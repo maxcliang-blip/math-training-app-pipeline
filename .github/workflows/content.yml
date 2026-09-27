@@ -1,0 +1,47 @@
+name: Content
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  content-math:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      # Rendering Conventions S3.3/S9 #11: content cannot reach import unverified, and the
+      # gate proves it can fail before it is trusted to block anything.
+      - name: Content math gate
+        run: npm run content:selftest
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: content-math-report
+          path: artifacts/content-math-report*.json
+
+  figures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      # Asymptote is a server-side build dependency (Rendering Conventions S5). It is a heavy
+      # install because it pulls TeX Live; that is the cost of shipping a figure to a learner
+      # without shipping a compiler. Do not make this step skippable: a figure build that
+      # validates and compiles nothing is not a pass, and the script exits 3 when the
+      # toolchain is absent rather than reporting success.
+      - name: Install Asymptote
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends asymptote
+      - name: Figure build
+        run: npm run content:figures
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: figure-manifest
+          path: artifacts/figures/manifest.json

@@ -1,0 +1,364 @@
+[
+  {
+    "id": "m1-l1-p1",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "linear-equations",
+      "fractions"
+    ],
+    "promptLatex": "Solve the equation $\\dfrac{3x}{4}-\\dfrac{5}{6}=1$ for the value of $x$.",
+    "choices": [
+      "\\frac{22}{9}",
+      "\\frac{11}{9}",
+      "\\frac{22}{3}",
+      "\\frac{9}{22}",
+      "\\frac{44}{9}"
+    ],
+    "answerLatex": "\\frac{22}{9}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "There is one term containing $x$ and one constant on each side of the equation.",
+      "Multiply both sides by $12$, the least common multiple of $4$ and $6$, to clear the denominators.",
+      "After clearing the denominators you get $9x-10=12$, so the remaining step is one subtraction and one division."
+    ],
+    "solutionLatex": "Clear the denominators by multiplying both sides by $12$, which preserves the solution set because $12$ is nonzero.\n\n$12\\left(\\frac{3x}{4}-\\frac{5}{6}\\right)=12$\n\n$9x-10=12$\n\n$9x=22 \\;\\implies\\; x=\\frac{22}{9}$\n\nThe equation is linear with a nonzero coefficient of $x$, so this is the unique solution.",
+    "techniqueSlugs": [
+      "balance-equations",
+      "clear-denominators-lcm"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-p2",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "absolute-value",
+      "linear-equations"
+    ],
+    "promptLatex": "The equation $|2x-5|=11$ has two solutions. What is the sum of those two solutions?",
+    "choices": [
+      "5",
+      "11",
+      "13",
+      "-5",
+      "0"
+    ],
+    "answerLatex": "5",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two solutions sit at equal distances on either side of the point where $2x-5=0$.",
+      "Split the equation into the two cases $2x-5=11$ and $2x-5=-11$.",
+      "The two solutions are $x=8$ and $x=-3$, so add them."
+    ],
+    "solutionLatex": "Because $11$ is positive, the equation $|2x-5|=11$ is the pair of equations $2x-5=11$ and $2x-5=-11$.\n\n$2x-5=11 \\;\\implies\\; x=8 \\qquad 2x-5=-11 \\;\\implies\\; x=-3$\n\nBoth candidates satisfy the original equation, since $|2(8)-5|=11$ and $|2(-3)-5|=11$.\n\n$8+(-3)=5$",
+    "techniqueSlugs": [
+      "absolute-value-two-cases"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-p3",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "linear-equations",
+      "word-problem"
+    ],
+    "promptLatex": "The sum of two consecutive positive even integers is $34$. What is the product of the two integers?",
+    "choices": null,
+    "answerLatex": "288",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Consecutive even integers are not two apart in value by $1$; check what separates them.",
+      "Write the smaller integer as $n$ and the larger as $n+2$, then use the given sum.",
+      "The equation $2n+2=34$ gives $n=16$, so the integers are $16$ and $18$."
+    ],
+    "solutionLatex": "Consecutive even integers differ by $2$, so write them as $n$ and $n+2$ with $n>0$.\n\n$n+(n+2)=34 \\;\\implies\\; 2n=32 \\;\\implies\\; n=16$\n\nThe two integers are $16$ and $18$, and both are positive and even as required.\n\n$16(18)=288$",
+    "techniqueSlugs": [
+      "balance-equations"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-p4",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "linear-equations",
+      "exponents"
+    ],
+    "promptLatex": "If $2^{10}x=1$, what is the exact value of $x$?",
+    "choices": null,
+    "answerLatex": "\\frac{1}{1024}",
+    "answerAlternatives": [
+      "\\frac{1}{2^{10}}",
+      "2^{-10}"
+    ],
+    "hintLatex": [
+      "The coefficient of $x$ is a power of two rather than a plain number.",
+      "Dividing both sides by a power of $a$ is the same as multiplying by the reciprocal power of $a$.",
+      "Dividing by $2^{10}$ leaves $x$ equal to one over $2^{10}$, and $2^{10}=1024$."
+    ],
+    "solutionLatex": "Divide both sides by $2^{10}$, which is nonzero.\n\n$x=\\frac{1}{2^{10}}=\\frac{1}{1024}$\n\nThe three forms $\\frac{1}{2^{10}}$, $2^{-10}$, and $\\frac{1}{1024}$ are the same number, so the canonical answer is recorded as $\\frac{1}{1024}$ and the equivalent forms are listed as accepted alternatives.",
+    "techniqueSlugs": [
+      "balance-equations"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-p5",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "absolute-value",
+      "region-split"
+    ],
+    "promptLatex": "Find the sum of all real values of $x$ that satisfy the equation $|x-1|+|x+4|=9$.",
+    "choices": null,
+    "answerLatex": "-3",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Each absolute value changes its formula at exactly one point, and this equation has two of them.",
+      "Solve a separate linear equation in each of the three regions defined by the breakpoints, and reject any candidate that falls outside the region that produced it.",
+      "The two solutions that survive are $x=-6$ and $x=3$."
+    ],
+    "solutionLatex": "The breakpoints are $1$ and $-4$, so the real line splits into the regions $x<-4$, $-4\\le x\\le 1$, and $x>1$.\n\nOn $x<-4$ the sum is $(1-x)+(-x-4)=-2x-3$, so $-2x-3=9$ gives $x=-6$, which lies in the region.\n\nOn $-4\\le x\\le 1$ the sum is $(1-x)+(x+4)=5$, which is never $9$, so this region contributes nothing.\n\nOn $x>1$ the sum is $(x-1)+(x+4)=2x+3$, so $2x+3=9$ gives $x=3$, which lies in the region.\n\nThe solution set is $\\{-6,3\\}$, and its sum is\n\n$-6+3=-3$",
+    "techniqueSlugs": [
+      "region-split-absolute-sum"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-p6",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "absolute-value",
+      "counting-integers",
+      "inequalities"
+    ],
+    "promptLatex": "Find the sum of all integer values of $x$ that satisfy the inequality $|2x-1|\\le 7$.",
+    "choices": null,
+    "answerLatex": "4",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A nonpositive right-hand side inside an absolute value inequality behaves differently from a positive one, so first check the sign.",
+      "The inequality $|2x-1|\\le 7$ is equivalent to the double inequality $-7\\le 2x-1\\le 7$.",
+      "That double inequality reduces to $-3\\le x\\le 4$, whose integers are $-3$ through $4$."
+    ],
+    "solutionLatex": "Since $7$ is positive, the absolute value inequality is a double inequality with solid endpoints.\n\n$-7\\le 2x-1 \\le 7$\n\nAdd $1$ to all three parts, then divide by the positive number $2$, so no reversal occurs.\n\n$-6\\le 2x \\le 8 \\;\\implies\\; -3\\le x \\le 4$\n\nThe integer solutions are $-3,-2,-1,0,1,2,3,4$.\n\n$(-3-2-1+0+1+2+3)+4=4$",
+    "techniqueSlugs": [
+      "abs-inequality-double-bound",
+      "count-integer-solutions"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-p7",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "inequalities"
+    ],
+    "promptLatex": "Which of the following is the complete solution set of the inequality $3(x-1)<5x+4$?",
+    "choices": [
+      "x>-\\frac{7}{2}",
+      "x<-\\frac{7}{2}",
+      "x>\\frac{7}{2}",
+      "x<\\frac{7}{2}",
+      "x>-\\frac{11}{2}"
+    ],
+    "answerLatex": "x>-\\frac{7}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Every term in the inequality is on the same side of the comparison right now.",
+      "Subtract $3x$ from both sides and then add $3$, which isolates the remaining term.",
+      "You get $-7<2x$, and dividing by the positive number $2$ does not reverse the inequality."
+    ],
+    "solutionLatex": "Expand and gather the variable terms on one side.\n\n$3x-3<5x+4 \\;\\implies\\; -3-4<5x-3x \\;\\implies\\; -7<2x$\n\nThe divisor $2$ is positive, so the direction of the inequality is unchanged.\n\n$x>-\\frac{7}{2}$\n\nThe solution set is the interval $\\left(-\\frac{7}{2},\\infty\\right)$, which matches the first choice.",
+    "techniqueSlugs": [
+      "sign-flip-negative"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-p8",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "absolute-value",
+      "inequalities",
+      "region-split"
+    ],
+    "promptLatex": "The set of real numbers $x$ satisfying $|x+1|+|x-1|\\le 6$ is an interval of length $L$. What is the value of $L$?",
+    "choices": null,
+    "answerLatex": "6",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Between the two breakpoints the sum of the two absolute values does not change at all.",
+      "On the middle region the sum is a constant, and outside it the sum is twice the distance from the origin.",
+      "Outside the middle region the condition becomes $|x|\\le 3$, which bounds the solution set."
+    ],
+    "solutionLatex": "The breakpoints are $-1$ and $1$, which split the real line into three regions.\n\nOn $-1\\le x\\le 1$ the sum is $(x+1)+(1-x)=2$, which satisfies the inequality everywhere on that region.\n\nOn $x>1$ the sum is $(x+1)+(x-1)=2x$, so $2x\\le 6$ gives $x\\le 3$.\n\nOn $x<-1$ the sum is $-(x+1)+(1-x)=-2x$, so $-2x\\le 6$ gives $x\\ge -3$.\n\nThe three regions together give exactly $[-3,3]$, and both endpoints are included because the inequality is non-strict.\n\n$L=3-(-3)=6$",
+    "techniqueSlugs": [
+      "region-split-absolute-sum",
+      "abs-inequality-double-bound"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-p9",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "inequalities",
+      "absolute-value",
+      "intervals"
+    ],
+    "promptLatex": "Solve the inequality $|3x-2|>7$ for the set of values of $x$ that satisfy it.",
+    "choices": null,
+    "answerLatex": "x \\in \\left(-\\infty, -\\frac{5}{3}\\right) \\cup \\left(3, \\infty\\right)",
+    "answerAlternatives": [
+      "-\\infty < x < -\\frac{5}{3} \\text{ or } x > 3",
+      "x < -\\frac{5}{3} \\text{ or } x > 3"
+    ],
+    "hintLatex": [
+      "A strict inequality with an absolute value gives two rays, not one interval, and both endpoints are excluded.",
+      "The inequality $|3x-2|>7$ is the disjunction $3x-2>7$ or $3x-2<-7$.",
+      "Dividing the two parts by the positive number $3$ gives $x>3$ or $x<-\\frac{5}{3}$."
+    ],
+    "solutionLatex": "A strict inequality involving an absolute value is the disjunction of two one-sided inequalities.\n\n$3x-2>7 \\;\\text{ or } \\; 3x-2<-7$\n\nBoth divisions are by the positive number $3$, so neither part reverses.\n\n$x>3 \\;\\text{ or } \\; x<-\\frac{5}{3}$\n\nThe strict inequality excludes both endpoints, so in interval notation the solution set is\n\n$x \\in \\left(-\\infty, -\\frac{5}{3}\\right) \\cup \\left(3, \\infty\\right)$\n\nThis answer is not a single number, so the equivalent set and prose forms are listed in the accepted alternatives and grading falls back to the server.",
+    "techniqueSlugs": [
+      "abs-inequality-double-bound"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-m1",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "linear-equations",
+      "distributive-law"
+    ],
+    "promptLatex": "Solve the equation $5-3(2-x)=2x$ for the value of $x$.",
+    "choices": [
+      "1",
+      "-1",
+      "11",
+      "-11",
+      "0"
+    ],
+    "answerLatex": "1",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The parentheses hide a sign change on the term $-3x$.",
+      "Distribute $-3$ across the parentheses, then collect the $x$ terms on one side.",
+      "The left side becomes $3x-1$, so the equation reduces to $3x-1=2x$."
+    ],
+    "solutionLatex": "Distribute $-3$ across the parentheses, remembering that $-3$ times $-x$ is $+3x$.\n\n$5-3(2-x)=5-6+3x=3x-1$\n\nSo the equation is $3x-1=2x$, which gives $x=1$.\n\nSubstituting back, the left side is $5-3(2-1)=2$ and the right side is $2$, so the solution checks out.",
+    "techniqueSlugs": [
+      "balance-equations"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-m2",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "quadratics",
+      "factoring",
+      "radicals"
+    ],
+    "promptLatex": "Let $a$ and $b$ be the roots of $x^2-13x+36=0$. What is the value of $\\sqrt{a}+\\sqrt{b}$?",
+    "choices": null,
+    "answerLatex": "5",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The roots are the numbers whose sum is $13$ and whose product is $36$.",
+      "Factor the quadratic into two linear factors with integer roots.",
+      "The factorization is $(x-4)(x-9)$, so the roots are $4$ and $9$."
+    ],
+    "solutionLatex": "Factoring gives both roots at once.\n\n$x^2-13x+36=(x-4)(x-9)$\n\nThe roots are $a=4$ and $b=9$, and their sum $13$ and product $36$ match the coefficients. Both roots are positive perfect squares, so the radicals are real.\n\n$\\sqrt{4}+\\sqrt{9}=2+3=5$",
+    "techniqueSlugs": [
+      "balance-equations"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m1-l1-m3",
+    "moduleId": "M1",
+    "lessonId": "m1-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "absolute-value",
+      "counting-integers",
+      "region-split"
+    ],
+    "promptLatex": "Let $f(x)=|x-3|+|x+4|$. How many integers $x$ satisfy the inequality $f(x)\\le 9$?",
+    "choices": null,
+    "answerLatex": "10",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The graph of $f$ is piecewise linear with a flat bottom between the two breakpoints.",
+      "Solve $f(x)\\le 9$ separately on each of the three regions cut out by the breakpoints $-4$ and $3$.",
+      "The left region gives $-5\\le x\\le -4$, the middle region allows everything, and the right region gives $3\\le x\\le 4$."
+    ],
+    "solutionLatex": "The breakpoints are $-4$ and $3$, and between them the two terms are $3-x$ and $x+4$, so $f(x)=7$ on the whole middle region.\n\nSince $7\\le 9$, every $x$ in $[-4,3]$ is a solution.\n\nOn $x\\ge 3$ the sum is $(x-3)+(x+4)=2x+1$, so $2x+1\\le 9$ gives $x\\le 4$, and this region contributes $3\\le x\\le 4$.\n\nOn $x\\le -4$ the sum is $(3-x)+(-x-4)=-2x-1$, so $-2x-1\\le 9$ gives $x\\ge -5$, and this region contributes $-5\\le x\\le -4$.\n\nThe full solution set is the single interval $[-5,4]$, and the endpoints are included because $f(-5)=f(4)=9$.\n\n$5+4+1=10$",
+    "techniqueSlugs": [
+      "region-split-absolute-sum",
+      "count-integer-solutions"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

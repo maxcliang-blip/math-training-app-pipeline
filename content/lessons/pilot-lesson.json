@@ -1,0 +1,166 @@
+{
+  "id": "m1-l1",
+  "moduleId": "M1",
+  "order": 1,
+  "title": "Linear Equations, Inequalities, and Absolute Value",
+  "topicSlug": "linear-equations-absolute-value",
+  "tiers": ["10", "12"],
+  "estimatedMinutes": 55,
+  "lockMode": "soft",
+  "prerequisites": [],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Solve linear equations and inequalities in one variable, including equations and inequalities built from absolute values, and state the solution as an interval or as a set of integer values."
+    },
+    "prerequisites": {
+      "items": [],
+      "noteLatex": "No earlier lesson is required. If clearing fractions feels slow, review multiplying by a common denominator first; every method in this lesson assumes it is routine."
+    },
+    "concept": {
+      "conceptLatex": "A linear equation in one variable is an equation in which every term is a constant or a constant multiple of the variable. The goal never changes: reduce the equation to $x=c$ and report $c$. Only three properties of equality are needed. Adding or subtracting the same quantity on both sides preserves the solution set. Multiplying or dividing both sides by a nonzero quantity preserves it. Every one of those operations is its own inverse, which is why an equation can always be undone.\n\nClear the operations in a fixed order: parentheses first, then fractions, then the variable terms. One habit worth breaking immediately is cancelling a variable out of both sides, which silently discards the case where that variable is zero.\n\n$\\frac{2x+1}{3}-\\frac{x-2}{4}=\\frac{7}{6} \\implies 4(2x+1)-3(x-2)=14 \\implies 5x+10=14 \\implies x=\\frac{4}{5}$\n\nInequalities behave identically under the same operations with exactly one exception: multiplying or dividing both sides by a negative number reverses the inequality. The reversal is a consequence of the multiplication rather than a special property of the minus sign, so the safe habit is to keep every coefficient positive until the last possible moment.\n\n$a<bx\\le c \\text{ with } b>0 \\implies \\frac{a}{b}<x\\le \\frac{c}{b}$\n\nAbsolute value is a piecewise function: it equals its argument when the argument is nonnegative, and equals the negation of its argument otherwise. Three consequences cover nearly every competition problem built on it. The equation with a positive right-hand side splits into two equations, giving two solutions symmetric about the point where the inner expression vanishes. The non-strict inequality becomes a double inequality with solid endpoints, the strict inequality becomes a double inequality with open endpoints, and the strict inequality in the other direction is the complement of the non-strict one, so it must be written as a union of two rays.\n\n$|x-2|=5 \\iff x=7 \\text{ or } x=-3 \\qquad |x-2|\\le 5 \\iff -3\\le x\\le 7 \\qquad |x-2|>5 \\iff x<-3 \\text{ or } x>7$\n\nWhen two absolute values are summed, the breakpoints are the values where each one changes definition. Split the real line at those two points, solve a linear equation in each of the three regions, and discard any candidate that falls outside the region that produced it. In the middle region the sum is a constant equal to the distance between the breakpoints, and noticing that is usually the fastest route through the problem.\n\n$|x-a|+|x-b| = b-a \\text{ for every } x \\in [a,b] \\text{ whenever } a<b$\n\nA rational equation is not finished until its domain restrictions are checked. Dividing by an absolute value can lose solutions only where the inner expression is zero, because an absolute value is positive everywhere else, so the excluded points are exactly the zeros of the denominators.\n\nMany competition answers ask for the sum or the number of the integer solutions rather than for the solution itself. Convert to the interval first and move to integers second: $|2x-1|\\le 7$ gives $-3\\le x\\le 4$, whose integer solutions run from $-3$ to $4$ and sum to $4$. Keeping those two steps separate is the cheapest defense against an off-by-one at the endpoints.",
+      "figures": [
+        {
+          "id": "m1-l1-fig-1",
+          "captionLatex": "The number line marks the two breakpoints $-4$ and $1$ where the two absolute values in $|x-1|+|x+4|$ change definition; the segment between them is where the sum of the two terms is constant.",
+          "asymptoteSource": "// Breakpoints of |x-1| + |x+4| on the real line.\n// Two-argument size fixes the output box at 320 x 120, so the declared\n// aspect ratio 8/3 is exact and the reserved space cannot drift.\nsize(320,120);\npair A=(-5,0), B=(3.4,0);\ndraw(A--B,Arrow);\nlabel(\"$x$\",B,SE);\nfor (int x = -5; x <= 3; ++x) {\n  draw((x,-0.12)--(x,0.12),gray);\n}\nlabel(\"$-4$\",(-4,-0.45),S);\nlabel(\"$1$\",(1,-0.45),S);\nlabel(\"$|x-1|+|x+4|$\",(-1.5,0.62),N);\ndot((-4,0),2+2.5pt);\ndot((1,0),2+2.5pt);",
+          "asymptoteAlt": "A horizontal number line with an arrow at the right end and a label x. Short tick marks run from -5 to 3. The two ticks at -4 and 1 are drawn as filled dots and labelled below the line, and the expression |x-1|+|x+4| is written above the line between them.",
+          "asymptoteAspectRatio": 2.667
+        }
+      ],
+      "examples": [
+        {
+          "id": "m1-l1-ex-1",
+          "titleLatex": "Worked example: a linear equation with parentheses on both sides",
+          "bodyLatex": "Distribute first, then collect.\n\n$5-3(2-x)=2x-1 \\implies 5-6+3x=2x-1 \\implies 3x-1=2x-1 \\implies x=0$\n\nThe check is immediate: $5-3(2-0)=-1$ and $2(0)-1=-1$.",
+          "answerLatex": "$x=0$"
+        },
+        {
+          "id": "m1-l1-ex-2",
+          "titleLatex": "Worked example: an absolute value equation with two solutions",
+          "bodyLatex": "The right-hand side is positive, so the equation becomes two equations.\n\n$2x-5=9 \\implies x=7 \\qquad 2x-5=-9 \\implies x=-3$\n\nThe two solutions are symmetric about $x=\\frac{5}{2}$, and their sum is $7+(-3)=4=2\\left(\\frac{5}{2}\\right)$, so the sum can be read off without solving when the question asks for it.",
+          "answerLatex": "$x=7$ or $x=-3$"
+        },
+        {
+          "id": "m1-l1-ex-3",
+          "titleLatex": "Worked example: a compound inequality",
+          "bodyLatex": "Add to all three parts, then divide by a positive number so nothing reverses.\n\n$-2<3x-7\\le 5 \\implies 5<3x\\le 12 \\implies \\frac{5}{3}<x\\le 4$\n\nThe lower endpoint is excluded and the upper endpoint is included, which is what the strict and non-strict signs demand.",
+          "answerLatex": "$\\frac{5}{3}<x\\le 4$"
+        },
+        {
+          "id": "m1-l1-ex-4",
+          "titleLatex": "Worked example: the same absolute value, three ways",
+          "bodyLatex": "One expression, three different questions, three different answers.\n\n$|x|\\ge 3 \\iff x\\le -3 \\text{ or } x\\ge 3 \\qquad |x|\\le 3 \\iff -3\\le x\\le 3 \\qquad |x|<3 \\iff -3<x<3$\n\nThe non-strict and strict versions differ only in whether the endpoints are filled, and the complement of a closed interval is a pair of open rays.",
+          "answerLatex": "$|x|\\le 3 \\iff [-3,3]$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "balance-equations",
+          "name": "Balance with inverse operations",
+          "summaryLatex": "Apply the same operation to both sides, choosing the operation that undoes the one already present.",
+          "bodyLatex": "Add or subtract a term to isolate the variable, then multiply or divide by the coefficient. Verify the sign of every term after distributing, since a single sign slip changes the solution."
+        },
+        {
+          "slug": "clear-denominators-lcm",
+          "name": "Clear denominators with the least common multiple",
+          "summaryLatex": "Multiply every term by the least common multiple of the denominators, then the equation is polynomial.",
+          "bodyLatex": "The multiplier must be applied to every term including the constants, and it must be a common multiple rather than a product of the denominators, otherwise the arithmetic grows needlessly."
+        },
+        {
+          "slug": "sign-flip-negative",
+          "name": "Reverse on multiply or divide by a negative",
+          "summaryLatex": "Multiplying or dividing an inequality by a negative number reverses the direction of the inequality.",
+          "bodyLatex": "The flip applies once per negative factor. Rearranging so that every coefficient is positive until the final step avoids the error entirely."
+        },
+        {
+          "slug": "absolute-value-two-cases",
+          "name": "Split an absolute value equation into two cases",
+          "summaryLatex": "For a positive right-hand side, the equation is the pair of equations obtained by negating the inner expression.",
+          "bodyLatex": "A zero right-hand side gives the single solution where the inner expression vanishes. The two solutions are symmetric about that point, so a question asking for their sum does not require solving."
+        },
+        {
+          "slug": "abs-inequality-double-bound",
+          "name": "Convert an absolute value inequality to a double inequality",
+          "summaryLatex": "The non-strict form becomes a double inequality with solid endpoints; the strict form is its complement, written as a union of two open rays.",
+          "bodyLatex": "Check the sign of the right-hand side first: if it is negative then the non-strict form has no solutions, while the strict form is automatically true."
+        },
+        {
+          "slug": "region-split-absolute-sum",
+          "name": "Split the real line at the breakpoints of a sum",
+          "summaryLatex": "Each absolute value contributes one breakpoint; solve a linear equation in each region and discard candidates from the wrong region.",
+          "bodyLatex": "Between the two breakpoints the sum is a constant equal to the distance between them, which frequently settles the problem without any algebra at all."
+        },
+        {
+          "slug": "domain-check-denominator",
+          "name": "State the domain before solving a rational equation",
+          "summaryLatex": "Record the values that make a denominator zero, and exclude them from the candidate solutions.",
+          "bodyLatex": "An absolute value in a denominator is zero at exactly one point, so each such denominator removes a single value from the solution set."
+        },
+        {
+          "slug": "count-integer-solutions",
+          "name": "Convert an interval to integer solutions",
+          "summaryLatex": "Solve the inequality as an interval, then enumerate the integers inside it and compute the requested sum or count.",
+          "bodyLatex": "The endpoints need care when the interval is open, closed, or unbounded, and for a sum it is faster to pair negatives with positives than to add in order."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "no-flip-on-negative",
+          "titleLatex": "Dividing an inequality by a negative and forgetting to reverse it",
+          "wrongLatex": "x > -3",
+          "whyLatex": "Dividing $-2x>6$ by $-2$ must reverse the comparison, so the result is $x<-3$. The claimed answer is the whole complement of the true solution set.",
+          "fixLatex": "Divide by the positive value instead, or move the negative coefficient to the other side of the comparison before dividing."
+        },
+        {
+          "slug": "one-case-only",
+          "titleLatex": "Keeping only the positive case of an absolute value equation",
+          "wrongLatex": "x = 7",
+          "whyLatex": "The equation $|x-2|=5$ has two solutions, $7$ and $-3$, and reporting one of them silently drops half the solution set. The sum of the two solutions is $4$, twice the point where the inner expression vanishes.",
+          "fixLatex": "Write both cases every time, solve them separately, and then check each candidate in the original equation before reporting."
+        },
+        {
+          "slug": "closed-when-open",
+          "titleLatex": "Filling the endpoints of a strict absolute value inequality",
+          "wrongLatex": "[-3, 3]",
+          "whyLatex": "The solution set of $|x|<3$ excludes $x=3$ and $x=-3$, because substituting either one gives $3<3$, which is false.",
+          "fixLatex": "Read the sign of the comparison as the endpoint style: strict gives open endpoints and parentheses, non-strict gives solid endpoints and brackets."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m1-l1-p1",
+        "m1-l1-p2",
+        "m1-l1-p3",
+        "m1-l1-p4",
+        "m1-l1-p5",
+        "m1-l1-p6",
+        "m1-l1-p7",
+        "m1-l1-p8",
+        "m1-l1-p9"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m1-l1-p1",
+        "m1-l1-p2",
+        "m1-l1-p3",
+        "m1-l1-p4",
+        "m1-l1-p5",
+        "m1-l1-p6",
+        "m1-l1-p7",
+        "m1-l1-p8",
+        "m1-l1-p9"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": ["m1-l1-m1", "m1-l1-m2", "m1-l1-m3"],
+      "passThreshold": 2
+    }
+  },
+  "tags": ["linear-equations", "inequalities", "absolute-value", "domain"]
+}

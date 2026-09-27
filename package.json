@@ -6,6 +6,14 @@
     "dev:web": "npm run dev --workspace web",
     "dev:api": "npm run dev --workspace api",
     "build": "npm run build --workspace web",
-    "test": "npm test --workspaces --if-present"
+    "test": "npm test --workspaces --if-present",
+    "content:check": "node scripts/check-content-math.mjs",
+    "content:selftest": "node scripts/check-content-math.mjs --selftest",
+    "content:figures": "node scripts/build-figures.mjs",
+    "content:figures:authoring": "node scripts/build-figures.mjs --allow-missing-toolchain",
+    "ci:content": "npm run content:selftest && npm run content:figures"
+  },
+  "devDependencies": {
+    "katex": "0.16.11"
   }
 }

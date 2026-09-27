@@ -1,0 +1,70 @@
+[
+  {
+    "id": "m8-l1-f1",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": ["angles", "trig-conversion"],
+    "promptLatex": "A counterclockwise rotation of $150^\\circ$ about the origin is equivalent to a counterclockwise rotation of how many radians?",
+    "choices": null,
+    "answerLatex": "\\frac{5\\pi}{6}",
+    "answerAlternatives": [],
+    "angleUnit": "rad",
+    "hintLatex": [
+      "A full turn around the circle is the same in both units, so convert by comparing full turns.",
+      "Since a full turn is $2\\pi$ radians and also $360^\\circ$, one degree is $\\frac{\\pi}{180}$ radians.",
+      "Multiplying $150$ by $\\frac{\\pi}{180}$ and simplifying by the factor $30$ gives $\\frac{5\\pi}{6}$."
+    ],
+    "solutionLatex": "The conversion factor comes from matching full turns.\n\n$360^\\circ = 2\\pi \\;\\text{ radians} \\;\\implies\\; 1^\\circ = \\frac{\\pi}{180} \\text{ radians}$\n\n$\\frac{150\\pi}{180}=\\frac{5\\pi}{6}$\n\nThe answer is required in radians, so the declared unit is radians and a response in degrees is deliberately not accepted.",
+    "techniqueSlugs": ["unit-circle-coordinates"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m5-l2-f2",
+    "moduleId": "M5",
+    "lessonId": "m5-l2",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": ["angles", "triangles"],
+    "promptLatex": "In right triangle $ABC$ the right angle is at $C$ and $\\angle A=30^\\circ$. What is the measure of $\\angle B$ in degrees?",
+    "choices": null,
+    "answerLatex": "60",
+    "answerAlternatives": [],
+    "answerAngle": "deg",
+    "hintLatex": [
+      "The three interior angles of any triangle sum to a fixed total, whatever the shape of the triangle.",
+      "Write the angle sum identity and substitute the two known angles.",
+      "That gives $30^\\circ+90^\\circ+\\angle B=180^\\circ$, so $\\angle B=60^\\circ$."
+    ],
+    "solutionLatex": "The interior angles of a triangle sum to $180^\\circ$.\n\n$30^\\circ+90^\\circ+\\angle B=180^\\circ$\n\n$\\angle B=60^\\circ$\n\nThe answer is recorded as the bare number $60$ with the unit declared as degrees, so a learner may type either $60$ or $60^\\circ$ and be graded correct.",
+    "techniqueSlugs": ["triangle-angle-sum"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m5-l2-f3",
+    "moduleId": "M5",
+    "lessonId": "m5-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": ["circles", "chords", "pythagorean"],
+    "promptLatex": "Circle $\\omega$ has center $O$ and diameter $\\overline{AB}$ with $AB=20$. A chord $\\overline{CD}$ is perpendicular to $\\overline{AB}$ at $M$, where $AM=4$. What is the length of $CD$?",
+    "choices": null,
+    "answerLatex": "16",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A diameter determines the radius, and the radius drawn to the midpoint of a chord is perpendicular to that chord.",
+      "Compute the distance from the center to the chord, then apply the Pythagorean theorem to the right triangle formed with one half of the chord.",
+      "The distance from $O$ to $M$ is $10-4=6$, so the half-chength is $\\sqrt{10^2-6^2}=\\sqrt{64}$."
+    ],
+    "solutionLatex": "The radius is half the diameter, so $r=10$.\n\n$OM=AO-AM=10-4=6$\n\nThe radius to the midpoint of a chord is perpendicular to the chord, so the Pythagorean theorem in triangle $OMC$ gives\n\n$MC^2=r^2-OM^2=100-36=64 \\;\\implies\\; MC=8$\n\nThat perpendicular bisects the chord, so the full length is\n\n$CD=2(8)=16$",
+    "techniqueSlugs": ["power-of-a-point"],
+    "asymptoteSource": "// Circle with diameter AB and a chord CD perpendicular to AB at M.\n// Two-argument size fixes the output box at 320 x 240, so the declared\n// aspect ratio 4/3 is exact and the reserved space cannot drift.\nsize(320,240);\npair O=(0,0), A=(-10,0), B=(10,0), M=(-6,0);\nreal h=8;\npair C=M+(0,h), D=M+(0,-h);\ndraw(circle(O,10));\ndraw(A--B);\ndraw(C--D);\ndot(A,2+2.5pt); dot(B,2+2.5pt); dot(C,2+2.5pt); dot(D,2+2.5pt); dot(M,2+2.5pt);\nlabel(\"$A$\",A,SW); label(\"$B$\",B,SE); label(\"$C$\",C,N); label(\"$D$\",D,NE);\nlabel(\"$O$\",O,NE); label(\"$M$\",M+(-1.5,-0.35),SE);\ndraw(M+(-0.7,0)--M+(-0.7,0.7)--M+(0,0.7));",
+    "asymptoteAlt": "A circle with center O and horizontal diameter AB. A vertical chord CD crosses AB at right angles at the point M, which lies to the left of O. The points A, B, C, D, O, and M are marked with solid dots, and a small square at M marks the right angle.",
+    "asymptoteAspectRatio": 1.333
+  }
+]
