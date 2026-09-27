@@ -1,0 +1,11 @@
+{
+  "name": "math-training-app",
+  "private": true,
+  "workspaces": ["web", "api"],
+  "scripts": {
+    "dev:web": "npm run dev --workspace web",
+    "dev:api": "npm run dev --workspace api",
+    "build": "npm run build --workspace web",
+    "test": "npm test --workspaces --if-present"
+  }
+}
