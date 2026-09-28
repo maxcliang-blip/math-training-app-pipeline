@@ -7,11 +7,19 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    strategy:
+      # Both versions, not just the one that happens to work. `node --test test/` passed on
+      # Node 20 and failed on Node 24 with Cannot find module '.../api/test', which is exactly
+      # the class of bug a single pinned version hides. The test script is fixed, and this
+      # matrix is what keeps it fixed.
+      fail-fast: false
+      matrix:
+        node-version: [20, 24]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm run build --workspace web
       - run: npm test --workspaces --if-present

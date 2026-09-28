@@ -1,0 +1,133 @@
+import { test } from "node:test";
+import assert from "node:assert";
+import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+import { FigureStore, requireFigure, loadFigureStore } from "../src/figures.js";
+import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS, figureReference, toFigurePayload, exerciseFigureKey, lessonFigureKey } from "../../lib/figure-contract.mjs";
+
+function manifest(overrides = {}) {
+  return {
+    pipelineVersion: "asymptote-svg-sanitized@2",
+    status: "pass",
+    toolchain: { bin: "asymptote", version: "Asymptote version 2.86" },
+    figures: [
+      {
+        figureKey: "m1-l1.sections.concept.figures[0]",
+        figureSvgUrl: "artifacts/figures/svg/m1-l1.svg",
+        figureHash: "sha256:abc123",
+        figurePipelineVersion: "asymptote-svg-sanitized@2",
+        declaredAspectRatio: 2.667,
+        compiledAspectRatio: 2.66,
+        asymptoteVersion: "Asymptote version 2.86",
+        alt: "A number line with two marked points.",
+        captionLatex: null,
+      },
+    ],
+    ...overrides,
+  };
+}
+
+test("figure keys address a figure the way the build writes them", () => {
+  // These three strings are the whole addressing contract. A key that shifts is a learner
+  // served the wrong figure, so they are pinned here rather than only in the build.
+  assert.equal(lessonFigureKey("m1-l1", "concept", 0), "m1-l1.sections.concept.figures[0]");
+  assert.equal(exerciseFigureKey("m5-l2-f3"), "m5-l2-f3");
+});
+
+test("a figure payload carries the contract fields and nothing else", () => {
+  const store = new FigureStore(manifest());
+  const payload = store.get("m1-l1.sections.concept.figures[0]");
+
+  assert.deepEqual(Object.keys(payload).sort(), [...FIGURE_PAYLOAD_FIELDS].sort());
+  assert.equal(payload.figureHash, "sha256:abc123");
+  // asymptoteVersion is build provenance and stays behind the build.
+  assert.equal("asymptoteVersion" in payload, false);
+});
+
+test("a non-figure route gets the reference and never the payload", () => {
+  const ref = figureReference("m1-l1.sections.concept.figures[0]");
+  assert.deepEqual(Object.keys(ref), FIGURE_REFERENCE_FIELDS);
+  for (const field of FIGURE_PAYLOAD_FIELDS) {
+    if (field === "figureKey") continue;
+    assert.equal(field in ref, false, `${field} must not appear on a lesson or exercise response`);
+  }
+});
+
+test("a manifest that did not pass the build serves no figure", () => {
+  const store = new FigureStore(manifest({ status: "fail" }));
+  assert.equal(store.usable, false);
+  assert.equal(store.get("m1-l1.sections.concept.figures[0]"), null);
+  assert.throws(() => requireFigure(store, "m1-l1.sections.concept.figures[0]"), (err) => {
+    assert.match(err.message, /not usable/);
+    assert.equal(err.status, 503);
+    return true;
+  });
+});
+
+test("an empty manifest is not a usable catalogue", () => {
+  const store = new FigureStore(manifest({ figures: [] }));
+  assert.equal(store.usable, false);
+});
+
+test("a figure with no hash is not served", () => {
+  const bad = manifest();
+  delete bad.figures[0].figureHash;
+  const store = new FigureStore(bad);
+  assert.equal(store.usable, true, "the manifest itself passed; this figure is the problem");
+  assert.equal(store.get("m1-l1.sections.concept.figures[0]"), null);
+  assert.throws(() => requireFigure(store, "m1-l1.sections.concept.figures[0]"), (err) => {
+    assert.match(err.message, /without a figureHash/);
+    assert.equal(err.status, 404);
+    return true;
+  });
+});
+
+test("an unknown figure is a 404 and says so", () => {
+  const store = new FigureStore(manifest());
+  assert.throws(() => requireFigure(store, "m9-l9.sections.concept.figures[0]"), (err) => {
+    assert.match(err.message, /not in the manifest/);
+    assert.equal(err.status, 404);
+    return true;
+  });
+});
+
+test("a manifest from an older pipeline version is still readable, and says which", () => {
+  const store = new FigureStore(manifest({ pipelineVersion: "asymptote-svg-sanitized@1" }));
+  assert.equal(store.pipelineVersion, "asymptote-svg-sanitized@1");
+  assert.equal(store.get("m1-l1.sections.concept.figures[0]").figurePipelineVersion, "asymptote-svg-sanitized@2");
+});
+
+test("a missing or malformed manifest is a load error, not a silent empty catalogue", () => {
+  const dir = mkdtempSync(join(tmpdir(), "figure-store-"));
+  try {
+    assert.throws(() => loadFigureStore(join(dir, "nope.json")), /unreadable/);
+
+    const badJson = join(dir, "bad.json");
+    writeFileSync(badJson, "{ not json");
+    assert.throws(() => loadFigureStore(badJson), /not valid JSON/);
+
+    const noFigures = join(dir, "no-figures.json");
+    writeFileSync(noFigures, JSON.stringify({ pipelineVersion: "x" }));
+    assert.throws(() => loadFigureStore(noFigures), /no figures array/);
+
+    const noVersion = join(dir, "no-version.json");
+    writeFileSync(noVersion, JSON.stringify({ figures: [] }));
+    assert.throws(() => loadFigureStore(noVersion), /no pipelineVersion/);
+
+    const good = join(dir, "good.json");
+    writeFileSync(good, JSON.stringify(manifest()));
+    const store = loadFigureStore(good);
+    assert.equal(store.usable, true);
+    assert.deepEqual(store.keys(), ["m1-l1.sections.concept.figures[0]"]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("toFigurePayload whitelists rather than passing an entry through", () => {
+  const payload = toFigurePayload({ figureKey: "k", figureHash: "sha256:x", somethingNew: "leaks" });
+  assert.equal("somethingNew" in payload, false);
+  assert.equal(toFigurePayload(null), null);
+});

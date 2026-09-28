@@ -3,10 +3,21 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      record_aspect_ratios:
+        description: >-
+          Bootstrap mode. Compiles every figure with the real toolchain and rewrites each
+          figure's declared size(W,H) and asymptoteAspectRatio to the box the compiler
+          actually produced, then uploads the rewritten content as an artifact instead of
+          asserting on it. Use once when adopting a new TeX Live; never as a gate.
+        type: boolean
+        default: false
 
 jobs:
   content-math:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,6 +36,9 @@ jobs:
 
   figures:
     runs-on: ubuntu-latest
+    # Asymptote pulls TeX Live, so this job is minutes not seconds. The ceiling is here to turn
+    # a wedged apt or a hung compile into a red run rather than a job that never reports.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,11 +51,56 @@ jobs:
       # validates and compiles nothing is not a pass, and the script exits 3 when the
       # toolchain is absent rather than reporting success.
       - name: Install Asymptote
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends asymptote
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends asymptote
+      # The install step and the build step are deliberately separate, and this one has no
+      # `continue-on-error` and no `|| true`. If the package name is wrong, the image lacks
+      # TeX Live, or asymptote is installed but cannot start, the failure has to be attributed
+      # to the toolchain rather than surfacing later as a mysterious figure error. A version
+      # banner here is also what the manifest records as asymptoteVersion.
+      - name: Verify Asymptote toolchain
+        run: |
+          set -euo pipefail
+          command -v asymptote
+          asymptote --version
+          # A figure whose labels are typeset by TeX needs latex and dvipng present. Without
+          # them asymptote still starts and still passes --version, and then fails on the
+          # first label() instead, so their absence is caught here rather than as a corpus
+          # error an author would be asked to fix.
+          command -v latex
+          command -v dvipng
       - name: Figure build
+        if: ${{ !inputs.record_aspect_ratios }}
         run: npm run content:figures
+      - name: Record aspect ratios from a real compile
+        if: ${{ inputs.record_aspect_ratios && github.event_name == 'workflow_dispatch' }}
+        run: npm run content:figures -- --record-aspect-ratios
+      # A green figure job has to mean figures were produced. The build exits 0 on a corpus
+      # with no figures at all, which is technically true and completely useless, so the
+      # manifest is asserted here: at least one figure, and every one of them carrying a hash.
+      - name: Assert the manifest is populated
+        if: ${{ !inputs.record_aspect_ratios }}
+        run: |
+          set -euo pipefail
+          node -e '
+            const m = require("./artifacts/figures/manifest.json");
+            if (m.status !== "pass") throw new Error("manifest status is " + m.status);
+            if (!m.toolchain) throw new Error("manifest records no toolchain");
+            if (!m.figures.length) throw new Error("manifest has no compiled figures");
+            for (const f of m.figures) {
+              if (!f.figureHash) throw new Error(f.figureKey + " has no figureHash");
+              if (!f.figureSvgUrl) throw new Error(f.figureKey + " has no figureSvgUrl");
+            }
+            console.log("manifest ok:", m.figures.length, "figures,", m.toolchain.version);
+          '
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: figure-manifest
           path: artifacts/figures/manifest.json
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.record_aspect_ratios && github.event_name == 'workflow_dispatch' }}
+        with:
+          name: recorded-content
+          path: content/

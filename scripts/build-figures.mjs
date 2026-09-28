@@ -270,6 +270,10 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
   const violations = [];
   const compiled = [];
   const skipped = [];
+  // Recorded for every figure the compiler actually saw, including the ones that then failed
+  // the ratio check. Without this a mismatch reports "wrong number" and not "here is the
+  // number", which is the one thing the author needs in order to fix it.
+  const measurements = [];
 
   for (const figure of figures) {
     const { problems, box } = validateFigure(figure);
@@ -287,9 +291,20 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
       continue;
     }
     const measured = result.box;
+    const sizeCall = figure.source.match(/size\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)/);
+    const measurement = {
+      key: figure.key,
+      file: figure.file,
+      source: figure.source,
+      declaredSize: sizeCall ? `size(${sizeCall[1]},${sizeCall[2]})` : null,
+      declaredRatio: box.ratio,
+      measuredWidth: measured ? measured.width : null,
+      measuredHeight: measured ? measured.height : null,
+      measuredRatio: null,
+    };
     let ratioNote = null;
     if (measured && measured.height > 0) {
-      const measuredRatio = Number((measured.width / measured.height).toFixed(RATIO_DECIMALS));
+      measurement.measuredRatio = Number((measured.width / measured.height).toFixed(RATIO_DECIMALS));
       // S5.5 compiled-box drift, two tiers, exactly as rendering_conventions 5.4 item 4:
       // over 2% is a warning, over 5% rejects the figure. Both sides are rounded to the
       // declared precision first, so the declaration's own quantization is not counted as drift.
@@ -300,27 +315,31 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
       // gutter. At a 480px figure width, 2% is about 7px (imperceptible) and 5% is about 18px
       // (visible). A tighter single threshold, such as the 0.5% this previously used, rejects
       // figures the spec says to warn about and has no layout justification behind it.
-      const drift = Math.abs(measuredRatio - box.ratio) / box.ratio;
+      const drift = Math.abs(measurement.measuredRatio - box.ratio) / box.ratio;
       if (drift > RATIO_REJECT) {
         violations.push({
           key: figure.key,
           problems: [
-            `compiled box is ${measured.width}x${measured.height} (ratio ${measuredRatio}) but content declared ` +
+            `compiled box is ${measured.width}x${measured.height} (ratio ${measurement.measuredRatio}) but content declared ` +
             `${box.ratio}: ${(drift * 100).toFixed(1)}% drift exceeds the ${RATIO_REJECT * 100}% reject threshold (S5.5). ` +
-            `The drawing overflows its size() call; fix the size() or scale the content.`,
+            `size(W,H) bounds the output under Asymptote's default keepAspect rather than fixing it, so the ` +
+            `declaration has to be the box the compiler produces. Run \`npm run content:figures -- ` +
+            `--record-aspect-ratios\` against a real toolchain to rewrite it from a measurement.`,
           ],
         });
+        measurements.push(measurement);
         continue;
       }
       if (drift > RATIO_WARN) {
         warnings.push({
           key: figure.key,
-          message: `compiled box is ${measured.width}x${measured.height} (ratio ${measuredRatio}) against declared ` +
+          message: `compiled box is ${measured.width}x${measured.height} (ratio ${measurement.measuredRatio}) against declared ` +
             `${box.ratio}: ${(drift * 100).toFixed(1)}% drift is over the ${RATIO_WARN * 100}% warn threshold (S5.5)`,
         });
       }
-      ratioNote = measuredRatio;
+      ratioNote = measurement.measuredRatio;
     }
+    measurements.push(measurement);
     compiled.push({
       figureKey: figure.key,
       figureSvgUrl: `artifacts/figures/svg/${result.file}`,
@@ -335,7 +354,60 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
   }
 
   const status = violations.length ? "fail" : toolchain ? (skipped.length ? "partial" : "pass") : "toolchain-missing";
-  return { status, figures, toolchain, violations, compiled, skipped, warnings };
+  return { status, figures, toolchain, violations, compiled, skipped, warnings, measurements };
+}
+
+// Rewrite each figure's declared box to the box the compiler actually produced.
+//
+// This is a bootstrap tool, not a gate. It exists because the box a figure ends up with is
+// decided by the compiler and by the TeX Live fonts it happens to have, which no amount of
+// reading the source predicts: Asymptote's size(W,H) bounds the output under the default
+// keepAspect and does not scale labels, so the real box is a measurement. Run it once against a
+// real toolchain, review the diff, commit it, and the strict S5.5 comparison in buildFigures is
+// what keeps the corpus honest from then on.
+//
+// The edits are made on the raw text rather than through a JSON round trip because the corpus is
+// prettier-formatted: a round trip expands every inline array and turns a two-number change into
+// a whole-file rewrite that buries the two numbers that actually moved.
+export function recordAspectRatios(result) {
+  const changes = [];
+
+  for (const m of result.measurements) {
+    if (!m.file || !m.measuredWidth || !m.measuredHeight || !m.measuredRatio) continue;
+    const width = Math.round(m.measuredWidth);
+    const height = Math.round(m.measuredHeight);
+    const newSize = `size(${width},${height})`;
+    if (newSize === m.declaredSize && m.measuredRatio === m.declaredRatio) continue;
+
+    let text = readFileSync(m.file, "utf8");
+    const sourceToken = JSON.stringify(m.source).slice(1, -1);
+    const sourceCount = text.split(sourceToken).length - 1;
+    if (sourceCount !== 1) {
+      return { ok: false, error: `cannot locate the source of ${m.key} in ${m.file} (${sourceCount} matches); refusing to guess` };
+    }
+    const newSource = m.source.replace(/size\s*\(\s*[\d.]+\s*,\s*[\d.]+\s*\)/, newSize);
+    if (newSource === m.source) {
+      return { ok: false, error: `no size(W,H) call found in the source of ${m.key}; refusing to guess` };
+    }
+    text = text.replace(sourceToken, JSON.stringify(newSource).slice(1, -1));
+
+    const ratioToken = `"asymptoteAspectRatio": ${m.declaredRatio}`;
+    const ratioCount = text.split(ratioToken).length - 1;
+    if (ratioCount !== 1) {
+      return { ok: false, error: `cannot locate asymptoteAspectRatio ${m.declaredRatio} uniquely in ${m.file} (${ratioCount} matches); refusing to guess` };
+    }
+    text = text.replace(ratioToken, `"asymptoteAspectRatio": ${m.measuredRatio}`);
+
+    writeFileSync(m.file, text);
+    changes.push({
+      figureKey: m.key,
+      file: m.file.replace(REPO + "/", ""),
+      from: { size: m.declaredSize, declaredAspectRatio: m.declaredRatio },
+      to: { size: newSize, declaredAspectRatio: m.measuredRatio },
+    });
+  }
+
+  return { ok: true, changes };
 }
 
 // ---------------------------------------------------------------------------
@@ -346,6 +418,7 @@ const isMain = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(imp
 if (isMain) {
   const args = process.argv.slice(2);
   const allowMissing = args.includes("--allow-missing-toolchain");
+  const record = args.includes("--record-aspect-ratios");
   const outIdx = args.indexOf("--out");
   const positional = args[0] && !args[0].startsWith("--") ? resolve(args[0]) : null;
   const contentRoot = positional || (process.env.CONTENT_ROOT ? resolve(process.env.CONTENT_ROOT) : DEFAULT_CONTENT);
@@ -356,9 +429,34 @@ if (isMain) {
     process.exit(2);
   }
 
+  // Record mode needs the measurements even for the figures it is about to fix, and it must not
+  // be satisfied by a toolchain it never found: rewriting a corpus from no measurements would
+  // quietly produce an empty diff that looks like "nothing needed changing".
+  if (record && !allowMissing && !findToolchain()) {
+    console.error("build-figures: CONFIG: --record-aspect-ratios needs a real Asymptote toolchain; none was found");
+    process.exit(2);
+  }
+
   const result = buildFigures(contentRoot, outDir, { requireToolchain: !allowMissing });
 
-  for (const w of result.warnings) console.log(`  [warn] ${w.path}: ${w.message}`);
+  if (record) {
+    const recorded = recordAspectRatios(result);
+    if (!recorded.ok) {
+      console.error(`build-figures: CONFIG: ${recorded.error}`);
+      process.exit(2);
+    }
+    console.log(`build-figures: RECORDED ${recorded.changes.length} figure box declarations from a real compile`);
+    for (const c of recorded.changes) {
+      console.log(`  ${c.figureKey}  ${c.file}`);
+      console.log(`    ${c.from.size} (${c.from.declaredAspectRatio})  ->  ${c.to.size} (${c.to.declaredAspectRatio})`);
+    }
+    if (!recorded.changes.length) {
+      console.log("  every figure already declares the box the compiler produces");
+    }
+    console.log("  review the diff and commit it. This mode is a bootstrap, not a gate.");
+  }
+
+  for (const w of result.warnings) console.log(`  [warn] ${w.path || w.key}: ${w.message}`);
   for (const v of result.violations) {
     for (const p of v.problems) console.log(`  [error] ${v.key}: ${p}`);
   }
@@ -377,6 +475,17 @@ if (isMain) {
     generatedFrom: contentRoot.replace(REPO + "/", ""),
     figures: result.compiled,
     notCompiled: result.skipped.map((s) => ({ figureKey: s.key, declaredAspectRatio: s.box && s.box.ratio })),
+    // What the compiler measured, for every figure it compiled including the ones that then
+    // failed S5.5. A ratio mismatch is only actionable if the report says what the compiler
+    // produced, and this is where a follow-up run reads it from.
+    measurements: result.measurements.map((m) => ({
+      figureKey: m.key,
+      declaredSize: m.declaredSize,
+      declaredAspectRatio: m.declaredRatio,
+      measuredWidth: m.measuredWidth,
+      measuredHeight: m.measuredHeight,
+      measuredAspectRatio: m.measuredRatio,
+    })),
   };
   const manifestPath = join(outDir, "manifest.json");
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n");

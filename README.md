@@ -42,6 +42,38 @@ one-directional and load-bearing:
 Content must never carry the derived three. Requiring them at import deadlocks authoring on
 the build, and no figure can ever ship.
 
+### The figure box is a measurement, not an arithmetic consequence
+
+`size(W,H)` does not produce a W by H picture. Under Asymptote's default `keepAspect=Aspect` the
+picture is scaled "with its aspect ratio preserved such that the final width is no more than x
+and the final height is no more than y" (manual, *Frames and pictures* 6.5), and `label()` is a
+true-size object that `size` does not scale. The real box is whatever the geometry and the
+installed font metrics jointly produce, which is why the compiled box is compared with a
+tolerance (S5.5: warn at 2%, reject at 5%) rather than for equality.
+
+`npm run content:figures:record` is the bootstrap for that: it compiles with a real toolchain
+and rewrites each figure's `size(W,H)` and `asymptoteAspectRatio` to what the compiler produced,
+so the corpus declares a box it can actually hit. It edits the raw text, not a JSON round trip,
+because the corpus is prettier-formatted and a round trip would bury two numbers in a whole-file
+rewrite. Use it when adopting a new TeX Live, review the diff, and let the strict gate hold the
+line afterwards.
+
+### Figure contract
+
+`lib/figure-contract.mjs` is the single definition of how a figure is addressed and which fields
+reach a learner, shared by the build, the API (`api/src/figures.js`) and the frontend:
+
+- the address is `figureKey` — `m1-l1.sections.concept.figures[0]` for a lesson section figure,
+  `m5-l2-f3` for an exercise — and never a filename or an array index, because a key that shifts
+  serves a learner the wrong figure
+- the figure payload is exactly `figureKey`, `figureSvgUrl`, `figureHash`,
+  `figurePipelineVersion`, `declaredAspectRatio`, `compiledAspectRatio`, `alt`, `captionLatex`
+- a lesson or exercise response carries `figureReference()` and nothing more: a key, never an
+  inline SVG, hash or pipeline version
+- the payload is served only from a manifest with `status: "pass"` and a `figureHash` on the
+  figure. Absent, unbuilt or unhashed means the route does not answer; it is not an empty
+  catalogue
+
 ## Run locally
 
 ```bash
