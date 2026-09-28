@@ -105,6 +105,10 @@ const MAX_FIGURES_PER_LESSON = 8;
 const MAX_CORPUS_FIGURES = 185;
 const MAX_ASPECT = 3;
 const MIN_ASPECT = 0.5;
+// Content declares aspect ratios to 3 decimals, so every ratio comparison in the pipeline
+// rounds to the same precision. Both sides are rounded, so the declaration's own quantization
+// cannot masquerade as drift in either direction. Shared with scripts/build-figures.mjs.
+const RATIO_DECIMALS = 3;
 
 const TIERS = new Set(["10", "12", "A", "A+"]);
 const TAGS = new Set([
@@ -332,15 +336,22 @@ function checkAsymptote(source, alt, ratio, path) {
     "figure source must call size(...) so the pipeline knows its dimensions (S5.2)");
   const sizeCall = source.match(/size\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)/);
   if (sizeCall && typeof ratio === "number") {
+    // S5.4 authoring rule: exact at the declared precision, not a percentage tolerance.
+    // Both sides come from integers written in the same record, so this is a transcription
+    // check with no physical uncertainty to absorb. A tolerance here only hides mistakes,
+    // and worse, it disagrees with the figure build, which compares at the same precision:
+    // content inside the old 2% band would pass authoring and then fail CI. Rule S5.4a
+    // (declared vs size()) is exact; the compiled-box drift is S5.5 and carries the 2%/5% tiers.
     const declared = Number(sizeCall[1]) / Number(sizeCall[2]);
-    const drift = Math.abs(declared - ratio) / ratio;
-    check("error", "S5.4-ratio-matches-size", path, drift <= 0.02,
-      `asymptoteAspectRatio ${ratio} does not match size(${sizeCall[1]},${sizeCall[2]}) = ${declared.toFixed(4)} (${(drift * 100).toFixed(1)}% drift)`);
+    const atPrecision = Number(declared.toFixed(RATIO_DECIMALS));
+    check("error", "S5.4-ratio-matches-size", path, ratio === atPrecision,
+      `asymptoteAspectRatio ${ratio} is not size(${sizeCall[1]},${sizeCall[2]}) = ${atPrecision} ` +
+      `(${declared.toFixed(4)} rounded to ${RATIO_DECIMALS} decimals); S5.4a is exact at the declared precision`);
     check("advisory", "S5.2-size-arity", path, true,
       "two-argument size() is what makes the declared ratio exact; size(300) alone leaves the ratio to the natural bounding box");
   } else if (!sizeCall) {
     fail("advisory", "S5.4-ratio-unverifiable", path,
-      "single-argument size(): the real aspect ratio is not knowable until compile, so S5.4's 2% rule cannot be checked at authoring time");
+      "single-argument size(): the real aspect ratio is not knowable until compile, so S5.4a cannot be checked at authoring time and only S5.5 applies");
   }
   check("error", "S5.2-no-file-io", path, !/\b(input|include|write|open)\s*\(/.test(source),
     "figure source must not do file IO (S5.2)");
@@ -616,7 +627,12 @@ export function run(contentRoot) {
       checksRun,
       totals: { error: errors.length, warning: warnings.length, advisory: advisories.length },
       status: errors.length === 0 ? "pass" : "fail",
-      findings,
+      // Copy, do not alias: `findings` is module-level and is truncated in place by the next
+      // run(). Returning it directly meant a caller holding one report saw it refilled by a
+      // second run() on a different corpus, while `totals` above kept the old counts — a
+      // report that contradicted itself. Any caller that compares two reports was comparing
+      // one array with itself.
+      findings: findings.map((f) => ({ ...f })),
     },
     errors,
   };

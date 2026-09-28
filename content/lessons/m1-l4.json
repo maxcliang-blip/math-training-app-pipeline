@@ -1,0 +1,170 @@
+{
+  "id": "m1-l4",
+  "moduleId": "M1",
+  "order": 4,
+  "title": "Polynomial Expansion and Factoring",
+  "topicSlug": "polynomial-expansion-factoring",
+  "tiers": ["10", "12"],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": ["m1-l1"],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Expand products of polynomials correctly, factor polynomials over the integers completely, and use a factorization to evaluate an expression at a convenient value."
+    },
+    "prerequisites": {
+      "items": ["m1-l1"],
+      "noteLatex": "Multiplying out a bracket is the distributive law, and the only prerequisite beyond [m1-l1](/M1/lessons/m1-l1) is comfort with negative numbers and with reading a coefficient as a multiplier rather than as a label."
+    },
+    "concept": {
+      "conceptLatex": "Multiplying polynomials is the distributive law applied more than once, and the only place a mistake can happen is bookkeeping: a term that fails to appear, a sign that flips unnoticed, or a coefficient that never gets combined. The rules are short, and they are cheaper to trust than to re-derive.\n\nStart with monomials, because that fixes the vocabulary. Powers of the same base multiply by adding exponents, and coefficients multiply. A product in which different variables appear does not collapse into a single term: the exponent of each letter is tracked separately.\n\n$3x^{2} \\times 4x^{3} = 12x^{5} \\qquad x^{2}y \\times xy^{3} = x^{3}y^{4}$\n\nDivision reverses multiplication, so exponents subtract, and the inequality direction must reverse whenever the base being compared is negative.\n\n$\\frac{x^{7}}{x^{2}} = x^{5} \\qquad \\frac{6x^{4}y}{2x^{2}} = 3x^{2}y$\n\nDistributing a monomial over a sum multiplies every term by it, and a term multiplied by zero vanishes, which is the usual reason a term goes missing from a result.\n\n$3x(2x^{2}-5x+7) = 6x^{3}-15x^{2}+21x$\n\nA binomial times a binomial produces four products that collapse into three terms. Multiply the first terms, the outer terms, the inner terms, and the last terms; the two middle ones are usually like terms and combine.\n\n$(ax+b)(cx+d) = acx^{2} + (ad+bc)x + bd$\n\n$(2x+3)(4x-1) = 8x^{2}-2x+12x-3 = 8x^{2}+10x-3$\n\nThe square of a binomial always has three terms, and the middle one carries a factor of $2$ that is never a matter of judgement.\n\n$(a+b)^{2} = a^{2}+2ab+b^{2} \\qquad (a-b)^{2} = a^{2}-2ab+b^{2}$\n\nThe difference of squares is the most useful single factorization in competition algebra, because it turns one subtraction into a product of two shorter expressions. The sum of two squares is the important exception: it does not factor over the integers.\n\n$a^{2}-b^{2} = (a-b)(a+b) \\qquad a^{2}+b^{2} \\text{ does not factor over the integers}$\n\nCubes factor as well, and the sum of cubes is the mirror image of the difference of squares with the middle sign flipped.\n\n$a^{3}-b^{3} = (a-b)(a^{2}+ab+b^{2}) \\qquad a^{3}+b^{3} = (a+b)(a^{2}-ab+b^{2})$\n\nFactoring reverses all of it. Take out the greatest common factor first, always, because it changes what is left over. Then test the remainder against a short list of structural patterns in a fixed order: difference of squares, perfect-square trinomial, then two integers whose sum and product are read off the coefficients.\n\n$x^{2}-14x+49 = (x-7)^{2} \\qquad x^{2}+5x+6 = (x+2)(x+3) \\qquad x^{2}+2x-8 = (x+4)(x-2)$\n\nWhen the leading coefficient is not $1$, either clear the common factor first or clear the denominators inside each factor.\n\n$6x^{2}+11x+3 = (2x+1)(3x+3) = 3(2x+1)(x+1)$\n\nTwo habits prevent nearly every factoring error. Expand the result to confirm it reproduces the original. And read a factorization as a claim about signs: if the constant term is negative then exactly one of the factors has a negative constant, and if the constant term is positive then either both do or neither does.\n\nThere is a payoff that does not require factoring at all. If $P(x)$ is a polynomial, then $P(a)-P(b)$ is divisible by $a-b$, and when $P(a)=0$ the factorization makes $P(b)$ a product in which one factor is already known.\n\n$P(x) = (x-2)(x+5) \\implies P(-5) = 0$\n\nFactorization is also not unique, and swapping the order of two factors changes nothing. A factorization is correct when it multiplies back to the original, not when it resembles the one expected.",
+      "figures": [],
+      "examples": [
+        {
+          "id": "m1-l4-ex-1",
+          "titleLatex": "Worked example: a binomial times a binomial",
+          "bodyLatex": "All four products, then combine the middle two.\n\n$(2x+3)(4x-1) = 8x^{2}-2x+12x-3 = 8x^{2}+10x-3$\n\nThe middle coefficient is the sum $-2x+12x=10x$, which is the single most common place for a sign slip.",
+          "answerLatex": "$8x^{2}+10x-3$"
+        },
+        {
+          "id": "m1-l4-ex-2",
+          "titleLatex": "Worked example: a perfect-square trinomial read backwards",
+          "bodyLatex": "The last term is $49=7^{2}$ and the roots of the auxiliary quadratic $t^{2}-14t+49$ are both $7$, so the middle coefficient is forced.\n\n$x^{2}-14x+49 = (x-7)^{2}$\n\nThe check is the expansion, which reproduces the middle term $-14x$ rather than the $+14x$ that a careless reading gives.",
+          "answerLatex": "$(x-7)^{2}$"
+        },
+        {
+          "id": "m1-l4-ex-3",
+          "titleLatex": "Worked example: a leading coefficient that is not one",
+          "bodyLatex": "The product of the outer coefficients is $18$, and the pairs adding to $11$ are $(-1)$ and $(-18)$ or $(-6)$ and $(-3)$.\n\n$6x^{2}+11x+3 = (2x+1)(3x+3)$\n\nRemoving the content gives the complete factorization $3(2x+1)(x+1)$, and expanding it returns $6x^{2}+11x+3$.",
+          "answerLatex": "$3(2x+1)(x+1)$"
+        },
+        {
+          "id": "m1-l4-ex-4",
+          "titleLatex": "Worked example: evaluating without expanding",
+          "bodyLatex": "Because $P$ is already factored, one factor is known to be zero, so no arithmetic is needed.\n\n$P(x) = (x-2)(x+5) \\implies P(-5) = (-7)(0) = 0$\n\nExpanding first would give $x^{2}+3x-10$ and then $P(-5) = 25-15-10 = 0$, the same value by a longer road.",
+          "answerLatex": "$0$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "multiply-powers-same-base",
+          "name": "Add exponents when the base matches",
+          "summaryLatex": "Multiplying powers of the same base adds the exponents, and the coefficients multiply separately.",
+          "bodyLatex": "Track each variable independently, since a product containing two different variables never collapses to one term. Division by a power of the same base subtracts the exponents."
+        },
+        {
+          "slug": "distribute-every-term",
+          "name": "Distribute to every term inside",
+          "summaryLatex": "A multiplier outside a parenthesis acts on each term inside it, and a term multiplied by zero disappears.",
+          "bodyLatex": "Counting the terms before and after the expansion catches a missing product immediately, because a distribution can never create or destroy a term."
+        },
+        {
+          "slug": "binomial-times-binomial",
+          "name": "Four products, three terms",
+          "summaryLatex": "The product of two binomials has four cross-products, and the two middle ones combine into the linear term.",
+          "bodyLatex": "Writing the general form $(ax+b)(cx+d)=acx^{2}+(ad+bc)x+bd$ makes the middle coefficient $ad+bc$ explicit rather than a matter of memory."
+        },
+        {
+          "slug": "square-binomial-pattern",
+          "name": "Square of a binomial",
+          "summaryLatex": "$(a+b)^{2}=a^{2}+2ab+b^{2}$ and $(a-b)^{2}=a^{2}-2ab+b^{2}$, with the sign of the middle term following the sign between the two terms.",
+          "bodyLatex": "A perfect-square trinomial must satisfy two independent conditions, on the first and last coefficients and on the middle one, and both are needed before factoring."
+        },
+        {
+          "slug": "greatest-common-factor-first",
+          "name": "Take out the greatest common factor first",
+          "summaryLatex": "Removing the content of the polynomial first is what exposes the structural pattern in what remains.",
+          "bodyLatex": "The content is the greatest common divisor of all coefficients together with the largest common power of the variable. A negative content is usually taken as positive with one factor negated."
+        },
+        {
+          "slug": "difference-of-squares",
+          "name": "Difference of squares",
+          "summaryLatex": "$a^{2}-b^{2}=(a-b)(a+b)$, which applies to any expression that is visibly a square minus a square.",
+          "bodyLatex": "The sum of two squares has no such factorization over the integers, and a negative sign in front of the whole expression can be absorbed into one factor."
+        },
+        {
+          "slug": "sum-and-difference-of-cubes",
+          "name": "Sum and difference of cubes",
+          "summaryLatex": "$a^{3}-b^{3}=(a-b)(a^{2}+ab+b^{2})$ and $a^{3}+b^{3}=(a+b)(a^{2}-ab+b^{2})$.",
+          "bodyLatex": "The middle term of the quadratic factor follows the same sign rule as the linear factor, which is a quick way to remember which of the two forms applies."
+        },
+        {
+          "slug": "factor-evaluate-shortcut",
+          "name": "Use a factorization to evaluate",
+          "summaryLatex": "When a polynomial is written as a product and one factor vanishes at the value being substituted, the whole value is zero.",
+          "bodyLatex": "This turns an evaluation into a one-line observation and is the reason contest problems hand out a factored form in the first place."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "missing-middle-term",
+          "titleLatex": "Losing the middle term of a trinomial when squaring a binomial",
+          "wrongLatex": "x^{2}+25",
+          "whyLatex": "The square of a binomial has three terms, and the middle term $2ab$ is the one a two-step mental shortcut drops. The correct expansion of $(x+5)^{2}$ is $x^{2}+10x+25$.",
+          "fixLatex": "Write all three terms from the pattern before simplifying anything, and confirm the middle coefficient is twice the product of the two terms being squared."
+        },
+        {
+          "slug": "sum-of-squares-factored",
+          "titleLatex": "Factoring a sum of two squares",
+          "wrongLatex": "a^{2}+b^{2} = (a+b)^{2}",
+          "whyLatex": "The middle term of $(a+b)^{2}$ is $2ab$, so the expansion is $a^{2}+2ab+b^{2}$, not $a^{2}+b^{2}$. Over the integers $a^{2}+b^{2}$ does not factor at all.",
+          "fixLatex": "Only a difference of squares factors that way. When the sign between the two squares is positive, look for a sum of cubes or a trinomial pattern instead."
+        },
+        {
+          "slug": "unverified-factorization",
+          "titleLatex": "Reporting a factorization that has not been multiplied back",
+          "wrongLatex": "x^{2}+5x+6 = (x+1)(x+6)",
+          "whyLatex": "The product on the right is $x^{2}+7x+6$, so the middle coefficient is wrong. The pairs that multiply to $6$ are $1$ and $6$, and $2$ and $3$, and only the second of those adds to $5$.",
+          "fixLatex": "Multiply the factors back before reporting. For a trinomial the check is a sum and a product at once, so both conditions must hold simultaneously."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m1-l4-p1",
+        "m1-l4-p2",
+        "m1-l4-p3",
+        "m1-l4-p4",
+        "m1-l4-p5",
+        "m1-l4-p6",
+        "m1-l4-p7",
+        "m1-l4-p8",
+        "m1-l4-p9",
+        "m1-l4-p10",
+        "m1-l4-p11",
+        "m1-l4-p12",
+        "m1-l4-p13",
+        "m1-l4-p14",
+        "m1-l4-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m1-l4-p1",
+        "m1-l4-p2",
+        "m1-l4-p3",
+        "m1-l4-p4",
+        "m1-l4-p5",
+        "m1-l4-p6",
+        "m1-l4-p7",
+        "m1-l4-p8",
+        "m1-l4-p9",
+        "m1-l4-p10",
+        "m1-l4-p11",
+        "m1-l4-p12",
+        "m1-l4-p13",
+        "m1-l4-p14",
+        "m1-l4-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": ["m1-l4-m1", "m1-l4-m2", "m1-l4-m3"],
+      "passThreshold": 2
+    }
+  },
+  "tags": ["factoring", "distributive-law", "exponents", "quadratics"]
+}

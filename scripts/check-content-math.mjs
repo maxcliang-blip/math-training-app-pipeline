@@ -118,9 +118,19 @@ function loadCorpus(contentRoot) {
   };
 }
 
-function findLessonFigure(lesson) {
-  const concept = lesson.sections && lesson.sections.concept;
-  return concept && concept.figures && concept.figures[0];
+// The figure mutations mutate a real donor, so the donor must be located rather than assumed.
+// readdirSync is not sorted, so "lessons[0]" is whichever file the filesystem returned first:
+// on a corpus whose first lesson carries no concept figure the four figure mutations would
+// throw on undefined and report MISSED for a corpus that is actually fine. Scan in lesson-id
+// order and take the first figure found, which is stable across filesystems and corpus growth.
+function findLessonFigure(lessons) {
+  const ordered = [...lessons].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  for (const lesson of ordered) {
+    const concept = lesson.sections && lesson.sections.concept;
+    const figures = concept && concept.figures;
+    if (figures && figures.length) return figures[0];
+  }
+  return undefined;
 }
 
 // One defect per rule family, each with the severity that family must raise and a rule
@@ -206,7 +216,7 @@ export const MUTATIONS = [
     rule: "S9-alt-mandatory",
     severity: "error",
     apply(c) {
-      findLessonFigure(c.lessons[0]).asymptoteAlt = "";
+      findLessonFigure(c.lessons).asymptoteAlt = "";
     },
   },
   {
@@ -214,7 +224,7 @@ export const MUTATIONS = [
     rule: "S5.4-ratio-matches-size",
     severity: "error",
     apply(c) {
-      findLessonFigure(c.lessons[0]).asymptoteAspectRatio = 9.9;
+      findLessonFigure(c.lessons).asymptoteAspectRatio = 9.9;
     },
   },
   {
@@ -222,7 +232,7 @@ export const MUTATIONS = [
     rule: "S5.4-ratio-unverifiable",
     severity: "advisory",
     apply(c) {
-      const fig = findLessonFigure(c.lessons[0]);
+      const fig = findLessonFigure(c.lessons);
       fig.asymptoteSource = fig.asymptoteSource.replace(/size\s*\(\s*[\d.]+\s*,\s*[\d.]+\s*\)/, "size(300)");
     },
   },
@@ -231,7 +241,7 @@ export const MUTATIONS = [
     rule: "S5.2-size-required",
     severity: "error",
     apply(c) {
-      const fig = findLessonFigure(c.lessons[0]);
+      const fig = findLessonFigure(c.lessons);
       fig.asymptoteSource = fig.asymptoteSource.replace(/\bsize\s*\([^)]*\)/, "");
     },
   },

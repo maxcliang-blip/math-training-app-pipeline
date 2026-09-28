@@ -1,0 +1,178 @@
+{
+  "id": "m1-l5",
+  "moduleId": "M1",
+  "order": 5,
+  "title": "Quadratic Equations and the Discriminant",
+  "topicSlug": "quadratic-equations-discriminant",
+  "tiers": ["10", "12", "A"],
+  "estimatedMinutes": 65,
+  "lockMode": "soft",
+  "prerequisites": ["m1-l4"],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Solve quadratic equations by factoring, by completing the square, and by the quadratic formula, decide how many real solutions exist from the discriminant, and use the sum and product of the roots to read a quadratic without solving it."
+    },
+    "prerequisites": {
+      "items": ["m1-l4"],
+      "noteLatex": "Everything here is a consequence of two earlier lessons: rearranging an equation without changing its solutions, and factoring a trinomial. A quadratic that will not factor over the integers is exactly the case the quadratic formula exists to handle."
+    },
+    "concept": {
+      "conceptLatex": "A quadratic equation is an equation that can be written $ax^{2}+bx+c=0$ with $a$ not $0$. Putting an equation in that form is the only real preparation any solving method needs, and the form is worth seeking even when the equation arrives disguised.\n\n$2x-3=0 \\implies 2x^{2}-3x = 0 \\implies x(2x-3) = 0$\n\nThe zero-product property is the workhorse. If a product of two factors equals zero then at least one factor is zero, and solving each factor gives exactly the solution set.\n\n$x^{2}-7x+12 = 0 \\implies (x-3)(x-4) = 0 \\implies x=3 \\text{ or } x=4$\n\nWhen the equation is written as $x^{2}=k$, taking square roots gives two values unless $k$ is negative, in which case there is no real solution at all. Writing the two values separately rather than with a single sign symbol avoids the classic mistake of reporting only one of them.\n\n$x^{2}=11 \\implies x=\\sqrt{11} \\text{ or } x=-\\sqrt{11} \\qquad x^{2}=-4 \\text{ has no real solution}$\n\nCompleting the square is the method that never fails, and it also produces a form from which the geometry of the parabola can be read directly. Half the linear coefficient goes inside, and the constant adjusts to compensate.\n\n$x^{2}-8x+11 = 0 \\implies (x^{2}-8x+16) - 5 = 0 \\implies (x-4)^{2} = 5 \\implies x-4 = \\sqrt{5} \\text{ or } x-4=-\\sqrt{5}$\n\nThe same completion shows the minimum value of a quadratic without solving anything, because a square is never negative.\n\n$y = (x-4)^{2}-5$ has minimum value $-5$, attained at $x=4$\n\nThe quadratic formula is completing the square with the arithmetic already done, and it is the method to reach for when factoring fails.\n\n$x = \\frac{-b \\pm \\sqrt{b^{2}-4ac}}{2a} \\implies x = \\frac{-b \\text{ with either sign in front of } \\sqrt{b^{2}-4ac}}{2a}$\n\nThe quantity $b^{2}-4ac$ is called the discriminant and is written $D$. Its sign is a complete description of the root count, and nothing else about the discriminant matters for that purpose.\n\n$D>0 \\iff$ two distinct real roots, and $D=0 \\iff$ one repeated real root, and $D<0 \\iff$ no real roots.\n\n$D$ is a perfect square exactly when the two roots are rational, since the square root in the formula must then be rational, and this is often a faster test than attempting to factor.\n\nTwo facts about the roots follow from the formula without solving it. Their sum is $-b/a$ and their product is $c/a$, and these two facts are frequently enough on their own.\n\n$x^{2}-9x+14 = 0 \\implies r+s = 9 \\text{ and } rs = 14 \\implies r^{2}+s^{2} = 81-28 = 53$\n\nA negative discriminant means the graph never meets the axis, but it does not mean the quadratic is useless. Its sign is constant on the whole real line, and which sign is decided by the leading coefficient, so inequalities of the form $ax^{2}+bx+c \\le 0$ can often be settled without a single root.\n\n$x^{2}-6x+13 = (x-3)^{2}+4$ is positive for every real $x$, so no real $x$ satisfies $x^{2}-6x+13 \\le 0$.\n\nThree habits keep the errors out. Write the equation in standard form before computing anything, because the coefficients are read positionally and a leading sign is easy to lose. Never cancel a factor of $x$ without splitting off the case $x=0$ first. And always check whether the discriminant is positive before writing a square root of it.",
+      "figures": [
+        {
+          "id": "m1-l5-fig-1",
+          "captionLatex": "The graph of $y=x^{2}-5x+6$ meets the axis at the two marked intercepts, and the vertex sits above the axis between them; the factorization $(x-2)(x-3)$ records the two intercepts directly.",
+          "asymptoteSource": "// The parabola y = x^2 - 5x + 6, with both x-intercepts marked.\n// Two-argument size fixes the output box at 320 x 240, so the declared\n// aspect ratio 4/3 is exact and the reserved space cannot drift.\nsize(320,240);\nreal f(real x){return x*x-5*x+6;}\npair A=(-0.6,0), B=(6.6,0);\ndraw(A--B,Arrow);\nlabel(\"$x$\",B,SE);\ndraw((0,0)--(0,9.5),Arrow);\nlabel(\"$y$\",(0,9.5),N);\ndraw(plot(f,-0.6,6.6,400),blue);\ndot((2,0),2+2.5pt);\ndot((3,0),2+2.5pt);\nlabel(\"$2$\",(2,-1.1),S);\nlabel(\"$3$\",(3,-1.1),S);\ndot((0,0),2+2.5pt);\nlabel(\"$O$\",(0,0),SW);\nlabel(\"$y=x^{2}-5x+6$\",(5.9,8.6),N);",
+          "asymptoteAlt": "A Cartesian plane with arrowheaded axes. An upward-opening parabola crosses the horizontal axis at two points marked with solid dots, which sit close together beneath the vertex. The vertex is above the axis, and the curve is labelled with the expression it graphs.",
+          "asymptoteAspectRatio": 1.333
+        }
+      ],
+      "examples": [
+        {
+          "id": "m1-l5-ex-1",
+          "titleLatex": "Worked example: a quadratic that factors",
+          "bodyLatex": "Standard form first, then the zero-product property.\n\n$x^{2}-7x+12 = 0 \\implies (x-3)(x-4) = 0$\n\n$x=3$ or $x=4$, and both are roots, so the fact that the two values differ by $1$ is a sanity check rather than a coincidence.",
+          "answerLatex": "$3$ and $4$"
+        },
+        {
+          "id": "m1-l5-ex-2",
+          "titleLatex": "Worked example: completing the square",
+          "bodyLatex": "Move the constant across, halve the linear coefficient, add the square, and subtract the same square.\n\n$x^{2}-8x+11 = 0 \\implies (x-4)^{2} = 5$\n\n$x-4=\\sqrt{5}$ or $x-4=-\\sqrt{5}$, so the two roots are $4+\\sqrt{5}$ and $4-\\sqrt{5}$, and their sum is $8$ as required.",
+          "answerLatex": "$4+\\sqrt{5}$ and $4-\\sqrt{5}$"
+        },
+        {
+          "id": "m1-l5-ex-3",
+          "titleLatex": "Worked example: reading the root count from the discriminant",
+          "bodyLatex": "The discriminant is the only thing that has to be computed.\n\n$2x^{2}-5x+3 = 0 \\implies D = (-5)^{2}-4(2)(3) = 25-24 = 1$\n\nSince $D=1>0$, there are two distinct real roots, and since $D$ is a perfect square both roots are rational.",
+          "answerLatex": "$D=1$"
+        },
+        {
+          "id": "m1-l5-ex-4",
+          "titleLatex": "Worked example: a sum of squares that cannot be solved",
+          "bodyLatex": "Completing the square settles the question that factoring cannot.\n\n$x^{2}+2x+5 = (x+1)^{2}+4$\n\nThe square is never negative and $4>0$, so the expression is positive for every real $x$ and the equation has no real solutions.",
+          "answerLatex": "no real solutions"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "write-standard-form",
+          "name": "Write the equation in standard form first",
+          "summaryLatex": "Move every term to one side so the equation reads $ax^{2}+bx+c=0$, then read the coefficients positionally.",
+          "bodyLatex": "The coefficients are read by position rather than by appearance, so a leading negative sign is easy to drop. Standard form is also what makes the zero-product property applicable."
+        },
+        {
+          "slug": "zero-product-property",
+          "name": "Use the zero-product property",
+          "summaryLatex": "A product equals zero only when at least one of its factors equals zero, so each factor is solved separately.",
+          "bodyLatex": "A factor that is a constant multiple of $x$ also yields the solution $x=0$. Cancelling a factor of $x$ instead of splitting off that case silently discards a solution."
+        },
+        {
+          "slug": "take-both-square-roots",
+          "name": "Take both square roots",
+          "summaryLatex": "From $u^{2}=k$ with $k>0$ come exactly two values, one with each sign in front of the root.",
+          "bodyLatex": "Writing the two values as separate equations removes the opportunity to report only one of them. When $k$ is negative there is no real value, and when $k$ is zero there is exactly one."
+        },
+        {
+          "slug": "complete-the-square",
+          "name": "Complete the square",
+          "summaryLatex": "Add and subtract the square of half the linear coefficient to reach a perfect square, which solves the equation or exposes an extremum.",
+          "bodyLatex": "The completed form also gives the vertex of the parabola and its extremal value, so the same work answers a minimization question that a solution set cannot."
+        },
+        {
+          "slug": "quadratic-formula",
+          "name": "Quadratic formula",
+          "summaryLatex": "$x = \\frac{-b \\pm \\sqrt{b^{2}-4ac}}{2a}$ works for every quadratic, including the ones that do not factor.",
+          "bodyLatex": "The formula is only valid when $a$ is not $0$, and the sign in front of $b$ is a minus because it comes from completing the square rather than from a pattern."
+        },
+        {
+          "slug": "discriminant-root-count",
+          "name": "Discriminant and root count",
+          "summaryLatex": "The sign of $D=b^{2}-4ac$ is positive, zero, or negative according as there are two distinct real roots, one repeated real root, or no real roots.",
+          "bodyLatex": "When only the number of real solutions is asked for, computing the discriminant alone answers the question, and factoring is unnecessary."
+        },
+        {
+          "slug": "rational-root-discriminant-test",
+          "name": "Perfect-square discriminant as a rational-root test",
+          "summaryLatex": "The roots are rational exactly when the discriminant is a perfect square, which is faster than trying to factor.",
+          "bodyLatex": "For a quadratic with integer coefficients this turns a factoring problem into one multiplication, and it also settles the no-real-roots case in the same computation."
+        },
+        {
+          "slug": "sum-and-product-of-roots",
+          "name": "Sum and product of the roots",
+          "summaryLatex": "The roots of $ax^{2}+bx+c=0$ have sum $-b/a$ and product $c/a$, and any symmetric expression in them follows from those two numbers.",
+          "bodyLatex": "Squares, cubes, and reciprocals of the roots are all symmetric, so an expression in them can usually be evaluated without solving for either root at all."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "one-root-from-square-root",
+          "titleLatex": "Reporting only the positive square root",
+          "wrongLatex": "x=\\sqrt{11}",
+          "whyLatex": "The equation $x^{2}=11$ has two real solutions, $\\sqrt{11}$ and $-\\sqrt{11}$, and reporting the positive one drops half the solution set. The fact that squaring erases the sign is exactly why both branches are needed.",
+          "fixLatex": "Split the equation into the two cases explicitly, solve each one, and check each candidate in the original equation before reporting."
+        },
+        {
+          "slug": "square-root-of-negative",
+          "titleLatex": "Taking a square root of a negative discriminant",
+          "wrongLatex": "x=\\frac{-1+\\sqrt{-7}}{2}",
+          "whyLatex": "For $x^{2}+x+2=0$ the discriminant is $1-8=-7$, so there is no real number whose square is $-7$ and therefore no real solution. The expression written down is a complex number, not a real answer.",
+          "fixLatex": "Compute the discriminant first. A negative value ends the problem with a stated root count rather than a square root."
+        },
+        {
+          "slug": "sign-over-cancelling",
+          "titleLatex": "Cancelling a factor of $x$",
+          "wrongLatex": "x=3",
+          "whyLatex": "Dividing $x^{2}=3x$ by $x$ discards the case $x=0$, which satisfies the original equation. The solution set is $0$ and $3$, and the division is only valid for the values of $x$ being divided, not for all of them.",
+          "fixLatex": "Move every term to one side and factor, so the case $x=0$ appears as an ordinary solution of a linear factor rather than being cancelled away."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m1-l5-p1",
+        "m1-l5-p2",
+        "m1-l5-p3",
+        "m1-l5-p4",
+        "m1-l5-p5",
+        "m1-l5-p6",
+        "m1-l5-p7",
+        "m1-l5-p8",
+        "m1-l5-p9",
+        "m1-l5-p10",
+        "m1-l5-p11",
+        "m1-l5-p12",
+        "m1-l5-p13",
+        "m1-l5-p14",
+        "m1-l5-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m1-l5-p1",
+        "m1-l5-p2",
+        "m1-l5-p3",
+        "m1-l5-p4",
+        "m1-l5-p5",
+        "m1-l5-p6",
+        "m1-l5-p7",
+        "m1-l5-p8",
+        "m1-l5-p9",
+        "m1-l5-p10",
+        "m1-l5-p11",
+        "m1-l5-p12",
+        "m1-l5-p13",
+        "m1-l5-p14",
+        "m1-l5-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": ["m1-l5-m1", "m1-l5-m2", "m1-l5-m3"],
+      "passThreshold": 2
+    }
+  },
+  "tags": ["quadratics", "factoring", "radicals", "fractions"]
+}

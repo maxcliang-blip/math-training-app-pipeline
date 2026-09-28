@@ -16,6 +16,7 @@
 //
 // Usage:
 //   node scripts/build-figures.mjs [contentRoot] [--out <dir>] [--allow-missing-toolchain]
+//                                   [--record-aspect-ratios]
 //
 // Exit codes: 0 validated and compiled · 1 contract violation · 2 configuration error
 //             3 validated but not compiled (no asymptote toolchain)
@@ -28,6 +29,10 @@ import { tmpdir } from "node:os";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS, lessonFigureKey, exerciseFigureKey } from "../lib/figure-contract.mjs";
+
+export { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS };
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
 const DEFAULT_CONTENT = join(REPO, "content");
@@ -35,12 +40,19 @@ const DEFAULT_OUT = join(REPO, "artifacts", "figures");
 
 // Bump when the pipeline changes what it emits, so a stale figure is detectable by hash
 // rather than by inspection.
-export const PIPELINE_VERSION = "asymptote-svg-sanitized@1";
+export const PIPELINE_VERSION = "asymptote-svg-sanitized@2";
 
-// Content declares a ratio at 3 decimal places, so the build compares at the same
-// precision rather than at S5.4's 2% authoring tolerance: the true box is known here.
+// Content declares a ratio at 3 decimal places, and the authoring check that ties that
+// declaration to the author's own size(W,H) call is exact at that precision. It lives in
+// scripts/preflight-content.mjs (S5.4a) because it is a property of the source text and needs
+// no compiler. The two checks are different and must not be given the same number.
 const RATIO_DECIMALS = 3;
-const RATIO_TOLERANCE = 0.005;
+// S5.5 thresholds, from rendering_conventions 5.4 item 4. These govern the *compiled* box
+// only. The authoring check (S5.4a, declared ratio vs size(w,h)) is exact at RATIO_DECIMALS
+// and lives in scripts/preflight-content.mjs; the two are different checks and must not be
+// given the same number.
+const RATIO_WARN = 0.02;
+const RATIO_REJECT = 0.05;
 
 // Defence in depth. The primary control is that only Asymptote output for approved figure
 // sources is ever shipped; this removes the active-content vectors that could survive a
@@ -60,7 +72,6 @@ const SVG_DENY = [
   [/<!DOCTYPE[\s\S]*?>/gi, ""],
 ];
 
-export const DERIVED_FIELDS = ["figureSvgUrl", "figureHash", "figurePipelineVersion"];
 
 // ---------------------------------------------------------------------------
 // Corpus scan
@@ -69,53 +80,64 @@ export const DERIVED_FIELDS = ["figureSvgUrl", "figureHash", "figurePipelineVers
 function loadDir(dir, flat) {
   let files = [];
   try {
-    files = readdirSync(dir).filter((f) => f.endsWith(".json"));
+    files = readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
   } catch {
     return [];
   }
-  const parsed = files.map((f) => JSON.parse(readFileSync(join(dir, f), "utf8")));
-  return flat ? parsed.flat() : parsed;
+  // Sorted, because the figure keys the selftest mutates are resolved in lesson-id order and an
+  // unsorted readdir makes which file is "first" a property of the filesystem rather than of
+  // the corpus. The `flat` files hold an array of records and the rest hold a single record;
+  // both are returned as one flat list carrying the file each record came from, so a record
+  // mode can write back to the right file without re-deriving it.
+  return files.flatMap((f) => {
+    const file = join(dir, f);
+    const parsed = JSON.parse(readFileSync(file, "utf8"));
+    const records = flat && Array.isArray(parsed) ? parsed : [parsed];
+    return records.filter((r) => r && typeof r === "object").map((record) => ({ file, record }));
+  });
 }
 
 export function collectFigures(contentRoot) {
   const figures = [];
   const warnings = [];
 
-  const lessonRecords = loadDir(join(contentRoot, "lessons"), false);
-  const exerciseRecords = [...loadDir(join(contentRoot, "exercises"), true), ...loadDir(join(contentRoot, "fixtures"), true)];
+  const lessonFiles = loadDir(join(contentRoot, "lessons"), false);
+  const exerciseFiles = [...loadDir(join(contentRoot, "exercises"), true), ...loadDir(join(contentRoot, "fixtures"), true)];
 
-  for (const lesson of lessonRecords) {
+  for (const { file, record: lesson } of lessonFiles) {
     for (const [sectionName, section] of Object.entries(lesson.sections || {})) {
       const list = section && section.figures;
       if (!Array.isArray(list)) continue;
       list.forEach((fig, i) => {
         if (!fig || !fig.asymptoteSource) return;
         figures.push({
-          key: `${lesson.id}.sections.${sectionName}.figures[${i}]`,
+          key: lessonFigureKey(lesson.id, sectionName, i),
           source: fig.asymptoteSource,
           alt: fig.asymptoteAlt,
           declaredRatio: fig.asymptoteAspectRatio,
           caption: fig.captionLatex || null,
+          file,
           record: fig,
         });
       });
     }
   }
 
-  for (const ex of exerciseRecords) {
+  for (const { file, record: ex } of exerciseFiles) {
     if (!ex.asymptoteSource) continue;
     figures.push({
-      key: `${ex.id}`,
+      key: exerciseFigureKey(ex.id),
       source: ex.asymptoteSource,
       alt: ex.asymptoteAlt,
       declaredRatio: ex.asymptoteAspectRatio,
       caption: ex.captionLatex || null,
+      file,
       record: ex,
     });
   }
 
-  for (const [owner, records] of [["lessons", lessonRecords], ["exercises", exerciseRecords]]) {
-    for (const record of records) {
+  for (const [owner, files] of [["lessons", lessonFiles], ["exercises", exerciseFiles]]) {
+    for (const { file, record } of files) {
       const found = DERIVED_FIELDS.filter((f) => record[f] !== undefined && record[f] !== null);
       if (found.length) {
         warnings.push({
@@ -268,14 +290,34 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
     let ratioNote = null;
     if (measured && measured.height > 0) {
       const measuredRatio = Number((measured.width / measured.height).toFixed(RATIO_DECIMALS));
-      if (Math.abs(measuredRatio - box.ratio) / box.ratio > RATIO_TOLERANCE) {
+      // S5.5 compiled-box drift, two tiers, exactly as rendering_conventions 5.4 item 4:
+      // over 2% is a warning, over 5% rejects the figure. Both sides are rounded to the
+      // declared precision first, so the declaration's own quantization is not counted as drift.
+      //
+      // The tolerance is a *cosmetics* threshold, not a physics one. CLS is already 0 in both
+      // states because the reserved box is sized from the declared ratio and the SVG is
+      // object-fit:contain, so a mismatch never reflows the page -- it only leaves a sunken
+      // gutter. At a 480px figure width, 2% is about 7px (imperceptible) and 5% is about 18px
+      // (visible). A tighter single threshold, such as the 0.5% this previously used, rejects
+      // figures the spec says to warn about and has no layout justification behind it.
+      const drift = Math.abs(measuredRatio - box.ratio) / box.ratio;
+      if (drift > RATIO_REJECT) {
         violations.push({
           key: figure.key,
           problems: [
-            `compiled box is ${measured.width}x${measured.height} (ratio ${measuredRatio}) but content declared ${box.ratio}`,
+            `compiled box is ${measured.width}x${measured.height} (ratio ${measuredRatio}) but content declared ` +
+            `${box.ratio}: ${(drift * 100).toFixed(1)}% drift exceeds the ${RATIO_REJECT * 100}% reject threshold (S5.5). ` +
+            `The drawing overflows its size() call; fix the size() or scale the content.`,
           ],
         });
         continue;
+      }
+      if (drift > RATIO_WARN) {
+        warnings.push({
+          key: figure.key,
+          message: `compiled box is ${measured.width}x${measured.height} (ratio ${measuredRatio}) against declared ` +
+            `${box.ratio}: ${(drift * 100).toFixed(1)}% drift is over the ${RATIO_WARN * 100}% warn threshold (S5.5)`,
+        });
       }
       ratioNote = measuredRatio;
     }
