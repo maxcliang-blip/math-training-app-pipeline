@@ -1,0 +1,186 @@
+{
+  "id": "m5-l1",
+  "moduleId": "M5",
+  "order": 1,
+  "title": "Angles, Parallel Lines, and Angle Relationships",
+  "topicSlug": "angles-parallel-lines-angle-relationships",
+  "tiers": [
+    "10",
+    "12"
+  ],
+  "estimatedMinutes": 70,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m4-l4"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Identify and classify angles formed by parallel lines and a transversal, vertical angles, complementary and supplementary pairs, and apply the triangle angle sum and polygon angle sum theorems to find unknown angle measures."
+    },
+    "prerequisites": {
+      "items": [
+        "m4-l4"
+      ],
+      "noteLatex": "Familiarity with basic angle notation and triangle interior angles from prior modules is assumed."
+    },
+    "concept": {
+      "conceptLatex": "When two parallel lines are cut by a transversal, eight angles are formed with predictable relationships. Vertical angles share a vertex and have no intervening segments; they are always congruent. A linear pair of adjacent angles sums to 180, making them supplementary. Complementary angles sum to 90. If parallel lines are cut by a transversal, corresponding angles are congruent, alternate interior angles are congruent, alternate exterior angles are congruent, and consecutive interior angles are supplementary. These rules are reversible: if a pair of angles is congruent (or supplementary) and the lines are cut by a transversal, the lines are parallel. The triangle angle sum theorem states that the interior angles of any triangle total 180. Generalizing to a convex n-gon, the interior angle sum is (n-2) * 180 and each exterior angle, one at each vertex, sums to 360.\n\nangle A and angle B are vertical, so angle A = angle B\n\nangle A and angle B form a linear pair, so angle A + angle B = 180\n\nIf two parallel lines are cut by a transversal, then corresponding angles are congruent.\n\nIf two parallel lines are cut by a transversal, then alternate interior angles are congruent.\n\nThe interior angle sum of a triangle is 180.\n\nThe interior angle sum of a convex n-gon is (n-2) * 180",
+      "figures": [
+        {
+          "asymptoteSource": null,
+          "asymptoteAlt": "When two parallel lines are cut by a transversal, eight angles are formed with vertical angles, linear pairs, corresponding angles, alternate interior and exterior angles, and consecutive interior angles. All angle relationships are marked and labeled.",
+          "asymptoteAspectRatio": 1.6,
+          "captionLatex": "Angle relationships formed by parallel lines and a transversal."
+        },
+        {
+          "asymptoteSource": null,
+          "asymptoteAlt": "A triangle with interior angles labeled A, B, C. The angle sum theorem states that A + B + C = 180.",
+          "asymptoteAspectRatio": 1.2,
+          "captionLatex": "Triangle angle sum theorem."
+        },
+        {
+          "asymptoteSource": null,
+          "asymptoteAlt": "A convex pentagon with interior angles labeled. The interior angle sum is (5-2) * 180 = 3 * 180 = 540.",
+          "asymptoteAspectRatio": 1.4,
+          "captionLatex": "Polygon angle sum for a pentagon."
+        },
+        {
+          "asymptoteSource": null,
+          "asymptoteAlt": "A convex hexagon with interior angles labeled. The interior angle sum is (6-2) * 180 = 4 * 180 = 720.",
+          "asymptoteAspectRatio": 1.5,
+          "captionLatex": "Polygon angle sum for a hexagon."
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "vertical-angles",
+          "name": "Vertical angles are congruent",
+          "summaryLatex": "\\text{Vertical angles are congruent.}",
+          "bodyLatex": "\\text{When two lines intersect, the opposite (vertical) angles have the same measure.}"
+        },
+        {
+          "slug": "linear-pair-supplementary",
+          "name": "Linear pair angles are supplementary",
+          "summaryLatex": "\\text{Angles in a linear pair sum to } 180^{\\circ}\text{.}",
+          "bodyLatex": "\\text{If two adjacent angles form a straight line, their measures add to } 180^{\\circ}\text{.}"
+        },
+        {
+          "slug": "corresponding-angles",
+          "name": "Corresponding angles are congruent",
+          "summaryLatex": "\\text{Corresponding angles formed by a transversal and parallel lines are congruent.}",
+          "bodyLatex": "\\text{When two parallel lines are cut by a transversal, angles in the same relative position are congruent.}"
+        },
+        {
+          "slug": "alternate-interior-angles",
+          "name": "Alternate interior angles are congruent",
+          "summaryLatex": "\\text{Alternate interior angles formed by a transversal and parallel lines are congruent.}",
+          "bodyLatex": "\\text{When two parallel lines are cut by a transversal, interior angles on opposite sides of the transversal are congruent.}"
+        },
+        {
+          "slug": "alternate-exterior-angles",
+          "name": "Alternate exterior angles are congruent",
+          "summaryLatex": "\\text{Alternate exterior angles formed by a transversal and parallel lines are congruent.}",
+          "bodyLatex": "\\text{When two parallel lines are cut by a transversal, exterior angles on opposite sides of the transversal are congruent.}"
+        },
+        {
+          "slug": "consecutive-interior-supplementary",
+          "name": "Consecutive interior angles are supplementary",
+          "summaryLatex": "\\text{Consecutive interior angles formed by a transversal and parallel lines are supplementary.}",
+          "bodyLatex": "\\text{When two parallel lines are cut by a transversal, interior angles on the same side of the transversal sum to } 180^{\\circ}\text{.}"
+        },
+        {
+          "slug": "triangle-angle-sum",
+          "name": "Triangle angle sum is 180",
+          "summaryLatex": "\\text{The interior angles of a triangle sum to } 180^{\\circ}\text{.}",
+          "bodyLatex": "\\text{For any triangle } \\triangle ABC, \\angle A + \\angle B + \\angle C = 180^{\\circ}\text{.}"
+        },
+        {
+          "slug": "polygon-angle-sum",
+          "name": "Polygon interior angle sum",
+          "summaryLatex": "\\text{The interior angle sum of a convex } n\text{-gon is } (n-2)\\times 180^{\\circ}\text{.}",
+          "bodyLatex": "\\text{A convex } n\text{-gon can be decomposed into } (n-2) \\text{ triangles, each contributing } 180^{\\circ}\text{.}"
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "confusing-vertical-and-adjacent",
+          "titleLatex": "Confusing vertical angles with adjacent angles",
+          "wrongLatex": "\\angle A = \\angle B \\text{ because they look the same size but share a ray}",
+          "whyLatex": "\\text{Vertical angles must be opposite each other at an intersection; adjacent angles share a ray and their sum is not guaranteed to be equal.}",
+          "fixLatex": "\\text{Look for the shared vertex and no intersecting segments between the angles. If they share a ray, they are adjacent, not vertical.}"
+        },
+        {
+          "slug": "misidentifying-corresponding-angles",
+          "titleLatex": "Misidentifying corresponding angles",
+          "wrongLatex": "\\angle 1 and \\angle 2 are corresponding because they are both on the same side",
+          "whyLatex": "\\text{Corresponding angles must be in the same relative position at each intersection. Being on the same side alone is not sufficient.}",
+          "fixLatex": "\\text{Match the position at one intersection to the same position at the other intersection (top-left with top-left, bottom-right with bottom-right, etc.).}"
+        },
+        {
+          "slug": "forgetting-triangle-angle-sum-direction",
+          "titleLatex": "Forgetting to use triangle angle sum in the correct orientation",
+          "wrongLatex": "\\angle x = 180^{\\circ} - (\\angle A + \\angle B) \\text{ when the triangle is not oriented with a base}",
+          "whyLatex": "\\text{The triangle angle sum theorem applies to interior angles regardless of orientation, but one must correctly identify which three angles belong to the triangle.}",
+          "fixLatex": "\\text{Identify the three interior angles of the triangle explicitly before applying the theorem.}"
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m5-l1-p1",
+        "m5-l1-p2",
+        "m5-l1-p3",
+        "m5-l1-p4",
+        "m5-l1-p5",
+        "m5-l1-p6",
+        "m5-l1-p7",
+        "m5-l1-p8",
+        "m5-l1-p9",
+        "m5-l1-p10",
+        "m5-l1-p11",
+        "m5-l1-p12",
+        "m5-l1-p13",
+        "m5-l1-p14",
+        "m5-l1-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m5-l1-p1",
+        "m5-l1-p2",
+        "m5-l1-p3",
+        "m5-l1-p4",
+        "m5-l1-p5",
+        "m5-l1-p6",
+        "m5-l1-p7",
+        "m5-l1-p8",
+        "m5-l1-p9",
+        "m5-l1-p10",
+        "m5-l1-p11",
+        "m5-l1-p12",
+        "m5-l1-p13",
+        "m5-l1-p14",
+        "m5-l1-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m5-l1-m1",
+        "m5-l1-m2",
+        "m5-l1-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "angles",
+    "parallel",
+    "transversal",
+    "triangle",
+    "polygon"
+  ]
+}

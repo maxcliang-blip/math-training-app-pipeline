@@ -1,0 +1,572 @@
+[
+  {
+    "id": "m4-l1-p1",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "arithmetic-sequences",
+      "sequences"
+    ],
+    "promptLatex": "An arithmetic sequence begins $1, 4, 7, 10, \\ldots$. What is its fortieth term?",
+    "choices": [
+      "118",
+      "121",
+      "115",
+      "120",
+      "124"
+    ],
+    "answerLatex": "118",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Write the term you want as a first term plus a number of gaps, and count how many gaps separate the first term from the fortieth.",
+      "In an arithmetic sequence the term at index $n$ is the first term plus $(n-1)$ gaps of the common difference.",
+      "The gaps are all $3$, and from $a_1$ to $a_{40}$ there are $39$ of them, so $a_{40} = 1 + 39(3)$."
+    ],
+    "solutionLatex": "The sequence $1, 4, 7, 10$ has constant gap $3$, so $d = 3$ and $a_1 = 1$.\n\n$a_n = a_1 + (n-1)d \\implies a_{40} = 1 + 39(3) = 1 + 117 = 118$\n\nCheck against the listed terms: $a_4 = 1 + 3(3) = 10$, which is the fourth term given.",
+    "techniqueSlugs": [
+      "common-difference-detection",
+      "nth-term-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p2",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "arithmetic-sequences",
+      "sequences"
+    ],
+    "promptLatex": "An arithmetic sequence has $a_5 = 11$ and $a_9 = 23$. What is $a_{12}$?",
+    "choices": null,
+    "answerLatex": "32",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two given terms are four indices apart, so four gaps separate their values.",
+      "The common difference is the difference of the values divided by the difference of the indices.",
+      "$d = \\frac{23-11}{4} = 3$, and from $a_5$ to $a_{12}$ there are seven gaps, so $a_{12} = 11 + 7(3)$."
+    ],
+    "solutionLatex": "Four gaps of size $d$ separate $a_5$ from $a_9$, so $4d = 23 - 11 = 12$ and $d = 3$.\n\nFrom $a_5$ to $a_{12}$ there are seven gaps.\n\n$a_{12} = 11 + 7(3) = 11 + 21 = 32$\n\nContinuing the sequence from $a_5 = 11$ by threes gives $11, 14, 17, 20, 23, \\ldots$, which reaches $32$ three steps past $23$ as the count of seven gaps requires.",
+    "techniqueSlugs": [
+      "nth-term-from-two-terms",
+      "nth-term-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p3",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "geometric-sequences",
+      "sequences"
+    ],
+    "promptLatex": "A geometric sequence has first term $3$ and common ratio $4$. What is its sixth term?",
+    "choices": [
+      "3072",
+      "768",
+      "12288",
+      "2187",
+      "972"
+    ],
+    "answerLatex": "3072",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Each term after the first is the term before it multiplied by the ratio, so count how many multiplications separate the first term from the sixth.",
+      "A geometric sequence satisfies $a_n = a_1 r^{n-1}$.",
+      "There are five multiplications from $a_1$ to $a_6$, so $a_6 = 3(4^{5}) = 3(1024)$."
+    ],
+    "solutionLatex": "The terms are $3, 12, 48, 192, 768, \\ldots$, so the sixth term is the result of five applications of the ratio.\n\n$a_6 = a_1 r^{5} = 3 \\cdot 4^{5} = 3 \\cdot 1024 = 3072$\n\nThe list confirms the fifth term is $768$, and one more multiplication by $4$ gives the answer.",
+    "techniqueSlugs": [
+      "common-ratio-detection",
+      "nth-term-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p4",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "geometric-sequences",
+      "fractional-ratio",
+      "sequences"
+    ],
+    "promptLatex": "The sequence $1, \\frac{1}{2}, \\frac{1}{4}, \\frac{1}{8}, \\ldots$ has a common ratio. What is its tenth term?",
+    "choices": null,
+    "answerLatex": "\\frac{1}{512}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The sequence is geometric and shrinking, so each term divides the one before it rather than multiplying it.",
+      "In a geometric sequence the term at index $n$ is the first term times the ratio raised to the power of the index less one.",
+      "The ratio is $\\frac{1}{2}$ and the exponent is $9$, so the tenth term is $\\frac{1}{2}$ raised to the ninth power."
+    ],
+    "solutionLatex": "Each term is half the previous one, so $r = \\frac{1}{2}$ and $a_1 = 1$.\n\n$a_{10} = a_1 r^{9} = 1 \\cdot \\left(\\frac{1}{2}\\right)^{9} = \\frac{1}{512}$\n\nThe fourth term listed is $\\frac{1}{8} = \\frac{1}{2^{3}}$, and each further index adds one to the exponent, so index $10$ carries exponent $9$ as the formula requires.",
+    "techniqueSlugs": [
+      "fractional-ratio",
+      "nth-term-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p5",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "geometric-sequences",
+      "sequences"
+    ],
+    "promptLatex": "A geometric sequence has $a_2 = 20$ and $a_5 = 160$. What is its common ratio?",
+    "choices": [
+      "2",
+      "3",
+      "4",
+      "\\frac{1}{2}",
+      "8"
+    ],
+    "answerLatex": "2",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Two indices and three apart means three multiplications by the ratio account for the change in value.",
+      "The quotient of the two given terms is the common ratio raised to the power of the difference of the indices.",
+      "$\\frac{160}{20} = 8$ is the cube of the ratio, and the cube root of $8$ is the ratio."
+    ],
+    "solutionLatex": "Three ratios separate $a_2$ from $a_5$, so $r^{3} = \\frac{160}{20} = 8$.\n\n$r = \\sqrt[3]{8} = 2$\n\nVerification: the sequence is $10, 20, 40, 80, 160, \\ldots$, whose second and fifth terms are exactly the two given values.",
+    "techniqueSlugs": [
+      "nth-term-from-two-terms"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p6",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "sequences",
+      "quadratics",
+      "difference-table"
+    ],
+    "promptLatex": "The sequence $2, 6, 12, 20, 30, \\ldots$ is neither arithmetic nor geometric. What is its tenth term?",
+    "choices": null,
+    "answerLatex": "110",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Take the gaps between the terms, and then the gaps between those gaps; a constant second gap identifies the rule.",
+      "If the second differences are constant, the terms are quadratic in the index, and the leading coefficient is half the second difference.",
+      "The gaps are $4, 6, 8, 10$, so the gaps grow by $2$ each step, giving gaps $2n$ and therefore terms $n(n+1)$."
+    ],
+    "solutionLatex": "The gaps are $4, 6, 8, 10$, and the gaps of the gaps are constant at $2$, so the rule is quadratic in the index.\n\n$a_n = n(n+1)$\n\nCheck: $a_1 = 2$, $a_2 = 6$, $a_3 = 12$, $a_4 = 20$, $a_5 = 30$, all as listed.\n\n$a_{10} = 10(11) = 110$",
+    "techniqueSlugs": [
+      "difference-table",
+      "common-difference-detection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p7",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "geometric-sequences",
+      "word-problem",
+      "sequences"
+    ],
+    "promptLatex": "A bacterial culture multiplies by a factor of $3$ every $5$ hours, and the growth is exactly geometric. By what factor has the population grown after $20$ hours?",
+    "choices": [
+      "81",
+      "27",
+      "243",
+      "9",
+      "64"
+    ],
+    "answerLatex": "81",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Count how many complete growth intervals of five hours fit into twenty hours.",
+      "Each interval multiplies the population by $3$, so $k$ intervals multiply it by $3^{k}$.",
+      "Twenty hours is four intervals, and the factor is $3^{4}$."
+    ],
+    "solutionLatex": "The intervals are $[0,5]$, $[5,10]$, $[10,15]$, and $[15,20]$, so there are four of them.\n\nThe factor is $3^{4} = 81$.\n\nThe distinction that matters here is between four steps and twenty: multiplying by $3$ twenty times would describe a population that triples every hour, which is a different problem.",
+    "techniqueSlugs": [
+      "geometric-modeling",
+      "common-ratio-detection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p8",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "arithmetic-sequences",
+      "recurrences",
+      "sequences"
+    ],
+    "promptLatex": "A sequence is defined by $a_1 = 60$ and $a_{n+1} = a_n - 5$ for every $n \\ge 1$. What is the smallest index $n$ with $a_n \\le 0$?",
+    "choices": null,
+    "answerLatex": "13",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The sequence is a subtraction of a fixed amount at each step, so think about how many steps it takes to spend the whole of $60$.",
+      "After $n-1$ steps the value is $60 - 5(n-1)$, and the condition to solve is an inequality in $n$.",
+      "$60 - 5(n-1) \\le 0$ gives $n - 1 \\ge 12$, and the first index satisfying that is $13$."
+    ],
+    "solutionLatex": "The recurrence is arithmetic with common difference $-5$, so $a_n = 60 - 5(n-1)$.\n\n$60 - 5(n-1) \\le 0 \\implies 5(n-1) \\ge 60 \\implies n - 1 \\ge 12 \\implies n \\ge 13$\n\nAt $n=13$ the value is $60 - 60 = 0$, and at $n=12$ it is $5$, which is still positive, so $13$ is the smallest index that works.",
+    "techniqueSlugs": [
+      "explicit-from-recursive",
+      "threshold-crossing"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p9",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "geometric-sequences",
+      "sequences"
+    ],
+    "promptLatex": "A geometric sequence has $a_1 = 7$ and $a_4 = 448$. What is $a_7$?",
+    "choices": [
+      "28672",
+      "2867",
+      "7168",
+      "114688",
+      "229376"
+    ],
+    "answerLatex": "28672",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Three ratios separate the first term from the fourth, and three more separate the fourth from the seventh.",
+      "The quotient of two terms is the common ratio raised to the difference of their indices, which is the same difference in both steps here.",
+      "$r^{3} = \\frac{448}{7} = 64$, so $r = 4$, and $a_7 = 7(4^{6})$."
+    ],
+    "solutionLatex": "Three ratios separate $a_1$ from $a_4$, so $r^{3} = 448/7 = 64$ and $r = 4$.\n\nFrom $a_1$ to $a_7$ there are six ratios.\n\n$a_7 = 7 \\cdot 4^{6} = 7 \\cdot 4096 = 28672$\n\nSanity check: $a_2 = 28$, $a_3 = 112$, $a_4 = 448$ as given, and three further steps multiply by $4^{3} = 64$ to give $448 \\cdot 64 = 28672$.",
+    "techniqueSlugs": [
+      "nth-term-from-two-terms",
+      "nth-term-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p10",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "arithmetic-sequences",
+      "sequences"
+    ],
+    "promptLatex": "An arithmetic sequence has $a_1 = 3$ and $a_{30} = 90$. What is $a_{16}$?",
+    "choices": null,
+    "answerLatex": "48",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Twenty-nine gaps separate the two given terms, and the distance from the first term to the sixteenth is fifteen of those gaps.",
+      "The common difference is the difference of the given values divided by the number of gaps between their indices.",
+      "$d = \\frac{90-3}{29} = 3$, and $a_{16} = 3 + 15(3) = 48$."
+    ],
+    "solutionLatex": "Twenty-nine gaps of size $d$ separate $a_1$ and $a_{30}$.\n\n$29d = 90 - 3 = 87 \\implies d = 3$\n\n$a_{16} = 3 + 15(3) = 48$\n\nAs a check, the two halves of the sequence pair up: $a_{16} + a_{15} = 48 + 45 = 93$ equals $a_1 + a_{30} = 93$, which holds for any arithmetic sequence.",
+    "techniqueSlugs": [
+      "nth-term-from-two-terms",
+      "nth-term-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p11",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "geometric-sequences",
+      "sequences"
+    ],
+    "promptLatex": "Which of the following lists is not a geometric sequence?",
+    "choices": [
+      "3, 6, 12, 24, 48",
+      "2, 6, 18, 54, 162",
+      "64, 16, 4, 1, \\frac{1}{4}",
+      "2, 0, 0, 0, 0",
+      "1, 2, 4, 8, 17"
+    ],
+    "answerLatex": "1, 2, 4, 8, 17",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Compare the quotients of neighbouring terms, allowing a fraction, and see which list fails to keep the same one.",
+      "A list is geometric when each term is the previous term times one fixed constant, so check the multiplication rather than the growth.",
+      "In $1, 2, 4, 8, 17$ the first three quotients are $2$ but the last is $\\frac{17}{8}$."
+    ],
+    "solutionLatex": "Compute the consecutive quotients.\n\n$3, 6, 12, 24, 48$: all $2$. $2, 6, 18, 54, 162$: all $3$. $64, 16, 4, 1, \\frac{1}{4}$: all $\\frac{1}{4}$. $2, 0, 0, 0, 0$: all $0$. $1, 5, 25, 125, 625$: all $5$.\n\nOnly $1, 2, 4, 8, 17$ fails, since $\\frac{17}{8}$ is not $2$.\n\nThe list looks geometric because the first four terms do form a geometric sequence, which is exactly how a single miscopied term hides.",
+    "techniqueSlugs": [
+      "common-ratio-detection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p12",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "geometric-sequences",
+      "sequences"
+    ],
+    "promptLatex": "A geometric sequence has $a_2 = 10$ and $a_5 = 80$. What is $a_8$?",
+    "choices": null,
+    "answerLatex": "640",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Both given terms and the term asked for are the same number of indices apart in pairs, so the same power of the ratio governs both steps.",
+      "The quotient of two terms is the common ratio raised to the difference of their indices, so the ratio is the cube root of the quotient here.",
+      "$r^{3} = \\frac{80}{10} = 8$, so $r = 2$, and $a_8 = 10 \\cdot 2^{6}$."
+    ],
+    "solutionLatex": "Three ratios separate $a_2$ and $a_5$, so $r^{3} = 80/10 = 8$ and $r = 2$.\n\nThree ratios also separate $a_5$ and $a_8$, so $a_8 = 80 \\cdot 2^{3} = 640$.\n\nBoth routes agree: $a_8 = a_2 \\cdot 2^{6} = 10 \\cdot 64 = 640$.",
+    "techniqueSlugs": [
+      "nth-term-from-two-terms",
+      "nth-term-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p13",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "sequences",
+      "quadratics",
+      "difference-table"
+    ],
+    "promptLatex": "A sequence has $a_n = 3n^{2} - 5n + 1$ for every $n \\ge 1$. What is $a_{12} - a_{11}$?",
+    "choices": [
+      "64",
+      "69",
+      "59",
+      "384",
+      "403"
+    ],
+    "answerLatex": "64",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The rule is quadratic, so consecutive terms differ by an amount that grows by a fixed step as the index moves up.",
+      "For a quadratic rule, $a_{n+1} - a_n$ is linear in $n$, so evaluate it at the index of the gap you want.",
+      "$a_{n+1} - a_n = 3(2n+1) - 5 = 6n - 2$, and at $n = 11$ this is $66 - 2 = 64$."
+    ],
+    "solutionLatex": "Expand the difference and simplify before substituting numbers.\n\n$a_{n+1} - a_n = 3((n+1)^{2} - n^{2}) - 5 = 3(2n+1) - 5 = 6n - 2$\n\nThe gap wanted is between $a_{11}$ and $a_{12}$, so $n = 11$ and the gap is $6(11) - 2 = 64$.\n\nDirect check: $a_{12} = 373$ and $a_{11} = 309$, and $373 - 309 = 64$.",
+    "techniqueSlugs": [
+      "difference-table",
+      "nth-term-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p14",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "geometric-sequences",
+      "quadratics",
+      "sequences"
+    ],
+    "promptLatex": "A geometric sequence has first term $2$, a positive common ratio, and its first three terms sum to $14$. What is the common ratio?",
+    "choices": [
+      "2",
+      "3",
+      "\\frac{1}{2}",
+      "4",
+      "6"
+    ],
+    "answerLatex": "2",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The first three terms are the first term, the first term times the ratio, and the first term times the ratio squared, so their sum is an expression in the ratio alone.",
+      "Write the sum as $a_1(1 + r + r^{2}) = 14$ and divide by the first term to get a quadratic in $r$.",
+      "$1 + r + r^{2} = 7$ gives $r^{2} + r - 6 = 0$, which factors as $(r+3)(r-2) = 0$."
+    ],
+    "solutionLatex": "The first three terms are $2$, $2r$, and $2r^{2}$, so their sum is $2(1 + r + r^{2}) = 14$.\n\n$1 + r + r^{2} = 7 \\implies r^{2} + r - 6 = 0 \\implies (r+3)(r-2) = 0$\n\nThe roots are $r = 2$ and $r = -3$. The ratio is declared positive, and indeed $r = -3$ would give the terms $2, -6, 18$ whose sum is also $14$, so the positivity condition is what makes the answer unique.\n\nCheck: $2 + 4 + 8 = 14$.",
+    "techniqueSlugs": [
+      "nth-term-from-two-terms",
+      "common-ratio-detection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-p15",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "geometric-sequences",
+      "counting-integers",
+      "sequences"
+    ],
+    "promptLatex": "How many terms of the sequence $2^{1}, 2^{2}, 2^{3}, \\ldots$ have value at most $1000$?",
+    "choices": [
+      "9",
+      "10",
+      "8",
+      "11",
+      "1000"
+    ],
+    "answerLatex": "9",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The terms grow, so the ones satisfying the condition are exactly the first several, and the count is the largest index that satisfies it.",
+      "Write the condition as $2^{n} \\le 1000$ and compare powers of $2$ with $1000$ directly, without logarithms.",
+      "$2^{9} = 512 \\le 1000$ while $2^{10} = 1024 > 1000$, so exactly nine terms qualify."
+    ],
+    "solutionLatex": "The sequence increases, so the qualifying terms are the first ones, and the answer is the largest index $n$ with $2^{n} \\le 1000$.\n\n$2^{9} = 512$ and $2^{10} = 1024$\n\nSince $512 \\le 1000 < 1024$, the largest such index is $n = 9$, so there are $9$ terms.\n\nCounting the terms in the list $2, 4, 8, \\ldots, 512$ directly gives the same answer, and $1024$ is the first term that fails.",
+    "techniqueSlugs": [
+      "threshold-crossing"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-m1",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "arithmetic-sequences",
+      "sequences"
+    ],
+    "promptLatex": "An arithmetic sequence has $a_4 = 17$ and $a_{11} = 38$. What is $a_7$?",
+    "choices": [
+      "26",
+      "23",
+      "29",
+      "21",
+      "24"
+    ],
+    "answerLatex": "26",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two given indices are seven apart, and the target index sits three steps above the first of them.",
+      "Seven gaps of size $d$ separate the two given values, so $d$ is their difference divided by seven.",
+      "$d = \\frac{38-17}{7} = 3$, and $a_7 = 17 + 3(3) = 26$."
+    ],
+    "solutionLatex": "Seven gaps separate $a_4$ and $a_{11}$.\n\n$7d = 38 - 17 = 21 \\implies d = 3$\n\n$a_7 = 17 + 3(3) = 26$\n\nCheck by continuing the sequence from $a_4 = 17$: $17, 20, 23, 26$ at indices $4, 5, 6, 7$, and $a_{11} = 17 + 7(3) = 38$ as given.",
+    "techniqueSlugs": [
+      "nth-term-from-two-terms",
+      "nth-term-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-m2",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "word-problem",
+      "geometric-sequences",
+      "fractions"
+    ],
+    "promptLatex": "A ball dropped from a height of $12$ units bounces to half the height it fell each time. How far does it travel in total before it hits the ground for the third time?",
+    "choices": null,
+    "answerLatex": "30",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Write out the journey as a list of up and down trips, being careful about what counts as hitting the ground.",
+      "Each bounce halves the height, so the successive bounce heights are $6$ and then $3$, and every bounce is an up trip followed by an equal down trip.",
+      "The distance is $12 + 2(6) + 2(3) = 30$, because the third ground contact is the end of the second bounce."
+    ],
+    "solutionLatex": "The first trip is a fall of $12$. The first bounce carries the ball up $6$ and back down $6$, and that return is the second contact with the ground. The second bounce carries it up $3$ and back down $3$, and that return is the third contact.\n\n$12 + 2(6) + 2(3) = 12 + 12 + 6 = 30$\n\nThe counting that trips people up is the last one: the ball hits the ground after the first fall, after the first bounce, and after the second bounce, so the second bounce is included in full and no third bounce is.",
+    "techniqueSlugs": [
+      "geometric-modeling",
+      "fractional-ratio"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l1-m3",
+    "moduleId": "M4",
+    "lessonId": "m4-l1",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "recurrences",
+      "geometric-sequences",
+      "sequences"
+    ],
+    "promptLatex": "A sequence satisfies $a_1 = 1$ and $a_{n+1} = 2a_n + 1$ for every $n \\ge 1$. What is $a_9$?",
+    "choices": null,
+    "answerLatex": "511",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "There is a constant being added at every step, and a constant addition of that kind is removed by shifting the whole sequence.",
+      "Find the fixed point $c$ with $c = 2c + 1$, then set $b_n = a_n - c$ so that the $b$ sequence is geometric.",
+      "$c = -1$, so $b_n = a_n + 1$ satisfies $b_{n+1} = 2b_n$ with $b_1 = 2$, and $b_9 = 2^{9}$."
+    ],
+    "solutionLatex": "The fixed point of the recurrence solves $c = 2c + 1$, which gives $c = -1$.\n\nWith $b_n = a_n + 1$ the recurrence becomes\n\n$b_{n+1} = a_{n+1} + 1 = 2a_n + 1 + 1 = 2(a_n + 1) = 2b_n$\n\nSo $b_n$ is geometric with first term $b_1 = 2$ and ratio $2$, giving $b_n = 2^{n}$ and $a_n = 2^{n} - 1$.\n\n$a_9 = 2^{9} - 1 = 512 - 1 = 511$\n\nCheck: the terms are $1, 3, 7, 15, 31, 63, 127, 255, 511$, and doubling $511$ and adding one gives the tenth term $1023$ as the rule requires.",
+    "techniqueSlugs": [
+      "explicit-from-recursive",
+      "nth-term-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

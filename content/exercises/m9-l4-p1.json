@@ -1,0 +1,22 @@
+{
+  "id": "m9-l4-p1",
+  "moduleId": "M9",
+  "lessonId": "m9-l4",
+  "tier": "12",
+  "difficulty": 1,
+  "tags": ["counterexample", "quantifiers"],
+  "promptLatex": "The claim 'every odd integer greater than 1 is prime' is false. What is the smallest odd composite number?",
+  "choices": null,
+  "answerLatex": "9",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Test small odd composite numbers starting from the smallest.",
+    "9 is 3 × 3, so it is composite and odd.",
+    "The next odd number after 1 is 3, which is prime, then 5, which is prime, then 7, which is prime, then 9, which is not prime."
+  ],
+  "solutionLatex": "The claim states that every odd integer greater than 1 is prime. To find a counterexample, test small odd integers:\n\n- 3 is prime ✓\n- 5 is prime ✓\n- 7 is prime ✓\n- 9 = 3 × 3 is composite ✗\n\nSince 9 is odd, greater than 1, and not prime, it is a counterexample. The smallest odd composite number is 9.",
+  "techniqueSlugs": ["counterexample"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,30 @@
+{
+  "id": "m7-l2-m3",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": ["pigeonhole-principle", "combinations"],
+  "promptLatex": "What is the minimum number of integers that must be selected from {1, 2, ..., 30} to guarantee that at least one pair has a sum of 31?",
+  "choices": [
+    "3",
+    "4",
+    "16",
+    "17",
+    "31"
+  ],
+  "answerLatex": "17",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Use the pigeonhole principle.",
+    "Pair the numbers into 15 pairs that sum to 31: (1,30), (2,29), (3,28), ..., (15,16).",
+    "These are the 15 pigeonholes.",
+    "If we select 16 numbers (pigeons), by pigeonhole, at least one pair is fully selected, giving a sum of 31.",
+    "If we select 15 numbers, we could select exactly one from each pair, avoiding any sum of 31."
+  ],
+  "solutionLatex": "Pair the numbers 1 through 30 into 15 pairs that each sum to 31: (1,30), (2,29), (3,28), ..., (15,16). These 15 pairs are the pigeonholes.",
+  "techniques": ["pigeonhole-application"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

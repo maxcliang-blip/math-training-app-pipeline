@@ -1,0 +1,501 @@
+[
+  {
+    "id": "m6-l3-p1",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "12",
+    "difficulty": 1,
+    "tags": [
+      "parabolas",
+      "quadratics"
+    ],
+    "promptLatex": "What are the coordinates of the vertex of the parabola $y = x^{2} - 6x + 5$?",
+    "choices": null,
+    "answerLatex": "(3,-4)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The vertex is the lowest or highest point of the curve, and for a parabola opening upward it is the lowest.",
+      "Rewrite the expression by completing the square, and the vertex is then read off as the value of the squared term's argument and the constant.",
+      "$x^{2}-6x+5 = (x-3)^{2} - 4$"
+    ],
+    "solutionLatex": "Complete the square in the expression.\n\n$y = (x^{2}-6x+9) - 9 + 5 = (x-3)^{2} - 4$\n\nThe squared term vanishes at $x=3$, and the value there is $-4$.\n\nThe vertex is $(3,-4)$\n\nCheck: substituting $x=3$ into the original equation gives $9-18+5=-4$, and the parabola opens upward, so this is its minimum.",
+    "techniqueSlugs": [
+      "complete-the-square-conic",
+      "read-standard-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p2",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "parabolas"
+    ],
+    "promptLatex": "Find the vertex of the parabola $y = 2x^{2} - 8x + 9$.",
+    "choices": null,
+    "answerLatex": "(2,1)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A coefficient in front of the squared term scales the parabola but does not move its turning point horizontally.",
+      "Factor the coefficient out of the quadratic part, complete the square on what remains, and then account for the scaling.",
+      "$2x^{2}-8x+9 = 2(x^{2}-4x)+9 = 2(x-2)^{2}-8+9$"
+    ],
+    "solutionLatex": "Factor out the leading coefficient and complete the square.\n\n$y = 2(x^{2}-4x) + 9 = 2(x-2)^{2} - 8 + 9 = 2(x-2)^{2} + 1$\n\nThe squared term vanishes at $x=2$, where the value is $1$.\n\nThe vertex is $(2,1)$\n\nCheck: $2(4)-16+9 = 1$, so the point does lie on the curve, and the parabola opens upward so it is the minimum.",
+    "techniqueSlugs": [
+      "complete-the-square-conic",
+      "find-focus-of-shifted-parabola"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p3",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "parabolas"
+    ],
+    "promptLatex": "For the parabola $y^{2} = 12x$, what is the $x$-coordinate of the focus?",
+    "choices": null,
+    "answerLatex": "3",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "This form of the parabola is already in standard position, so nothing has to be rearranged before the focus can be read off.",
+      "The standard form is $y^{2}=4px$, and the focus lies on the axis a distance $p$ from the vertex.",
+      "The written coefficient is $12$, and the parameter is a quarter of it"
+    ],
+    "solutionLatex": "The standard form is $y^{2}=4px$, so $4p=12$ and $p=3$.\n\nThe vertex is at the origin and the axis is the horizontal axis, so the focus is $(3,0)$ and the directrix is $x=-3$.\n\nThe $x$-coordinate of the focus is $3$\n\nCheck with a point on the curve: $(6,0)$ lies on $y^{2}=12x$, its distance to $(3,0)$ is $3$, and its distance to the line $x=-3$ is also $3$, which is the defining property.",
+    "techniqueSlugs": [
+      "read-standard-form",
+      "focus-directrix-definition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p4",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "ellipses"
+    ],
+    "promptLatex": "The ellipse $\\frac{x^{2}}{25} + \\frac{y^{2}}{9} = 1$ has foci at $(\\pm c, 0)$. What is the value of $c$?",
+    "choices": [
+      "4",
+      "3",
+      "5",
+      "8",
+      "16"
+    ],
+    "answerLatex": "4",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two denominators are the squares of the two semiaxes, and the focal distance is built from them.",
+      "For an ellipse the focal distance subtracts: the square of the longer semiaxis minus the square of the shorter one.",
+      "$25 - 9 = 16$, and the focal distance is the square root of that"
+    ],
+    "solutionLatex": "The semiaxes are $a=5$ along the $x$-axis and $b=3$ along the $y$-axis, since $a>b$ the major axis is the horizontal one.\n\nFor an ellipse the focal distance satisfies $c^{2}=a^{2}-b^{2}$.\n\n$c^{2} = 25-9 = 16$, so $c=4$.\n\n$c = 4$\n\nCheck: $c<a$, so the foci lie inside the curve, which is required of an ellipse, and the eccentricity is $\\frac{4}{5}<1$.",
+    "techniqueSlugs": [
+      "read-standard-form",
+      "eccentricity-from-semiaxes"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p5",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "ellipses"
+    ],
+    "promptLatex": "What is the eccentricity of the ellipse $\\frac{x^{2}}{16} + \\frac{y^{2}}{7} = 1$?",
+    "choices": null,
+    "answerLatex": "\\frac{3}{4}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The eccentricity is a ratio of the focal distance to the semimajor axis, so the first quantity to find is the focal distance.",
+      "The semiaxes are the square roots of the two denominators, and the focal distance follows from their squares by a subtraction.",
+      "$a=4$, $b^{2}=7$, and the focal distance satisfies $c^{2}=a^{2}-b^{2}$"
+    ],
+    "solutionLatex": "The semiaxes are $a=4$ and $b=\\sqrt{7}$, so the major axis is the horizontal one.\n\n$c^{2} = a^{2}-b^{2} = 16-7 = 9$, giving $c=3$.\n\nThe eccentricity is $e=\\frac{c}{a} = \\frac{3}{4}$.\n\nAs a check the value lies strictly between $0$ and $1$, which is what an ellipse requires, and it is close to $1$ because the ellipse is only slightly flattened.",
+    "techniqueSlugs": [
+      "eccentricity-from-semiaxes",
+      "read-standard-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p6",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "conics",
+      "circles"
+    ],
+    "promptLatex": "The equation $x^{2} + 4x + y^{2} - 6y = 0$ describes a circle. What is its radius?",
+    "choices": null,
+    "answerLatex": "\\sqrt{13}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A circle is the ellipse whose two semiaxes agree, and the two semiaxes become visible once the linear terms are absorbed into completed squares.",
+      "Complete the square on the first variable and on the second, and remember that the constants you move must be carried across.",
+      "$x^{2}+4x = (x+2)^{2}-4$ and $y^{2}-6y = (y-3)^{2}-9$"
+    ],
+    "solutionLatex": "Complete the square on both variables.\n\n$(x+2)^{2} - 4 + (y-3)^{2} - 9 = 0$, so $(x+2)^{2} + (y-3)^{2} = 13$.\n\nA circle in the form $(x-h)^{2}+(y-k)^{2}=r^{2}$ has radius $r$, so here $r=\\sqrt{13}$.\n\nThe radius is $\\sqrt{13}$\n\nThe center is $(-2,3)$, and the circle passes through the origin because the original equation is satisfied there, which is consistent with a center-to-origin distance of $\\sqrt{4+9}=\\sqrt{13}$.",
+    "techniqueSlugs": [
+      "complete-the-square-conic",
+      "read-standard-form"
+    ],
+    "asymptoteSource": "// A circle recovered from a general equation by completing the square.\n// Two-argument size call fixes the output box, so the declared 1 is exact.\nsize(300,300);\ndraw(circle((-2,3),sqrt(13)));\ndraw((-5.2,0)--(0.6,0),Arrow);\ndraw((0,-4.2)--(0,5.2),Arrow);\ndot((-2,3),2+3pt);\ndot((0,0),2+2.5pt);\nlabel(\"center $(-2,3)$\",(-2,3.5),NE);\nlabel(\"through the origin\",(-2.2,-0.4),SW);\nlabel(\"$(x+2)^{2}+(y-3)^{2}=13$\",(-1.6,-4.2),S);",
+    "asymptoteAlt": "A circle lies mostly in the second quadrant, with coordinate axes crossing through the lower right part of it. A filled dot marks the centre of the circle, labelled with its coordinates, and another filled dot marks the origin where the axes cross, which the circle passes through. A note beneath the figure gives the rewritten equation of the circle in standard form.",
+    "asymptoteAspectRatio": 1
+  },
+  {
+    "id": "m6-l3-p7",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "conics",
+      "circles"
+    ],
+    "promptLatex": "The conic $2x^{2} - 8x + 2y^{2} - 8y = 0$ can be written as $(x-h)^{2} + (y-k)^{2} = r$. What is the value of $h+k$?",
+    "choices": null,
+    "answerLatex": "4",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Both squared terms have the same coefficient, which is what makes this a circle rather than a general ellipse.",
+      "Complete the square on each variable in turn, keeping track of the constants that move to the other side.",
+      "$2(x-2)^{2} + 2(y-2)^{2} = 16$, so dividing through by the leading coefficient gives the form asked for"
+    ],
+    "solutionLatex": "Complete the square on each variable.\n\n$2(x^{2}-4x) + 2(y^{2}-4y) = 0$ becomes $2(x-2)^{2} - 8 + 2(y-2)^{2} - 8 = 0$, so $2(x-2)^{2} + 2(y-2)^{2} = 16$.\n\nDividing through by $2$ gives $(x-2)^{2} + (y-2)^{2} = 8$, which is in the form asked for with $h=2$ and $k=2$.\n\n$h+k = 4$\n\nThe center is $(2,2)$ and the radius is $\\sqrt{8}$, consistent with the fact that the original equation is satisfied at $(2,2)$: $2(4)-16+2(4)-16=0$.",
+    "techniqueSlugs": [
+      "complete-the-square-conic"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p8",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "ellipses"
+    ],
+    "promptLatex": "An ellipse has vertices at $(\\pm 5, 0)$ and co-vertices at $(0, \\pm 4)$. What is the length of its latus rectum?",
+    "choices": null,
+    "answerLatex": "\\frac{32}{5}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The latus rectum is a chord through a focus, so it is found by substituting the focal distance into the ellipse's equation.",
+      "The major semiaxis and the minor semiaxis are given directly by the vertices and the co-vertices, and the focal distance follows from them.",
+      "$a=5$, $b=4$, and the chord at $x=c$ has endpoints with $y$-values differing by $\\frac{2b^{2}}{a}$"
+    ],
+    "solutionLatex": "The vertices give $a=5$ and the co-vertices give $b=4$, so the equation is $\\frac{x^{2}}{25}+\\frac{y^{2}}{16}=1$.\n\nThe focal distance satisfies $c^{2}=a^{2}-b^{2}=25-16=9$, so $c=3$.\n\nThe latus rectum is the chord at $x=c=3$: substituting gives $\\frac{9}{25} + \\frac{y^{2}}{16} = 1$, so $\\frac{y^{2}}{16} = \\frac{16}{25}$ and $y = \\pm\\frac{16}{5}$.\n\nThe length is $\\frac{16}{5} - \\left(-\\frac{16}{5}\\right) = \\frac{32}{5}$, which is $\\frac{2b^{2}}{a} = \\frac{2 \\cdot 16}{5}$.\n\nThe latus rectum is $\\frac{32}{5}$",
+    "techniqueSlugs": [
+      "latus-rectum-length",
+      "read-standard-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p9",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "conics",
+      "parallel-lines"
+    ],
+    "promptLatex": "The conic $x^{2} + 2xy + y^{2} - 4x - 4y + 3 = 0$ is a degenerate conic consisting of two parallel lines. What is the distance between those two lines?",
+    "choices": null,
+    "answerLatex": "\\sqrt{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The quadratic part of the equation is a perfect square, so the whole left-hand side can be collected in terms of one combination of the variables.",
+      "Write $x^{2}+2xy+y^{2}$ as the square of $x+y$, then regard the rest of the equation as a quadratic in that single quantity and factor it.",
+      "The equation becomes a product of two linear factors in $x+y$"
+    ],
+    "solutionLatex": "Collect the equation in terms of $x+y$.\n\n$(x+y)^{2} - 4(x+y) + 3 = 0$\n\nThis is a quadratic in $u=x+y$ with roots $1$ and $3$, so it factors as $(x+y-1)(x+y-3)=0$.\n\nThe equation therefore describes the parallel lines $x+y=1$ and $x+y=3$.\n\nThe distance between parallel lines is the constant difference divided by the length of the normal vector, so the distance is $\\frac{3-1}{\\sqrt{1^{2}+1^{2}}} = \\frac{2}{\\sqrt{2}} = \\sqrt{2}$.\n\nThe distance is $\\sqrt{2}$",
+    "techniqueSlugs": [
+      "degenerate-conic-factoring",
+      "discriminant-classification"
+    ],
+    "asymptoteSource": "// A degenerate conic: the parallel lines x+y=1 and x+y=3.\n// Two-argument size call fixes the output box, so the declared 1 is exact.\nsize(300,300);\ndraw((-3.2,4.2)--(3.2,-2.2));\ndraw((-1.2,4.2)--(5.2,-2.2));\nlabel(\"$x+y=3$\",(-1.6,2.4),NW);\nlabel(\"$x+y=1$\",(3.4,-0.6),SE);\nlabel(\"the equation is $(x+y-1)(x+y-3)=0$\",(1.0,3.6),N);",
+    "asymptoteAlt": "Two straight lines run from the upper left to the lower right, parallel to each other and a short distance apart, each labelled with the equation it represents. A note above the pair states that the conic factors into a product of two linear expressions in the sum of the coordinates, which is why the curve is a pair of lines rather than a single closed shape.",
+    "asymptoteAspectRatio": 1
+  },
+  {
+    "id": "m6-l3-p10",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "parabolas",
+      "quadratics"
+    ],
+    "promptLatex": "The parabola $y = x^{2} - 2x$ meets the horizontal line $y = 4$ at two points. What is the distance between those two points?",
+    "choices": null,
+    "answerLatex": "2\\sqrt{5}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Both intersection points lie on the same horizontal line, so the distance between them is simply the difference of their horizontal coordinates.",
+      "The horizontal coordinates are the solutions of a quadratic equation obtained by substituting the known height into the parabola.",
+      "$x^{2}-2x-4=0$, whose solutions are $1\\pm\\sqrt{5}$"
+    ],
+    "solutionLatex": "Intersect the two curves.\n\n$x^{2}-2x = 4$ gives $x^{2}-2x-4=0$, so $x = 1 \\pm \\sqrt{5}$.\n\nThe two points are $(1+\\sqrt{5}, 4)$ and $(1-\\sqrt{5}, 4)$.\n\nBoth lie on the line $y=4$, so the distance between them is the difference of the first coordinates.\n\n$\\left(1+\\sqrt{5}\\right) - \\left(1-\\sqrt{5}\\right) = 2\\sqrt{5}$\n\nThe distance is $2\\sqrt{5}$",
+    "techniqueSlugs": [
+      "count-conic-intersections"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p11",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "ellipses"
+    ],
+    "promptLatex": "What is the area of the ellipse $9x^{2} + 25y^{2} = 225$?",
+    "choices": null,
+    "answerLatex": "15\\pi",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The area of an ellipse is the product of its two semiaxes times the area constant, so the equation has to be read for the semiaxes first.",
+      "Divide through by the right-hand side so that both squared terms have the form of a first coordinate squared over a semiaxis squared.",
+      "Dividing by $225$ gives $\\frac{x^{2}}{25} + \\frac{y^{2}}{9} = 1$"
+    ],
+    "solutionLatex": "Divide through by $225$ to reach standard form.\n\n$\\frac{9x^{2}}{225} + \\frac{25y^{2}}{225} = 1$, that is $\\frac{x^{2}}{25} + \\frac{y^{2}}{9} = 1$.\n\nThe semiaxes are $a=5$ and $b=3$.\n\nThe area of an ellipse is $\\pi ab$, so the area is $\\pi \\cdot 5 \\cdot 3 = 15\\pi$.\n\nThe area is $15\\pi$\n\nThe answer is larger than the area of the inscribed circle of radius $3$ and smaller than that of the circumscribed circle of radius $5$, as $15\\pi$ is, since $9\\pi < 15\\pi < 25\\pi$.",
+    "techniqueSlugs": [
+      "read-standard-form"
+    ],
+    "asymptoteSource": "// The ellipse 9x^2 + 25y^2 = 225 with its two semiaxes marked.\n// Two-argument size call fixes the output box, so the declared 1.667 is exact.\nsize(300,180);\ndraw(ellipse((0,0),5,3));\ndraw((-5,0)--(5,0),Arrow);\ndraw((0,-3)--(0,3),Arrow);\ndot((5,0),2+2.5pt);\ndot((0,3),2+2.5pt);\nlabel(\"$a=5$\",(2.5,0.35),N);\nlabel(\"$b=3$\",(0.35,1.5),E);\nlabel(\"area $=\\pi ab$\",(0,-3.6),S);",
+    "asymptoteAlt": "A wide closed oval curve is centred on the origin, with coordinate axes and arrowheads running through it along its long and short directions. Filled dots mark the rightmost point of the oval and its topmost point, and labels give the two semiaxis lengths as the distances from the centre to those dots. A note beneath the figure states that the area of an ellipse is the area constant times the product of the two semiaxes.",
+    "asymptoteAspectRatio": 1.667
+  },
+  {
+    "id": "m6-l3-p12",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "circles",
+      "counting-integers"
+    ],
+    "promptLatex": "How many points with integer coordinates lie on the circle $x^{2} + y^{2} = 25$?",
+    "choices": null,
+    "answerLatex": "12",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Write down the condition on the two integer coordinates, then list the squares of small integers that can appear in the sum.",
+      "The coordinates are integers whose squares add to a small fixed number, so only the squares zero, one, four, nine, and sixteen are available.",
+      "The pairs of squares summing to $25$ are $0+25$, $9+16$, and $16+9$"
+    ],
+    "solutionLatex": "Integer coordinates on the circle satisfy $x^{2}+y^{2}=25$.\n\nThe squares of integers at most $5$ are $0,1,4,9,16,25$, and the pairs summing to $25$ are $0+25$, $9+16$, and $16+9$.\n\nThe pair $0+25$ gives four points, since either coordinate may be zero and either sign is possible: $(\\pm 5, 0)$ and $(0, \\pm 5)$.\n\nThe pairs $9+16$ and $16+9$ give eight points: $(\\pm 3, \\pm 4)$ and $(\\pm 4, \\pm 3)$ with independent signs.\n\nThe total is $4+8=12$, and no case is double counted because the three pairs are distinct as unordered collections of squares.\n\nThere are $12$ points",
+    "techniqueSlugs": [
+      "read-standard-form",
+      "complete-the-square-conic"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p13",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "ellipses",
+      "conics"
+    ],
+    "promptLatex": "What is the eccentricity of the conic $2x^{2} + 3y^{2} = 12$?",
+    "choices": null,
+    "answerLatex": "\\frac{\\sqrt{3}}{3}",
+    "answerAlternatives": [
+      "\\frac{1}{\\sqrt{3}}"
+    ],
+    "hintLatex": [
+      "Both squared terms carry a positive coefficient, so the curve is bounded, and the eccentricity is still the focal distance over the semimajor axis.",
+      "Divide through to reach standard form, then take the square roots of the two denominators to get the semiaxes.",
+      "Dividing by $12$ gives $\\frac{x^{2}}{6} + \\frac{y^{2}}{4} = 1$, so $a^{2}=6$ and $b^{2}=4$"
+    ],
+    "solutionLatex": "Divide through by $12$ to reach standard form.\n\n$\\frac{x^{2}}{6} + \\frac{y^{2}}{4} = 1$\n\nThe semiaxes are $a=\\sqrt{6}$ and $b=2$, and $a>b$ so the major axis is the horizontal one.\n\n$c^{2} = a^{2}-b^{2} = 6-4 = 2$, so $c=\\sqrt{2}$.\n\nThe eccentricity is $e=\\frac{c}{a} = \\frac{\\sqrt{2}}{\\sqrt{6}} = \\frac{1}{\\sqrt{3}} = \\frac{\\sqrt{3}}{3}$.\n\nThe value is about $0.577$, strictly between $0$ and $1$, which is the range an ellipse requires.",
+    "techniqueSlugs": [
+      "eccentricity-from-semiaxes",
+      "read-standard-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p14",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "parabolas"
+    ],
+    "promptLatex": "A parabola has vertex $(2,3)$ and passes through the point $(4,7)$, and its axis of symmetry is vertical. What is the distance from its vertex to its focus?",
+    "choices": null,
+    "answerLatex": "\\frac{1}{4}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A vertical axis means the vertex form has the squared term in the first coordinate, and the distance to the focus is a quarter of the reciprocal of the leading coefficient.",
+      "Use the point to determine the leading coefficient, then convert the vertex form into the standard form with a factor of four.",
+      "Substituting $(4,7)$ gives $7 = 4a + 3$, and then the parameter satisfies $4p = 1$"
+    ],
+    "solutionLatex": "Write the vertex form with a vertical axis.\n\n$y - 3 = a(x-2)^{2}$\n\nThe point $(4,7)$ lies on the curve, so $7-3 = a(4-2)^{2}$, giving $4 = 4a$ and $a=1$.\n\nSo $(x-2)^{2} = y-3$, and comparing with $(x-h)^{2} = 4p(y-k)$ gives $h=2$, $k=3$ and $4p=1$, so $p=\\frac{1}{4}$.\n\nThe distance from the vertex to the focus is $p = \\frac{1}{4}$\n\nCheck: the focus is $\\left(2, 3+\\frac{1}{4}\\right)$ and the directrix is $y = 3-\\frac{1}{4}$; the point $(4,7)$ is at distance $\\sqrt{4+\\left(7-3.25\\right)^{2}} = \\sqrt{4+14.0625} = \\sqrt{18.0625} = 4.25$ from the focus and the same distance from the directrix, as required.",
+    "techniqueSlugs": [
+      "find-focus-of-shifted-parabola",
+      "complete-the-square-conic"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-p15",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "parabolas"
+    ],
+    "promptLatex": "What is the sum of the two coordinates of the focus of the parabola $y = 2x^{2} - 8x + 6$?",
+    "choices": null,
+    "answerLatex": "\\frac{1}{8}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The focus sits on the axis of symmetry, so its first coordinate is the vertex's first coordinate and only the second coordinate has to be found.",
+      "Convert the equation to the form with the squared term in the first coordinate, and remember that the coefficient four multiplies the distance to the focus.",
+      "Completing the square gives $y+2 = 2(x-2)^{2}$, so $(x-2)^{2} = \\frac{1}{2}(y+2)$"
+    ],
+    "solutionLatex": "Complete the square to find the vertex and the parameter.\n\n$y = 2(x^{2}-4x)+6 = 2(x-2)^{2}-2$, so $(x-2)^{2} = \\frac{1}{2}(y+2)$.\n\nComparing with $(x-h)^{2} = 4p(y-k)$ gives $h=2$, $k=-2$ and $4p=\\frac{1}{2}$, so $p=\\frac{1}{8}$.\n\nThe parabola opens upward, so the focus is above the vertex: $F = \\left(2, -2+\\frac{1}{8}\\right) = \\left(2, -\\frac{15}{8}\\right)$.\n\nThe sum of the coordinates is $2 - \\frac{15}{8} = \\frac{16}{8}-\\frac{15}{8} = \\frac{1}{8}$.\n\nThe sum is $\\frac{1}{8}$",
+    "techniqueSlugs": [
+      "find-focus-of-shifted-parabola",
+      "complete-the-square-conic"
+    ],
+    "asymptoteSource": "// The upward parabola y = 2(x-2)^2 - 2 with its focus and directrix.\n// Two-argument size call fixes the output box, so the declared 1 is exact.\nsize(300,300);\ndraw(graph(new real(real t){return 2*(t-2)*(t-2)-2;},-1.4,5.4));\ndraw((-1.4,-1.875)--(5.4,-1.875),dashed);\ndot((2,-2),2+2.5pt);\ndot((2,-1.875),2+3pt);\nlabel(\"vertex $(2,-2)$\",(1.7,-2.35),SW);\nlabel(\"focus\",(2.3,-1.875),NE);\nlabel(\"directrix\",(4.6,-1.875),NE);",
+    "asymptoteAlt": "An upward-opening curve has its lowest point at a filled dot in the lower part of the figure, labelled as the vertex. A horizontal dashed line runs just above that point across the whole width, representing the directrix, and a second filled dot sits on that dashed line directly above the vertex, labelled as the focus. The vertical distance between the vertex and the focus is the parameter of the parabola.",
+    "asymptoteAspectRatio": 1
+  },
+  {
+    "id": "m6-l3-m1",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "parabolas"
+    ],
+    "promptLatex": "For the parabola $x = (y-2)^{2} - 1$, what is the distance from the vertex to the directrix?",
+    "choices": null,
+    "answerLatex": "\\frac{1}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "This parabola opens to the right, and for a parabola the vertex sits halfway between the focus and the directrix along the axis.",
+      "Compare the written equation with the standard right-opening form, where the coefficient of the squared term is four times the distance from the vertex to the focus.",
+      "$(y-2)^{2} = x+1$ has the same shape as $y^{2}=4px$ shifted along the axis"
+    ],
+    "solutionLatex": "Put the equation in standard form: $(y-2)^{2} = x+1$, which matches $(y-k)^{2}=4p(x-h)$ with $h=-1$, $k=2$ and $4p=1$.\n\nSo $p=\\frac{1}{4}$: the focus is $\\frac{1}{4}$ unit to the right of the vertex and the directrix is $\\frac{1}{4}$ unit to the left of it.\n\nThe vertex is at $(-1,2)$, the focus is $\\left(-\\frac{3}{4}, 2\\right)$, and the directrix is the line $x=-\\frac{5}{4}$.\n\nThe distance from the vertex to the directrix is $\\frac{1}{4}+\\frac{1}{4} = \\frac{1}{2}$.\n\nThe distance is $\\frac{1}{2}$",
+    "techniqueSlugs": [
+      "read-standard-form",
+      "focus-directrix-definition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-m2",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "ellipses"
+    ],
+    "promptLatex": "An ellipse has foci at $(\\pm 4, 0)$ and passes through the point $(0,3)$. What is the length of its minor axis?",
+    "choices": null,
+    "answerLatex": "6",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "An ellipse is defined by a constant sum of distances to the two foci, and one point on the curve is enough to recover that constant.",
+      "Compute the two distances from the given point to the foci and add them; that sum is the length of the major axis.",
+      "Each distance from $(0,3)$ to a focus is $\\sqrt{16+9}=5$"
+    ],
+    "solutionLatex": "The defining property of an ellipse is that the sum of the distances from any point on it to the two foci is constant.\n\nFrom $(0,3)$ the distance to each focus at $(\\pm 4, 0)$ is $\\sqrt{4^{2}+3^{2}} = 5$.\n\nSo the constant is $10$, which is the major axis: $2a=10$ and $a=5$, with $c=4$ given.\n\n$b^{2}=a^{2}-c^{2}=25-16=9$, so $b=3$ and the minor axis is $2b=6$.\n\nThe minor axis is $6$\n\nThe point $(0,3)$ is then a co-vertex, which is consistent with $b=3$.",
+    "techniqueSlugs": [
+      "read-standard-form",
+      "focus-directrix-definition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l3-m3",
+    "moduleId": "M6",
+    "lessonId": "m6-l3",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "circles",
+      "conics"
+    ],
+    "promptLatex": "The circle $x^{2} + 2x + y^{2} + 6y = 6$ has center $C$. What is the distance from the origin to $C$?",
+    "choices": null,
+    "answerLatex": "\\sqrt{10}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The center of a circle is a coordinate pair that can be read off once the equation is written with two completed squares.",
+      "Complete the square on each variable, and note that the constants you move change the right-hand side as well as the center.",
+      "$x^{2}+2x = (x+1)^{2}-1$ and $y^{2}+6y = (y+3)^{2}-9$"
+    ],
+    "solutionLatex": "Complete the square on both variables.\n\n$(x+1)^{2} - 1 + (y+3)^{2} - 9 = 6$, so $(x+1)^{2} + (y+3)^{2} = 16$.\n\nThis is the standard form with center $(-1,-3)$ and radius $4$.\n\nThe distance from the origin to the center is $\\sqrt{(-1)^{2}+(-3)^{2}} = \\sqrt{10}$.\n\nThe distance is $\\sqrt{10}$\n\nAs a check the circle has radius $4$ and its center is $\\sqrt{10}$ from the origin, so it crosses the axes rather than sitting entirely in one quadrant, which the standard form confirms.",
+    "techniqueSlugs": [
+      "complete-the-square-conic",
+      "read-standard-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

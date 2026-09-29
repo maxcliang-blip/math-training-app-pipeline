@@ -1,0 +1,612 @@
+[
+  {
+    "id": "m2-l2-p1",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "prime-factorization",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive divisors does $360$ have?",
+    "choices": [
+      "24",
+      "12",
+      "16",
+      "36",
+      "20"
+    ],
+    "answerLatex": "24",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number is not prime, and its small size is misleading.",
+      "Each divisor is built from prime powers, and the choices for different primes are independent.",
+      "$360 = 2^{3} \\cdot 3^{2} \\cdot 5$, so the choices number $4$, $3$, and $2$."
+    ],
+    "solutionLatex": "Write the prime factorization first.\n\n$360 = 8 \\cdot 45 = 2^{3} \\cdot 3^{2} \\cdot 5$\n\nA divisor chooses an exponent of $2$ from $0$ to $3$ (four choices), an exponent of $3$ from $0$ to $2$ (three choices), and an exponent of $5$ from $0$ to $1$ (two choices). These choices are independent, so they multiply.\n\n$\\tau(360) = 4 \\cdot 3 \\cdot 2 = 24$",
+    "techniqueSlugs": [
+      "divisor-count-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p2",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "prime-factorization"
+    ],
+    "promptLatex": "How many positive divisors does $144$ have?",
+    "choices": [
+      "15",
+      "12",
+      "9",
+      "18",
+      "16"
+    ],
+    "answerLatex": "15",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "One prime appears more often than a quick glance suggests.",
+      "The count is one more than each exponent, multiplied together.",
+      "$144 = 2^{4} \\cdot 3^{2}$ because $16 \\cdot 9 = 144$, giving $5 \\cdot 3 = 15$."
+    ],
+    "solutionLatex": "Factor completely before counting.\n\n$144 = 16 \\cdot 9 = 2^{4} \\cdot 3^{2}$\n\nThe exponent of $2$ is $4$, not $1$, which is the trap: $144$ is a perfect square with a large prime power inside it.\n\n$\\tau(144) = (4+1)(2+1) = 5 \\cdot 3 = 15$",
+    "techniqueSlugs": [
+      "divisor-count-formula",
+      "unitary-decomposition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p3",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "prime-factorization",
+      "counting-integers"
+    ],
+    "promptLatex": "What is the sum of the positive divisors of $28$?",
+    "choices": [
+      "56",
+      "28",
+      "40",
+      "48",
+      "36"
+    ],
+    "answerLatex": "56",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The question asks for a total, not a count.",
+      "The sum of divisors of a product of prime powers is a product of geometric sums.",
+      "$28 = 2^{2} \\cdot 7$, so the sum is $\\left(1+2+4\\right)\\left(1+7\\right)$."
+    ],
+    "solutionLatex": "Use the geometric-sum version of the formula.\n\n$28 = 2^{2} \\cdot 7$\n\n$\\sigma(28) = \\left(1 + 2 + 4\\right)\\left(1 + 7\\right) = 7 \\cdot 8 = 56$\n\nThe divisors are $1, 2, 4, 7, 14, 28$, and they sum to $56$, which confirms the product. Since the proper divisors sum to $56 - 28 = 28$, the number is perfect.",
+    "techniqueSlugs": [
+      "divisor-sum-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p4",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "prime-factorization",
+      "counting-integers",
+      "unitary-decomposition"
+    ],
+    "promptLatex": "How many positive divisors does $2^{5} \\cdot 3^{2} \\cdot 5 \\cdot 7$ have?",
+    "choices": [
+      "72",
+      "36",
+      "60",
+      "48",
+      "144"
+    ],
+    "answerLatex": "72",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number is given as a product of prime powers already.",
+      "Add one to each of the four exponents and multiply the results.",
+      "The exponents are $5$, $2$, $1$, and $1$, so the choices number $6$, $3$, $2$, and $2$."
+    ],
+    "solutionLatex": "The factorization is given, so count directly.\n\n$\\tau = (5+1)(2+1)(1+1)(1+1) = 6 \\cdot 3 \\cdot 2 \\cdot 2 = 72$\n\nEach of the four primes contributes one more choice than its exponent, because exponent $0$ is allowed and omits the prime. Dropping one of the two $+1$ terms would give $36$.",
+    "techniqueSlugs": [
+      "divisor-count-formula",
+      "unitary-decomposition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p5",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "prime-factorization",
+      "counting-integers"
+    ],
+    "promptLatex": "What is the sum of the positive divisors of $496$?",
+    "choices": [
+      "992",
+      "496",
+      "744",
+      "1240",
+      "4960"
+    ],
+    "answerLatex": "992",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number is even, so one prime is certainly present, and the other is not obvious.",
+      "Divide out the small prime, then apply the geometric-sum formula to each block.",
+      "$496 = 16 \\cdot 31 = 2^{4} \\cdot 31$, so the sum is $31 \\cdot 32 = 992$."
+    ],
+    "solutionLatex": "Find the prime blocks first.\n\n$496 = 2^{4} \\cdot 31$, and $31$ is prime.\n\n$\\sigma(496) = \\left(1+2+4+8+16\\right)\\left(1+31\\right) = 31 \\cdot 32 = 992$\n\nThe proper divisors sum to $992 - 496 = 496$, so $496$ is the second perfect number after $28$.",
+    "techniqueSlugs": [
+      "divisor-sum-formula",
+      "unitary-decomposition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p6",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "prime-factorization"
+    ],
+    "promptLatex": "How many positive divisors does $1001$ have?",
+    "choices": [
+      "8",
+      "4",
+      "6",
+      "12",
+      "16"
+    ],
+    "answerLatex": "8",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number looks like it might have a complicated structure, and it does not.",
+      "A product of three distinct primes has a divisor count of two to the third.",
+      "$1001 = 7 \\cdot 11 \\cdot 13$, and each prime contributes $2$ choices."
+    ],
+    "solutionLatex": "Factor the number into its distinct primes.\n\n$1001 = 7 \\cdot 143 = 7 \\cdot 11 \\cdot 13$\n\nAll three primes are distinct, so each divisor is a subset of the three primes and there are $2^{3} = 8$ such subsets, including the empty subset which gives the divisor $1$.\n\n$\\tau(1001) = 2 \\cdot 2 \\cdot 2 = 8$",
+    "techniqueSlugs": [
+      "divisor-count-formula",
+      "unitary-decomposition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p7",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "divisibility",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers at most $100$ are divisible by $4$, by $6$, and by $9$ at the same time?",
+    "choices": [
+      "2",
+      "3",
+      "4",
+      "0",
+      "8"
+    ],
+    "answerLatex": "2",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Three divisibility requirements at once reduce to a single one.",
+      "A number meeting all three conditions is a multiple of one specific number.",
+      "$\\operatorname{lcm}(4,6,9) = 36$, and $\\left\\lfloor 100/36 \\right\\rfloor = 2$."
+    ],
+    "solutionLatex": "Combine the conditions into a single divisibility requirement.\n\n$\\operatorname{lcm}(4,6,9) = 2^{2} \\cdot 3^{2} = 36$\n\nThe multiples of $36$ at most $100$ are $36$ and $72$, and $108$ is too large.\n\nSo there are $2$. Note the exponent structure: $9$ forces $3^2$ and $6$ forces $2$, while $4$ forces $2^2$, so the least common multiple is $2^{2} 3^{2}$.",
+    "techniqueSlugs": [
+      "unitary-decomposition",
+      "divisor-count-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p8",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "prime-factorization",
+      "exponents",
+      "valuation-counting"
+    ],
+    "promptLatex": "How many positive divisors does $10!$ have?",
+    "choices": [
+      "270",
+      "36",
+      "72",
+      "144",
+      "108"
+    ],
+    "answerLatex": "270",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The factorial has to be broken into prime powers before it can be counted.",
+      "The exponent of a prime in a factorial is the number of its multiples, plus the number of multiples of its square, and so on.",
+      "The exponents are $8$, $4$, $2$, and $1$ for the primes $2$, $3$, $5$, and $7$."
+    ],
+    "solutionLatex": "Build the prime factorization of $10!$ by counting multiples of each prime power.\n\n$v_2(10!) = 5 + 2 + 1 = 8$, from the multiples of $2$, $4$, and $8$.\n\n$v_3(10!) = 3 + 1 = 4$, from the multiples of $3$ and $9$. $v_5(10!) = 2$ and $v_7(10!) = 1$.\n\nSo $10! = 2^{8} 3^{4} 5^{2} 7$ and\n\n$\\tau(10!) = 9 \\cdot 5 \\cdot 3 \\cdot 2 = 270$",
+    "techniqueSlugs": [
+      "valuation-counting",
+      "factorial-valuation",
+      "divisor-count-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p9",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "prime-factorization",
+      "counting-integers"
+    ],
+    "promptLatex": "What is the sum of the positive divisors of $2^{3} \\cdot 3^{2}$?",
+    "choices": [
+      "195",
+      "72",
+      "120",
+      "156",
+      "180"
+    ],
+    "answerLatex": "195",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number is given as prime powers, so the structure is already visible.",
+      "Multiply the geometric sum for each prime.",
+      "The sums are $1+2+4+8 = 15$ and $1+3+9 = 13$, and $15 \\cdot 13 = 195$."
+    ],
+    "solutionLatex": "Apply the divisor-sum formula to each block.\n\n$\\sigma = \\left(1+2+4+8\\right)\\left(1+3+9\\right) = 15 \\cdot 13 = 195$\n\nThe product form is valid because a divisor of $2^{3} 3^{2}$ is exactly a product of one divisor of $2^{3}$ with one divisor of $3^{2}$, and distributivity turns the sum over all such products into a product of the two sums.",
+    "techniqueSlugs": [
+      "divisor-sum-formula",
+      "unitary-decomposition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p10",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "prime-factorization",
+      "unitary-decomposition"
+    ],
+    "promptLatex": "How many positive divisors does $3^{4} \\cdot 5^{2} \\cdot 7^{3}$ have?",
+    "choices": [
+      "60",
+      "36",
+      "48",
+      "72",
+      "90"
+    ],
+    "answerLatex": "60",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Three prime powers, each contributing a number of independent choices.",
+      "The count is one more than each exponent, multiplied together.",
+      "The choices number $5$, $3$, and $4$."
+    ],
+    "solutionLatex": "Read the count straight off the three exponents.\n\n$\\tau = (4+1)(2+1)(3+1) = 5 \\cdot 3 \\cdot 4 = 60$\n\nEach prime's exponent in a divisor ranges from $0$ up to the exponent in the number, so $5$ choices for $3$, $3$ for $5$, and $4$ for $7$. The product is $60$.",
+    "techniqueSlugs": [
+      "divisor-count-formula",
+      "unitary-decomposition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p11",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "exponents",
+      "prime-factorization",
+      "valuation-counting"
+    ],
+    "promptLatex": "What is the largest integer $k$ such that $2^{k} \\le 1000$?",
+    "choices": [
+      "9",
+      "8",
+      "10",
+      "11",
+      "7"
+    ],
+    "answerLatex": "9",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Powers of two grow quickly, so only a few values need checking.",
+      "Square $2$ repeatedly and stop as soon as the result passes the target.",
+      "$2^{9} = 512$ is at most $1000$ while $2^{10} = 1024$ is not."
+    ],
+    "solutionLatex": "Generate the powers until you pass the bound.\n\n$2^{7} = 128$, $2^{8} = 256$, $2^{9} = 512$, $2^{10} = 1024$\n\nSince $512 \\le 1000 < 1024$, the largest admissible exponent is $9$.\n\nThis is the same count as the number of multiples of $2$, $4$, and $8$ at most $1000$, which is $500 + 250 + 125 + 62 + 31 + 15 + 7 + 3 + 1$.",
+    "techniqueSlugs": [
+      "prime-power-bounds",
+      "valuation-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p12",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "prime-factorization",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers at most $100$ have exactly four positive divisors?",
+    "choices": [
+      "32",
+      "30",
+      "25",
+      "36",
+      "24"
+    ],
+    "answerLatex": "32",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A fixed small divisor count pins down the shape of the number.",
+      "Four divisors means the exponent pattern is $3$ or $1,1$.",
+      "The two forms are $p^{3}$, giving $8$ and $27$, and $pq$ with $p \\ne q$."
+    ],
+    "solutionLatex": "Classify by exponent pattern, then count each form.\n\nExactly four divisors means $\\prod (a_i+1) = 4$, so the number is either $p^{3}$ or $pq$ for distinct primes $p$ and $q$.\n\nOf the form $p^{3} \\le 100$: $2^{3} = 8$ and $3^{3} = 27$, giving $2$ numbers. $5^{3} = 125$ is too large.\n\nOf the form $pq$ with $pq \\le 100$: take $p = 2$, which pairs with the $14$ primes from $3$ to $47$; take $p = 3$, pairing with the $9$ primes from $5$ to $31$; take $p = 5$, pairing with the $5$ primes from $7$ to $19$; take $p = 7$, pairing with $11$ and $13$. No larger prime works. That gives $14 + 9 + 5 + 2 = 30$.\n\nThe total is $2 + 30 = 32$.",
+    "techniqueSlugs": [
+      "perfect-power-forms",
+      "divisor-count-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p13",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "prime-factorization",
+      "counting-integers"
+    ],
+    "promptLatex": "What is the sum of the positive divisors of $6$?",
+    "choices": [
+      "12",
+      "6",
+      "9",
+      "10",
+      "8"
+    ],
+    "answerLatex": "12",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number is a product of two distinct primes.",
+      "For $pq$ with distinct primes the divisor sum is $(1+p)(1+q)$.",
+      "$6 = 2 \\cdot 3$, so the sum is $(1+2)(1+3) = 12$."
+    ],
+    "solutionLatex": "Both primes appear to the first power.\n\n$6 = 2 \\cdot 3$\n\n$\\sigma(6) = (1+2)(1+3) = 3 \\cdot 4 = 12$\n\nDirectly, the divisors are $1, 2, 3, 6$, which sum to $12$. Note that $6$ itself is a divisor, so this is the sum of all divisors and not of the proper divisors, which would be $6$.",
+    "techniqueSlugs": [
+      "divisor-sum-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p14",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "prime-factorization",
+      "exponents",
+      "unitary-decomposition"
+    ],
+    "promptLatex": "How many positive divisors does $10^{6}$ have?",
+    "choices": [
+      "49",
+      "36",
+      "13",
+      "42",
+      "64"
+    ],
+    "answerLatex": "49",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A power of ten has a very restricted prime factorization.",
+      "Each prime in the base contributes an exponent equal to the power.",
+      "$10^{6} = (2 \\cdot 5)^{6} = 2^{6} 5^{6}$, giving $7 \\cdot 7 = 49$."
+    ],
+    "solutionLatex": "Expand the power of ten into its two prime factors.\n\n$10^{6} = (2 \\cdot 5)^{6} = 2^{6} 5^{6}$\n\n$\\tau(10^{6}) = (6+1)(6+1) = 7 \\cdot 7 = 49$\n\nEach divisor is $2^{a} 5^{b}$ with $0 \\le a \\le 6$ and $0 \\le b \\le 6$, giving $7$ choices in each direction. The count is always an odd square for a sixth power of ten.",
+    "techniqueSlugs": [
+      "divisor-count-formula",
+      "unitary-decomposition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-p15",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "prime-factorization",
+      "exponents"
+    ],
+    "promptLatex": "How many positive integers at most $1000$ are divisible by $16$ but not divisible by $32$?",
+    "choices": [
+      "31",
+      "62",
+      "30",
+      "16",
+      "93"
+    ],
+    "answerLatex": "31",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "One condition is a stronger version of the other, so this is a difference of two counts.",
+      "Multiples of $32$ are a subfamily of the multiples of $16$, so count the larger family and remove the smaller.",
+      "$\\left\\lfloor 1000/16 \\right\\rfloor = 62$ and $\\left\\lfloor 1000/32 \\right\\rfloor = 31$."
+    ],
+    "solutionLatex": "The excluded numbers are a subfamily of the counted ones, so subtract.\n\n$\\#\\{n \\le 1000 : 16 \\mid n\\} = \\left\\lfloor 1000/16 \\right\\rfloor = 62$ and $\\#\\{n \\le 1000 : 32 \\mid n\\} = \\left\\lfloor 1000/32 \\right\\rfloor = 31$.\n\n$62 - 31 = 31$\n\nIn valuation language the answer counts the integers with $v_2(n)$ exactly $4$: a multiple of $16$ has at least four factors of $2$, and dropping the multiples of $32$ removes exactly those with five or more.",
+    "techniqueSlugs": [
+      "valuation-counting",
+      "valuation-additivity"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-m1",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "prime-factorization"
+    ],
+    "promptLatex": "How many positive divisors does $2^{10}$ have?",
+    "choices": [
+      "11",
+      "10",
+      "21",
+      "1024",
+      "12"
+    ],
+    "answerLatex": "11",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number is a single prime power, which is the simplest possible case.",
+      "A divisor chooses one exponent from $0$ up to the exponent in the number.",
+      "The exponents run from $0$ to $10$, which is $11$ values."
+    ],
+    "solutionLatex": "A single prime power has a single choice to make.\n\n$2^{10}$ has divisors $2^{0}, 2^{1}, \\ldots, 2^{10}$\n\n$\\tau(2^{10}) = 10 + 1 = 11$\n\nThe count is one more than the exponent, and the divisors run from $1$ up to $2^{10} = 1024$, so $1$ and $1024$ are both included.",
+    "techniqueSlugs": [
+      "divisor-count-formula",
+      "prime-power-bounds"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-m2",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "prime-factorization",
+      "counting-integers"
+    ],
+    "promptLatex": "What is the sum of the positive divisors of $2^{5}$?",
+    "choices": [
+      "63",
+      "62",
+      "64",
+      "32",
+      "31"
+    ],
+    "answerLatex": "63",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A single geometric series is all that is needed.",
+      "The divisors are the successive powers of the prime, and they form a geometric sum.",
+      "$1+2+4+8+16+32 = 63$."
+    ],
+    "solutionLatex": "Sum the geometric series directly.\n\n$1 + 2 + 4 + 8 + 16 + 32 = \\frac{2^{6}-1}{2-1} = 63$\n\nThe closed form $\\frac{p^{a+1}-1}{p-1}$ gives $63$ immediately, and adding the six terms by hand gives the same value. Every one of $63$ and $31$ is such a sum, which is why numbers of the form $2^{a+1}-1$ often appear in this module.",
+    "techniqueSlugs": [
+      "divisor-sum-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l2-m3",
+    "moduleId": "M2",
+    "lessonId": "m2-l2",
+    "tier": "12",
+    "difficulty": 5,
+    "tags": [
+      "prime-factorization",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers at most $1000$ have exactly eight positive divisors?",
+    "choices": [
+      "180",
+      "150",
+      "165",
+      "200",
+      "135"
+    ],
+    "answerLatex": "180",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A fixed divisor count of eight leaves only three possible shapes for the number.",
+      "Eight factors into $8$, $4 \\cdot 2$, or $2 \\cdot 2 \\cdot 2$, giving $p^{7}$, $p^{3}q$, or $pqr$.",
+      "Count each of the three forms separately."
+    ],
+    "solutionLatex": "Classify by exponent pattern, then count each form.\n\nExactly eight divisors means $\\prod (a_i+1) = 8$, so the forms are $p^{7}$, $p^{3}q$, and $pqr$ with distinct primes.\n\nOf the form $p^{7} \\le 1000$: only $2^{7} = 128$, giving $1$ number, since $3^{7} = 2187$ is too large.\n\nOf the form $p^{3}q$ with $p \\ne q$: the bound is $q \\le 1000/p^{3}$, so for $p = 2$ there are $29$ primes $q \\le 125$ other than $2$; for $p = 3$ there are $11$ primes $q \\le 37$ other than $3$; for $p = 5$ there are $3$ primes $q \\le 8$; and for $p = 7$ only $q = 2$ works. No larger $p$ fits. That gives $29 + 11 + 3 + 1 = 44$.\n\nOf the form $pqr$ with three distinct primes, order them $p < q < r$ and group by the smallest prime. For $p = 2$ the counts are $36, 22, 16, 9, 6, 3, 1$ as $q$ runs through the primes from $3$ to $19$, totalling $93$. For $p = 3$ the counts are $15, 11, 5, 3, 1$ as $q$ runs from $5$ to $17$, totalling $35$. For $p = 5$ the counts are $5$ and $2$ for $q = 7$ and $q = 11$, totalling $7$. For $p \\ge 7$ the smallest product $7 \\cdot 11 \\cdot 13 = 1001$ already exceeds $1000$, so there are none. That gives $93 + 35 + 7 = 135$.\n\nAdding the three forms gives $1 + 44 + 135 = 180$.",
+    "techniqueSlugs": [
+      "perfect-power-forms",
+      "divisor-count-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

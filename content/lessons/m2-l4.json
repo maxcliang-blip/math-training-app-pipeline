@@ -1,0 +1,211 @@
+{
+  "id": "m2-l4",
+  "moduleId": "M2",
+  "order": 4,
+  "title": "Base-Ten Structure and Place Value",
+  "topicSlug": "base-ten-place-value",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 65,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m2-l1",
+    "m2-l2"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Use place value and digit structure to compute residues, count integers with prescribed digits, find the last digits of large powers, and convert between bases."
+    },
+    "prerequisites": {
+      "items": [
+        "m2-l1",
+        "m2-l2"
+      ],
+      "noteLatex": "Requires [m2-l1](/MAX/issues/MAX-14) for divisibility and least common multiples, since the digit tests are statements about divisibility by $9$, $11$, $2$, and $5$. Requires [m2-l3](/MAX/issues/MAX-14) for congruences, because reading the last $k$ digits of a number is a question about its remainder modulo $10^{k}$."
+    },
+    "concept": {
+      "conceptLatex": "A decimal number is a sum of its digits weighted by powers of ten, and that single sentence generates most of what this lesson is about. Writing $d_k d_{k-1} \\cdots d_1 d_0$ for the number with digits $d_i$, the value is $n = \\sum_{i=0}^{k} d_i 10^{i}$, and every place-value question is a question about this sum. The value of a digit is its face value times its position, so the $6$ in $46253$ contributes $6 \\cdot 100 = 600$ and nothing more.\n\nThe single most useful consequence is that $10 \\equiv 1$ modulo $9$, and more generally $10^{i} \\equiv 1 \\pmod{9}$ for every $i$. Every term of the place-value expansion therefore collapses to its digit, so a number and its digit sum have the same remainder modulo $9$. This is casting out nines, and it turns divisibility by $9$ into arithmetic on a small integer. It also explains the classic self-check: a computed answer is right if its digit sum matches the digit sum of the problem's data.\n\n$n \\equiv d_0 + d_1 + \\cdots + d_k \\pmod{9}$ because $10^{i} \\equiv 1 \\pmod{9}$\n\nThe same idea with a different modulus gives a family of tests. Since $10 \\equiv -1 \\pmod{11}$, the powers of ten alternate between $1$ and $-1$ modulo $11$, so $n \\equiv d_0 - d_1 + d_2 - \\cdots \\pmod{11}$: the alternating sum of the digits decides divisibility by $11$. Since $10^{i} \\equiv 0$ modulo $2$ and modulo $5$ for $i \\ge 1$, divisibility by $2$ and by $5$ reads only the units digit. More generally, divisibility by $2^{k}$ or $5^{k}$ reads only the last $k$ digits, because the remaining terms are divisible by that power.\n\nCounting numbers with a prescribed digit structure is a stars-and-bars problem in disguise, and it is the main source of combinatorics in this lesson. If a number has $k$ digits with a fixed digit sum $s$ and leading zeros allowed, the count is the number of nonnegative solutions to $d_0 + \\cdots + d_{k-1} = s$ with each $d_i \\le 9$; when $s \\le 9$ the upper bounds never bind and the count is $\\binom{s+k-1}{k-1}$. Adding a condition such as parity restricts the units digit and turns the count into a short sum over the possible units digits.\n\n$\\#\\{d_0 + d_1 + d_2 = 9\\} = \\binom{11}{2} = 55$, and every such number is divisible by $9$ for free\n\nPowers of $10$ are the other recurring object, because $10^{k}$ is one followed by $k$ zeros, so the last $k$ digits of a number are its remainder modulo $10^{k}$. The last digits of a power of $2$ or $3$ or $7$ are therefore periodic in the exponent: the residues live in a finite set, so two exponents must give the same residue and the sequence repeats. For $3$ the last-digit cycle is $3, 9, 7, 1$ of period $4$, so $3^{100} \\equiv 3^{0} \\equiv 1 \\pmod{10}$ because $100$ is a multiple of $4$. Reducing the exponent modulo the period is how the last digits of a large power are found without ever expanding it.\n\nThree habits keep this module clean. First, distinguish a digit from its place value before computing, since the two differ by a power of ten and confusing them is the most common arithmetic slip here. Second, when a count is asked for, decide explicitly whether leading zeros are allowed, because the answer changes. Third, when a reversal or a digit condition appears, check divisibility by $11$ and by $9$ first, since those are the two moduli for which digit patterns are visible without arithmetic.",
+      "figures": [
+        {
+          "id": "m2-l4-fig-1",
+          "captionLatex": "The place-value structure of a four-digit number: the units, tens, hundreds, and thousands positions stand for $1$, $10$, $100$, and $1000$, so the blocks are drawn with widths in the ratio $1 : 10 : 100 : 1000$ and the last block is drawn solid because it is the leading digit.",
+          "asymptoteSource": "// Place value in a four-digit number, drawn to scale: the widths of the\n// blocks are proportional to the values they stand for.\n// Two-argument size() fixes the output box, so the declared 8/5 is exact.\nsize(320,200);\nfilldraw((0,0)--(10,80)--(10,0)--cycle,lightgray);\nfilldraw((10,0)--(110,80)--(10,80)--cycle,gray);\nfilldraw((110,0)--(185,80)--(110,80)--cycle,lightgray);\nfilldraw((185,0)--(200,80)--(185,80)--cycle,black);\nlabel(\"$1$\",(5,44),E);\nlabel(\"$10$\",(60,44),E);\nlabel(\"$100$\",(147,44),E);\nlabel(\"$1000$\",(192,44),W);\nlabel(\"each block is ten times the width of the one before it\",(100,120),N);",
+          "asymptoteAlt": "Four adjacent trapezoid-like blocks rise from a common baseline, each block ten times as wide as the one to its left, so the rightmost is by far the widest and is filled solid black while the three narrower blocks to its left are shaded in greys. A number is printed inside each block naming the value it stands for, reading one, ten, one hundred, and one thousand from left to right. Above the blocks, centred, is a note stating that each block is ten times the width of the one before it.",
+          "asymptoteAspectRatio": 1.6
+        },
+        {
+          "id": "m2-l4-fig-2",
+          "captionLatex": "Casting out nines in practice: the difference of two numbers is a multiple of nine exactly when their digit sums agree modulo nine, and $1782 - 2451 = -669$ is $-74$ groups of nine.",
+          "asymptoteSource": "// Casting out nines: the digit sums of two numbers that agree modulo 9.\n// Two-argument size() fixes the box, so the declared 4/3 is exact.\nsize(320,240);\nlabel(\"$1782$\",(0,0),W);\nlabel(\"$2451$\",(0,-1),W);\nlabel(\"digit sum $18$\",(3.2,0),W);\nlabel(\"digit sum $12$\",(3.2,-1),W);\ndraw((0,0.4)--(5.6,0.4));\ndraw((0,-0.6)--(4.0,-0.6));\nlabel(\"$1782 - 2451 = -669 = -74 \\\\cdot 9$\",(2.8,1.2),N);",
+          "asymptoteAlt": "Two lines of algebra are stacked one above the other, the upper naming one four-digit number and the lower naming another, each followed on the right by its digit sum. The upper digit sum reads eighteen and the lower reads twelve. A horizontal rule runs beneath each line, the upper one longer than the lower. Above both lines, centred, is a note giving the difference of the two numbers as a whole number of nines.",
+          "asymptoteAspectRatio": 1.333
+        },
+        {
+          "id": "m2-l4-fig-3",
+          "captionLatex": "The last digits of the powers of $3$ run through the cycle $3, 9, 7, 1$ and then repeat, because multiplying the last digit of a power by $3$ sends $3$ to $9$, $9$ to $7$, $7$ to $1$, and $1$ back to $3$.",
+          "asymptoteSource": "// The last-digit cycle of powers of 3, drawn as a closed loop of four states.\n// Two-argument size() fixes the box, so the declared 16/11 is exact.\nsize(320,220);\ndot((0,0),4pt);\ndot((120,0),4pt);\ndot((120,110),4pt);\ndot((0,110),4pt);\ndraw((6,2)--(112,2),Arrow);\ndraw((122,6)--(122,102),Arrow);\ndraw((114,108)--(8,108),Arrow);\ndraw((-2,104)--(-2,8),Arrow);\nlabel(\"$3$\",(0,14),N);\nlabel(\"$9$\",(120,14),N);\nlabel(\"$7$\",(120,92),S);\nlabel(\"$1$\",(0,92),S);\nlabel(\"the cycle repeats with period four\",(60,150),N);",
+          "asymptoteAlt": "Four large filled dots sit at the corners of a tall rectangle, and arrows run clockwise from each dot to the next, closing the loop. The top-left dot is labelled three, the top-right nine, the bottom-right seven, and the bottom-left one. Above the rectangle, centred, is a note reading that the cycle repeats with period four.",
+          "asymptoteAspectRatio": 1.455
+        }
+      ],
+      "examples": [
+        {
+          "id": "m2-l4-wex-1",
+          "titleLatex": "Worked example: casting out nines as a checksum",
+          "bodyLatex": "Reduce a large number to a small one before doing anything with it.\n\n$2^{10} = 1024$, and the digit sum is $1 + 0 + 2 + 4 = 7$.\n\nSo $2^{10} \\equiv 7 \\pmod{9}$, and the same reduction says $2^{10} \\equiv 7 \\pmod{3}$ and $\\equiv 1 \\pmod{2}$. If a later computation needs $2^{10}$ modulo $9$, the answer is $7$ without ever dividing.",
+          "answerLatex": "$7$"
+        },
+        {
+          "id": "m2-l4-wex-2",
+          "titleLatex": "Worked example: counting numbers with a fixed digit sum",
+          "bodyLatex": "How many three-digit numbers have digit sum $9$?\n\nLeading zeros are not allowed for a three-digit number, so the hundreds digit is at least $1$. Setting $e = d_2 - 1$ turns the problem into counting $e + d_1 + d_0 = 8$ in nonnegative integers with $e \\le 8$, $d_1 \\le 9$, and $d_0 \\le 9$.\n\nNone of the upper bounds binds because the total is $8$, so the count is $\\binom{10}{2} = 45$.\n\nAllowing leading zeros instead would give $\\binom{11}{2} = 55$, and the difference of $10$ is exactly the count with hundreds digit $0$.",
+          "answerLatex": "$45$"
+        },
+        {
+          "id": "m2-l4-wex-3",
+          "titleLatex": "Worked example: a last-digit cycle",
+          "bodyLatex": "Find the last digit of $7^{20}$.\n\nMultiplying successive powers of $7$ by $7$ and keeping the last digit: $7$, $9$, $3$, $1$, then $7$ again.\n\nThe cycle has period $4$, and $20$ is a multiple of $4$, so $7^{20}$ has the same last digit as $7^{4}$, namely $1$.\n\nThe repetition is guaranteed rather than accidental: the last digit of $7^{n+1}$ depends only on the last digit of $7^{n}$, so the sequence lives in a set of ten values and must repeat.",
+          "answerLatex": "$1$"
+        },
+        {
+          "id": "m2-l4-wex-4",
+          "titleLatex": "Worked example: why every four-digit palindrome is a multiple of eleven",
+          "bodyLatex": "A four-digit palindrome has the form $abba$, with value $1000a + 100b + 10b + a = 1001a + 110b$.\n\n$1001 = 91 \\cdot 11$ and $110 = 10 \\cdot 11$, so the value is $11(91a + 10b)$ and is divisible by $11$.\n\nThe same calculation with alternating digit sum gives $a - b + b - a = 0$, a multiple of $11$, which is the divisibility test stated in the language of digits.",
+          "answerLatex": "every four-digit palindrome is divisible by $11$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "place-value-expansion",
+          "name": "Expand a number by place value",
+          "summaryLatex": "Write $n = \\sum d_i 10^{i}$ and reduce each term separately.",
+          "bodyLatex": "The expansion is just the definition, and it is the right starting point whenever a question mixes a digit with its position or asks what a number is worth in some other base. Working term by term also makes it obvious which terms vanish modulo a given modulus."
+        },
+        {
+          "slug": "digit-sum-mod-nine",
+          "name": "Reduce a number to its digit sum modulo nine",
+          "summaryLatex": "Since $10 \\equiv 1 \\pmod{9}$, a number is congruent to its digit sum.",
+          "bodyLatex": "Every weight $10^{i}$ contributes $1$ modulo $9$, so the sum of the digits is the whole residue. This gives the divisibility test for $9$ and the divisibility tests for $3$ and for $2$, and it serves as a checksum on any long computation, since an arithmetic slip almost always changes the digit sum."
+        },
+        {
+          "slug": "alternating-sum-eleven",
+          "name": "Use the alternating digit sum modulo eleven",
+          "summaryLatex": "Since $10 \\equiv -1 \\pmod{11}$, a number is congruent to the alternating sum of its digits.",
+          "bodyLatex": "The weights alternate $1, -1, 1, -1$ from the units place, so the residues cancel in pairs. Divisibility by $11$ is exactly vanishing of that alternating sum, which is why every even-length palindrome is a multiple of $11$ while odd-length palindromes need not be."
+        },
+        {
+          "slug": "trailing-digits",
+          "name": "Read the last digits as a remainder",
+          "summaryLatex": "The last $k$ digits of $n$ are $n \\bmod 10^{k}$.",
+          "bodyLatex": "Since $10^{i} \\equiv 0$ modulo $10^{k}$ for $i \\ge k$, all but the last $k$ place-value terms vanish. So divisibility by $2^{k}$ and by $5^{k}$ reads only the last $k$ digits, and a question about the last three digits of a large number is a question about its remainder modulo $1000$."
+        },
+        {
+          "slug": "periodicity-of-last-digits",
+          "name": "Find the cycle of a power's last digits",
+          "summaryLatex": "Multiplying by the base maps last digit to last digit, so the sequence of last digits is eventually periodic.",
+          "bodyLatex": "The last digit of $b^{n+1}$ is determined by the last digit of $b^{n}$, so the sequence lives in a finite set and repeats. For $3$ the cycle is $3, 9, 7, 1$ of period $4$, so an exponent may be reduced modulo $4$; for $7$ it is $7, 9, 3, 1$, also of period $4$."
+        },
+        {
+          "slug": "digit-sum-counting",
+          "name": "Count numbers with a fixed digit sum",
+          "summaryLatex": "With leading zeros allowed, count the nonnegative solutions to $d_0 + \\cdots + d_{k-1} = s$ with each $d_i \\le 9$.",
+          "bodyLatex": "When $s \\le 9$ no upper bound binds, and stars and bars gives $\\binom{s+k-1}{k-1}$. When $s > 9$ the bounds do bind and the count is $\\binom{s+k-1}{k-1} - k\\binom{s-10+k-1}{k-1} + \\cdots$ by inclusion-exclusion on which digit exceeds $9$. A leading-zero restriction is handled by subtracting the solutions with $d_{k-1} = 0$."
+        },
+        {
+          "slug": "parity-restriction-on-digits",
+          "name": "Impose parity on a digit count",
+          "summaryLatex": "Restrict the units digit first, then count the remaining digits freely.",
+          "bodyLatex": "The units digit determines parity, so the count splits into a short sum over the even units digits $0, 2, 4, 6, 8$, each leaving a smaller fixed sum for the other positions. For a digit sum of $9$ over four positions this gives $55 + 36 + 21 + 10 + 3 = 125$."
+        },
+        {
+          "slug": "base-conversion",
+          "name": "Convert between bases by repeated division",
+          "summaryLatex": "Divide successively by the target base; the remainders read upward are the digits.",
+          "bodyLatex": "Each division peels off one digit, because the number is quotient times the base plus remainder. The method is the same in every base and is the only reliable way to read a base-notation number of more than a few digits."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "digit-versus-place-value",
+          "titleLatex": "Using a digit's face value where its place value is required",
+          "wrongLatex": "the $6$ in $46253$ contributes $6$",
+          "whyLatex": "The $6$ sits in the hundreds column, so it contributes $6 \\cdot 100 = 600$ and the number is $40000 + 6000 + 200 + 50 + 3$. Reading face values throughout would give the digit sum $20$ instead of the number, which is not a place-value error that any later step can recover from.",
+          "fixLatex": "Name the column before using the digit, and multiply by the power of ten for that column. If the result is needed modulo something, check first which terms vanish."
+        },
+        {
+          "slug": "leading-zeros",
+          "titleLatex": "Ignoring the effect of a leading zero on a digit count",
+          "wrongLatex": "there are $\\binom{11}{2} = 55$ three-digit numbers with digit sum $9$",
+          "whyLatex": "That count allows a hundreds digit of $0$, so it includes two-digit and one-digit numbers, of which there are $10$. The correct count of three-digit numbers is $55 - 10 = 45$. The error is silent because both counts look reasonable.",
+          "fixLatex": "Decide explicitly whether leading zeros are permitted, and if they are not, subtract the solutions with the leading digit equal to zero."
+        },
+        {
+          "slug": "period-not-dividing",
+          "titleLatex": "Reducing an exponent modulo a period without checking the period divides it",
+          "wrongLatex": "$3^{100}$ has last digit $3$",
+          "whyLatex": "The last digits of powers of $3$ run through $3, 9, 7, 1$ with period $4$, and $100$ is a multiple of $4$, so the last digit is the fourth entry of the cycle, which is $1$. The value $3$ would come from reading the first entry, which requires the exponent to be congruent to $1$ modulo $4$.",
+          "fixLatex": "Compute the exponent's remainder modulo the period, then take the entry of the cycle at that position, counting from zero. Writing the cycle as a list indexed from zero removes the off-by-one entirely."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m2-l4-p1",
+        "m2-l4-p2",
+        "m2-l4-p3",
+        "m2-l4-p4",
+        "m2-l4-p5",
+        "m2-l4-p6",
+        "m2-l4-p7",
+        "m2-l4-p8",
+        "m2-l4-p9",
+        "m2-l4-p10",
+        "m2-l4-p11",
+        "m2-l4-p12",
+        "m2-l4-p13",
+        "m2-l4-p14",
+        "m2-l4-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m2-l4-p1",
+        "m2-l4-p2",
+        "m2-l4-p3",
+        "m2-l4-p4",
+        "m2-l4-p5",
+        "m2-l4-p6",
+        "m2-l4-p7",
+        "m2-l4-p8",
+        "m2-l4-p9",
+        "m2-l4-p10",
+        "m2-l4-p11",
+        "m2-l4-p12",
+        "m2-l4-p13",
+        "m2-l4-p14",
+        "m2-l4-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m2-l4-m1",
+        "m2-l4-m2",
+        "m2-l4-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "place-value",
+    "base-ten",
+    "digit-problems",
+    "counting-integers"
+  ]
+}

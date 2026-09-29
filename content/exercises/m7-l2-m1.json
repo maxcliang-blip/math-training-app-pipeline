@@ -1,0 +1,32 @@
+{
+  "id": "m7-l2-m1",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": ["inclusion-exclusion"],
+  "promptLatex": "In a group of 60 students, 35 take math, 30 take physics, and 20 take chemistry. 12 take both math and physics, 8 take both math and chemistry, and 5 take both physics and chemistry. 3 take all three subjects. How many students take exactly one subject?",
+  "choices": [
+    "41",
+    "45",
+    "39",
+    "49",
+    "47"
+  ],
+  "answerLatex": "45",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "First compute the number who take at least one subject using inclusion-exclusion.",
+    "Then subtract those who take exactly two and exactly three subjects.",
+    "Or compute directly: (only math) + (only physics) + (only chemistry).",
+    "Only math: 35 - 12 - 8 + 3 = 18 (subtract those in intersections, add back the triple).",
+    "Only physics: 30 - 12 - 5 + 3 = 16.",
+    "Only chemistry: 20 - 8 - 5 + 3 = 10.",
+    "Total exactly one: 18 + 16 + 10 = 44."
+  ],
+  "solutionLatex": "Using inclusion-exclusion, compute the number of students in each exclusive region.",
+  "techniques": ["inclusion-exclusion-principle"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

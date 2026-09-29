@@ -1,0 +1,28 @@
+{
+  "id": "m7-l2-p4",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": ["stars-and-bars"],
+  "promptLatex": "How many nonnegative integer solutions does x + y + z = 10 have?",
+  "choices": [
+    "66",
+    "55",
+    "120",
+    "165",
+    "110"
+  ],
+  "answerLatex": "66",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "This is a stars-and-bars problem. The formula for the number of nonnegative integer solutions to x_1 + ... + x_k = n is \\binom{n+k-1}{k-1}.",
+    "Here n = 10 and k = 3, so the answer is \\binom{10+3-1}{3-1} = \\binom{12}{2}.",
+    "\\binom{12}{2} = 12 \\times 11 / 2 = 66."
+  ],
+  "solutionLatex": "Using stars and bars, the number of nonnegative integer solutions to x + y + z = 10 is \\binom{10+3-1}{3-1} = \\binom{12}{2}.\n\n\\binom{12}{2} = \\frac{12 \\times 11}{2} = 66.",
+  "techniqueSlugs": ["stars-and-bars-method"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

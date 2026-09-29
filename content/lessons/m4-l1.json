@@ -1,0 +1,204 @@
+{
+  "id": "m4-l1",
+  "moduleId": "M4",
+  "order": 1,
+  "title": "Arithmetic and Geometric Sequences",
+  "topicSlug": "arithmetic-geometric-sequences",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m1-l1"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Identify a sequence as arithmetic or geometric from its terms, write the explicit formula for its $n$th term, recover the first term and the common difference or common ratio from two given terms, convert a first-order recurrence into an explicit formula, and count how many terms of a sequence satisfy a range or threshold condition."
+    },
+    "prerequisites": {
+      "items": [
+        {
+          "labelLatex": "[m1-l1](/M1/lessons/m1-l1) linear equations",
+          "noteLatex": "solving for the index rather than the term"
+        }
+      ],
+      "noteLatex": "No earlier module is required beyond facility with exponents and with fractions, since every method here multiplies or divides an index by a constant. If forming $a_1 r^{n-1}$ from $a_1$ and $r$ feels slow, review negative and zero exponents in [m1-l2](/M1/lessons/m1-l2) first."
+    },
+    "concept": {
+      "conceptLatex": "A sequence is a function whose input is a position rather than a variable. Its values are written $a_1, a_2, a_3, \\ldots$, the position is the index, and $a_1$ is the first term. The object of nearly every problem in this lesson is a term whose index is not written down, usually a large one, so the whole game is getting from the given data to a formula for $a_n$.\n\nTwo families cover almost everything that appears on the AMC. In an arithmetic sequence the gap between consecutive terms is a constant $d$, the common difference, so $a_{n+1} - a_n = d$ holds for every index and the formula is linear. In a geometric sequence the ratio of consecutive terms is a constant $r$, the common ratio, so $a_{n+1} = r a_n$ holds for every index and the formula is exponential.\n\n$a_n = a_1 + (n-1)d \\qquad a_n = a_1 r^{n-1}$\n\nThe index offset $n-1$ is where these problems usually break, and the reason is the same in both formulas: the first term is already in hand, so reaching the second term takes one application of the rule, and reaching the $n$th term takes $n-1$ of them. The cheap defense is to substitute $n=1$ into whatever formula was just derived; if it does not return $a_1$, the formula is wrong.\n\nTwo terms determine either family, and the two recipes are symmetric. For indices $i < j$ the difference gives $d = \\frac{a_j - a_i}{j-i}$, and the ratio gives $r = \\left(\\frac{a_j}{a_i}\\right)^{1/(j-i)}$. Both need $i \\ne j$, and both lose information when the ratio is negative, because a positive quotient of two terms can be produced by either sign. When the sequence alternates in sign, the recurrence or a third term has to settle the question instead of the quotient.\n\nA sequence handed to you as a recurrence is not geometric until it is shifted. Consider $a_{n+1} = 3a_n - 2$. The constant is the obstacle, and it is removed by moving to the fixed point of the recurrence, the value $c$ with $c = 3c - 2$, which is $c = 1$. Setting $b_n = a_n - 1$ gives $b_{n+1} = 3b_n$, a geometric sequence with ratio $3$, so $a_n = 1 + b_1 3^{n-1}$. The same shift handles every recurrence $a_{n+1} = r a_n + k$ with $r \\ne 1$, and it is the whole reason those problems are solvable.\n\nNot every sequence belongs to either family, and a polynomial rule frequently hides one of them. The sequence $2, 6, 12, 20, 30, \\ldots$ has gaps $4, 6, 8, 10$, and the gaps of the gaps are all $2$, which identifies $a_n = n(n+1)$ without guessing. A sequence whose terms grow by a constant factor should be tested for a ratio first; a sequence that creeps should be tested for a gap.\n\nCounting by a threshold is the last recurring demand, and it is an index problem wearing a sequence costume. Asking how many terms of a sequence lie in a range is asking which indices lie in a range, and the answer is obtained by solving for the index rather than by listing terms. With $r > 1$ the comparisons are comparisons of two powers, and choosing a threshold that is itself a power of $r$ keeps the whole computation in integer arithmetic.",
+      "figures": [
+        {
+          "id": "m4-l1-fig-1",
+          "captionLatex": "In the upper row every gap between neighbours is the same width, which is what an arithmetic sequence looks like; in the lower row each gap is a fixed multiple of the one before it, which is what a geometric sequence with a ratio above one looks like.",
+          "asymptoteSource": "// Two rows of five terms. Equal gaps above, gaps that multiply by the\n// ratio below. Two-argument size fixes the output box exactly.\nsize(320,200);\nfor (int i=0; i<5; ++i) {\n  pair P = (1.2*i, 0.8);\n  pair Q = (0.3*i*i, -0.8);\n  dot(P, 2+2.5pt);\n  dot(Q, 2+2.5pt);\n  label(\"$\"+string(i+1)+\"$\", P, N);\n  label(\"$\"+string(i+1)+\"$\", Q, S);\n}\nlabel(\"equal gaps\", (2.4, 1.7), N);\nlabel(\"each gap a fixed multiple of the last\", (2.4, -1.7), S);",
+          "asymptoteAlt": "Two rows of five filled dots each, indexed by position. In the upper row the dots are evenly spaced from left to right, so every neighbour gap is the same width. In the lower row the first two dots nearly touch and each later gap is visibly wider than the one before it, so the spacing opens up toward the right. A short caption above the top row and another below the bottom row name the two patterns.",
+          "asymptoteAspectRatio": 1.6
+        }
+      ],
+      "examples": [
+        {
+          "id": "m4-l1-wex-1",
+          "titleLatex": "Worked example: an arithmetic sequence pinned by two terms",
+          "bodyLatex": "Suppose $a_7 = 31$ and $a_{12} = 61$. Five gaps separate the two terms, so five gaps of size $d$ separate their values, and $5d = 61 - 31 = 30$ gives $d = 6$.\n\n$a_n = a_1 + (n-1)d \\implies 31 = a_1 + 6(6) \\implies a_1 = -5$\n\nSix gaps reach the seventh term, so the formula is $a_n = -5 + 6(n-1)$, and checking it at $n=7$ returns $31$ as it must.",
+          "answerLatex": "$a_n = 6n - 11$"
+        },
+        {
+          "id": "m4-l1-wex-2",
+          "titleLatex": "Worked example: a geometric sequence from a quotient of terms",
+          "bodyLatex": "Suppose $a_3 = 24$ and $a_6 = 192$. Three ratios separate the terms, so $r^{3} = \\frac{192}{24} = 8$ and $r = 2$.\n\n$a_3 = a_1 r^{2} \\implies 24 = a_1(4) \\implies a_1 = 6$\n\nThe sign of $r$ was forced here because $r^{3} = 8$ is positive and the exponent is odd, so a negative ratio was never a possibility. At $n=6$ the formula returns $6(2^{5}) = 192$.",
+          "answerLatex": "$a_n = 6 \\cdot 2^{n-1}$"
+        },
+        {
+          "id": "m4-l1-wex-3",
+          "titleLatex": "Worked example: shifting a recurrence to a geometric sequence",
+          "bodyLatex": "Take $a_1 = 5$ and $a_{n+1} = 3a_n - 2$. The fixed point of the recurrence solves $c = 3c - 2$, so $c = 1$, and $b_n = a_n - 1$ obeys $b_{n+1} = 3 b_n$ with $b_1 = 4$.\n\n$b_n = 4 \\cdot 3^{n-1} \\implies a_n = 1 + 4 \\cdot 3^{n-1}$\n\nAt $n=5$ this gives $1 + 4(81) = 325$, and writing out the terms $5, 13, 37, 109, 325$ confirms it.",
+          "answerLatex": "$a_5 = 325$"
+        },
+        {
+          "id": "m4-l1-wex-4",
+          "titleLatex": "Worked example: a gap pattern that is neither constant nor geometric",
+          "bodyLatex": "The terms $2, 6, 12, 20, 30$ have gaps $4, 6, 8, 10$, so the sequence is not arithmetic, and the quotient of neighbours is not constant either, so it is not geometric. The gaps increase by $2$ each time, and a sequence whose gaps increase by a constant has gaps $2n$ and terms $n(n+1)$.\n\n$a_n = n(n+1) \\implies a_{10} = 10(11) = 110$\n\nReading the first five terms off that formula gives $2, 6, 12, 20, 30$, which is the only check available and the one that matters here.",
+          "answerLatex": "$a_{10} = 110$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "common-difference-detection",
+          "name": "Reading a common difference off the terms",
+          "summaryLatex": "Subtract consecutive terms; the family is arithmetic exactly when every gap agrees.",
+          "bodyLatex": "Compute $a_2 - a_1$, $a_3 - a_2$, and $a_4 - a_3$. If all three are equal the sequence is arithmetic with that common difference, and the sign of the difference is the only thing that says whether the sequence climbs or falls. A sequence that alternates in sign can never be arithmetic unless the difference is $0$, because a nonzero gap moves monotonically."
+        },
+        {
+          "slug": "common-ratio-detection",
+          "name": "Reading a common ratio off the terms",
+          "summaryLatex": "Divide consecutive terms; the family is geometric exactly when every quotient agrees.",
+          "bodyLatex": "Compute $a_2/a_1$, $a_3/a_2$, and $a_4/a_3$. Equal quotients give a geometric sequence with that common ratio, and the ratio carries the whole story: $r > 1$ grows, $0 < r < 1$ decays toward zero, $r < 0$ alternates in sign, and $r = 0$ produces a single nonzero term followed by zeros. Fractions in the terms are a warning that the ratio is a fraction, not a rounding error."
+        },
+        {
+          "slug": "difference-table",
+          "name": "A difference table for sequences that are neither",
+          "summaryLatex": "Keep differencing until the table is constant; the degree of the fitting polynomial is the number of rounds.",
+          "bodyLatex": "A constant second difference means a quadratic rule, so $a_n$ is a quadratic in $n$ whose leading coefficient is half the second difference. Constant third differences mean a cubic, and so on. The method matters because a sequence can grow like a geometric one while being a polynomial: $2, 6, 12, 20, 30$ climbs fast but has constant second differences, so it is polynomial and a ratio test would fail on it."
+        },
+        {
+          "slug": "nth-term-formula",
+          "name": "The explicit formulas",
+          "summaryLatex": "One application of the rule per gap, so both families use the index less one.",
+          "bodyLatex": "$a_n = a_1 + (n-1)d$ for arithmetic and $a_n = a_1 r^{n-1}$ for geometric. The index less one is not a convention but a count: $n-1$ steps separate the first term from the $n$th. Two habits protect the formula. Substituting $n=1$ must return $a_1$, and computing $a_2$ by hand must reproduce $a_1 + d$ and $a_1 r$, which is a check that costs nothing and catches almost every slip."
+        },
+        {
+          "slug": "nth-term-from-two-terms",
+          "name": "Solving for the rule from two known terms",
+          "summaryLatex": "Divide the difference of the values by the difference of the indices, or take the corresponding root of the quotient.",
+          "bodyLatex": "For indices $i < j$ the arithmetic rule gives $d = \\frac{a_j - a_i}{j - i}$ and then $a_1 = a_i - (i-1)d$. The geometric rule gives $r^{j-i} = a_j/a_i$, so $r$ is the $(j-i)$-th root of that quotient. Choosing indices that are adjacent makes the arithmetic a single step, and choosing indices a power apart makes the root a power as well."
+        },
+        {
+          "slug": "explicit-from-recursive",
+          "name": "Converting a recurrence into an explicit formula",
+          "summaryLatex": "Move to the fixed point of the recurrence, then the remainder is geometric.",
+          "bodyLatex": "For $a_{n+1} = r a_n + k$ with $r \\ne 1$ the fixed point is $c = \\frac{k}{1-r}$, and $b_n = a_n - c$ satisfies $b_{n+1} = r b_n$. Hence $a_n = c + (a_1 - c) r^{n-1}$. When $r = 1$ the recurrence is $a_{n+1} = a_n + k$, which is arithmetic with common difference $k$ and needs no shift at all."
+        },
+        {
+          "slug": "threshold-crossing",
+          "name": "Counting terms against a threshold",
+          "summaryLatex": "Solve the inequality in the index rather than evaluating terms one at a time.",
+          "bodyLatex": "Asking for the first index with $a_n > 100$ is an inequality in $n$, not a search. For an arithmetic sequence it is linear and exact; for a geometric sequence with $r > 1$ it is a comparison of powers, and if the threshold is chosen to be a power of $r$ then the comparison is integer arithmetic with no rounding at all. Counting the terms inside a range is the same work with two inequalities, and the count is the difference of the two boundary indices."
+        },
+        {
+          "slug": "fractional-ratio",
+          "name": "Sequences with a fractional common ratio",
+          "summaryLatex": "A ratio below one divides rather than multiplies, and halving or thirding is the usual case.",
+          "bodyLatex": "When $0 < r < 1$ the terms shrink, and a term two positions later is $a_1 r^2$, which for $r = \\frac{1}{2}$ is $a_1/4$. Keeping exact fractions until the end avoids a decimal that looks exact and is not, and the direction of a threshold test reverses: a decaying sequence passes below a threshold at a much later index than it passes above it."
+        },
+        {
+          "slug": "geometric-modeling",
+          "name": "Building a sequence from a story",
+          "summaryLatex": "Decide what one step of the story multiplies or adds, and check the model against the first two steps.",
+          "bodyLatex": "A fixed amount added per step is arithmetic, whether it is a salary, a monthly deposit, or the growth of a snail. A fixed factor per step is geometric, whether it is compounding, decay, or a factor by which a population triples. The trap in every such story is the step size: a rate stated per month applied for three years is a hundred and thirty six steps, not three, and a growth stated every five hours has four steps in twenty hours rather than twenty."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "n-minus-one",
+          "titleLatex": "Applying the rule $n$ times instead of $n-1$",
+          "wrongLatex": "an arithmetic sequence with $a_1 = 1$ and $d = 3$ has $a_{10} = 1 + 10(3) = 31$",
+          "whyLatex": "There are nine gaps between the first term and the tenth, not ten, so the tenth term is $1 + 9(3) = 28$. The same error in a geometric sequence reads $a_{10} = a_1 r^{10}$, which doubles the first term's worth of growth.",
+          "fixLatex": "Substitute $n = 1$ into the derived formula. A formula that does not return $a_1$ at the first index has an index error, and the check costs one line."
+        },
+        {
+          "slug": "growth-is-not-a-ratio",
+          "titleLatex": "Reading any growing sequence as geometric",
+          "wrongLatex": "the sequence $1, 2, 4, 8, 17$ is geometric with ratio $2$",
+          "whyLatex": "The quotients are $2$, $2$, $2$, and then $17/8$, so the last step breaks the pattern. Growth alone never establishes a common ratio, and a single miscopied or misread term is exactly how a geometric list gets broken in a problem.",
+          "fixLatex": "Compute three consecutive quotients and require all three to match. When the terms are integers, check that each one really is the previous one times the ratio rather than merely close to it."
+        },
+        {
+          "slug": "simple-interest-in-compounding",
+          "titleLatex": "Adding a rate instead of multiplying by one",
+          "wrongLatex": "a balance of 1200 growing by 5 percent a year is $1200(1 + 5(0.05)) = 1500$ after five years",
+          "whyLatex": "Each year's growth is a fraction of the balance at the start of that year, not of the original balance, so the five increases compound. The correct figure is $1200(1.05)^{5}$, which is larger than $1500$ rather than smaller: compounding can only raise the total above the simple-interest one, and it raises it by a factor of more than $1$ on every increase after the first.",
+          "fixLatex": "Write the balance after $n$ steps as $B_0 (1+r)^{n}$ with $r$ the rate for one step, and count the steps rather than the years when the compounding period is not a year."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m4-l1-p1",
+        "m4-l1-p2",
+        "m4-l1-p3",
+        "m4-l1-p4",
+        "m4-l1-p5",
+        "m4-l1-p6",
+        "m4-l1-p7",
+        "m4-l1-p8",
+        "m4-l1-p9",
+        "m4-l1-p10",
+        "m4-l1-p11",
+        "m4-l1-p12",
+        "m4-l1-p13",
+        "m4-l1-p14",
+        "m4-l1-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m4-l1-p1",
+        "m4-l1-p2",
+        "m4-l1-p3",
+        "m4-l1-p4",
+        "m4-l1-p5",
+        "m4-l1-p6",
+        "m4-l1-p7",
+        "m4-l1-p8",
+        "m4-l1-p9",
+        "m4-l1-p10",
+        "m4-l1-p11",
+        "m4-l1-p12",
+        "m4-l1-p13",
+        "m4-l1-p14",
+        "m4-l1-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m4-l1-m1",
+        "m4-l1-m2",
+        "m4-l1-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "sequences",
+    "arithmetic-sequences",
+    "geometric-sequences",
+    "recurrences"
+  ]
+}

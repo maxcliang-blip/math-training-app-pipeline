@@ -1,0 +1,22 @@
+{
+  "id": "m9-l4-p8",
+  "moduleId": "M9",
+  "lessonId": "m9-l4",
+  "tier": "A+",
+  "difficulty": 3,
+  "tags": ["proof-strategy", "wlog"],
+  "promptLatex": "To prove 'x^2+y^2 ≥ 2xy for all real x, y', may we assume without loss of generality that x ≥ y?",
+  "choices": ["yes, because the claim is symmetric in x and y", "yes, because x^2+y^2-2xy = (x-y)^2 ≥ 0 always", "no, the claim is not symmetric in x and y", "no, because assuming x ≥ y changes the problem", "yes, by the pigeonhole principle"],
+  "answerLatex": "yes, because the claim is symmetric in x and y",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A claim is symmetric if interchanging the names leaves it unchanged.",
+    "Interchanging x and y gives y^2+x^2 ≥ 2yx, which is the same inequality.",
+    "Since the claim treats x and y identically, we may assume an ordering without loss of generality."
+  ],
+  "solutionLatex": "The claim x^2+y^2 ≥ 2xy is symmetric in x and y: interchanging x and y leaves the claim unchanged. Therefore we may assume wlog that x ≥ y (or x ≤ y) without loss of generality, as the discarded case is exactly the kept case with the names exchanged. Alternatively, note that x^2+y^2-2xy = (x-y)^2 ≥ 0 for all real x, y, which proves the claim directly without any wlog assumption.",
+  "techniqueSlugs": ["wlog"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

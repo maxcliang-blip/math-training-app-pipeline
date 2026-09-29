@@ -1,0 +1,208 @@
+{
+  "id": "m4-l2",
+  "moduleId": "M4",
+  "order": 2,
+  "title": "Series, Partial Sums, and Telescoping Decompositions",
+  "topicSlug": "series-partial-sums-telescoping",
+  "tiers": [
+    "12",
+    "A",
+    "A+"
+  ],
+  "estimatedMinutes": 65,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m4-l1"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Read and write sigma notation, evaluate a sum of an arithmetic or alternating pattern by pairing or by a formula, detect a telescoping decomposition and collapse it, shift the index of a sum to make it collapse, and use a sum of floors to count the objects a problem actually asks about."
+    },
+    "prerequisites": {
+      "items": [
+        {
+          "labelLatex": "[m4-l1](/M4/lessons/m4-l1) arithmetic and geometric sequences",
+          "noteLatex": "the terms being summed"
+        }
+      ],
+      "noteLatex": "This lesson assumes the explicit formulas for the $n$th term from [m4-l1](/M4/lessons/m4-l1) and comfort with partial fractions such as $\\frac{1}{k(k+1)} = \\frac{1}{k} - \\frac{1}{k+1}$. No formal series theory is needed anywhere in this lesson."
+    },
+    "concept": {
+      "conceptLatex": "A series is the sum of the terms of a sequence, and it is a different object from the sequence itself. The partial sum $S_n = a_1 + a_2 + \\cdots + a_n$ is the single most useful notation in the subject: it is finite, it is the sum of the first $n$ terms, and the subscript counts terms rather than indices of the summand. Most errors in this lesson are the error of reading $S_n$ as the $n$th term.\n\nSigma notation compresses that list, and expanding it is the reliable way to read an unfamiliar sum. In $\\sum_{k=1}^{10} k$ the symbol $\\sum$ means add once for each integer $k$ from $1$ to $10$, and the expression to the right of it is evaluated at each of those values before anything is added. When the summand is written in terms of the index, the index is a dummy variable: replacing $k$ by $j$ changes nothing, and the sum still has exactly one term for each allowed value of the index.\n\nThree families cover most of what appears on the AMC. The sum of an arithmetic pattern has a closed form built from the number of terms and the average of the first and last. The sum of an alternating pattern is handled by pairing adjacent terms, which usually makes every pair constant. And a sum of fractions whose denominators factor is often telescoping, which means the summand can be written as a difference of two simpler expressions that then cancel pairwise.\n\n$\\sum_{k=1}^{n} k = \\frac{n(n+1)}{2} \\qquad \\sum_{k=1}^{n} (2k-1) = n^{2} \\qquad \\sum_{k=1}^{n} \\frac{1}{k(k+1)} = 1 - \\frac{1}{n+1}$\n\nThe last identity is the model for the whole telescoping method. Each summand $\\frac{1}{k} - \\frac{1}{k+1}$ contributes a term that the next summand cancels, so the entire sum collapses to the first positive piece and the last negative piece. The decomposition is not obvious from the summand alone and is usually found by factoring the denominator and forcing the numerators to add to the correct constant, here $1$.\n\nA sum that will not telescope can often be made to by shifting its index. The identity $\\sum_{k=2}^{10} (k^{2} - (k-1)^{2}) = 100 - 1$ holds because each summand is the difference of two consecutive squares, so the whole sum is the last square minus the first. Any sum of the form $f(k) - f(k-1)$ collapses the same way, and recognising that shape is a matter of practice rather than theory.\n\nCounting is where most real problems hide. How many multiples of $7$ lie below $100$ is the sum $7 + 14 + \\cdots + 98$, and how many ordered pairs $(a,b)$ satisfy $a + b \\le 12$ with both positive is a sum in which the $k$th summand counts the number of valid partners for $k$. A sum of floors does the same job: $\\sum_{k=1}^{20} \\lfloor k/7 \\rfloor$ counts, for each $k$, the number of multiples of $7$ at most $k$, so the total counts each multiple of $7$ exactly as many times as there are values of $k$ at or above it, which is a count of something specific and not simply the number of terms.",
+      "figures": [
+        {
+          "id": "m4-l2-fig-1",
+          "captionLatex": "The positive and negative halves of a telescoping sum are written in two columns, with each negative term dropped by one row so that it lines up with the positive term it cancels; only the first positive piece and the last negative piece are left with nothing to pair against.",
+          "asymptoteSource": "// The telescoping sum, with the negative column aligned to the positive\n// terms it cancels. Two-argument size fixes the output box exactly.\nsize(300,260);\nlabel(\"$+\\\\frac{1}{1}$\", (0,4.4), E);\nlabel(\"$+\\\\frac{1}{2}$\", (0,3.3), E);\nlabel(\"$\\\\frac{1}{2}$\", (2.4,3.3), W);\nlabel(\"$+\\\\frac{1}{3}$\", (0,2.2), E);\nlabel(\"$\\\\frac{1}{3}$\", (2.4,2.2), W);\nlabel(\"$+\\\\frac{1}{4}$\", (0,1.1), E);\nlabel(\"$\\\\frac{1}{4}$\", (2.4,1.1), W);\nlabel(\"$+\\\\frac{1}{5}$\", (0,0.0), E);\nlabel(\"$\\\\frac{1}{5}$\", (2.4,0.0), W);\nlabel(\"$\\\\frac{1}{6}$\", (2.4,-1.1), W);\nfor (int i=0; i<4; ++i) {\n  draw((0.9,3.3-1.1*i)--(1.5,3.3-1.1*i), dashed);\n}\nlabel(\"the two survivors\", (1.2,-2.1), S);",
+          "asymptoteAlt": "Two columns of fractions arranged in five rows. The left column carries a plus sign on each of its five entries, running from one fifth at the bottom up to one at the top. The right column carries the same five values in the same order but with a minus sign, except that its topmost entry is one sixth, so it sits one step below the bottom of the left column. A short dashed line joins the two entries in each of the top four rows, and the entry at the very top of the left column and the entry at the very bottom of the right column are left with no dashed line at all.",
+          "asymptoteAspectRatio": 1.154
+        },
+        {
+          "id": "m4-l2-fig-2",
+          "captionLatex": "The odd numbers from $1$ to $99$ pair up from the outside in, and every pair is made to sum to the same value, so the total is the number of pairs times that value.",
+          "asymptoteSource": "// Four outside-in pairings of the odd numbers, each summing to the same\n// total. Two-argument size fixes the output box exactly.\nsize(320,200);\nfor (int i=0; i<4; ++i) {\n  real y = 1.5*(3-i);\n  draw((0,y)--(2,y));\n  draw((2,y)--(4,y));\n  dot((0,y),2+2.5pt);\n  dot((2,y),2+2.5pt);\n  dot((4,y),2+2.5pt);\n  label(\"$\"+string(2*i+1)+\"$\", (0,y-0.1), S);\n  label(\"$\"+string(99-2*i)+\"$\", (4,y-0.1), S);\n  label(\"$100$\", (2,y+0.1), N);\n}\nlabel(\"every pair is worth the same\", (2, -0.8), S);",
+          "asymptoteAlt": "Four horizontal bars stacked from top to bottom, each drawn as two segments meeting at a central dot, with a dot at each outer end as well. A small number sits below each outer dot and the same label sits above each middle dot, so the outer labels read as a small number and a large one while every bar carries an identical label at its centre. A caption under the stack states the point of the picture.",
+          "asymptoteAspectRatio": 1.6
+        }
+      ],
+      "examples": [
+        {
+          "id": "m4-l2-wex-1",
+          "titleLatex": "Worked example: the sum of the first $n$ odd numbers",
+          "bodyLatex": "Pair the odd numbers from the outside in: $1$ with $2n-1$, $3$ with $2n-3$, and so on. Every pair sums to $2n$.\n\nThere are $n$ odd numbers in total, so there are $n/2$ pairs, and the sum is $\\frac{n}{2}(2n) = n^{2}$.\n\nAt $n = 5$ this predicts $25$, and indeed $1+3+5+7+9 = 25$, which confirms the pattern on a case small enough to check by hand.",
+          "answerLatex": "$1 + 3 + 5 + \\cdots + (2n-1) = n^{2}$"
+        },
+        {
+          "id": "m4-l2-wex-2",
+          "titleLatex": "Worked example: a telescoping sum of fractions",
+          "bodyLatex": "Take $\\sum_{k=1}^{6} \\frac{1}{k(k+1)}$. Factor the denominator and choose numerators that add to $1$:\n\n$\\frac{1}{k(k+1)} = \\frac{1}{k} - \\frac{1}{k+1}$\n\nExpanding, the sum is $(1 - \\frac{1}{2}) + (\\frac{1}{2} - \\frac{1}{3}) + (\\frac{1}{3} - \\frac{1}{4}) + (\\frac{1}{4} - \\frac{1}{5}) + (\\frac{1}{5} - \\frac{1}{6}) + (\\frac{1}{6} - \\frac{1}{7})$, and every interior piece cancels, leaving $1 - \\frac{1}{7}$.\n\nThat equals $\\frac{6}{7}$, and adding the six fractions by hand gives the same value.",
+          "answerLatex": "$\\sum_{k=1}^{6} \\frac{1}{k(k+1)} = \\frac{6}{7}$"
+        },
+        {
+          "id": "m4-l2-wex-3",
+          "titleLatex": "Worked example: a sum of floors read as a count",
+          "bodyLatex": "Consider $\\sum_{k=1}^{8} \\lfloor k/3 \\rfloor$. Group the values of $k$ by how large the floor is.\n\n$k = 1, 2$ give $0$; $k = 3, 4, 5$ give $1$; $k = 6, 7, 8$ give $2$.\n\nThe sum is $0 + 0 + 1 + 1 + 1 + 2 + 2 + 2 = 9$.\n\nThe reading that makes this trustworthy: the $k$th summand is the number of multiples of $3$ that are at most $k$, so the total counts each multiple of $3$ once for every $k$ large enough to include it.",
+          "answerLatex": "$\\sum_{k=1}^{8} \\lfloor k/3 \\rfloor = 9$",
+          "asymptoteSource": "// Lattice points in a triangular region, one row per value of the index.\n// Two-argument size fixes the output box exactly.\nsize(300,240);\nfor (int i=0; i<6; ++i) {\n  for (int j=0; j<=i; ++j) {\n    dot((0.7*j,0.7*i), 2pt);\n  }\n}\ndraw((0,0)--(3.5,0));\ndraw((0,0)--(0,3.5));\ndraw((0,0)--(3.15,3.15), dashed);\nlabel(\"$\\sum$\", (-0.6,1.75), E);\nlabel(\"one row of dots per value of the index\", (1.6,-0.7), S);",
+          "asymptoteAlt": "A right triangle of small filled dots in six rows, the bottom row holding one dot and each row above holding one more, so the array fills the region under a dashed diagonal line running from the lower left corner to the upper right. A vertical axis and a horizontal axis are drawn along the left and bottom edges, a summation sign sits outside the vertical axis, and a note beneath the picture explains that each row corresponds to one value of the index being summed.",
+          "asymptoteAspectRatio": 1.25
+        },
+        {
+          "id": "m4-l2-wex-4",
+          "titleLatex": "Worked example: floors grouped by blocks of five",
+          "bodyLatex": "Take $\\sum_{k=1}^{40} \\lfloor k/5 \\rfloor$. The floor is constant on each block of five consecutive values of $k$.\n\n$\\lfloor k/5 \\rfloor = 0$ for $k = 1$ to $4$, then $1$ for $k=5$ to $9$, $2$ for $k=10$ to $14$, and so on up to $7$ for $k=35$ to $39$, with the last value $k=40$ alone giving $8$.\n\nThe seven full blocks contribute $5(1+2+\\cdots+7) = 5(28) = 140$, and the leftover value contributes $8$, for a total of $148$.",
+          "answerLatex": "$\\sum_{k=1}^{40} \\lfloor k/5 \\rfloor = 148$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "sigma-notation-expansion",
+          "name": "Expanding a sum before evaluating it",
+          "summaryLatex": "Write one term for each value of the index, then look for a pattern in the list.",
+          "bodyLatex": "In $\\sum_{k=1}^{12} (3k-2)$ the summand is evaluated at $k = 1, 2, \\ldots, 12$, giving $1, 4, 7, \\ldots, 34$, and the structure of the list is visible immediately. Expansion costs a line and prevents every substitution error, particularly the one where the expression is evaluated at the bounds instead of at every index in between."
+        },
+        {
+          "slug": "sigma-index-shift",
+          "name": "Shifting the index so pieces cancel",
+          "summaryLatex": "Rewrite a shifted sum with the same dummy index, then subtract the two expressions.",
+          "bodyLatex": "The sums $\\sum_{k=1}^{n} k$ and $\\sum_{k=1}^{n} (k+1)$ are not equal, but replacing the index in the second by $k-1$ turns it into $\\sum_{k=2}^{n+1} k$, which overlaps the first on every term from $2$ to $n$. Subtracting then leaves only the two boundary terms, and the size of the overlap is what carries the answer."
+        },
+        {
+          "slug": "arithmetic-sum-formula",
+          "name": "The formula for a sum of an arithmetic pattern",
+          "summaryLatex": "Multiply the number of terms by the average of the first and the last.",
+          "bodyLatex": "For $n$ terms in arithmetic progression the sum is $n$ times the average of the endpoints, which is $\\frac{n}{2}(a_1 + a_n)$ and can be written $\\frac{n}{2}(2a_1 + (n-1)d)$. A sum that is a polynomial in the index is arithmetically different, but a linear summand is an arithmetic pattern and this formula applies to it directly."
+        },
+        {
+          "slug": "symmetric-pairing",
+          "name": "Pairing terms from the outside in",
+          "summaryLatex": "Pair the first with the last, the second with the second-last, and check that every pair has the same value.",
+          "bodyLatex": "The sum of the first $n$ odd numbers is $n^{2}$ because every outside-in pair sums to $2n$, and there are $n/2$ pairs. The same move works on any pattern whose values are symmetric about a midpoint, and it is worth trying before any formula, because it often produces the answer in one line and verifies itself."
+        },
+        {
+          "slug": "telescoping-split",
+          "name": "Forcing a telescoping decomposition",
+          "summaryLatex": "Factor the denominator, split the fraction into a difference, and let the interior pieces cancel.",
+          "bodyLatex": "For $\\frac{1}{k(k+1)}$ the factors are consecutive, so $\\frac{1}{k} - \\frac{1}{k+1}$ has numerator $1$ and works. For $\\frac{1}{k(k+2)}$ the factors differ by $2$, so the numerators must add to $2$: $\\frac{1}{k} - \\frac{1}{k+2}$ does. For a product of three factors, decompose twice, first into a difference of two products and then again. The constant that the numerators must add to is always the difference between the factors, and getting it right is the whole method."
+        },
+        {
+          "slug": "subseries-split",
+          "name": "Splitting a sum into a sum of pairs",
+          "summaryLatex": "When signs alternate, group consecutive pairs so each pair simplifies on its own.",
+          "bodyLatex": "In $\\sum_{k=1}^{20} (-1)^{k} k$ the terms are $-1, 2, -3, 4, \\ldots$, and each adjacent pair is $1$. Ten pairs give $10$ with no formula at all. The same structure appears whenever an alternating sum has terms growing steadily, and pairing beats any attempt to find a closed form."
+        },
+        {
+          "slug": "counting-by-sigma",
+          "name": "Turning a counting question into a sum",
+          "summaryLatex": "Fix one coordinate and count the choices for the other, then sum over the fixed coordinate.",
+          "bodyLatex": "A count becomes a sum by fixing a variable and writing the number of valid values of the other as a summand. The number of multiples of $7$ below $100$ is $7(1 + 2 + \\cdots + 14)$; the number of lattice points in a triangular region is a sum of floors; the sum of the units digits of the integers from $1$ to $100$ is ten copies of the digit sum of $0$ through $9$. Writing the count as a sum first is what makes these problems mechanical instead of creative."
+        },
+        {
+          "slug": "partial-sum-reindex",
+          "name": "Collapsing a sum of differences",
+          "summaryLatex": "A summand of the form $f(k) - f(k-1)$ telescopes to the last value minus the first.",
+          "bodyLatex": "Expanding $\\sum_{k=2}^{10} (k^{2} - (k-1)^{2})$ gives $(4-1) + (9-4) + (16-9) + \\cdots + (100-81)$, and the interior values appear twice with opposite signs. What survives is $100 - 1$. The same argument handles $\\sum \\sqrt{k} - \\sqrt{k-1}$ and any other difference of a function at consecutive arguments."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "partial-sum-read-as-a-term",
+          "titleLatex": "Reading a partial sum as the next term of the sequence",
+          "wrongLatex": "$S_5 = 5(3) = 15$ for a sequence with $a_1 = 3$ and common difference $3$",
+          "whyLatex": "$S_5$ is a sum of five terms, so it is $3 + 6 + 9 + 12 + 15 = 45$, while $a_5$ is the single term $15$. The subscript on $S$ counts terms, and mixing the two objects produces answers that are off by a large factor.",
+          "fixLatex": "Keep the notation apart on paper: $a_n$ is a term and $S_n$ is a total. If a problem asks for the sum of the first $n$ terms, the answer is a quantity that grows like $n$ squared, not like $n$."
+        },
+        {
+          "slug": "telescoping-without-a-decomposition",
+          "titleLatex": "Cancelling terms that never actually meet",
+          "wrongLatex": "the sum $\\sum_{k=1}^{8} \\frac{1}{k(k+1)}$ cancels to $0$",
+          "whyLatex": "Nothing cancels until each summand is written as a difference, and after the decomposition only the interior pieces cancel. The first positive piece and the last negative piece never had partners, and they are the whole answer.",
+          "fixLatex": "Write the decomposed sum out in full, in order, on one line. If the interior pieces do not visibly pair up, the decomposition is wrong rather than the conclusion being surprising."
+        },
+        {
+          "slug": "pairing-an-odd-number-of-terms",
+          "titleLatex": "Pairing when one term is left over",
+          "wrongLatex": "$1 + 3 + 5 + \\cdots + 9 = 3(10) = 30$",
+          "whyLatex": "There are five odd numbers from $1$ to $9$, not six, so they form two pairs and one unpaired middle term. Pairing has to start by counting the terms, since an odd number of terms means the middle value has to be handled on its own.",
+          "fixLatex": "Count the terms before pairing. With an even count every term gets a partner and the total is half the count times the common pair value; with an odd count, pair all but the middle term and add that one separately."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m4-l2-p1",
+        "m4-l2-p2",
+        "m4-l2-p3",
+        "m4-l2-p4",
+        "m4-l2-p5",
+        "m4-l2-p6",
+        "m4-l2-p7",
+        "m4-l2-p8",
+        "m4-l2-p9",
+        "m4-l2-p10",
+        "m4-l2-p11",
+        "m4-l2-p12",
+        "m4-l2-p13",
+        "m4-l2-p14",
+        "m4-l2-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m4-l2-p1",
+        "m4-l2-p2",
+        "m4-l2-p3",
+        "m4-l2-p4",
+        "m4-l2-p5",
+        "m4-l2-p6",
+        "m4-l2-p7",
+        "m4-l2-p8",
+        "m4-l2-p9",
+        "m4-l2-p10",
+        "m4-l2-p11",
+        "m4-l2-p12",
+        "m4-l2-p13",
+        "m4-l2-p14",
+        "m4-l2-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m4-l2-m1",
+        "m4-l2-m2",
+        "m4-l2-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "series",
+    "sigma-notation",
+    "telescoping",
+    "partial-sums"
+  ]
+}

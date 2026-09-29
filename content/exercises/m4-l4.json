@@ -1,0 +1,543 @@
+[
+  {
+    "id": "m4-l4-p1",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 1,
+    "tags": [
+      "binomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the coefficient of $x^{2}$ in the expansion of $(1+x)^{8}$?",
+    "choices": [
+      "28",
+      "8",
+      "56",
+      "36",
+      "64"
+    ],
+    "answerLatex": "28",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The terms of the expansion are all of the form $\\binom{8}{k} x^{k}$, so the coefficient wanted is one entry of a row of Pascal's triangle.",
+      "Read the third entry of row $8$, which counts the ways of choosing two of eight positions.",
+      "Row $8$ is $1, 8, 28, 56, 70, 56, 28, 8, 1$, and the third entry is $28$."
+    ],
+    "solutionLatex": "In $(1+x)^{8}$ the term with three factors supplying $x$ is $\\binom{8}{2}x^{2}$.\n\n$\\binom{8}{2} = \\frac{8 \\cdot 7}{2} = 28$\n\nRow $8$ of Pascal's triangle, $1, 8, 28, 56, 70, 56, 28, 8, 1$, has $28$ in the third position, which is the same entry by symmetry of $\\binom{8}{2} = \\binom{8}{6}$.",
+    "techniqueSlugs": [
+      "binomial-expansion",
+      "pascal-triangle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p2",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 1,
+    "tags": [
+      "binomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the fourth term in the expansion of $(x-2)^{7}$?",
+    "choices": null,
+    "answerLatex": "-280x^{4}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The term number fixes how many factors supply the $-2$, and the remaining factors supply the $x$.",
+      "The $r$th term of $(a+b)^{n}$ is $\\binom{n}{r-1} a^{n-r+1} b^{r-1}$.",
+      "With $r=4$ and $n=7$, three factors supply the $-2$ and four supply the $x$."
+    ],
+    "solutionLatex": "The fourth term has three copies of $-2$ and four copies of $x$.\n\n$T_{4} = \\binom{7}{3} x^{4} (-2)^{3} = 35 x^{4} \\cdot (-8) = -280x^{4}$\n\nThe exponents $4$ and $3$ add to $7$ as they must, and the term number $4$ is one more than the index of the second part, which is what the general term records.",
+    "techniqueSlugs": [
+      "specific-term",
+      "binomial-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p3",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "binomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the exact value of $\\binom{10}{3}$?",
+    "choices": null,
+    "answerLatex": "120",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "This coefficient counts the ways of choosing three positions out of ten, and it is an entry of row $10$ of Pascal's triangle.",
+      "Build the row by adding the two entries above each position until you reach the third one.",
+      "Row $10$ reads $1, 10, 45, 120, 210, 252, \\ldots$, and the fourth entry is $120$."
+    ],
+    "solutionLatex": "$\\binom{10}{3} = \\frac{10 \\cdot 9 \\cdot 8}{3 \\cdot 2 \\cdot 1} = \\frac{720}{6} = 120$\n\nThe same value sits in row $10$ of Pascal's triangle, where the fourth entry is $120$, and the symmetry $\\binom{10}{3} = \\binom{10}{7}$ puts it at the eighth entry as well.",
+    "techniqueSlugs": [
+      "pascal-triangle",
+      "combinatorial-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p4",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "binomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the coefficient of $a^{3}b^{2}$ in the expansion of $(a+b)^{5}$?",
+    "choices": [
+      "10",
+      "20",
+      "5",
+      "15",
+      "25"
+    ],
+    "answerLatex": "10",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The term is fixed by its exponents, and the coefficient counts the ways the five factors can supply two copies of $b$.",
+      "The coefficient of $a^{p}b^{q}$ in $(a+b)^{n}$ is $\\binom{n}{q}$ when $p$ and $q$ add to $n$.",
+      "Here $p=3$ and $q=2$, so the coefficient is $\\binom{5}{2}$."
+    ],
+    "solutionLatex": "The exponents $3$ and $2$ add to $5$, as they must.\n\n$\\binom{5}{2} = \\frac{5 \\cdot 4}{2} = 10$\n\nEquivalently the third term of the expansion is $10a^{3}b^{2}$, since the second part appears twice and the term number is one more than that index.",
+    "techniqueSlugs": [
+      "specific-term",
+      "pascal-triangle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p5",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "binomial-coefficients",
+      "series"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=0}^{9} \\binom{9}{k}$?",
+    "choices": null,
+    "answerLatex": "512",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The sum of all the coefficients of a polynomial is its value at one, and the coefficients here are the whole expansion of a power.",
+      "$\\sum_{k=0}^{n} \\binom{n}{k}$ is the value of $(1+1)^{n}$.",
+      "With $n=9$ the sum is $2^{9}$."
+    ],
+    "solutionLatex": "Setting $x=1$ in $(1+x)^{9} = \\sum_{k=0}^{9}\\binom{9}{k}x^{k}$ collapses every term to its coefficient.\n\n$\\sum_{k=0}^{9} \\binom{9}{k} = (1+1)^{9} = 2^{9} = 512$\n\nThis is the number of subsets of a $9$-element set, all sizes together, since a subset of size $k$ is one of the $\\binom{9}{k}$ subsets of that size.",
+    "techniqueSlugs": [
+      "sum-of-binomials",
+      "binomial-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p6",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "binomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the coefficient of $x^{2}$ in the expansion of $(2x+1)^{5}$?",
+    "choices": null,
+    "answerLatex": "40",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number attached to $x$ contributes a power of itself to the multiplier of every term, so the answer is not simply an entry of a row.",
+      "The $x^{2}$ term is $\\binom{5}{2}(2x)^{2}$, and the factor $(2)^{2}$ belongs to the coefficient.",
+      "$\\binom{5}{2} \\cdot 2^{2} = 10 \\cdot 4 = 40$."
+    ],
+    "solutionLatex": "In $(2x+1)^{5}$ the term with two factors supplying $2x$ is\n\n$\\binom{5}{2}(2x)^{2} = 10 \\cdot 4x^{2} = 40x^{2}$\n\nThe coefficient is therefore $40$. The full expansion $1 + 10x + 40x^{2} + 80x^{3} + 80x^{4} + 32x^{5}$ shows the same entry, and the exponents run from $0$ to $5$ as they should.",
+    "techniqueSlugs": [
+      "coefficient-extraction",
+      "binomial-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p7",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "binomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the coefficient of $x^{3}y^{3}$ in the expansion of $(x+2y)^{6}$?",
+    "choices": null,
+    "answerLatex": "160",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The exponents of $x$ and $y$ have to add to the power of the whole, and the number attached to $y$ has to be raised to a power and counted as well.",
+      "Half of the six factors supply $2y$ and half supply $x$, giving $\\binom{6}{3}(2y)^{3}$.",
+      "$\\binom{6}{3} \\cdot 2^{3} = 20 \\cdot 8 = 160$."
+    ],
+    "solutionLatex": "Three factors supply $2y$ and three supply $x$.\n\n$\\binom{6}{3}(x)^{3}(2y)^{3} = 20 x^{3} \\cdot 8y^{3} = 160x^{3}y^{3}$\n\nThe exponents $3$ and $3$ add to $6$, as they must, and the coefficient of the monomial is $160$.",
+    "techniqueSlugs": [
+      "specific-term",
+      "coefficient-extraction"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p8",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "multinomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the coefficient of $a^{2}b^{2}c$ in the expansion of $(a+b+c)^{5}$?",
+    "choices": [
+      "30",
+      "60",
+      "20",
+      "15",
+      "120"
+    ],
+    "answerLatex": "30",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The exponents $2$, $2$, and $1$ add to $5$, so the term exists, and its coefficient counts the ways of placing those three letters.",
+      "Write $5!$ divided by one factorial for each letter: $\\frac{5!}{2!2!1!}$.",
+      "$\\frac{5!}{2!2!1!}$ has numerator $120$ and denominator $4$, so the coefficient is their ratio."
+    ],
+    "solutionLatex": "The coefficient is the multinomial coefficient for the split $5 = 2 + 2 + 1$.\n\n$\\frac{5!}{2!2!1!} = \\frac{120}{4} = 30$\n\nThe same count comes from choosing positions in two stages: $\\binom{5}{2}$ ways to place the $a$'s and $\\binom{3}{2}$ ways to place the $b$'s among what remains, and $10 \\cdot 3 \\cdot 1 = 30$.",
+    "techniqueSlugs": [
+      "multinomial-coefficients",
+      "combinatorial-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p9",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "multinomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "How many distinct terms does the expansion of $(x+y+z)^{4}$ have?",
+    "choices": null,
+    "answerLatex": "15",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Each term corresponds to a way of splitting the exponent $4$ into three nonnegative counts, one for each letter.",
+      "Count the solutions of $p+q+r=4$ in nonnegative integers, remembering that the counts are attached to specific letters.",
+      "Adding a fourth row of counting turns this into a row of Pascal's triangle, so the count is $\\binom{6}{2}$."
+    ],
+    "solutionLatex": "A term is fixed by how the four factors split among the three letters, so the count is the number of ordered triples of nonnegative integers summing to $4$.\n\nListing them by the value of the first exponent: $1$ way for $p=4$, $3$ for $p=3$, $6$ for $p=2$, $4$ for $p=1$, and $1$ for $p=0$, giving $1+3+6+4+1 = 15$.\n\nThe standard shortcut is to note that this is the number of $2$-element subsets of a $6$-element set, so it is $\\binom{6}{2} = 15$.",
+    "techniqueSlugs": [
+      "multinomial-coefficients",
+      "pascal-triangle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p10",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "binomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the exact value of $\\binom{20}{17}$?",
+    "choices": [
+      "1140",
+      "6840",
+      "380",
+      "570",
+      "1540"
+    ],
+    "answerLatex": "1140",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A coefficient with a large second index is the same as one with the complementary small index, so reduce it first.",
+      "The symmetry gives $\\binom{20}{17} = \\binom{20}{3}$.",
+      "$\\binom{20}{3} = \\frac{20 \\cdot 19 \\cdot 18}{6} = 1140$."
+    ],
+    "solutionLatex": "Symmetry first: $\\binom{20}{17} = \\binom{20}{3}$, which is a small factorial.\n\n$\\binom{20}{3} = \\frac{20 \\cdot 19 \\cdot 18}{3 \\cdot 2 \\cdot 1} = \\frac{6840}{6} = 1140$\n\nRow $20$ of Pascal's triangle has $1140$ at both the fourth and the eighteenth positions, which is the symmetry stated as a table entry.",
+    "techniqueSlugs": [
+      "binomial-symmetry",
+      "combinatorial-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p11",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "binomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the coefficient of $x^{2}$ in the expansion of $(x^{2}+x+1)^{8}$?",
+    "choices": null,
+    "answerLatex": "112",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A coefficient can be built from the available degrees in more than one way, and all of the ways have to be counted.",
+      "The eight units of degree two can come from two squares, from one square and one linear term, or from two linear terms.",
+      "The three contributions are $\\binom{8}{2}$, $8 \\cdot 7$, and $\\binom{8}{2}$, giving $28 + 56 + 28$."
+    ],
+    "solutionLatex": "Enumerate the ways to reach degree two.\n\nTwo squares: $\\binom{8}{2} = 28$.\n\nOne square and one linear term: $8 \\cdot 7 = 56$, choosing which factor gives the square and which gives the linear term.\n\nTwo linear terms: $\\binom{8}{2} = 28$.\n\nThe coefficient is $28 + 56 + 28 = 112$.\n\nNothing else contributes: a constant has degree zero, and two squares already use the whole budget of two.",
+    "techniqueSlugs": [
+      "coefficient-extraction",
+      "binomial-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p12",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "binomial-coefficients",
+      "series"
+    ],
+    "promptLatex": "What is the sum of the coefficients of the polynomial $(2x-1)^{5}$?",
+    "choices": null,
+    "answerLatex": "1",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Adding the coefficients of a polynomial is the same operation as evaluating it where every power becomes one.",
+      "The value of a polynomial at $x=1$ is the sum of its coefficients, signs included.",
+      "$(2 \\cdot 1 - 1)^{5} = 1^{5} = 1$."
+    ],
+    "solutionLatex": "The sum of the coefficients is the value at $x=1$.\n\n$(2 \\cdot 1 - 1)^{5} = 1^{5} = 1$\n\nExpanding confirms it: $-1 + 10x - 40x^{2} + 80x^{3} - 80x^{4} + 32x^{5}$ has coefficients $-1 + 10 - 40 + 80 - 80 + 32 = 1$.\n\nThe sign of the constant term is the whole difficulty: the answer is not $(2+1)^{5}$, because the term is $-1$ and at $x=1$ it stays negative.",
+    "techniqueSlugs": [
+      "sum-of-binomials",
+      "binomial-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p13",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "combinations",
+      "binomial-coefficients"
+    ],
+    "promptLatex": "How many subsets of a $10$-element set contain exactly $4$ elements?",
+    "choices": [
+      "210",
+      "252",
+      "120",
+      "45",
+      "1024"
+    ],
+    "answerLatex": "210",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A subset is determined by which elements it contains, so the number of them is a choice count.",
+      "The number of $k$-element subsets of an $n$-element set is $\\binom{n}{k}$.",
+      "Here $n=10$ and $k=4$, and $\\binom{10}{4} = \\frac{10 \\cdot 9 \\cdot 8 \\cdot 7}{24}$."
+    ],
+    "solutionLatex": "$\\binom{10}{4} = \\frac{10 \\cdot 9 \\cdot 8 \\cdot 7}{4 \\cdot 3 \\cdot 2 \\cdot 1} = \\frac{5040}{24} = 210$\n\nThe same number is the coefficient of $a^{4}b^{6}$ in $(a+b)^{10}$, since that coefficient counts the same choice: which four of the ten factors supply an $a$.",
+    "techniqueSlugs": [
+      "combinatorial-counting",
+      "pascal-triangle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p14",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "binomial-coefficients",
+      "series"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=0}^{10} \\binom{10}{k} 3^{k}$?",
+    "choices": null,
+    "answerLatex": "1048576",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The binomial coefficients are the coefficients of one polynomial, and the extra power of $3$ on each term points at a particular value of that polynomial.",
+      "$\\sum_{k=0}^{n} \\binom{n}{k} x^{k} = (1+x)^{n}$ for every value of $x$.",
+      "Setting $x=3$ and $n=10$ gives $(1+3)^{10} = 4^{10}$."
+    ],
+    "solutionLatex": "The binomial identity $\\sum_{k=0}^{n}\\binom{n}{k}x^{k} = (1+x)^{n}$ is the expansion of a power of a binomial.\n\n$\\sum_{k=0}^{10} \\binom{10}{k} 3^{k} = (1+3)^{10} = 4^{10} = 1048576$\n\nThe identity is the same statement as the expansion, read in the direction that removes the work: the sum is a value of a power rather than a sum of eleven terms.",
+    "techniqueSlugs": [
+      "sum-of-binomials",
+      "binomial-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-p15",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "binomial-coefficients",
+      "place-value",
+      "divisibility"
+    ],
+    "promptLatex": "How many trailing zeros does the integer $\\binom{100}{50}$ have?",
+    "choices": null,
+    "answerLatex": "0",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A trailing zero needs a two and a five at the same time, so the two kinds have to be counted separately and the smaller count is what shows.",
+      "Use Legendre's formula on the three factorials inside the binomial coefficient, once for the prime $5$ and once for the prime $2$.",
+      "The count of factors of $5$ in $\\frac{100!}{50!50!}$ is $24 - 12 - 12 = 0$, and no number without a factor of $5$ ends in a zero."
+    ],
+    "solutionLatex": "A trailing zero requires one factor of $2$ and one factor of $5$, so the number of them is the smaller of the two counts.\n\nFor the prime $5$, Legendre's formula gives $v_{5}(100!) = 20 + 4 = 24$ and $v_{5}(50!) = 10 + 2 = 12$, so\n\n$v_{5}\\left(\\binom{100}{50}\\right) = 24 - 12 - 12 = 0$\n\nThe coefficient has no factor of $5$ at all. For comparison the count of factors of $2$ is $97 - 47 - 47 = 3$, so the coefficient is divisible by $8$ but by no power of $10$.\n\nWith no factor of $5$ available, the number of trailing zeros is $0$.",
+    "techniqueSlugs": [
+      "binomial-modular",
+      "combinatorial-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-m1",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "binomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the constant term in the expansion of $\\left(x+\\frac{2}{x}\\right)^{8}$?",
+    "choices": [
+      "1120",
+      "70",
+      "560",
+      "2240",
+      "112"
+    ],
+    "answerLatex": "1120",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A constant term appears only when the powers of $x$ coming from the two parts exactly cancel.",
+      "If $k$ of the eight factors supply $\\frac{2}{x}$ and the rest supply $x$, the exponent of $x$ is $8-2k$.",
+      "Setting $8-2k$ equal to zero gives $k=4$, so the term is $\\binom{8}{4} 2^{4}$."
+    ],
+    "solutionLatex": "Let $k$ be the number of factors supplying $\\frac{2}{x}$. The term is\n\n$\\binom{8}{k} x^{8-k} \\left(\\frac{2}{x}\\right)^{k} = \\binom{8}{k} 2^{k} x^{8-2k}$\n\nFor a constant term the exponent of $x$ must vanish, so $8 - 2k = 0$ and $k = 4$.\n\nThe constant term is $\\binom{8}{4} 2^{4} = 70 \\cdot 16 = 1120$.\n\nThe parity condition is why this works at all: with an even exponent the cancellation is possible, and the count of such positions is the middle entry of an even row.",
+    "techniqueSlugs": [
+      "coefficient-extraction",
+      "binomial-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-m2",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "binomial-coefficients",
+      "series"
+    ],
+    "promptLatex": "What is the sum of the coefficients of the polynomial $(1+2x-x^{2})^{5}$?",
+    "choices": null,
+    "answerLatex": "32",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The sum of the coefficients of any polynomial is its value where every power of the variable becomes one.",
+      "Evaluate the polynomial at $x=1$.",
+      "$(1 + 2 - 1)^{5} = 2^{5} = 32$."
+    ],
+    "solutionLatex": "The sum of the coefficients is the value at $x=1$.\n\n$(1 + 2 \\cdot 1 - 1^{2})^{5} = (1+2-1)^{5} = 2^{5} = 32$\n\nThe negative term matters and is not dropped: it contributes $-1$ rather than $+1$, which is the only reason the answer is $32$ and not $4^{5} = 1024$.",
+    "techniqueSlugs": [
+      "sum-of-binomials",
+      "coefficient-extraction"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l4-m3",
+    "moduleId": "M4",
+    "lessonId": "m4-l4",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "multinomial-coefficients",
+      "combinations"
+    ],
+    "promptLatex": "What is the coefficient of $x^{4}y^{2}$ in the expansion of $(x+2y+3)^{10}$?",
+    "choices": null,
+    "answerLatex": "12600",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The exponents in the term fix the split of the ten factors, and every part of the sum contributes its own power.",
+      "Four factors supply $x$, two supply $2y$, and the remaining four supply the constant $3$, so the count of arrangements is $\\frac{10!}{4!2!4!}$.",
+      "The constant parts contribute $3^{4}$, so the coefficient is $\\frac{10!}{4!2!4!} \\cdot 2^{2} \\cdot 3^{4}$."
+    ],
+    "solutionLatex": "The exponents $4$ and $2$ account for six of the ten factors, so the remaining four factors must supply the constant $3$.\n\nThe number of ways to arrange the three groups is the multinomial coefficient $\\frac{10!}{4!2!4!}$, and the group supplying $2y$ contributes a factor of $2^{2}$.\n\n$\\text{coefficient of } x^{4}y^{2} = \\frac{10!}{4!2!4!} \\cdot 2^{2} = 3150 \\cdot 4 = 12600$\n\nThe four factors of $3$ contribute $3^{4}$ to the term as a whole but not to the coefficient, because a coefficient is the multiplier of the monomial itself and $3^{4}$ is a constant shared by many terms of the expansion.",
+    "techniqueSlugs": [
+      "multinomial-coefficients",
+      "coefficient-extraction"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

@@ -1,0 +1,546 @@
+[
+  {
+    "id": "m8-l2-p1",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "trig-identities",
+      "exact-trig-values",
+      "double-angle-recovery"
+    ],
+    "promptLatex": "Suppose $\\sin x = \\frac{3}{5}$ and $\\cos x = \\frac{4}{5}$ for an acute angle $x$. Compute the exact value of $\\sin 2x$.",
+    "choices": null,
+    "answerLatex": "\\frac{24}{25}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Both function values are given, so a doubled-angle formula is the natural tool.",
+      "The doubled sine is twice the product of the sine and the cosine of the original angle.",
+      "$\\frac{3}{5} \\cdot \\frac{4}{5} = \\frac{12}{25}$, and twice that is $\\frac{24}{25}$."
+    ],
+    "solutionLatex": "The doubled-sine identity is $\\sin 2x = 2 \\sin x \\cos x$, and both factors are given.\n\n$\\sin 2x = 2 \\cdot \\frac{3}{5} \\cdot \\frac{4}{5} = \\frac{24}{25}$\n\nCheck: $\\cos 2x = \\cos^2 x - \\sin^2 x = \\frac{16}{25} - \\frac{9}{25} = \\frac{7}{25}$, and $\\left(\\frac{24}{25}\\right)^2 + \\left(\\frac{7}{25}\\right)^2 = 1$.",
+    "techniqueSlugs": [
+      "double-angle-recovery",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p2",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "trig-identities",
+      "special-angles",
+      "double-angle-recovery"
+    ],
+    "promptLatex": "Suppose $x$ is an acute angle with $\\sin x = \\cos x$. Compute $\\sin x \\cos x$.",
+    "choices": null,
+    "answerLatex": "\\frac{1}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A condition that makes a sine and a cosine equal to each other pins the angle down, and a $45^\\circ$ angle is the only acute possibility.",
+      "The identity $\\sin^2 x + \\cos^2 x = 1$ holds for every angle, and with the two values equal each of their squares is half of $1$.",
+      "The sine is $\\frac{\\sqrt{2}}{2}$, so the product is $\\frac{\\sqrt{2}}{2} \\cdot \\frac{\\sqrt{2}}{2} = \\frac{1}{2}$."
+    ],
+    "solutionLatex": "Since $\\sin x = \\cos x$ and the two squares sum to $1$, each square is $\\frac{1}{2}$, so in the first quadrant $\\sin x = \\cos x = \\frac{\\sqrt{2}}{2}$.\n\n$\\sin x \\cos x = \\frac{\\sqrt{2}}{2} \\cdot \\frac{\\sqrt{2}}{2} = \\frac{2}{4} = \\frac{1}{2}$\n\nEquivalently, $\\sin 2x = 2 \\sin x \\cos x = 1$, which is $\\sin 90^\\circ$, and indeed the angle must be $45^\\circ$.",
+    "techniqueSlugs": [
+      "double-angle-recovery",
+      "pythagorean-recovery"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p3",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "trig-identities",
+      "simplify-before-substituting",
+      "factor-the-expression"
+    ],
+    "promptLatex": "Suppose $\\sin x = \\frac{3}{5}$ and $\\cos x = \\frac{4}{5}$ for an acute angle $x$. Compute the value of $\\frac{1 - \\cos^2 x}{\\sin x}$.",
+    "choices": null,
+    "answerLatex": "\\frac{3}{5}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The numerator looks complicated only because the two values have not been used yet, so look at the shape of the expression before the numbers.",
+      "The quantity $1 - \\cos^2 x$ is exactly what the Pythagorean identity describes, since the identity says the sine's square and the cosine's square sum to $1$.",
+      "Replacing the numerator by $\\sin^2 x$ turns the whole fraction into $\\frac{\\sin^2 x}{\\sin x} = \\sin x$, and the sine is given."
+    ],
+    "solutionLatex": "The Pythagorean identity $\\sin^2 x + \\cos^2 x = 1$ rearranges to $1 - \\cos^2 x = \\sin^2 x$, so\n\n$\\frac{1 - \\cos^2 x}{\\sin x} = \\frac{\\sin^2 x}{\\sin x} = \\sin x = \\frac{3}{5}$.\n\nThe simplification is exact wherever $\\sin x$ is not $0$, and the given sine is $\\frac{3}{5}$, so nothing is excluded. Direct substitution gives the same value: $\\frac{1 - \\frac{16}{25}}{\\frac{3}{5}} = \\frac{\\frac{9}{25}}{\\frac{3}{5}} = \\frac{9}{25} \\cdot \\frac{5}{3} = \\frac{3}{5}$.",
+    "techniqueSlugs": [
+      "simplify-before-substituting",
+      "factor-the-expression",
+      "pythagorean-recovery"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p4",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "trig-identities",
+      "exact-trig-values",
+      "double-angle-recovery"
+    ],
+    "promptLatex": "Suppose $\\cos x = \\frac{4}{5}$ and $\\sin x = \\frac{3}{5}$ for an acute angle $x$. Compute the exact value of $\\cos 2x$.",
+    "choices": null,
+    "answerLatex": "\\frac{7}{25}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The doubled cosine has several equivalent forms, and the useful one depends on which function value you were handed.",
+      "Since a cosine is given, the form that keeps only cosine squares is the one to use, and it turns the doubled cosine into a single square plus a constant.",
+      "$\\left(\\frac{4}{5}\\right)^2 = \\frac{16}{25}$, and twice that less $1$ is $\\frac{7}{25}$."
+    ],
+    "solutionLatex": "With a cosine in hand the convenient form is $\\cos 2x = 2\\cos^2 x - 1$.\n\n$\\cos 2x = 2 \\cdot \\left(\\frac{4}{5}\\right)^2 - 1 = 2 \\cdot \\frac{16}{25} - 1 = \\frac{32}{25} - \\frac{25}{25} = \\frac{7}{25}$\n\nThe other form agrees: $\\cos^2 x - \\sin^2 x = \\frac{16}{25} - \\frac{9}{25} = \\frac{7}{25}$. Check against the doubled sine, which is $\\frac{24}{25}$: $\\frac{49}{625} + \\frac{576}{625} = 1$.",
+    "techniqueSlugs": [
+      "double-angle-recovery",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p5",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "trig-identities",
+      "exact-trig-values",
+      "convert-to-sine-and-cosine"
+    ],
+    "promptLatex": "Suppose $\\tan x = \\frac{3}{4}$ and $x$ is acute. Compute $\\tan 2x$.",
+    "choices": null,
+    "answerLatex": "\\frac{24}{7}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A tangent of the doubled angle is not one of the standard formulas, so the doubled-angle identities have to be converted before use.",
+      "Write the doubled tangent as the ratio of the doubled sine to the doubled cosine, then replace each doubled function with its identity to clear the denominator.",
+      "The result is $\\frac{2\\tan x}{1 - \\tan^2 x}$, and substituting the known tangent finishes it."
+    ],
+    "solutionLatex": "There is no direct formula for $\\tan 2x$, so write it as a quotient and use the doubled-angle identities for numerator and denominator.\n\n$\\tan 2x = \\frac{\\sin 2x}{\\cos 2x} = \\frac{2 \\sin x \\cos x}{\\cos^2 x - \\sin^2 x}$\n\nDividing numerator and denominator by $\\cos^2 x$ gives $\\frac{2 \\tan x}{1 - \\tan^2 x}$, and with $\\tan x = \\frac{3}{4}$:\n\n$\\tan 2x = \\frac{2 \\cdot \\frac{3}{4}}{1 - \\frac{9}{16}} = \\frac{\\frac{3}{2}}{\\frac{7}{16}} = \\frac{3}{2} \\cdot \\frac{16}{7} = \\frac{24}{7}$\n\nDirectly, $\\sin x = \\frac{3}{5}$ and $\\cos x = \\frac{4}{5}$ from the $3$-$4$-$5$ triangle, so $\\tan 2x = \\frac{2 \\cdot \\frac{3}{5} \\cdot \\frac{4}{5}}{\\frac{16}{25} - \\frac{9}{25}} = \\frac{\\frac{24}{25}}{\\frac{7}{25}} = \\frac{24}{7}$.",
+    "techniqueSlugs": [
+      "convert-to-sine-and-cosine",
+      "double-angle-recovery"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p6",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "trig-identities",
+      "exact-trig-values",
+      "pythagorean-recovery"
+    ],
+    "promptLatex": "Suppose $\\tan x = \\frac{3}{4}$ and $x$ is acute. Compute $\\sec^2 x$.",
+    "choices": null,
+    "answerLatex": "\\frac{25}{16}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A tangent and a secant are linked by an identity that is the Pythagorean one divided through by a single square.",
+      "Dividing $\\sin^2 x + \\cos^2 x = 1$ by $\\cos^2 x$ leaves the tangent's square on the left and a secant on the right.",
+      "The answer is one more than the square of the given tangent, and $\\frac{9}{16} + 1$ is the sum."
+    ],
+    "solutionLatex": "Divide the Pythagorean identity by $\\cos^2 x$:\n\n$1 + \\frac{\\sin^2 x}{\\cos^2 x} = \\frac{1}{\\cos^2 x}$, that is $1 + \\tan^2 x = \\sec^2 x$.\n\n$\\sec^2 x = 1 + \\left(\\frac{3}{4}\\right)^2 = 1 + \\frac{9}{16} = \\frac{25}{16}$\n\nCross-check: the $3$-$4$-$5$ triangle gives $\\cos x = \\frac{4}{5}$, so $\\sec x = \\frac{5}{4}$ and $\\sec^2 x = \\frac{25}{16}$.",
+    "techniqueSlugs": [
+      "pythagorean-recovery",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p7",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "trig-identities",
+      "exact-trig-values",
+      "angle-addition-expansion"
+    ],
+    "promptLatex": "Suppose $\\sin x = \\frac{3}{5}$, $\\cos x = \\frac{4}{5}$, $\\sin y = \\frac{5}{13}$, and $\\cos y = \\frac{12}{13}$, with $x$ and $y$ acute. Compute $\\sin(x + y)$.",
+    "choices": null,
+    "answerLatex": "\\frac{56}{65}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two angles are being added, and the addition formula for the sine is stated in terms of products of a function at one angle and a function at the other.",
+      "The formula is $\\sin(x+y) = \\sin x \\cos y + \\cos x \\sin y$, and all four factors are given.",
+      "$\\frac{3}{5} \\cdot \\frac{12}{13} = \\frac{36}{65}$ and $\\frac{4}{5} \\cdot \\frac{5}{13} = \\frac{20}{65}$, and the two add."
+    ],
+    "solutionLatex": "The sine addition formula is $\\sin(x + y) = \\sin x \\cos y + \\cos x \\sin y$.\n\n$\\sin(x+y) = \\frac{3}{5} \\cdot \\frac{12}{13} + \\frac{4}{5} \\cdot \\frac{5}{13} = \\frac{36}{65} + \\frac{20}{65} = \\frac{56}{65}$\n\nThe value is about $0.862$, consistent with $x \\approx 37^\\circ$ and $y \\approx 23^\\circ$ summing to about $60^\\circ$, whose sine is $\\frac{\\sqrt{3}}{2} \\approx 0.866$.",
+    "techniqueSlugs": [
+      "angle-addition-expansion",
+      "convert-to-sine-and-cosine"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p8",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "trig-identities",
+      "exact-trig-values",
+      "angle-addition-expansion"
+    ],
+    "promptLatex": "Suppose $\\sin x = \\frac{3}{5}$, $\\cos x = \\frac{4}{5}$, $\\sin y = \\frac{5}{13}$, and $\\cos y = \\frac{12}{13}$, with $x$ and $y$ acute. Compute $\\cos(x - y)$.",
+    "choices": null,
+    "answerLatex": "\\frac{63}{65}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The angles are being subtracted, and the cosine of a difference is built from the same four given values as the sine of a sum.",
+      "Both terms in the cosine of a difference are positive products, since the sign changes in the sine formula cancel against the signs that the odd function introduces.",
+      "$\\frac{4}{5} \\cdot \\frac{12}{13} = \\frac{48}{65}$ and $\\frac{3}{5} \\cdot \\frac{5}{13} = \\frac{15}{65}$, and the two add."
+    ],
+    "solutionLatex": "From the subtraction formula $\\cos(a-b) = \\cos a \\cos b + \\sin a \\sin b$:\n\n$\\cos(x-y) = \\frac{4}{5} \\cdot \\frac{12}{13} + \\frac{3}{5} \\cdot \\frac{5}{13} = \\frac{48}{65} + \\frac{15}{65} = \\frac{63}{65}$\n\nSanity check: $x \\approx 37^\\circ$ and $y \\approx 23^\\circ$, so $x - y \\approx 14^\\circ$ and its cosine is close to $1$, which $\\frac{63}{65} \\approx 0.969$ is.",
+    "techniqueSlugs": [
+      "angle-addition-expansion",
+      "convert-to-sine-and-cosine"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p9",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "special-angles",
+      "exact-trig-values",
+      "angle-addition-expansion"
+    ],
+    "promptLatex": "Compute the exact value of $\\sin 75^\\circ$.",
+    "choices": null,
+    "answerLatex": "\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "No right triangle has an angle of $75^\\circ$, so the value has to be assembled from angles that do have triangles.",
+      "Look for a way to write $75^\\circ$ as a sum of two familiar special angles and then use the addition formula.",
+      "$75^\\circ = 45^\\circ + 30^\\circ$, and the four values in the expansion are $\\frac{\\sqrt{2}}{2}$, $\\frac{\\sqrt{3}}{2}$, $\\frac{\\sqrt{2}}{2}$, and $\\frac{1}{2}$."
+    ],
+    "solutionLatex": "Write $75^\\circ$ as a sum of special angles: $75^\\circ = 45^\\circ + 30^\\circ$.\n\n$\\sin(45^\\circ + 30^\\circ) = \\sin 45^\\circ \\cos 30^\\circ + \\cos 45^\\circ \\sin 30^\\circ$\n\n$= \\frac{\\sqrt{2}}{2} \\cdot \\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2} \\cdot \\frac{1}{2} = \\frac{\\sqrt{6}}{4} + \\frac{\\sqrt{2}}{4} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$\n\nThe value is about $0.966$, correct for a sine in the first quadrant at $75^\\circ$.",
+    "techniqueSlugs": [
+      "angle-addition-expansion",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p10",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "special-angles",
+      "exact-trig-values",
+      "angle-addition-expansion"
+    ],
+    "promptLatex": "Compute the exact value of $\\cos 105^\\circ$.",
+    "choices": null,
+    "answerLatex": "\\frac{\\sqrt{2} - \\sqrt{6}}{4}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "An angle of $105^\\circ$ has no right triangle of its own, so it must be built from two angles that do.",
+      "$105^\\circ = 60^\\circ + 45^\\circ$, and the cosine addition formula is a difference of two products rather than a sum.",
+      "$\\frac{1}{2} \\cdot \\frac{\\sqrt{2}}{2} - \\frac{\\sqrt{3}}{2} \\cdot \\frac{\\sqrt{2}}{2} = \\frac{\\sqrt{2}}{4} - \\frac{\\sqrt{6}}{4}$, and the cosine is negative here."
+    ],
+    "solutionLatex": "Write $105^\\circ = 60^\\circ + 45^\\circ$ and use the cosine addition formula.\n\n$\\cos(60^\\circ + 45^\\circ) = \\cos 60^\\circ \\cos 45^\\circ - \\sin 60^\\circ \\sin 45^\\circ$\n\n$= \\frac{1}{2} \\cdot \\frac{\\sqrt{2}}{2} - \\frac{\\sqrt{3}}{2} \\cdot \\frac{\\sqrt{2}}{2} = \\frac{\\sqrt{2}}{4} - \\frac{\\sqrt{6}}{4} = \\frac{\\sqrt{2} - \\sqrt{6}}{4}$\n\nThe value is about $-0.259$, which is right for a cosine in the second quadrant.",
+    "techniqueSlugs": [
+      "angle-addition-expansion",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p11",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "trig-identities",
+      "simplify-before-substituting",
+      "factor-the-expression"
+    ],
+    "promptLatex": "Suppose $\\cos x = \\frac{3}{5}$ and $x$ is acute. Compute the value of $\\frac{1 + \\cos x}{1 - \\cos x}$.",
+    "choices": [
+      "4",
+      "2",
+      "\\frac{1}{4}",
+      "8",
+      "\\frac{3}{2}"
+    ],
+    "answerLatex": "4",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A quotient of two linear expressions in a single known value can be evaluated directly, so decide whether any simplification is needed first.",
+      "Both the numerator and the denominator are stated in terms of the one known value, and neither needs an identity.",
+      "The numerator is $\\frac{8}{5}$ and the denominator is $\\frac{2}{5}$, and their ratio is $4$."
+    ],
+    "solutionLatex": "With $\\cos x = \\frac{3}{5}$ both parts are ordinary numbers.\n\n$\\frac{1 + \\frac{3}{5}}{1 - \\frac{3}{5}} = \\frac{\\frac{8}{5}}{\\frac{2}{5}} = \\frac{8}{5} \\cdot \\frac{5}{2} = 4$\n\nThe denominator is $\\frac{2}{5} > 0$, so nothing is excluded, and the value $4$ is consistent with the half-angle form $\\cot^2\\frac{x}{2}$ since $\\cos x = \\frac{3}{5}$ gives $\\tan^2\\frac{x}{2} = \\frac{1-\\cos x}{1+\\cos x} = \\frac{1}{4}$.",
+    "techniqueSlugs": [
+      "simplify-before-substituting",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p12",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "trig-identities",
+      "exact-trig-values",
+      "factor-the-expression"
+    ],
+    "promptLatex": "Suppose $\\sin x = \\frac{3}{5}$ and $\\cos x = \\frac{4}{5}$. Compute the value of $(\\cos x + \\sin x)(\\cos x - \\sin x)$.",
+    "choices": [
+      "\\frac{7}{25}",
+      "\\frac{24}{25}",
+      "\\frac{25}{49}",
+      "\\frac{9}{25}",
+      "\\frac{1}{25}"
+    ],
+    "answerLatex": "\\frac{7}{25}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A product of a sum and a difference of the same two terms is a difference of squares, and here the two terms are both known.",
+      "Expanding gives $\\cos^2 x - \\sin^2 x$, which is one of the forms of the doubled cosine.",
+      "$\\frac{16}{25} - \\frac{9}{25} = \\frac{7}{25}$."
+    ],
+    "solutionLatex": "The product of a sum and a difference of the same two quantities is a difference of squares:\n\n$(\\cos x + \\sin x)(\\cos x - \\sin x) = \\cos^2 x - \\sin^2 x$\n\n$= \\left(\\frac{4}{5}\\right)^2 - \\left(\\frac{3}{5}\\right)^2 = \\frac{16}{25} - \\frac{9}{25} = \\frac{7}{25}$\n\nThis is $\\cos 2x$, and with $\\sin 2x = \\frac{24}{25}$ the identity $\\frac{49}{625} + \\frac{576}{625} = 1$ confirms it.",
+    "techniqueSlugs": [
+      "factor-the-expression",
+      "double-angle-recovery"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p13",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "trig-identities",
+      "simplify-before-substituting",
+      "factor-the-expression"
+    ],
+    "promptLatex": "Suppose $\\sin x = \\frac{12}{13}$ and $\\cos x = \\frac{5}{13}$ for an acute angle $x$. Compute the value of $\\frac{1 + \\cos x}{\\sin x}$.",
+    "choices": null,
+    "answerLatex": "\\frac{3}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The expression is a quotient whose two parts are both fixed by the single known cosine, so the identity that matters is the one that produces a sine.",
+      "The Pythagorean identity turns the given cosine into the matching sine, after which the quotient is a ratio of plain numbers.",
+      "The sine is $\\frac{12}{13}$, so the value is $\\frac{1 + \\frac{5}{13}}{\\frac{12}{13}} = \\frac{\\frac{18}{13}}{\\frac{12}{13}} = \\frac{18}{12}$."
+    ],
+    "solutionLatex": "The Pythagorean identity gives $\\sin^2 x = 1 - \\cos^2 x = 1 - \\frac{25}{169} = \\frac{144}{169}$, and the first quadrant makes it positive: $\\sin x = \\frac{12}{13}$, which is the value given.\n\n$\\frac{1 + \\frac{5}{13}}{\\frac{12}{13}} = \\frac{\\frac{18}{13}}{\\frac{12}{13}} = \\frac{18}{13} \\cdot \\frac{13}{12} = \\frac{3}{2}$\n\nThe quotient is $\\cot\\frac{x}{2}$ in general, and $\\tan^2\\frac{x}{2} = \\frac{1-\\cos x}{1+\\cos x} = \\frac{8}{18} = \\frac{4}{9}$ gives the reciprocal $\\frac{3}{2}$.",
+    "techniqueSlugs": [
+      "simplify-before-substituting",
+      "pythagorean-recovery",
+      "cofunction-substitution"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p14",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "trig-equations",
+      "trig-identities",
+      "double-angle-recovery"
+    ],
+    "promptLatex": "What is the smallest positive value of $x$, in radians, for which $\\sin 2x = 0$ and $0 < x < \\pi$?",
+    "choices": null,
+    "answerLatex": "\\frac{\\pi}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A doubled function is zero exactly when the underlying function is zero at half the angle, and the zeros of the sine are the whole numbers of $\\pi$.",
+      "$\\sin 2x = 0$ when $2x$ is a whole multiple of $\\pi$, so $x$ is a whole multiple of $\\frac{\\pi}{2}$.",
+      "Inside the open interval $(0, \\pi)$ the multiples of $\\frac{\\pi}{2}$ are $\\frac{\\pi}{2}$ only, since $\\pi$ is excluded."
+    ],
+    "solutionLatex": "The sine vanishes exactly at integer multiples of $\\pi$, so $\\sin 2x = 0$ requires $2x = k\\pi$ for an integer $k$, that is $x = k \\cdot \\frac{\\pi}{2}$.\n\nThe solutions inside $0 < x < \\pi$ are $x = \\frac{\\pi}{2}$ for $k = 1$; $k = 2$ gives $x = \\pi$, which is excluded, and $k = 0$ gives $x = 0$, also excluded.\n\nSo the smallest positive value is $\\frac{\\pi}{2}$.",
+    "techniqueSlugs": [
+      "double-angle-recovery",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-p15",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "trig-identities",
+      "exact-trig-values",
+      "double-angle-recovery"
+    ],
+    "promptLatex": "Suppose $\\tan x = \\frac{1}{2}$ and $\\cos x > 0$. Compute the exact value of $\\cos 2x$.",
+    "choices": null,
+    "answerLatex": "\\frac{3}{5}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Only a tangent is given, so the doubled cosine has to be reached through an identity that eliminates the sine rather than one that keeps it.",
+      "The Pythagorean identity divided by the cosine's square gives the tangent's square plus $1$ in terms of the secant's square, and combining that with the difference of squares removes both unknowns.",
+      "$\\frac{1 - \\tan^2 x}{1 + \\tan^2 x}$ becomes $\\frac{1 - \\frac{1}{4}}{1 + \\frac{1}{4}}$, and that quotient simplifies."
+    ],
+    "solutionLatex": "The doubled cosine in terms of the tangent is $\\cos 2x = \\frac{1 - \\tan^2 x}{1 + \\tan^2 x}$, obtained by dividing $\\cos^2 x - \\sin^2 x = \\cos^2 x(1 - \\tan^2 x)$ and then using $\\frac{1}{\\cos^2 x} = 1 + \\tan^2 x$.\n\n$\\cos 2x = \\frac{1 - \\frac{1}{4}}{1 + \\frac{1}{4}} = \\frac{\\frac{3}{4}}{\\frac{5}{4}} = \\frac{3}{5}$\n\nCross-check: $\\cos x > 0$ and $\\tan x = \\frac{1}{2}$ give the $1$-$2$-$\\sqrt{5}$ triangle, so $\\cos x = \\frac{2}{\\sqrt{5}}$ and $\\sin x = \\frac{1}{\\sqrt{5}}$, and $\\frac{4}{5} - \\frac{1}{5} = \\frac{3}{5}$ as before.",
+    "techniqueSlugs": [
+      "convert-to-sine-and-cosine",
+      "double-angle-recovery",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-m1",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "trig-identities",
+      "trig-equations",
+      "double-angle-recovery"
+    ],
+    "promptLatex": "Suppose $x$ is an acute angle with $\\sin x - \\cos x = \\frac{1}{2}$. Compute $\\sin 2x$.",
+    "choices": null,
+    "answerLatex": "\\frac{3}{4}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The condition involves a difference of the two functions rather than either one, and squaring a difference turns it into something the doubled-angle identities can use.",
+      "Squaring the given difference produces both squares and a cross term, and the cross term is the negative of the doubled sine.",
+      "$\\sin^2 x + \\cos^2 x = 1$ and $2\\sin x\\cos x = \\sin 2x$, so $\\frac{1}{4} = 1 - \\sin 2x$."
+    ],
+    "solutionLatex": "Square the given equation:\n\n$(\\sin x - \\cos x)^2 = \\sin^2 x + \\cos^2 x - 2\\sin x\\cos x = 1 - \\sin 2x$.\n\nThe left side is $\\left(\\frac{1}{2}\\right)^2 = \\frac{1}{4}$, so $\\frac{1}{4} = 1 - \\sin 2x$ and $\\sin 2x = \\frac{3}{4}$.\n\nThe value is positive, which is right: in the first quadrant $\\sin x$ exceeds $\\cos x$ only once $x$ has passed $45^\\circ$, and the doubled angle is then in $(90^\\circ, 180^\\circ)$ where the sine is still positive. Indeed $x$ is about $75^\\circ$, so $2x$ is about $150^\\circ$ and $\\sin 150^\\circ = \\frac{1}{2}$ is the right size, with the given difference of $\\frac{\\sqrt{6} - \\sqrt{2}}{4} \\approx 0.259$ confirming it.",
+    "techniqueSlugs": [
+      "double-angle-recovery",
+      "simplify-before-substituting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-m2",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "trig-identities",
+      "exact-trig-values",
+      "double-angle-recovery"
+    ],
+    "promptLatex": "Suppose $\\sin x = \\frac{5}{13}$ and $\\cos x = \\frac{12}{13}$ for an acute angle $x$. Compute the exact value of $\\cos 2x$.",
+    "choices": [
+      "\\frac{119}{169}",
+      "\\frac{120}{169}",
+      "\\frac{144}{169}",
+      "\\frac{25}{169}",
+      "\\frac{119}{25}"
+    ],
+    "answerLatex": "\\frac{119}{169}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Both function values are given, so the form of the doubled cosine that uses both of them directly is available.",
+      "The difference of the two squares is one of the three equivalent forms, and both squares are immediate from the data.",
+      "$\\left(\\frac{12}{13}\\right)^2 = \\frac{144}{169}$ and $\\left(\\frac{5}{13}\\right)^2 = \\frac{25}{169}$, and their difference is the answer."
+    ],
+    "solutionLatex": "With both values given, use $\\cos 2x = \\cos^2 x - \\sin^2 x$.\n\n$\\cos 2x = \\left(\\frac{12}{13}\\right)^2 - \\left(\\frac{5}{13}\\right)^2 = \\frac{144 - 25}{169} = \\frac{119}{169}$\n\nThe single-function form agrees: $2\\cos^2 x - 1 = \\frac{288}{169} - \\frac{169}{169} = \\frac{119}{169}$. Check against the doubled sine $\\frac{120}{169}$: $\\frac{119^2 + 120^2}{169^2} = \\frac{14161 + 14400}{28561} = \\frac{28561}{28561} = 1$.",
+    "techniqueSlugs": [
+      "double-angle-recovery",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l2-m3",
+    "moduleId": "M8",
+    "lessonId": "m8-l2",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "special-angles",
+      "exact-trig-values",
+      "angle-addition-expansion"
+    ],
+    "promptLatex": "Compute the exact value of $\\sin 15^\\circ$.",
+    "choices": null,
+    "answerLatex": "\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Like the $75^\\circ$ value this one has no right triangle, so it is assembled from two angles that do, and $15^\\circ$ is a difference of two of them.",
+      "$15^\\circ = 45^\\circ - 30^\\circ$, and the sine of a difference is a difference of two products.",
+      "$\\frac{\\sqrt{2}}{2} \\cdot \\frac{\\sqrt{3}}{2} - \\frac{\\sqrt{2}}{2} \\cdot \\frac{1}{2} = \\frac{\\sqrt{6}}{4} - \\frac{\\sqrt{2}}{4}$, and the value is positive because the angle is."
+    ],
+    "solutionLatex": "Write $15^\\circ = 45^\\circ - 30^\\circ$ and use the sine subtraction formula, in which the second product is subtracted.\n\n$\\sin(45^\\circ - 30^\\circ) = \\sin 45^\\circ \\cos 30^\\circ - \\cos 45^\\circ \\sin 30^\\circ$\n\n$= \\frac{\\sqrt{2}}{2} \\cdot \\frac{\\sqrt{3}}{2} - \\frac{\\sqrt{2}}{2} \\cdot \\frac{1}{2} = \\frac{\\sqrt{6}}{4} - \\frac{\\sqrt{2}}{4} = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$\n\nThe value is about $0.259$, correct for a small first-quadrant angle. It is the complement of the $75^\\circ$ value, and the two agree: $\\sin 15^\\circ = \\cos 75^\\circ$.",
+    "techniqueSlugs": [
+      "angle-addition-expansion",
+      "cofunction-substitution",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "id": "m7-l2-p7",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 2,
+  "tags": ["stars-and-bars"],
+  "promptLatex": "How many ways are there to distribute 12 identical candies to 4 distinct children if each child must receive at least 2 candies?",
+  "choices": [
+    "35",
+    "45",
+    "56",
+    "70",
+    "84"
+  ],
+  "answerLatex": "35",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Give 2 candies to each child first, using 8 candies. Then distribute the remaining 4 candies freely among the 4 children.\nThe number of ways is \\binom{4+4-1}{4-1} = \\binom{7}{3}.",
+    "\\binom{7}{3} = 35."
+  ],
+  "solutionLatex": "Give 2 candies to each of the 4 children, using 8 candies total. Then distribute the remaining 4 candies freely among the 4 children (nonnegative solutions).\n\nNumber of ways: \\binom{4+4-1}{4-1} = \\binom{7}{3} = 35.",
+  "techniqueSlugs": ["stars-and-bars-method"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

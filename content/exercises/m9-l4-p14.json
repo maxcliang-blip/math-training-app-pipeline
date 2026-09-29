@@ -1,0 +1,22 @@
+{
+  "id": "m9-l4-p14",
+  "moduleId": "M9",
+  "lessonId": "m9-l4",
+  "tier": "A",
+  "difficulty": 2,
+  "tags": ["proof-strategy", "induction"],
+  "promptLatex": "A student claims: \"To prove 'n! > 2^n for all n ≥ 4' by induction, the inductive step from k to k+1 requires assuming k! > 2^k and showing (k+1)! > 2^{k+1}.\" What additional condition is needed for the step to work?",
+  "choices": ["the base case must be n = 1", "the induction hypothesis must also assume k ≥ 4", "no additional condition is needed", "the claim is false and cannot be proved by induction"],
+  "answerLatex": "the induction hypothesis must also assume k ≥ 4",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The inequality n! > 2^n first holds at n = 4 (4! = 24 > 16 = 2^4).",
+    "The inductive step (k+1)! > 2^{k+1} from k! > 2^k requires k+1 > 2, i.e., k ≥ 2, but the base case anchors at k = 4.",
+    "Ensuring k ≥ 4 guarantees the inductive step has enough room to operate."
+  ],
+  "solutionLatex": "The claim n! > 2^n is first true at n = 4 (4! = 24 > 16 = 2^4). For the inductive step, assume k! > 2^k for some k ≥ 4. Then (k+1)! = (k+1)k! > (k+1)2^k. Since k ≥ 4, k+1 ≥ 5 > 2, so (k+1)2^k > 2 · 2^k = 2^{k+1}. Thus (k+1)! > 2^{k+1}, completing the inductive step. The additional condition needed is that the induction hypothesis applies only when k ≥ 4, matching the base case.",
+  "techniqueSlugs": ["induction"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

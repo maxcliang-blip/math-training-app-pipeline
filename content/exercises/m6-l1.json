@@ -1,0 +1,526 @@
+[
+  {
+    "id": "m6-l1-p1",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "distance-formula",
+      "coordinates"
+    ],
+    "promptLatex": "What is the distance between the points $(-2,3)$ and $(5,-1)$?",
+    "choices": [
+      "\\sqrt{65}",
+      "\\sqrt{53}",
+      "\\sqrt{61}",
+      "\\sqrt{45}",
+      "\\sqrt{81}"
+    ],
+    "answerLatex": "\\sqrt{65}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two points differ in both coordinates, and a single distance has to account for both differences at once.",
+      "The distance formula squares the difference in each coordinate, adds the two squares, and takes one square root at the end.",
+      "The coordinate differences are $7$ and $-4$, and $7^{2}+(-4)^{2}=65$."
+    ],
+    "solutionLatex": "Apply the distance formula to the two points.\n\n$x_2-x_1 = 5-(-2) = 7$ and $y_2-y_1 = -1-3 = -4$.\n\n$d = \\sqrt{7^{2}+(-4)^{2}} = \\sqrt{49+16} = \\sqrt{65}$\n\nThe squares remove the sign of the second difference, so the order of the points cannot affect the answer.",
+    "techniqueSlugs": [
+      "distance-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p2",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "midpoint",
+      "coordinates"
+    ],
+    "promptLatex": "What is the midpoint of the segment whose endpoints are $(-4,7)$ and $(6,-3)$? Give the answer as an ordered pair.",
+    "choices": null,
+    "answerLatex": "(1,2)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The point being asked for is the one that sits halfway between the two endpoints.",
+      "The midpoint of two points comes from averaging the two $x$-coordinates and averaging the two $y$-coordinates.",
+      "The $x$-coordinate is $\\frac{-4+6}{2}=1$ and the $y$-coordinate is $\\frac{7+(-3)}{2}=2$."
+    ],
+    "solutionLatex": "Average each coordinate of the two endpoints.\n\n$x = \\frac{-4+6}{2} = 1$ and $y = \\frac{7+(-3)}{2} = 2$.\n\n$M = (1,2)$\n\nThe point $(1,2)$ is exactly $5$ from each endpoint, so the answer is consistent with the definition of a midpoint.",
+    "techniqueSlugs": [
+      "midpoint-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p3",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "reflections",
+      "coordinates"
+    ],
+    "promptLatex": "A point with coordinates $(3,-5)$ is reflected across the $x$-axis. What are the coordinates of the image?",
+    "choices": null,
+    "answerLatex": "(3,5)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The mirror is one of the coordinate axes, so the answer differs from the original in exactly one coordinate.",
+      "Reflection in the $x$-axis keeps the horizontal position and reverses the vertical one.",
+      "The $x$-coordinate stays $3$ and the $y$-coordinate becomes $-(-5)=5$."
+    ],
+    "solutionLatex": "Reflecting in the $x$-axis negates the $y$-coordinate and leaves the $x$-coordinate alone.\n\n$(3,-5) \\mapsto (3, 5)$\n\nThe distance from the origin is unchanged, since $\\sqrt{3^{2}+(-5)^{2}} = \\sqrt{3^{2}+5^{2}}$, which is what a reflection must do.",
+    "techniqueSlugs": [
+      "reflect-in-axis-or-diagonal"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p4",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "reflections",
+      "coordinates"
+    ],
+    "promptLatex": "Which ordered pair is the image of the point $(2,7)$ after reflection across the line $y=x$?",
+    "choices": [
+      "(7,2)",
+      "(2,7)",
+      "(-7,2)",
+      "(2,-7)",
+      "(-2,7)"
+    ],
+    "answerLatex": "(7,2)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "This mirror is a diagonal, so the two coordinates trade places rather than one of them changing sign.",
+      "Reflection in the line $y=x$ fixes every point on that line, so the map sends the first coordinate to the second and the second to the first.",
+      "The point $(2,7)$ has $2$ as its first coordinate and $7$ as its second, so the image is $(7,2)$."
+    ],
+    "solutionLatex": "Reflection in $y=x$ is the coordinate swap.\n\n$(2,7) \\mapsto (7,2)$\n\nPoints on the line $y=x$ are fixed by this map, and points off it move to the other side at the same distance from the line, which is the definition of a reflection.",
+    "techniqueSlugs": [
+      "reflect-in-axis-or-diagonal"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p5",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "coordinates",
+      "transformations"
+    ],
+    "promptLatex": "The whole plane is translated by the vector $(-9,5)$. What are the coordinates of the image of the point $(7,-2)$?",
+    "choices": null,
+    "answerLatex": "(-2,3)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A translation is the same displacement applied to every point, so the shift in the horizontal direction and the shift in the vertical direction are the same for everyone.",
+      "Adding a vector to a point means adding its first entry to the $x$-coordinate and its second entry to the $y$-coordinate.",
+      "The new coordinates are $7+(-9)=-2$ in the first place and $-2+5=3$ in the second."
+    ],
+    "solutionLatex": "Add the translation vector to each coordinate.\n\n$x = 7 + (-9) = -2$ and $y = -2 + 5 = 3$.\n\nThe image is $(-2,3)$\n\nA translation preserves distance, and indeed the point $(-2,3)$ is $\\sqrt{81+25}=\\sqrt{106}$ from the origin while $(7,-2)$ is $\\sqrt{49+4}=\\sqrt{53}$; the origin is not the center here, so only differences between image and original are preserved.",
+    "techniqueSlugs": [
+      "translation-as-vector"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p6",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "coordinates",
+      "linear-equations"
+    ],
+    "promptLatex": "Which of the following points lies on the line passing through $(1,1)$ and $(5,9)$?",
+    "choices": [
+      "(6,11)",
+      "(6,10)",
+      "(5,11)",
+      "(6,13)",
+      "(7,11)"
+    ],
+    "answerLatex": "(6,11)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Two points fix a line, and the question is which candidate continues that same straight line.",
+      "The direction vector between the two given points is $(4,8)$, so moving one more step in that direction gives another point on the line.",
+      "Adding $(4,8)$ to $(5,9)$ gives $(9,17)$; equivalently the line is $y=2x-1$, and $x=6$ gives $y=11$."
+    ],
+    "solutionLatex": "The direction vector from $(1,1)$ to $(5,9)$ is $(4,8)$, so the slope is $\\frac{8}{4}=2$.\n\nThe line through $(1,1)$ with slope $2$ is $y = 2x - 1$.\n\nTesting $x=6$ gives $y = 11$, so the point on the line is $(6,11)$. Checking against the direction vector directly, $(1,1)+t(4,8)$ equals $(6,11)$ at $t=\\frac{5}{4}$, which is consistent.",
+    "techniqueSlugs": [
+      "collinearity-test"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p7",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "distance-formula",
+      "pythagorean"
+    ],
+    "promptLatex": "How far is the point $(5,12)$ from the origin of the coordinate plane?",
+    "choices": null,
+    "answerLatex": "13",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The origin is a point like any other, so the same distance computation applies to it.",
+      "Take the origin as the first point, so both coordinate differences are just the coordinates themselves.",
+      "$\\sqrt{5^{2}+12^{2}}=\\sqrt{25+144}=\\sqrt{169}=13$"
+    ],
+    "solutionLatex": "Treat the origin as the point $(0,0)$.\n\n$d = \\sqrt{(5-0)^{2}+(12-0)^{2}} = \\sqrt{25+144} = \\sqrt{169}$\n\n$d = 13$\n\nThe triple $5, 12, 13$ is one of the standard Pythagorean triples, so the surd simplifies to a whole number.",
+    "techniqueSlugs": [
+      "distance-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p8",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "reflections",
+      "coordinates"
+    ],
+    "promptLatex": "The point $(2,3)$ is reflected across the vertical line $x=4$. What are the coordinates of its image?",
+    "choices": null,
+    "answerLatex": "(6,3)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The mirror is parallel to the $y$-axis but is not the $y$-axis itself, so a simple sign change will not do.",
+      "Find where the point's horizontal position meets the mirror line, and continue the same distance on the far side of it.",
+      "The $x$-coordinate of the mirror is $4$, the point sits at $x=2$, and $4+(4-2)=6$, so the image is $(6,3)$."
+    ],
+    "solutionLatex": "The mirror line $x=4$ is vertical, so only the $x$-coordinate changes.\n\nThe horizontal distance from $2$ to $4$ is $2$, and the same distance is added on the other side, giving $4+2=6$.\n\nThe image is $(6,3)$\n\nThe midpoint of the point and its image is $(4,3)$, which lies on the mirror line, so the construction is consistent.",
+    "techniqueSlugs": [
+      "reflect-in-line"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p9",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "reflections",
+      "coordinates"
+    ],
+    "promptLatex": "Find the coordinates of the reflection of the point $(2,3)$ across the line $y=2x$, which passes through the origin.",
+    "choices": null,
+    "answerLatex": "(\\frac{6}{5},\\frac{17}{5})",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The mirror is a slanted line through the origin, so neither coordinate simply changes sign.",
+      "Reflecting in a line amounts to locating the foot of the perpendicular from the point to the line, and then travelling the same distance beyond that foot.",
+      "The line has direction $u=(1,2)$ with $u\\cdot u = 5$, so the parameter of the foot is $\\frac{(2)(1)+(3)(2)}{5}=\\frac{8}{5}$ and the foot is $\\left(\\frac{8}{5},\\frac{16}{5}\\right)$."
+    ],
+    "solutionLatex": "The mirror line has direction $u=(1,2)$ and passes through the origin, so the foot of the perpendicular is the projection of $P=(2,3)$ onto $u$.\n\nThe parameter is $\\frac{P\\cdot u}{u\\cdot u} = \\frac{2+6}{5} = \\frac{8}{5}$, so the foot is $F = \\left(\\frac{8}{5},\\frac{16}{5}\\right)$.\n\nThe reflection is twice the foot minus the point.\n\n$P' = 2F - P = \\left(\\frac{16}{5}-2, \\frac{32}{5}-3\\right) = \\left(\\frac{6}{5},\\frac{17}{5}\\right)$\n\nCheck: the midpoint of $P$ and $P'$ is $F$, and the displacement $P'-P = \\left(-\\frac{4}{5},\\frac{2}{5}\\right)$ is perpendicular to $u=(1,2)$. Both are required of a reflection, so the answer is confirmed.",
+    "techniqueSlugs": [
+      "reflect-in-line"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p10",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "coordinates",
+      "midpoint"
+    ],
+    "promptLatex": "A point $P$ lies three quarters of the way from $A=(-8,2)$ to $B=(8,6)$. What are the coordinates of $P$?",
+    "choices": null,
+    "answerLatex": "(4,5)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The position along the segment is a fraction, and that fraction is measured from the first endpoint named.",
+      "Three quarters of the way from $A$ means adding three quarters of the displacement $B-A$ to the point $A$.",
+      "$B-A=(16,4)$, so $P = (-8,2)+\\frac{3}{4}(16,4) = (-8+12, 2+3)$"
+    ],
+    "solutionLatex": "The displacement from $A$ to $B$ is $B-A=(16,4)$.\n\n$P = A + \\frac{3}{4}(B-A) = (-8,2) + (12,3) = (4,5)$\n\nThe remaining fraction is $\\frac{1}{4}$, and the two fractions sum to $1$ as they must for an internal division, which confirms the ratio was read from the correct end. The point $(4,5)$ is indeed three quarters of the horizontal span from $-8$ to $8$.\n\nThe figure shows the configuration: $P$ sits at three quarters of the way along the segment from $A$ to $B$.",
+    "techniqueSlugs": [
+      "section-formula"
+    ],
+    "asymptoteSource": "// A segment divided internally in the ratio 3:1.\n// Two-argument size call fixes the output box, so the declared 2 is exact.\nsize(320,160);\npair A=(0,0), B=(6,0), P=(4.5,0);\ndraw(A--B,Arrow);\ndot(A,2+2.5pt);\ndot(B,2+2.5pt);\ndot(P,2+3.5pt);\nlabel(\"$A=(-8,2)$\",A,SW);\nlabel(\"$B=(8,6)$\",B,SE);\nlabel(\"$P$\",P,N);\nlabel(\"$\\frac{3}{4}$\",(2.25,0),N);\nlabel(\"$\\frac{1}{4}$\",(5.25,0),N);\nlabel(\"measured from $A$\",(3,-1),S);",
+    "asymptoteAlt": "A horizontal segment runs from left to right with an arrowhead at the right end. A small filled dot marks each endpoint and a larger filled dot marks a point about three quarters of the way along, labelled P. The long left portion of the segment carries a label showing three quarters and the short right portion shows one quarter, with a note underneath saying the fractions are measured from the left endpoint, and the two endpoints are labelled with their coordinates.",
+    "asymptoteAspectRatio": 2
+  },
+  {
+    "id": "m6-l1-p11",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "reflections",
+      "distance-formula"
+    ],
+    "promptLatex": "A point $P$ is confined to the $x$-axis. What is the smallest possible value of $PA+PB$, where $A=(0,4)$ and $B=(6,4)$?",
+    "choices": [
+      "10",
+      "8",
+      "12",
+      "13",
+      "9"
+    ],
+    "answerLatex": "10",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The sum of two distances has no formula, but it can be turned into a single distance by moving one of the two points.",
+      "Reflect one of the two points in the line that $P$ is confined to, and then compare the broken path with a straight segment.",
+      "Reflecting $B$ in the $x$-axis gives $(6,-4)$, and the distance from $A=(0,4)$ to $(6,-4)$ is $\\sqrt{6^{2}+8^{2}}$."
+    ],
+    "solutionLatex": "For any $P$ on the $x$-axis, reflecting $B$ in that axis to $B'=(6,-4)$ gives $PB = PB'$.\n\n$PA + PB = PA + PB' \\ge AB'$ by the triangle inequality, with equality exactly when $P$ lies on the segment $AB'$.\n\n$AB' = \\sqrt{(6-0)^{2}+(-4-4)^{2}} = \\sqrt{36+64} = 10$\n\nEquality is attained where $AB'$ crosses the $x$-axis, which by similar triangles is the point $(3,0)$; that point is on the axis, so the bound is achieved and the minimum is $10$.",
+    "techniqueSlugs": [
+      "reflect-to-shorten"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p12",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "distance-formula",
+      "triangles"
+    ],
+    "promptLatex": "A triangle has vertices at $(0,0)$, $(3,4)$, and $(3,-4)$. What is its perimeter?",
+    "choices": null,
+    "answerLatex": "18",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The perimeter is the total length of the three sides, and each side is a distance between two vertices.",
+      "Two of the three sides run from the origin to points whose coordinates are related, and the third joins the two remaining vertices directly.",
+      "$|OA| = 5$, $|OB| = 5$, and $AB$ is a vertical segment of length $8$"
+    ],
+    "solutionLatex": "Compute the three side lengths.\n\n$|OA| = \\sqrt{3^{2}+4^{2}} = 5$ and $|OB| = \\sqrt{3^{2}+(-4)^{2}} = 5$.\n\n$|AB|$ is vertical at $x=3$, so $|AB| = 4-(-4) = 8$.\n\nThe perimeter is $5+5+8 = 18$\n\nAs a check, the side of length $8$ is the hypotenuse of a right triangle with legs $5$ and $5$, and indeed $\\sqrt{50+50}=\\sqrt{100}=8$.",
+    "techniqueSlugs": [
+      "distance-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p13",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "distance-formula",
+      "counting-integers"
+    ],
+    "promptLatex": "How many points with integer coordinates lie at distance $\\sqrt{5}$ from the origin?",
+    "choices": [
+      "8",
+      "4",
+      "6",
+      "12",
+      "16"
+    ],
+    "answerLatex": "8",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Write down the equation the coordinates must satisfy, and remember that both signs are possible for each of them.",
+      "Integer coordinates at a fixed distance from the origin are integer solutions of a sum of two squares equalling a fixed small number.",
+      "The squares must be $1$ and $4$ in some order, giving two orderings and two sign choices for each"
+    ],
+    "solutionLatex": "Integer coordinates $x$ and $y$ at distance $\\sqrt{5}$ satisfy $x^{2}+y^{2}=5$.\n\nThe only squares of nonnegative integers below $5$ that can appear are $0$, $1$, and $4$. The pairs summing to $5$ are $1+4$ and $4+1$, so $|x|$ and $|y|$ are $1$ and $2$ in either order.\n\nThere are two orderings, and each of the two coordinates has two sign choices, giving $2 \\cdot 2 \\cdot 2 = 8$ points.\n\nNo coordinate can be $0$ here, since $5$ is not a square, so there is no overcount and no case where a sign choice coincides.",
+    "techniqueSlugs": [
+      "distance-formula",
+      "count-lattice-points"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p14",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "reflections",
+      "coordinates"
+    ],
+    "promptLatex": "A half-turn about the point $C=(2,-1)$ carries the point $(-5,7)$ to a point $P'$. What are the coordinates of $P'$?",
+    "choices": null,
+    "answerLatex": "(9,-9)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A half-turn about a point is a reflection in that point, and a point is the midpoint of any segment it reflects.",
+      "The center of a half-turn sits halfway between a point and its image, so the two images can be read off from the midpoint relation.",
+      "The midpoint of $(-5,7)$ and $P'$ is $(2,-1)$, so the image is $(4+5, -2-7)$"
+    ],
+    "solutionLatex": "The center of a half-turn is the midpoint of a point and its image, so $C=\\frac{P+P'}{2}$.\n\nSolving for $P'$ gives $P' = 2C - P$.\n\n$P' = (4+5, -2-7) = (9,-9)$\n\nCheck: the midpoint of $(-5,7)$ and $(9,-9)$ is $\\left(\\frac{4}{2},\\frac{-2}{2}\\right) = (2,-1)$, the center, as required.",
+    "techniqueSlugs": [
+      "midpoint-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-p15",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "coordinates",
+      "pythagorean"
+    ],
+    "promptLatex": "Points $A=(0,0)$ and $B=(12,0)$ are given, and $C$ lies in the first quadrant with $CA=CB=10$. What is the $x$-coordinate of $C$?",
+    "choices": null,
+    "answerLatex": "6",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Equal distances to two fixed points force a symmetry, and the symmetry axis passes through the midpoint of the two fixed points.",
+      "A point equidistant from $A$ and $B$ lies on the perpendicular bisector of the segment joining them.",
+      "The midpoint of $A$ and $B$ is $(6,0)$ and the perpendicular bisector there is the vertical line $x=6$"
+    ],
+    "solutionLatex": "Since $CA=CB$, the point $C$ lies on the perpendicular bisector of the segment $AB$.\n\nThe midpoint of $A=(0,0)$ and $B=(12,0)$ is $(6,0)$, and $AB$ is horizontal, so its perpendicular bisector is the line $x=6$.\n\nThe $x$-coordinate of $C$ is therefore $6$, and the first-quadrant condition picks the point $(6,8)$ above the axis, since $\\sqrt{6^{2}+8^{2}}=10$ as required.",
+    "techniqueSlugs": [
+      "midpoint-formula",
+      "distance-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-m1",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "10",
+    "difficulty": 3,
+    "tags": [
+      "midpoint",
+      "distance-formula"
+    ],
+    "promptLatex": "The vertices of a rectangle are $(3,1)$, $(9,1)$, $(9,7)$, and $(3,7)$. What is the distance from the center of the rectangle to any one of its vertices?",
+    "choices": [
+      "3\\sqrt{2}",
+      "6\\sqrt{2}",
+      "3\\sqrt{3}",
+      "6",
+      "12"
+    ],
+    "answerLatex": "3\\sqrt{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The center of a rectangle is the midpoint of either diagonal, and the distance from the center to a vertex is half a diagonal.",
+      "Locate the center first, then take the distance from it to one vertex.",
+      "The center is $(6,4)$ and the vertex $(3,1)$ differs from it by $(-3,-3)$, so the distance is $\\sqrt{9+9}$"
+    ],
+    "solutionLatex": "The center is the midpoint of the diagonal from $(3,1)$ to $(9,7)$, which is $(6,4)$.\n\nThe differences from $(6,4)$ to $(3,1)$ are $3$ and $3$ in absolute value.\n\n$d = \\sqrt{3^{2}+3^{2}} = \\sqrt{18} = 3\\sqrt{2}$\n\nCheck: a full diagonal is $\\sqrt{6^{2}+6^{2}}=\\sqrt{72}=6\\sqrt{2}$, and half of that is $3\\sqrt{2}$, which agrees with the value found directly.",
+    "techniqueSlugs": [
+      "midpoint-formula",
+      "distance-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-m2",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "reflections"
+    ],
+    "promptLatex": "The point $(5,-2)$ is reflected across the line $y=x$, and the resulting point is then reflected across the $x$-axis. What is the final image?",
+    "choices": null,
+    "answerLatex": "(-2,-5)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two reflections are performed one after the other, and each of them acts on coordinates in a way that can be read off directly.",
+      "The first mirror is a diagonal, so it trades the coordinates; the second is an axis, so it changes a single sign.",
+      "After the first reflection the point is $(-2,5)$, and reflecting that in the $x$-axis makes the second coordinate negative"
+    ],
+    "solutionLatex": "Reflecting in $y=x$ swaps the coordinates, so $(5,-2)$ becomes $(-2,5)$.\n\nReflecting in the $x$-axis negates the second coordinate.\n\n$(-2,5) \\mapsto (-2,-5)$\n\nBoth reflections preserve distance from the origin, and $\\sqrt{25+4}=\\sqrt{29}$ is unchanged at each step, as it must be.",
+    "techniqueSlugs": [
+      "reflect-in-axis-or-diagonal"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l1-m3",
+    "moduleId": "M6",
+    "lessonId": "m6-l1",
+    "tier": "12",
+    "difficulty": 5,
+    "tags": [
+      "distance-formula",
+      "coordinates"
+    ],
+    "promptLatex": "Two adjacent vertices of a square are $(1,2)$ and $(6,5)$. What is the area of that square?",
+    "choices": null,
+    "answerLatex": "34",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The area of a square is the square of its side length, and the side length is not the distance you first compute.",
+      "The two given points are joined by a side, so the side length is the distance between them and the area is that distance squared.",
+      "The two vertices are $5$ units apart horizontally and $3$ apart vertically, so the distance between them is $\\sqrt{25+9}=\\sqrt{34}$"
+    ],
+    "solutionLatex": "The side length is the distance between the two adjacent vertices.\n\n$s = \\sqrt{(6-1)^{2}+(5-2)^{2}} = \\sqrt{25+9} = \\sqrt{34}$\n\nThe area of a square is the side length squared, and $\\left(\\sqrt{34}\\right)^{2} = 34$.\n\nSquaring the distance is the step that is easy to forget, since the distance itself is irrational while the area is not.",
+    "techniqueSlugs": [
+      "distance-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

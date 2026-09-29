@@ -1,0 +1,515 @@
+[
+  {
+    "id": "m6-l4-p1",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 1,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "A complex number $z = a + bi$ satisfies $|z| = 5$ and $b = 3$, with $a > 0$. What is the value of $a$?",
+    "choices": null,
+    "answerLatex": "4",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The modulus of a complex number is a distance from the origin, so the real and imaginary parts form the legs of a right triangle.",
+      "Write the modulus as a square root of a sum of two squares and use the known imaginary part to get an equation in the real part alone.",
+      "$25 = a^{2} + 9$, and the condition $a>0$ chooses one of the two roots"
+    ],
+    "solutionLatex": "The modulus of $a+bi$ is $\\sqrt{a^{2}+b^{2}}$.\n\n$\\sqrt{a^{2}+3^{2}} = 5$ gives $a^{2}+9=25$, so $a^{2}=16$.\n\nThe two candidates are $a=4$ and $a=-4$, and the condition $a>0$ selects the first.\n\n$a = 4$\n\nBoth $4+3i$ and $-4+3i$ have modulus $5$, so the sign condition is doing real work here and may not be dropped.",
+    "techniqueSlugs": [
+      "complex-modulus-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p2",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 1,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "What is the product $(3+4i)(2-i)$? Give the answer in the form $a+bi$.",
+    "choices": null,
+    "answerLatex": "10+5i",
+    "answerAlternatives": [
+      "10 + 5i"
+    ],
+    "hintLatex": [
+      "There are four terms in the expansion, and only one of them needs the special rule for the square of the imaginary unit.",
+      "Distribute each part of the first factor across both parts of the second, and remember that the unit squared is minus one.",
+      "$6 - 3i + 8i - 4i^{2}$"
+    ],
+    "solutionLatex": "Distribute and then reduce the power of $i$.\n\n$(3+4i)(2-i) = 6 - 3i + 8i - 4i^{2}$\n\nSince $i^{2} = -1$, the last term is $+4$, so the real part is $6+4=10$ and the imaginary part is $-3i+8i=5i$.\n\n$10+5i$\n\nCheck the modulus: $|3+4i|=5$ and $|2-i|=\\sqrt{5}$, so the product should have modulus $5\\sqrt{5}$, and $|10+5i|=\\sqrt{100+25}=\\sqrt{125}=5\\sqrt{5}$, which agrees.",
+    "techniqueSlugs": [
+      "complex-conjugate-arithmetic"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p3",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 1,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "What is the value of $i^{2025}$? Reduce the exponent to decide which power of $i$ this is.",
+    "choices": [
+      "i",
+      "-i",
+      "-1",
+      "1",
+      "i^{2}"
+    ],
+    "answerLatex": "i",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The powers of the imaginary unit do not keep growing, they repeat with a fixed period.",
+      "Find the period of the cycle and then reduce the exponent to its place in that cycle.",
+      "$1, i, -1, -i$ is one full cycle, so the answer depends on the exponent modulo $4$"
+    ],
+    "solutionLatex": "The powers of $i$ cycle with period four: $i^{1}=i$, $i^{2}=-1$, $i^{3}=-i$, $i^{4}=1$.\n\nSo $i^{k}$ depends only on the remainder of $k$ on division by $4$.\n\n$2025 = 4 \\cdot 506 + 1$, and the remainder is $1$.\n\n$i^{2025} = i$\n\nNo pattern is being guessed here; the remainder is computed, which is what makes the answer reliable for any exponent.",
+    "techniqueSlugs": [
+      "roots-of-unity"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p4",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "What is the value of $\\frac{1+2i}{1-2i}$? Give the answer in the form $a+bi$.",
+    "choices": null,
+    "answerLatex": "-\\frac{3}{5}+\\frac{4}{5}i",
+    "answerAlternatives": [
+      "\\frac{-3+4i}{5}"
+    ],
+    "hintLatex": [
+      "The denominator is not a real number, so the quotient cannot be simplified the way an ordinary fraction is.",
+      "Multiply the numerator and the denominator by the conjugate of the denominator, which turns the denominator into a real number.",
+      "The conjugate of $1-2i$ is $1+2i$, and the product $(1-2i)(1+2i)$ is $5$"
+    ],
+    "solutionLatex": "Rationalize by multiplying by the conjugate of the denominator.\n\n$\\frac{1+2i}{1-2i} \\cdot \\frac{1+2i}{1+2i} = \\frac{(1+2i)^{2}}{(1-2i)(1+2i)}$\n\nThe denominator is $1+4=5$, and the numerator is $1+4i+4i^{2} = 1+4i-4 = -3+4i$.\n\n$-\\frac{3}{5}+\\frac{4}{5}i$\n\nCheck the modulus: the numerator and denominator both have modulus $\\sqrt{5}$, so the quotient has modulus $1$, and $\\sqrt{\\frac{9}{25}+\\frac{16}{25}} = 1$, as it should.",
+    "techniqueSlugs": [
+      "complex-conjugate-arithmetic"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p5",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "complex-numbers",
+      "distance-formula"
+    ],
+    "promptLatex": "What is the modulus of the complex number $2-3i$?",
+    "choices": null,
+    "answerLatex": "\\sqrt{13}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The modulus is a length, so it is computed the way any other distance is computed from coordinates.",
+      "Add the squares of the two components and then take a single square root of the total.",
+      "$\\sqrt{2^{2}+(-3)^{2}} = \\sqrt{4+9}$"
+    ],
+    "solutionLatex": "The modulus of $a+bi$ is $\\sqrt{a^{2}+b^{2}}$.\n\n$|2-3i| = \\sqrt{2^{2}+(-3)^{2}} = \\sqrt{4+9} = \\sqrt{13}$\n\n$\\sqrt{13}$\n\nThe sign of the imaginary part does not affect the modulus, since it is squared, and the answer is a length of about $3.6$, which is consistent with the two components of sizes $2$ and $3$.",
+    "techniqueSlugs": [
+      "complex-modulus-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p6",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "What is the complex conjugate of $\\frac{1+i}{2-i}$?",
+    "choices": null,
+    "answerLatex": "\\frac{1}{5}-\\frac{3}{5}i",
+    "answerAlternatives": [
+      "\\frac{1-3i}{5}"
+    ],
+    "hintLatex": [
+      "A conjugate can be taken before or after a division, and the two orders give the same result, so the easier order is the better one.",
+      "The conjugate of a quotient is the quotient of the conjugates, which avoids rationalizing entirely.",
+      "$\\overline{\\frac{1+i}{2-i}} = \\frac{\\overline{1+i}}{\\overline{2-i}} = \\frac{1-i}{2+i}$"
+    ],
+    "solutionLatex": "Take the conjugate of the quotient, which is the quotient of the conjugates.\n\n$\\overline{\\frac{1+i}{2-i}} = \\frac{\\overline{1+i}}{\\overline{2-i}} = \\frac{1-i}{2+i}$\n\nRationalize the denominator by multiplying by $2-i$:\n\n$\\frac{(1-i)(2-i)}{(2+i)(2-i)} = \\frac{2-i-2i+i^{2}}{4+1} = \\frac{1-3i}{5}$\n\n$\\frac{1}{5}-\\frac{3}{5}i$\n\nCheck: computing the original quotient gives $\\frac{(1+i)(2+i)}{5} = \\frac{1+3i}{5}$, and conjugating that flips the sign of the imaginary part, giving the same result.",
+    "techniqueSlugs": [
+      "complex-conjugate-arithmetic"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p7",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "transformations",
+      "quadratics"
+    ],
+    "promptLatex": "The graph of $y = x^{2}$ is translated so that its vertex moves from the origin to the point $(3,-2)$. What is the equation of the translated graph?",
+    "choices": null,
+    "answerLatex": "y = (x-3)^{2} - 2",
+    "answerAlternatives": [
+      "(x-3)^{2}-2",
+      "y = x^{2} - 6x + 7"
+    ],
+    "hintLatex": [
+      "A translation changes the position of the graph without changing its shape, so the squared term keeps its coefficient and only the position inside and outside it changes.",
+      "A graph moved $h$ units to the right and $k$ units up has $x$ replaced by $x-h$ and has $k$ added to the whole expression.",
+      "The vertex is placed at the horizontal value $3$ and the vertical value $-2$"
+    ],
+    "solutionLatex": "A translation right by $3$ and down by $2$ replaces $x$ by $x-3$ and subtracts $2$ from the whole expression.\n\n$y = (x-3)^{2} - 2$\n\nCheck the vertex: at $x=3$ the squared term is $0$ and the value is $-2$, so the vertex is $(3,-2)$ as required.\n\nExpanding gives the equivalent form $y = x^{2}-6x+9-2 = x^{2}-6x+7$, whose vertex is at $x=3$ with value $1$ from the quadratic formula route, matching.",
+    "techniqueSlugs": [
+      "translate-graph"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p8",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "transformations",
+      "quadratics"
+    ],
+    "promptLatex": "The graph of $y = x^{2}$ is reflected in the $x$-axis and then translated up $5$ units. What is the equation of the resulting graph?",
+    "choices": null,
+    "answerLatex": "y = -x^{2} + 5",
+    "answerAlternatives": [
+      "-x^{2}+5"
+    ],
+    "hintLatex": [
+      "Two changes are applied in a fixed order, and the second one acts on the curve the first one produced.",
+      "A reflection in the $x$-axis turns an upward-opening curve into a downward-opening one by negating the value, and a vertical translation then adds a constant.",
+      "After the reflection the curve is $y=-x^{2}$, and the vertex is still at the origin"
+    ],
+    "solutionLatex": "Apply the two transformations in order.\n\nReflecting in the $x$-axis negates the whole right-hand side, so $y = -x^{2}$.\n\nTranslating up $5$ then adds $5$ to the expression.\n\n$y = -x^{2} + 5$\n\nCheck the vertex: at $x=0$ the value is $5$, so the vertex is $(0,5)$, and the curve opens downward, which is what a reflection of an upward parabola must produce.",
+    "techniqueSlugs": [
+      "reflect-graph",
+      "translate-graph"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p9",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "One solution of $z^{3} = -8$ is the real number $-2$. Write the other solution whose imaginary part is positive, in the form $a+bi$.",
+    "choices": null,
+    "answerLatex": "1+\\sqrt{3}i",
+    "answerAlternatives": [
+      "1+i\\sqrt{3}"
+    ],
+    "hintLatex": [
+      "The three solutions of a cubic are equally spaced on a circle, so the argument of one of them can be found from the argument of another.",
+      "The three solutions differ in argument by a third of a full turn, so the third of the cube roots of a negative real number sits at a third of a turn from the real axis.",
+      "The roots have moduli equal to the cube root of $8$, and their arguments are $\\frac{\\pi}{3}$, $\\pi$, and $\\frac{5\\pi}{3}$"
+    ],
+    "solutionLatex": "Three solutions of a cubic are equally spaced on a circle, so they sit a third of a turn apart from one another.\n\nThe modulus of each root is the cube root of $8$, which is $2$, and one of them is the real root $-2$, pointing along the negative real axis.\n\nRotating that real root a third of a turn counterclockwise and clockwise gives the two non-real roots. The counterclockwise one has positive imaginary part, and a third of a turn from the negative real axis lands on a point whose two components are the projections of a segment of length $2$ onto the axes: the real part is $2 \\cdot \\frac{1}{2} = 1$ and the imaginary part is $2 \\cdot \\frac{\\sqrt{3}}{2} = \\sqrt{3}$.\n\n$1+\\sqrt{3}i$\n\nCheck: the modulus is $2$, and the argument of the cube is three times a third of a turn, which is a full turn from the positive real axis back onto the negative one, so the cube is $-8$ as required.",
+    "techniqueSlugs": [
+      "de-moivre-powers",
+      "roots-of-unity"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p10",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "complex-numbers",
+      "trig-conversion"
+    ],
+    "promptLatex": "The complex number $-1-i$ lies in the third quadrant. What is its argument in radians, expressed in the interval $[0, 2\\pi)$?",
+    "choices": null,
+    "answerLatex": "\\frac{5\\pi}{4}",
+    "answerAlternatives": [
+      "-\\frac{3\\pi}{4}"
+    ],
+    "hintLatex": [
+      "The argument is measured from the positive real axis, and a number in the third quadrant is reached only after passing through the fourth and the second quadrants.",
+      "The acute reference angle is one of the standard angles, and the quadrant tells you how far past it the ray has turned.",
+      "The reference angle is $\\frac{\\pi}{4}$, and a third quadrant angle is $\\pi$ plus the reference angle"
+    ],
+    "solutionLatex": "The point $(-1,-1)$ lies in the third quadrant, with reference angle $\\frac{\\pi}{4}$.\n\nA third quadrant angle is $\\pi$ plus its reference angle, so the argument is $\\pi + \\frac{\\pi}{4} = \\frac{5\\pi}{4}$.\n\n$\\frac{5\\pi}{4}$\n\nCheck that it lies in $[0,2\\pi)$: $\\frac{5\\pi}{4}$ is between $0$ and $2\\pi$, and the equivalent value $-\\frac{3\\pi}{4}$ is outside the required interval, which is why the form matters.",
+    "techniqueSlugs": [
+      "complex-modulus-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p11",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "loci",
+      "complex-numbers"
+    ],
+    "promptLatex": "The locus of complex numbers $z$ satisfying $|z-1| = |z+1|$ is a line. At what value of $x$ does that line cross the real axis?",
+    "choices": null,
+    "answerLatex": "0",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The condition compares distances to two fixed points, and the points equidistant from two points have a standard name.",
+      "The two fixed points are $1$ and $-1$, so the locus is the perpendicular bisector of the segment joining them on the real axis.",
+      "The midpoint of the two fixed points is the origin, and their segment lies along the real axis"
+    ],
+    "solutionLatex": "The condition $|z-1|=|z+1|$ says the point is equidistant from the real points $1$ and $-1$.\n\nThe locus of such points is the perpendicular bisector of the segment joining them, whose midpoint is the origin. The segment lies along the real axis, so the perpendicular bisector is the imaginary axis.\n\nThe imaginary axis crosses the real axis at the origin, where $x=0$.\n\nAlgebraically, with $z=x+yi$, squaring gives $(x-1)^{2}+y^{2}=(x+1)^{2}+y^{2}$, so $x=0$, which confirms the geometric argument.",
+    "techniqueSlugs": [
+      "locus-as-modulus-equation",
+      "write-locus-equation"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p12",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "complex-numbers",
+      "roots-of-unity"
+    ],
+    "promptLatex": "One sixth root of unity is $\\frac{1}{2} + \\frac{\\sqrt{3}}{2}i$. What is the smallest positive integer $k$ such that raising it to the $k$th power gives $1$?",
+    "choices": null,
+    "answerLatex": "6",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A root of unity lies on the unit circle, and its power returns to the starting point when the accumulated angle is a whole number of full turns.",
+      "Identify the fraction of a full turn the number represents, and the answer is the number of turns needed to complete it.",
+      "The number lies at an angle of $\\frac{\\pi}{3}$, which is one sixtieth of a full turn"
+    ],
+    "solutionLatex": "The number $\\frac{1}{2}+\\frac{\\sqrt{3}}{2}i$ has modulus $1$ and argument $\\frac{\\pi}{3}$, since it is the point on the unit circle one sixtieth of a turn above the positive real axis.\n\nRaising it to the $k$th power leaves the modulus at $1$ and multiplies the argument by $k$, so the result is $1$ exactly when $\\frac{k\\pi}{3}$ is a whole number of full turns.\n\nThat requires $\\frac{k}{3} = 2m$ for a whole number $m$, so $k$ must be a multiple of $6$, and the smallest positive choice is $k=6$.\n\n$k = 6$\n\nNo smaller positive value works: for $1 < k < 6$ the accumulated angle lands on the top of the circle or on the negative real axis, giving a power of $i$ or $-1$ rather than $1$.",
+    "techniqueSlugs": [
+      "roots-of-unity",
+      "de-moivre-powers"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p13",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "Let $z = \\frac{(1+i)^{5}}{(1-i)^{3}}$. What is the value of $|z|$?",
+    "choices": null,
+    "answerLatex": "2",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A modulus is multiplicative, so the modulus of a quotient is a quotient of moduli and no expansion is needed.",
+      "Both factors have the same modulus, and the powers can be taken on the moduli directly.",
+      "$|1+i| = |1-i| = \\sqrt{2}$, so the moduli combine as $\\frac{(\\sqrt{2})^{5}}{(\\sqrt{2})^{3}}$"
+    ],
+    "solutionLatex": "The modulus of a product is the product of the moduli and the modulus of a quotient is the quotient of the moduli.\n\n$|1+i| = \\sqrt{1+1} = \\sqrt{2}$ and $|1-i| = \\sqrt{1+1} = \\sqrt{2}$, so both numerator and denominator factors have modulus $\\sqrt{2}$.\n\n$|z| = \\frac{(\\sqrt{2})^{5}}{(\\sqrt{2})^{3}} = (\\sqrt{2})^{2} = 2$\n\n$2$\n\nNo expansion of either power is needed, and the answer is obtained from the moduli alone, which is the reason for using polar-form reasoning on this kind of question.",
+    "techniqueSlugs": [
+      "de-moivre-powers",
+      "complex-modulus-argument"
+    ],
+    "asymptoteSource": "// The two conjugate factors 1+i and 1-i with their moduli.\n// Two-argument size call fixes the output box, so the declared 1 is exact.\nsize(300,300);\ndraw((-1.6,0)--(3.6,0),Arrow);\ndraw((0,-3.6)--(0,3.6),Arrow);\nlabel(\"$\\operatorname{Re}$\",(3.7,0),E);\nlabel(\"$\\operatorname{Im}$\",(0,3.7),N);\nlabel(\"$1$\",(1,0),S);\nlabel(\"$1$\",(0,1),E);\ndraw(O--(1,1));\ndraw(O--(1,-1));\ndot((1,1),2+2.5pt);\ndot((1,-1),2+2.5pt);\nlabel(\"$1+i$\",(1.2,1.2),NW);\nlabel(\"$1-i$\",(1.2,-1.2),SW);\nlabel(\"equal moduli, conjugate positions\",(2.6,2.8),N);",
+    "asymptoteAlt": "Perpendicular axes with arrowheads are labelled as the real and imaginary axes, with the unit points marked on each. Two solid segments run from the origin, one up and to the right and one down and to the right, each ending in a filled dot labelled with a sum of one and a signed imaginary unit. A note near the top right states that the two points have equal moduli and conjugate positions.",
+    "asymptoteAspectRatio": 1
+  },
+  {
+    "id": "m6-l4-p14",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "transformations",
+      "complex-numbers"
+    ],
+    "promptLatex": "The graph of $y = x^{3}$ is reflected in the line $y = x$. What is the equation of the resulting graph?",
+    "choices": null,
+    "answerLatex": "y = \\sqrt[3]{x}",
+    "answerAlternatives": [
+      "\\sqrt[3]{x}",
+      "x = y^{3}"
+    ],
+    "hintLatex": [
+      "Reflecting a graph in the line $y=x$ exchanges the two coordinates of every point on it, which is a different operation from reflecting in an axis.",
+      "After exchanging the coordinates, the reflected graph is the set of points satisfying the original equation with the roles of the two coordinates swapped, and the usual way to read it is to solve for the second coordinate.",
+      "Swapping the coordinates of $y=x^{3}$ gives $x=y^{3}$"
+    ],
+    "solutionLatex": "Reflecting in $y=x$ exchanges the two coordinates, so the reflected graph is the set of points satisfying $x=y^{3}$.\n\nSolve for $y$ to put it in the usual form with the second coordinate isolated.\n\n$y = \\sqrt[3]{x}$\n\nCheck with a point: $(2,8)$ lies on $y=x^{3}$ and reflects to $(8,2)$, which satisfies $2=\\sqrt[3]{8}$. The reflected curve is the inverse function, and it is the familiar cube-root curve, which is the mirror image of the steepening cubic.",
+    "techniqueSlugs": [
+      "reflect-graph"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-p15",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "loci",
+      "ellipses",
+      "complex-numbers"
+    ],
+    "promptLatex": "The locus $|z-1| + |z+1| = 6$ in the complex plane is an ellipse. What is the length of its minor axis?",
+    "choices": null,
+    "answerLatex": "4\\sqrt{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A modulus is a distance, so the equation is a statement about a sum of distances to two fixed points, and that is the definition of an ellipse.",
+      "The two fixed points are the foci, and the constant on the right is the major axis, so the conic relations from the previous lesson apply directly.",
+      "The foci are at $1$ and $-1$, and the constant is $6$"
+    ],
+    "solutionLatex": "Read the equation: $|z-1|$ and $|z+1|$ are the distances from $z$ to the two real points $1$ and $-1$, and their sum is fixed at $6$.\n\nThat is the definition of an ellipse, with foci at $(\\pm 1, 0)$ and major axis $2a=6$, so $a=3$, while the focal distance is $c=1$.\n\n$b^{2} = a^{2}-c^{2} = 9-1 = 8$, so $b = 2\\sqrt{2}$ and the minor axis is $2b = 4\\sqrt{2}$.\n\n$4\\sqrt{2}$\n\nThe minor axis is shorter than the major axis of $6$, as it must be, and the locus is an ellipse rather than a circle because the foci are distinct.",
+    "techniqueSlugs": [
+      "locus-as-modulus-equation",
+      "write-locus-equation"
+    ],
+    "asymptoteSource": "// The ellipse |z-1| + |z+1| = 6 with its foci marked on the real axis.\n// Two-argument size call fixes the output box, so the declared 1.067 is exact.\nsize(320,300);\ndraw(ellipse((0,0),3,2*sqrt(2)));\ndraw((-3.6,0)--(3.6,0),Arrow);\nlabel(\"$\\operatorname{Re}$\",(3.7,0),E);\ndot((1,0),2+2.5pt);\ndot((-1,0),2+2.5pt);\nlabel(\"focus $(1,0)$\",(1,0.35),N);\nlabel(\"focus $(-1,0)$\",(-1,0.35),N);\nlabel(\"sum of distances fixed at $6$\",(0,-3.4),S);",
+    "asymptoteAlt": "A closed oval curve is centred on the origin and only slightly wider than it is tall. A horizontal axis with an arrowhead runs through it, and two filled dots on that axis, close to the centre, are labelled as the two foci. A note beneath the figure states that the sum of the distances from a point of the curve to the two foci is fixed at a constant value.",
+    "asymptoteAspectRatio": 1.067
+  },
+  {
+    "id": "m6-l4-m1",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "transformations"
+    ],
+    "promptLatex": "The graph of $y = \\sqrt{x}$ is reflected in the line $y = x$ and the result is then translated $4$ units to the left. What is the equation of the resulting graph?",
+    "choices": null,
+    "answerLatex": "y = (x+4)^{2}",
+    "answerAlternatives": [
+      "(x+4)^{2}"
+    ],
+    "hintLatex": [
+      "Two transformations are applied in sequence, and the second one acts on the curve produced by the first.",
+      "Reflecting in the diagonal $y=x$ exchanges the coordinates, so the curve has to be solved for its second coordinate afterwards.",
+      "After the reflection the curve is $x = y^{2}$, which becomes $y = x^{2}$ once solved for $y$"
+    ],
+    "solutionLatex": "Reflecting in $y=x$ exchanges the coordinates, so the reflected graph is $x=y^{2}$, that is $y=x^{2}$.\n\nTranslating $4$ units to the left replaces $x$ by $x+4$, since moving left is the opposite direction of the substitution in the right-hand side.\n\n$y = (x+4)^{2}$\n\nCheck: the vertex of the reflected curve started at the origin and the translation carries it to $(-4,0)$, and the equation gives $0$ at $x=-4$, so the vertex is where the reflection and translation require it.",
+    "techniqueSlugs": [
+      "reflect-graph",
+      "translate-graph"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-m2",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "complex-numbers",
+      "roots-of-unity"
+    ],
+    "promptLatex": "What is the value of $\\left(\\frac{1+i}{1-i}\\right)^{2026}$? Simplify the base before raising it to the power.",
+    "choices": null,
+    "answerLatex": "-1",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A large exponent on a complicated expression is a signal that the expression itself is simpler than it looks.",
+      "Simplify the fraction to a single fourth root of unity, and then only the exponent modulo four will matter.",
+      "Rationalizing the fraction gives $\\frac{(1+i)^{2}}{2}$"
+    ],
+    "solutionLatex": "Simplify the base first, since a large exponent only makes a complicated base worse.\n\n$\\frac{1+i}{1-i} = \\frac{(1+i)^{2}}{(1-i)(1+i)} = \\frac{1+2i+i^{2}}{2} = \\frac{2i}{2} = i$\n\nThe expression is therefore $i^{2026}$, and the powers of $i$ have period four.\n\n$2026 = 4 \\cdot 506 + 2$, so $i^{2026} = i^{2} = -1$.\n\n$-1$\n\nThe simplification is the whole trick: evaluating $(1+i)^{2026}$ and $(1-i)^{2026}$ directly would be far longer and would obscure the periodic structure.",
+    "techniqueSlugs": [
+      "complex-conjugate-arithmetic",
+      "roots-of-unity"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l4-m3",
+    "moduleId": "M6",
+    "lessonId": "m6-l4",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "What is the real part of the complex number $(3+4i)^{5}$?",
+    "choices": null,
+    "answerLatex": "-237",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A high power is computed by squaring the base a few times rather than by multiplying out the whole expression once.",
+      "Squaring a sum of two terms produces the two squares plus a cross term, and the square of the imaginary unit is minus one.",
+      "$(3+4i)^{2} = -7+24i$ and $(3+4i)^{4} = -527-336i$, so one more multiplication by $3+4i$ finishes the computation."
+    ],
+    "solutionLatex": "Squaring twice is shorter than expanding five times.\n\n$(3+4i)^{2} = 9 + 24i + 16i^{2} = -7 + 24i$\n\n$(3+4i)^{4} = (-7+24i)^{2} = 49 - 336i + 576i^{2} = -527 - 336i$\n\nThen one more product finishes it.\n\n$(3+4i)^{5} = (-527-336i)(3+4i) = -1581 - 2108i - 1008i + 1344 = -237 - 3116i$\n\nThe real part is $-237$.\n\nThe check is the modulus, which was available independently: the result must have modulus $5^{5} = 3125$, and $\\sqrt{237^{2}+3116^{2}} = \\sqrt{56169+9709456} = \\sqrt{9765625} = 3125$, so the arithmetic is consistent.",
+    "techniqueSlugs": [
+      "complex-powers-by-squaring",
+      "de-moivre-powers"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

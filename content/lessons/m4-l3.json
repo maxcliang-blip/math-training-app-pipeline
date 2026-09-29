@@ -1,0 +1,198 @@
+{
+  "id": "m4-l3",
+  "moduleId": "M4",
+  "order": 3,
+  "title": "Finite and Infinite Geometric Sums",
+  "topicSlug": "finite-infinite-geometric-sums",
+  "tiers": [
+    "12",
+    "A",
+    "A+"
+  ],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m4-l2"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Evaluate the sum of the first $n$ terms of a geometric sequence, decide whether an infinite geometric series converges, evaluate it when it does, apply the same machinery to alternating and fractional ratios, and build and solve the model for a growth, decay, or compounding story."
+    },
+    "prerequisites": {
+      "items": [
+        {
+          "labelLatex": "[m4-l2](/M4/lessons/m4-l2) series and partial sums",
+          "noteLatex": "partial sums and index shifts"
+        }
+      ],
+      "noteLatex": "The only prerequisite is the partial sum $S_n$ from [m4-l2](/M4/lessons/m4-l2) and the explicit formula $a_n = a_1 r^{n-1}$ from [m4-l1](/M4/lessons/m4-l1). The infinite series is introduced here as a limit of partial sums, so no theory of limits is assumed."
+    },
+    "concept": {
+      "conceptLatex": "A geometric series is a sum whose terms form a geometric sequence, and the entire subject is one identity proved by cancelling the sum against a multiple of itself. Let $a_1$ be the first term and $r$ the common ratio, and write\n\n$S = a_1 + a_1 r + a_1 r^{2} + a_1 r^{3} + \\cdots = \\frac{a_1}{1-r} \\qquad \\text{when } |r| < 1$\n\nThe proof is subtraction rather than a formula to memorise. Multiplying $S$ by $r$ gives $rS = a_1 r + a_1 r^{2} + a_1 r^{3} + \\cdots$, and subtracting the first equation from the second leaves $S - rS = a_1$ once every term except the first and the invisible tail cancels. The same argument truncated at $n$ terms gives the finite formula, where the tail is the term that did not get cancelled.\n\n$S_n = \\frac{a_1(1 - r^{n})}{1 - r} \\qquad r \\ne 1 \\qquad S_n = n a_1 \\text{ when } r = 1$\n\nThe finite formula is where the index earns its keep. A sum of $n$ terms starting at $a_1 = 3$ with ratio $2$ is $3(1 + 2 + \\cdots + 2^{n-1})$, so the exponent is $n-1$ and the answer is $\\frac{3(2^{n}-1)}{2-1}$. Writing the sum as starting from the zeroth term instead makes the exponent $n$ and the formula becomes $\\frac{a_0(1-r^{n+1})}{1-r}$, so the starting index of the summation has to be read before any arithmetic is done.\n\nThe case $r = 1$ is excluded from the formula because it divides by zero, and it has to be handled rather than avoided: a sequence of $n$ identical terms sums to $n$ times that term. The case $r = 0$ is included and gives $S_n = a_1$, since every term after the first is zero.\n\nAn infinite series converges only when $|r| < 1$, and the reason is visible in the partial sums. If $|r| < 1$ the tail $\\frac{a_1 r^{n}}{1-r}$ tends to zero, so the partial sums settle at $\\frac{a_1}{1-r}$. If $|r| \\ge 1$ the terms fail to shrink toward zero, the partial sums either grow without bound or oscillate, and there is no limit to report. Convergence must be checked before the formula is used, and the test is the condition on the ratio, not an estimate of the terms.\n\nA negative ratio is not a separate subject. The identity $S = \\frac{a_1}{1-r}$ already covers it, and for $r = -1$ the partial sums alternate between two values, so the series diverges even though the formula is arithmetically available. A common trap in this lesson is reading the finite sum of an alternating series as if it were converging, when in fact the terms of the tail are exactly as large as those in the body.\n\nThe cancellation argument is worth being able to redo from memory, because it settles both the finite and the infinite case and it never divides by anything except $1-r$. Writing the sum, writing $r$ times the sum, and subtracting leaves the first term and the un-cancelled tail; for a finite sum the tail is the last term alone, which is the only difference between the two formulas. Reading the first and last terms off the written list before substituting removes most of the errors that survive in this topic, which are almost always a first term taken one step off.",
+      "figures": [
+        {
+          "id": "m4-l3-fig-1",
+          "captionLatex": "Six partial sums of a decreasing geometric series drawn as stacked bars; each bar is half the height of the one above it, and the top of the stack creeps toward the dashed line without ever crossing it.",
+          "asymptoteSource": "// Partial sums of 1/2 + 1/4 + 1/8 + ... as stacked bars, approaching the\n// dashed limit. Two-argument size fixes the output box exactly.\nsize(280,240);\nreal h = 0.5;\nreal y = 0;\nfor (int i=0; i<6; ++i) {\n  filldraw((0,y)--(4,y+h)--(0,y+h)--cycle, lightgray);\n  label(\"$\"+string(i+1)+\"$\", (-0.5,y+h/2), E);\n  y = y + h;\n  h = h/2;\n}\ndraw((0,0)--(4.6,0));\ndraw((0,1)--(4.6,1), dashed);\nlabel(\"$1$\", (-0.5,1), E);\nlabel(\"the sum the stack is heading for\", (2.3,1.1), N);",
+          "asymptoteAlt": "A stack of six shaded horizontal bars rising from a baseline, each one about half the height of the bar below it, so the top of the stack sits just below a horizontal dashed line drawn across the picture. The dashed line carries a label of one at its left end, a small number sits beside the left edge of each bar counting it from the bottom, and a short note above the dashed line says the stack is heading for that height.",
+          "asymptoteAspectRatio": 1.167
+        }
+      ],
+      "examples": [
+        {
+          "id": "m4-l3-wex-1",
+          "titleLatex": "Worked example: a finite sum with a large last term",
+          "bodyLatex": "Take $1 + 3 + 9 + 27 + 81 + 243$. There are $6$ terms, the first is $1$, and the ratio is $3$.\n\n$S_6 = \\frac{a_1(3^{6}-1)}{3-1} = \\frac{1(729-1)}{2} = \\frac{728}{2} = 364$\n\nAdding the six terms by hand gives $1+3+9+27+81+243 = 364$, so the formula is being used for a sum whose last term is $243$ rather than its total, which is the situation the formula handles most cleanly.",
+          "answerLatex": "$1 + 3 + 9 + 27 + 81 + 243 = 364$"
+        },
+        {
+          "id": "m4-l3-wex-2",
+          "titleLatex": "Worked example: an infinite series with a ratio below one",
+          "bodyLatex": "Consider $\\frac{1}{2} + \\frac{1}{4} + \\frac{1}{8} + \\cdots$. The first term is $\\frac{1}{2}$ and the ratio is $\\frac{1}{2}$, so $|r| < 1$ and the series converges.\n\n$S = \\frac{\\frac{1}{2}}{1 - \\frac{1}{2}} = \\frac{1}{2} \\cdot 2 = 1$\n\nThe first six partial sums are $\\frac{1}{2}, \\frac{3}{4}, \\frac{7}{8}, \\frac{15}{16}, \\frac{31}{32}, \\frac{63}{64}$, and they approach $1$ from below exactly as the formula says.",
+          "answerLatex": "$\\frac{1}{2} + \\frac{1}{4} + \\frac{1}{8} + \\cdots = 1$"
+        },
+        {
+          "id": "m4-l3-wex-3",
+          "titleLatex": "Worked example: recovering the ratio from an infinite sum",
+          "bodyLatex": "An infinite geometric series has first term $10$ and sum $15$. The relation $S = \\frac{a_1}{1-r}$ gives\n\n$15 = \\frac{10}{1-r} \\implies 1 - r = \\frac{10}{15} = \\frac{2}{3} \\implies r = \\frac{1}{3}$\n\nCheck: $\\frac{10}{1 - \\frac{1}{3}} = \\frac{10}{\\frac{2}{3}} = 15$, so the ratio is consistent with both given values.",
+          "answerLatex": "$r = \\frac{1}{3}$"
+        },
+        {
+          "id": "m4-l3-wex-4",
+          "titleLatex": "Worked example: an alternating infinite series",
+          "bodyLatex": "Take $1 - \\frac{1}{3} + \\frac{1}{9} - \\frac{1}{27} + \\cdots$. The ratio is $-\\frac{1}{3}$, and $\\left| -\\frac{1}{3}\\right| < 1$, so the series converges despite the alternating signs.\n\n$S = \\frac{1}{1 - (-\\frac{1}{3})} = \\frac{1}{\\frac{4}{3}} = \\frac{3}{4}$\n\nThe partial sums are $1, \\frac{2}{3}, \\frac{7}{9}, \\frac{20}{27}, \\ldots$, oscillating around $\\frac{3}{4}$ while getting closer to it, which is the signature of a convergent alternating series.",
+          "answerLatex": "$1 - \\frac{1}{3} + \\frac{1}{9} - \\cdots = \\frac{3}{4}$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "finite-geometric-formula",
+          "name": "The sum of the first n terms",
+          "summaryLatex": "Multiply the first term by one minus the ratio to the power n, all over one minus the ratio.",
+          "bodyLatex": "$S_n = \\frac{a_1(1-r^{n})}{1-r}$. The power is the number of terms, and the first term is whatever the summation actually starts with: a sum written from $k=0$ has $a_1$ equal to the value at $k=0$, which changes the power from $n$ to $n+1$."
+        },
+        {
+          "slug": "ratio-one-case",
+          "name": "The case r equals one",
+          "summaryLatex": "The formula divides by zero, so read the sum directly as n identical terms.",
+          "bodyLatex": "When $r = 1$ every term equals $a_1$ and $S_n = n a_1$. A negative ratio of $-1$ is the other degenerate case: the partial sums alternate between $a_1$ and $0$, so there is no single sum and certainly no infinite one."
+        },
+        {
+          "slug": "negative-ratio-case",
+          "name": "Alternating geometric sums",
+          "summaryLatex": "The same formula with a negative ratio, and the signs alternate term by term.",
+          "bodyLatex": "For $r$ negative the terms alternate in sign, and $S = \\frac{a_1}{1-r} = \\frac{a_1}{1+|r|}$ is smaller than the first term alone. Convergence still requires $|r| < 1$, so an alternating series with $|r| = 1$ diverges even though its partial sums are bounded."
+        },
+        {
+          "slug": "infinite-geometric-sum",
+          "name": "The sum of a convergent infinite series",
+          "summaryLatex": "Drop the tail term, which is exactly what the cancellation has already done.",
+          "bodyLatex": "$S = \\frac{a_1}{1-r}$ for $|r| < 1$. The formula is the finite one with the tail $\\frac{a_1 r^{n}}{1-r}$ removed, so it is legitimate exactly when that tail tends to zero, which is the convergence test."
+        },
+        {
+          "slug": "convergence-test",
+          "name": "Deciding convergence before evaluating",
+          "summaryLatex": "Check that the ratio has absolute value below one; otherwise the partial sums never settle.",
+          "bodyLatex": "The necessary condition for any series to converge is that its terms approach zero, and a geometric term is $a_1 r^{n-1}$, which approaches zero exactly when $|r| < 1$. The condition is also sufficient here, so one comparison settles the question. Series such as $\\sum \\left(\\frac{5}{3}\\right)^{k}$ have a formula-shaped denominator that is easy to apply and produce a negative number, which is the signal that the series diverges."
+        },
+        {
+          "slug": "geometric-mean",
+          "name": "The middle term of a geometric run",
+          "summaryLatex": "In a positive geometric sequence the square of a term is the product of its neighbours.",
+          "bodyLatex": "From $a_{n+1} = r a_n$ and $a_{n-1} = a_n / r$ one gets $a_{n}^{2} = a_{n-1} a_{n+1}$, so a term with two neighbours known is found by taking the geometric mean. The sign has to come from the parity of the index, since squaring loses it: an even-indexed term of an alternating sequence is positive."
+        },
+        {
+          "slug": "reindex-and-subtract",
+          "name": "Subtracting a shifted copy of the sum",
+          "summaryLatex": "Write the sum and r times the sum, then subtract, and the interior terms cancel.",
+          "bodyLatex": "For a finite sum, subtracting $r S_n$ from $S_n$ leaves $S_n - rS_n = a_1 - a_1 r^{n}$ only after the un-cancelled tail is accounted for, which is precisely the finite formula. The same manoeuvre on $\\sum_{k=0}^{8} 3 \\cdot 2^{k}$ is often faster than substituting into the formula, and it is the proof worth remembering because the formula follows from it."
+        },
+        {
+          "slug": "growth-decay-modeling",
+          "name": "Growth, decay, and bouncing stories",
+          "summaryLatex": "Identify the per-step factor, count the steps, and decide whether the story asks for a partial or an infinite total.",
+          "bodyLatex": "A total distance travelled by a bouncing ball is an infinite sum when the bounces never stop, and the only question is whether each bounce is counted once or twice. A compounded balance is a finite or infinite sum depending on whether time is bounded. A percentage rate stated for one period must be applied once per period, so the number of applications is the number of periods rather than the number of years."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "infinite-formula-on-a-divergent-series",
+          "titleLatex": "Applying the infinite formula when the ratio is too large",
+          "wrongLatex": "$1 + 2 + 4 + 8 + \\cdots = \\frac{1}{1-2} = -1$",
+          "whyLatex": "The terms grow without bound, so the partial sums grow without bound and there is no limit to report. The negative value is an artifact of a formula whose hypothesis, $|r| < 1$, was never satisfied.",
+          "fixLatex": "Check $|r| < 1$ before writing the formula. A ratio outside that range means the series diverges, and for $r > 1$ the partial sums run to $+\\infty$."
+        },
+        {
+          "slug": "ratio-one-division-by-zero",
+          "titleLatex": "Letting a ratio of one into the formula",
+          "wrongLatex": "the sum of $n$ terms all equal to $5$ is $\\frac{5(5^{n}-1)}{5-1}$",
+          "whyLatex": "The denominator is $1-r$, which is zero when $r=1$, and the formula is not applicable at all. A constant sequence has the simplest possible sum, and using the geometric formula here is not an approximation error but a categorical one.",
+          "fixLatex": "Handle $r = 1$ before the formula, with $S_n = n a_1$. Checking the two degenerate ratios $1$ and $-1$ up front costs one line."
+        },
+        {
+          "slug": "starting-index-off-by-one",
+          "titleLatex": "Losing a term by starting the exponent at the wrong place",
+          "wrongLatex": "$1 + 3 + 9 + \\cdots + 3^{n} = \\frac{3^{n}}{3-1}$",
+          "whyLatex": "The sum of $n$ terms starting at $1$ ends at $3^{n-1}$, not at $3^{n}$, and the formula must be $\\frac{3^{n}-1}{3-1}$. Reading the last term off the end of the written list is the reliable way to see it.",
+          "fixLatex": "Write the last term of the list before substituting. The exponent on $r$ is the number of terms, and the number of terms is the number of values the index actually takes."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m4-l3-p1",
+        "m4-l3-p2",
+        "m4-l3-p3",
+        "m4-l3-p4",
+        "m4-l3-p5",
+        "m4-l3-p6",
+        "m4-l3-p7",
+        "m4-l3-p8",
+        "m4-l3-p9",
+        "m4-l3-p10",
+        "m4-l3-p11",
+        "m4-l3-p12",
+        "m4-l3-p13",
+        "m4-l3-p14",
+        "m4-l3-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m4-l3-p1",
+        "m4-l3-p2",
+        "m4-l3-p3",
+        "m4-l3-p4",
+        "m4-l3-p5",
+        "m4-l3-p6",
+        "m4-l3-p7",
+        "m4-l3-p8",
+        "m4-l3-p9",
+        "m4-l3-p10",
+        "m4-l3-p11",
+        "m4-l3-p12",
+        "m4-l3-p13",
+        "m4-l3-p14",
+        "m4-l3-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m4-l3-m1",
+        "m4-l3-m2",
+        "m4-l3-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "series",
+    "infinite-sums",
+    "geometric-sequences",
+    "series-convergence"
+  ]
+}

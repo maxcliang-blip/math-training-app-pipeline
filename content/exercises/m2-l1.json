@@ -1,0 +1,607 @@
+[
+  {
+    "id": "m2-l1-p1",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "divisibility",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers less than $100$ are divisible by $6$?",
+    "choices": [
+      "16",
+      "15",
+      "17",
+      "18",
+      "20"
+    ],
+    "answerLatex": "16",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The condition is that the number is a multiple of one fixed value.",
+      "The multiples of $6$ are spaced $6$ apart, so the count is a division with a remainder.",
+      "$100 = 16(6) + 4$, and the multiples of $6$ at most $100$ are $6, 12, \\ldots, 96$."
+    ],
+    "solutionLatex": "Multiples of $6$ from $1$ to $100$ are $6, 12, 18, \\ldots$.\n\n$100 = 16(6) + 4$\n\nThe largest multiple of $6$ at most $100$ is $96$, and the count is $\\left\\lfloor 100/6 \\right\\rfloor = 16$. The leftover $4$ shows that $102$ would be the next multiple and is too large.",
+    "techniqueSlugs": [
+      "floor-counting",
+      "divisibility-tests"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p2",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "gcd-lcm",
+      "divisibility",
+      "euclidean-algorithm"
+    ],
+    "promptLatex": "What is the greatest common divisor of $462$ and $1071$?",
+    "choices": [
+      "21",
+      "42",
+      "33",
+      "14",
+      "7"
+    ],
+    "answerLatex": "21",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Two large numbers, and the answer is small.",
+      "The greatest common divisor of a pair does not change when the larger number is replaced by the remainder from dividing by the smaller.",
+      "$1071 = 2(462) + 147$, then $462 = 3(147) + 21$, then $147 = 7(21) + 0$."
+    ],
+    "solutionLatex": "Run the Euclidean algorithm.\n\n$1071 = 2(462) + 147$\n\n$462 = 3(147) + 21$\n\n$147 = 7(21) + 0$\n\nThe last nonzero remainder is $21$. Both $462 = 21 \\cdot 22$ and $1071 = 21 \\cdot 51$ are divisible by $21$, and $\\gcd(22,51)=1$ because $51 = 2(22)+7$ and $22 = 3(7)+1$, so $21$ is the greatest.",
+    "techniqueSlugs": [
+      "euclidean-algorithm"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p3",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "gcd-lcm",
+      "fractions"
+    ],
+    "promptLatex": "What is the least common multiple of $12$ and $18$?",
+    "choices": [
+      "36",
+      "72",
+      "24",
+      "54",
+      "216"
+    ],
+    "answerLatex": "36",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two numbers are not coprime, which matters for the answer.",
+      "There is a relation between the product, the gcd, and the least common multiple of two numbers.",
+      "The gcd of $12$ and $18$ is $6$, and dividing the product by it gives the least common multiple."
+    ],
+    "solutionLatex": "Convert to a gcd problem, which is easier than finding the least common multiple directly.\n\n$\\gcd(12,18) = 6$\n\n$\\operatorname{lcm}(12,18) = \\frac{12 18}{\\gcd(12,18)} = \\frac{216}{6} = 36$\n\nThe check is that $36$ is a multiple of both, since $36 = 3(12) = 2(18)$, and no smaller positive number is a multiple of both.",
+    "techniqueSlugs": [
+      "lcm-from-gcd",
+      "lcm-prime-exponents"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p4",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "divisibility",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers at most $100$ are divisible by both $4$ and $6$?",
+    "choices": [
+      "8",
+      "4",
+      "16",
+      "25",
+      "12"
+    ],
+    "answerLatex": "8",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The condition asks for two divisibility requirements at once.",
+      "A number satisfying both conditions is a multiple of one specific number.",
+      "$\\operatorname{lcm}(4,6)=12$, and $\\left\\lfloor 100/12 \\right\\rfloor = 8$."
+    ],
+    "solutionLatex": "Both conditions at once means divisibility by the least common multiple.\n\n$\\operatorname{lcm}(4,6) = 12$\n\nThe multiples of $12$ at most $100$ are $12, 24, \\ldots, 96$, and $100 = 8(12) + 4$.\n\nSo there are $8$. Counting the multiples of $4$ and of $6$ separately and subtracting their overlap would give the same count, with more arithmetic.",
+    "techniqueSlugs": [
+      "lcm-from-gcd",
+      "floor-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p5",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "gcd-lcm",
+      "prime-factorization"
+    ],
+    "promptLatex": "What is the smallest positive integer divisible by every integer from $1$ through $10$?",
+    "choices": [
+      "2520",
+      "1260",
+      "5040",
+      "720",
+      "25200"
+    ],
+    "answerLatex": "2520",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The answer must be divisible by ten numbers at once.",
+      "A common multiple must contain the largest power of each prime that any of the inputs needs.",
+      "Among $1$ through $10$ the largest powers of $2$, $3$, $5$, and $7$ are $8$, $9$, $5$, and $7$, and the answer is their product."
+    ],
+    "solutionLatex": "Factor the requirement rather than testing candidates.\n\nAmong $1, 2, \\ldots, 10$ the number needing the most factors of $2$ is $8$, the one needing the most factors of $3$ is $9$, and $5$ and $7$ each appear once.\n\n$\\operatorname{lcm}(1,2,\\ldots,10) = 2^3 3^2 5 7 = 8 9 5 7 = 2520$\n\nEvery one of $1$ through $10$ divides $2520$, and dropping any one of the four prime powers would break divisibility by $8$, $9$, $5$, or $7$ respectively, so the answer is minimal.",
+    "techniqueSlugs": [
+      "lcm-prime-exponents"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p6",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "gcd-lcm",
+      "divisibility",
+      "euclidean-algorithm"
+    ],
+    "promptLatex": "What is the greatest common divisor of $48$ and $180$?",
+    "choices": [
+      "12",
+      "6",
+      "24",
+      "4",
+      "36"
+    ],
+    "answerLatex": "12",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Both numbers are divisible by a few small values, and exactly one of them is the greatest.",
+      "Repeated division by the smaller number keeps the answer unchanged.",
+      "$180 = 3(48) + 36$, then $48 = 1(36) + 12$, then $36 = 3(12) + 0$."
+    ],
+    "solutionLatex": "Apply the Euclidean algorithm twice.\n\n$180 = 3(48) + 36$\n\n$48 = 36 + 12$\n\n$36 = 3(12) + 0$\n\nThe last nonzero remainder is $12$, and indeed $48 = 4(12)$ while $180 = 15(12)$, with $\\gcd(4,15)=1$ confirming that no larger common divisor exists.",
+    "techniqueSlugs": [
+      "euclidean-algorithm"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p7",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "divisibility",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers at most $1000$ are divisible by $15$?",
+    "choices": [
+      "66",
+      "60",
+      "67",
+      "100",
+      "65"
+    ],
+    "answerLatex": "66",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The pattern is a running list of multiples.",
+      "The count is a quotient rounded down.",
+      "$1000 = 66(15) + 10$, and the next multiple after $990$ is $1005$."
+    ],
+    "solutionLatex": "The multiples of $15$ at most $1000$ end at $990$.\n\n$1000 = 66 \\cdot 15 + 10$\n\nSo there are $\\left\\lfloor 1000/15 \\right\\rfloor = 66$ of them. The remainder $10$ tells us the next multiple is $1005$, which exceeds $1000$.",
+    "techniqueSlugs": [
+      "floor-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p8",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "gcd-lcm",
+      "prime-factorization"
+    ],
+    "promptLatex": "What is the least common multiple of all the integers from $1$ through $20$?",
+    "choices": [
+      "232792560",
+      "155925",
+      "465585",
+      "279072",
+      "116396"
+    ],
+    "answerLatex": "232792560",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A large number, but it is built from a short list of prime powers.",
+      "For each prime, the answer needs the largest power of that prime at most twenty.",
+      "The largest powers of $2$, $3$, $5$, $7$, $11$, $13$, $17$, and $19$ not exceeding $20$ are $16$, $9$, $5$, $7$, $11$, $13$, $17$, and $19$."
+    ],
+    "solutionLatex": "Take the largest power of each prime that occurs among the inputs.\n\nThe primes at most $20$ are $2, 3, 5, 7, 11, 13, 17, 19$. The largest powers of each not exceeding $20$ are $16$, $9$, $5$, $7$, $11$, $13$, $17$, $19$ respectively.\n\n$2^4 3^2 5 7 11 13 17 19 = 232792560$\n\nThe answer must contain $16$ because $16$ is in the list, and $9$ because $9$ is in the list, and so on, so no smaller number is divisible by all twenty.",
+    "techniqueSlugs": [
+      "lcm-prime-exponents"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p9",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "gcd-lcm",
+      "divisibility",
+      "counting-integers"
+    ],
+    "promptLatex": "How many integers from $1$ to $100$ are relatively prime to $100$?",
+    "choices": [
+      "40",
+      "50",
+      "20",
+      "25",
+      "80"
+    ],
+    "answerLatex": "40",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Only two primes can spoil coprimality here.",
+      "For a known factorization, the count of integers avoiding every prime of $n$ is a product over those primes.",
+      "$100 = 2^2 5^2$, so the count is $100 \\cdot \\left(\\frac{1}{2}\\right) \\cdot \\left(\\frac{4}{5}\\right)$."
+    ],
+    "solutionLatex": "The integers that fail are exactly those divisible by $2$ or by $5$, since $100 = 2^2 5^2$ has no other prime factors.\n\n$\\varphi(100) = 100 \\left(1-\\frac{1}{2}\\right)\\left(1-\\frac{1}{5}\\right) = 100 \\frac{1}{2} \\frac{4}{5} = 40$\n\nThe two factors multiply because avoiding $2$ and avoiding $5$ are independent conditions. Equivalently, among every $10$ consecutive integers exactly $4$ are coprime to $10$, giving $40$ in $100$ integers.",
+    "techniqueSlugs": [
+      "totient-by-primes"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p10",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "gcd-lcm",
+      "counting-integers"
+    ],
+    "promptLatex": "How many integers from $1$ to $200$ are relatively prime to $12$?",
+    "choices": [
+      "67",
+      "66",
+      "68",
+      "100",
+      "64"
+    ],
+    "answerLatex": "67",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The modulus is small, so the count repeats in a short cycle.",
+      "Integers relatively prime to $12$ avoid the primes $2$ and $3$, so $4$ of every $12$ qualify.",
+      "$200 = 16(12) + 8$, and the last $8$ integers contribute $3$ more."
+    ],
+    "solutionLatex": "In every block of $12$ consecutive integers, those relatively prime to $12$ are the residues $1, 5, 7, 11$, so $4$ per block.\n\n$200 = 16 \\cdot 12 + 8$\n\nThe $16$ full blocks contribute $16 \\cdot 4 = 64$. The remaining integers $193$ through $200$ have residues $1, 2, \\ldots, 8$ modulo $12$, and the coprime residues among these are $1, 5, 7$, giving $3$ more.\n\n$64 + 3 = 67$",
+    "techniqueSlugs": [
+      "totient-by-primes",
+      "floor-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p11",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "gcd-lcm",
+      "divisibility",
+      "euclidean-algorithm"
+    ],
+    "promptLatex": "What is the greatest common divisor of $10!$ and $7!$?",
+    "choices": [
+      "5040",
+      "3628800",
+      "720",
+      "2520",
+      "1024"
+    ],
+    "answerLatex": "5040",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two numbers are factorials of different sizes, and one is a product containing the other.",
+      "When one factorial divides another, the gcd is the smaller one.",
+      "$7! = 7 \\cdot 6 \\cdot 5 \\cdots 1$ is a product of a subset of the factors of $10!$."
+    ],
+    "solutionLatex": "Observe the containment rather than computing.\n\n$10! = 10 \\cdot 9 \\cdot 8 \\cdot 7!$\n\nSince $7!$ is a factor of $10!$, every divisor of $7!$ divides $10!$, so the greatest common divisor is $7!$ itself.\n\n$7! = 5040$",
+    "techniqueSlugs": [
+      "euclidean-algorithm"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p12",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "divisibility",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers at most $50$ are divisible by both $7$ and $11$?",
+    "choices": [
+      "0",
+      "1",
+      "2",
+      "7",
+      "11"
+    ],
+    "answerLatex": "0",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two numbers are coprime, so think about their product.",
+      "A number divisible by two coprime values is a multiple of their product.",
+      "$7 \\cdot 11 = 77$, which already exceeds $50$."
+    ],
+    "solutionLatex": "Since $\\gcd(7,11)=1$, any number divisible by both is a multiple of $77$.\n\nThe smallest such positive number is $77$, which is greater than $50$.\n\nSo there are no such integers, and the count is $0$. A count of zero is a real answer and worth stating explicitly rather than treating as a failure to find a case.",
+    "techniqueSlugs": [
+      "lcm-from-gcd",
+      "work-backwards-from-lcm"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p13",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "gcd-lcm",
+      "fractions"
+    ],
+    "promptLatex": "What is the least common multiple of $15$ and $25$?",
+    "choices": [
+      "75",
+      "375",
+      "40",
+      "5",
+      "150"
+    ],
+    "answerLatex": "75",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two numbers are built from overlapping primes, and only one prime is shared.",
+      "There is a relation between the product of two numbers, their gcd, and their least common multiple.",
+      "$\\gcd(15,25)=5$ and $15 \\cdot 25 = 375$, so the answer is $375/5$."
+    ],
+    "solutionLatex": "Compute the gcd first and use the product identity.\n\n$25 = 1(15) + 10$, then $15 = 1(10) + 5$, then $10 = 2(5) + 0$, so $\\gcd(15,25)=5$.\n\n$\\operatorname{lcm}(15,25) = \\frac{15 \\cdot 25}{5} = \\frac{375}{5} = 75$\n\nIndeed $75 = 5(15) = 3(25)$.",
+    "techniqueSlugs": [
+      "lcm-from-gcd"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p14",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "divisibility",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers at most $1000$ are divisible by $2$ or by $3$?",
+    "choices": [
+      "667",
+      "833",
+      "500",
+      "666",
+      "999"
+    ],
+    "answerLatex": "667",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A number can satisfy both conditions, and each such number is at risk of being counted twice.",
+      "Adding the two counts overcounts by the size of the overlap.",
+      "The overlap is the multiples of $\\operatorname{lcm}(2,3)=6$, of which there are $166$."
+    ],
+    "solutionLatex": "Count each condition and subtract the overlap.\n\n$\\#\\{n \\le 1000 : 2 \\mid n\\} = 500$ and $\\#\\{n \\le 1000 : 3 \\mid n\\} = 333$\n\n$\\#\\{n \\le 1000 : 6 \\mid n\\} = 166$\n\n$500 + 333 - 166 = 667$\n\nWithout the subtraction the count would be $833$, overstating the answer by the $166$ multiples of $6$.",
+    "techniqueSlugs": [
+      "inclusion-exclusion-multiples",
+      "floor-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-p15",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "gcd-lcm",
+      "prime-factorization"
+    ],
+    "promptLatex": "Two numbers are given in fully factored form, $a = 2^{4} 3^{2} 5$ and $b = 2^{2} 3^{3} 7$. What is the greatest common divisor of $a$ and $b$?",
+    "choices": [
+      "36",
+      "72",
+      "108",
+      "18",
+      "144"
+    ],
+    "answerLatex": "36",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Both numbers are already written as products of prime powers.",
+      "The exponent of each prime in a gcd is the smaller of the two exponents.",
+      "The shared primes are $2$ and $3$ with exponents $2$ and $2$, and $5$ and $7$ do not appear in both."
+    ],
+    "solutionLatex": "Take the minimum exponent of each prime across the two factorizations.\n\nFor $2$: $\\min(4,2) = 2$. For $3$: $\\min(2,3) = 2$. For $5$: it appears only in $a$, so its exponent is $0$. For $7$: it appears only in $b$, so its exponent is $0$.\n\n$\\gcd(a,b) = 2^2 3^2 = 36$\n\nThe primes appearing in only one of the two numbers are dropped entirely, which is the exponent-by-exponent form of the rule that a common divisor need not share every prime.",
+    "techniqueSlugs": [
+      "gcd-prime-exponents"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-m1",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "divisibility",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers at most $250$ are divisible by $6$, by $10$, or by $15$?",
+    "choices": [
+      "66",
+      "82",
+      "41",
+      "99",
+      "74"
+    ],
+    "answerLatex": "66",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Three conditions overlap, and a number in all three is at risk of being counted three times.",
+      "Three conditions require three pairwise subtractions and one addition back.",
+      "Every pairwise lcm here is $30$, and the triple lcm is also $30$."
+    ],
+    "solutionLatex": "Apply inclusion-exclusion with three conditions.\n\nLet $A$, $B$, $C$ be the multiples of $6$, $10$, and $15$ up to $250$.\n\n$|A| = 41$, $|B| = 25$, $|C| = 16$.\n\nEvery pairwise lcm is $30$, since $\\operatorname{lcm}(6,10) = \\operatorname{lcm}(6,15) = \\operatorname{lcm}(10,15) = 30$, and the triple lcm is also $30$. Each of the four intersections therefore has size $\\left\\lfloor 250/30 \\right\\rfloor = 8$.\n\n$|A \\cup B \\cup C| = 41 + 25 + 16 - 8 - 8 - 8 + 8 = 66$",
+    "techniqueSlugs": [
+      "inclusion-exclusion-multiples",
+      "lcm-prime-exponents"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-m2",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "gcd-lcm",
+      "prime-factorization"
+    ],
+    "promptLatex": "What is the smallest positive integer divisible by every integer from $1$ through $12$?",
+    "choices": [
+      "27720",
+      "13860",
+      "55440",
+      "2310",
+      "277200"
+    ],
+    "answerLatex": "27720",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Same method as a smaller range, but the prime list has grown.",
+      "The answer needs the largest power of every prime that occurs at most twelve.",
+      "The primes are $2$, $3$, $5$, $7$, and $11$, needing powers $2^3$, $3^2$, $5$, $7$, and $11$."
+    ],
+    "solutionLatex": "Collect the largest power of each prime at most $12$.\n\n$2^3 = 8$ is needed for $8$, $3^2 = 9$ is needed for $9$, and $5$, $7$, $11$ each appear on their own.\n\n$2^3 3^2 5 7 11 = 8 9 5 7 11 = 27720$\n\nCompared with the range through $10$, the only change is the added factor $11$, and $2520 11 = 27720$.",
+    "techniqueSlugs": [
+      "lcm-prime-exponents"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l1-m3",
+    "moduleId": "M2",
+    "lessonId": "m2-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "gcd-lcm",
+      "divisibility"
+    ],
+    "promptLatex": "What is the greatest common divisor of $12!$ and $18!$?",
+    "choices": [
+      "479001600",
+      "6402373705728000",
+      "479001599",
+      "239500800",
+      "958003200"
+    ],
+    "answerLatex": "479001600",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The inputs are factorials, and the smaller one divides the larger.",
+      "The gcd of two numbers where one divides the other is the smaller number.",
+      "The smaller factorial divides the larger one, so the answer is the value of $12!$."
+    ],
+    "solutionLatex": "Recognize the containment.\n\n$18! = 13 \\cdot 14 \\cdots 18 \\cdot 12!$\n\nSince $12!$ divides $18!$, every divisor of $12!$ divides $18!$, so the greatest common divisor is $12!$ itself.\n\n$12! = 479001600$\n\nComputing either factorial is unnecessary; only the containment matters.",
+    "techniqueSlugs": [
+      "euclidean-algorithm"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

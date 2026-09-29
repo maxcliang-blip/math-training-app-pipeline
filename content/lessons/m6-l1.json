@@ -1,0 +1,196 @@
+{
+  "id": "m6-l1",
+  "moduleId": "M6",
+  "order": 1,
+  "title": "Coordinates, Distance, Midpoint, and Reflections",
+  "topicSlug": "coordinates-distance-and-reflections",
+  "tiers": [
+    "10",
+    "12"
+  ],
+  "estimatedMinutes": 55,
+  "lockMode": "soft",
+  "prerequisites": [],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Convert a geometric question about points into an algebraic one, compute distances, midpoints, and section points from coordinates, and carry out the reflections and translations that later modules build on."
+    },
+    "prerequisites": {
+      "items": [],
+      "noteLatex": "No earlier lesson in this module is required. The only prerequisites are the Pythagorean theorem and comfort with negative numbers, because a coordinate pair carries its signs as data and a dropped sign is the most common way to lose a point."
+    },
+    "concept": {
+      "conceptLatex": "A point in the plane is a pair of signed distances from two perpendicular axes, and the signs are not decoration: they are the only record of which side of each axis the point lies on. Because those two signed distances are exactly the coordinates of a vector, the plane behaves like every other vector space. Points can be added, scaled, and subtracted by the ordinary rules and the result is again a point. Almost every result in this lesson is one of those operations read in a different order, so the habit to build is to turn a geometric question into an algebraic one before computing anything.\n\nDistance is the one metric on the plane, and it is the Pythagorean theorem applied to the right triangle whose legs are the coordinate differences.\n\nd = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}\n\nEvery use of the distance formula is that one application, and the only way to err inside it is to drop a square. Notice what the formula says about signs: only differences and squares appear, so the distance from $A$ to $B$ equals the distance from $B$ to $A$ with no extra argument, and reversing the order of the differences cannot change the answer. That is why the formula is safe to memorize and cheap to check.\n\nMidpoint is the average of the coordinates, and it is the unique point of the segment equidistant from the two endpoints. The two statements are the same fact seen twice, because the midpoint is exactly the point at parameter $\\frac{1}{2}$ along the segment.\n\nM = \\left(\\frac{x_1+x_2}{2}, \\frac{y_1+y_2}{2}\\right)\n\nThe section formula is the same statement with a different parameter, and it answers any question about a point dividing a segment in a given ratio. One check makes it self-correcting: the two parameters must add to $1$, because a point dividing $AB$ internally in the ratio $m:n$ sits $\\frac{m}{m+n}$ of the way from $A$ and $\\frac{n}{m+n}$ of the way from $B$. A computed point whose two parameters sum to something other than $1$ is already known to be wrong.\n\nP = A + \\frac{m}{m+n}(B - A)\n\nReflections divide into two kinds, and the difference matters. Reflections in the axes and in the diagonals act on coordinates by permuting and negating them, so there is nothing to compute at all.\n\n(x, y) \\mapsto (x, -y) \\qquad (x, y) \\mapsto (-y, x)\n\nA reflection in a general line has no such rule, but it has a definition: the foot of the perpendicular from the point to the line is the one point mapped to itself, and the image lies the same distance beyond that foot on the other side. So the entire computation is a projection. With the line written through a point $A$ with direction vector $u$, the projection of $P$ is $A + ((P-A)\\cdot u)u$ divided by $u\\cdot u$, and the reflection is that point plus its own displacement again. In slope-intercept form the same work shortens, because the perpendicular direction has slope $-\\frac{1}{m}$ and the foot comes from solving one linear equation.\n\nTranslations are the simplest isometry of all: adding a fixed vector moves every point, and a composition of a translation with a reflection is a reflection in a different line, not a new kind of object.\n\nThe reason reflections earn a lesson is the path problem they solve. Whenever a shortest broken path must touch a given line, reflect one endpoint across that line; the broken path through the line is never shorter than the straight segment from the reflected point, and equality holds exactly at the foot of the perpendicular. That one move replaces a two-step optimization with a single distance computation, and it is the standard tool for every shortest-path question in the plane.",
+      "figures": [
+        {
+          "id": "m6-l1-fig-1",
+          "captionLatex": "The distance between two points is the hypotenuse of the right triangle whose legs are the horizontal and vertical differences of the coordinates; nothing else in the formula depends on the positions.",
+          "asymptoteSource": "// Distance as the hypotenuse of the coordinate-difference triangle.\n// Two-argument size call fixes the output box, so the declared 4/3 is exact.\nsize(320,240);\npair A=(0,0), B=(3,4), C=(3,0);\ndraw(A--C);\ndraw(C--B);\ndraw(A--B);\ndot(A,2+2.5pt);\ndot(C,2+2.5pt);\ndot(B,2+2.5pt);\nlabel(\"$A=(0,0)$\",A,SW);\nlabel(\"$B=(3,4)$\",B,NE);\nlabel(\"$C=(3,0)$\",C,SE);\nlabel(\"$3$\",(1.5,0),S);\nlabel(\"$4$\",(3,2),E);\nlabel(\"$d$\",(1.5,2.2),NW);\nlabel(\"only the differences of coordinates enter the formula\",(1.5,-1.1),S);",
+          "asymptoteAlt": "A right triangle is drawn with a horizontal leg of length three along the bottom and a vertical leg of length four on the right, joined by a sloping hypotenuse. Filled dots mark the three vertices: the origin at the lower left, a point three units to its right along the bottom, and a point four units above that one at the upper right. Each leg carries a label giving its length and the hypotenuse carries a single-letter label, with a note beneath the figure explaining that only coordinate differences enter the formula.",
+          "asymptoteAspectRatio": 1.333
+        }
+      ],
+      "examples": [
+        {
+          "id": "m6-l1-wex-1",
+          "titleLatex": "Worked example: distance and midpoint of one segment",
+          "bodyLatex": "Find the distance between $A=(-4,3)$ and $B=(2,7)$, and the midpoint of the segment joining them.\n\nThe differences are $2-(-4)=6$ and $7-3=4$, so the distance is $\\sqrt{36+16}=\\sqrt{52}$.\n\nThe midpoint averages the coordinates: $\\left(\\frac{-4+2}{2}, \\frac{3+7}{2}\\right)$.\n\n$d = \\sqrt{52}$ and $M=(-1,5)$.",
+          "answerLatex": "$d = \\sqrt{52}$, $M=(-1,5)$"
+        },
+        {
+          "id": "m6-l1-wex-2",
+          "titleLatex": "Worked example: a reflection in a sloped line",
+          "bodyLatex": "Reflect $P=(2,3)$ across the line $y=2x$, which passes through the origin with direction $u=(1,2)$.\n\n$P-A=(2,3)$ and $u\\cdot u=5$, so the parameter along $u$ is $\\frac{(2)(1)+(3)(2)}{5}=\\frac{8}{5}$.\n\nThe projection is $\\frac{8}{5}(1,2) = \\left(\\frac{8}{5},\\frac{16}{5}\\right)$, and the reflection is twice the projection minus the point.\n\n$2\\left(\\frac{8}{5},\\frac{16}{5}\\right)-(2,3) = \\left(\\frac{6}{5},\\frac{17}{5}\\right)$\n\nCheck: the midpoint of $P$ and the image is the projection, so the segment really is perpendicular to the line at the foot.",
+          "answerLatex": "$P' = \\left(\\frac{6}{5},\\frac{17}{5}\\right)$"
+        },
+        {
+          "id": "m6-l1-wex-3",
+          "titleLatex": "Worked example: a shortest path that must touch a line",
+          "bodyLatex": "A point $P$ is confined to the $x$-axis. Minimize $PA+PB$ for $A=(0,4)$ and $B=(6,4)$.\n\nReflect $B$ across the $x$-axis to get $B'=(6,-4)$. For any $P$ on the axis, $PB = PB'$, so $PA+PB = PA+PB' \\ge AB'$ by the triangle inequality.\n\n$AB' = \\sqrt{6^{2}+8^{2}} = 10$, with equality at the foot of the perpendicular from $A$ to the segment $AB'$, which lies on the axis.\n\nThe minimum is $10$ and it is attained at $P=(3,0)$.",
+          "answerLatex": "$10$"
+        },
+        {
+          "id": "m6-l1-wex-4",
+          "titleLatex": "Worked example: a section point from a ratio",
+          "bodyLatex": "The point $P$ divides the segment from $A=(-8,2)$ to $B=(8,6)$ in the ratio $AP:PB = 3:1$.\n\nThe parameter from $A$ is $\\frac{3}{3+1}$, and the two parameters $\\frac{3}{4}$ and $\\frac{1}{4}$ do sum to $1$, as they must.\n\n$P = (-8,2) + \\frac{3}{4}(16, 4) = (-8+12, 2+3)$\n\n$P = (4,5)$",
+          "answerLatex": "$P=(4,5)$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "distance-formula",
+          "name": "Compute a distance from coordinates",
+          "summaryLatex": "Square the coordinate differences, add, and take the square root.",
+          "bodyLatex": "Write $d=\\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}$. A sum of distances is a different object and has no such formula; when a sum appears, reach for a reflection instead of a second application of this one. If the answer is irrational, leave it as a root rather than a decimal, and if it is a whole number recognize the Pythagorean triple rather than re-deriving it."
+        },
+        {
+          "slug": "midpoint-formula",
+          "name": "Average the coordinates",
+          "summaryLatex": "The midpoint of two points is the average of their coordinates.",
+          "bodyLatex": "Each coordinate of the midpoint is the mean of the matching coordinates of the endpoints, which is exactly the point at parameter $\\frac{1}{2}$. Equivalently it is the unique point of the segment equidistant from both endpoints, so when a problem says a point of a segment is equidistant from the ends, the midpoint formula answers it immediately."
+        },
+        {
+          "slug": "section-formula",
+          "name": "Find the point dividing a segment in a given ratio",
+          "summaryLatex": "Write the point as $A + \\frac{m}{m+n}(B-A)$ and read the parameter off the ratio.",
+          "bodyLatex": "The ratio $AP:PB = m:n$ places $P$ at parameter $\\frac{m}{m+n}$ measured from $A$, and at parameter $\\frac{n}{m+n}$ measured from $B$. Getting the two mixed up is the dominant error here, and the sum-to-one check catches it. For an external division the parameter leaves the interval $[0,1]$ and the same formula still works."
+        },
+        {
+          "slug": "reflect-in-axis-or-diagonal",
+          "name": "Reflect in an axis or a diagonal by permuting coordinates",
+          "summaryLatex": "Reflection in $y=x$ swaps the coordinates, and the other three named lines negate or swap them.",
+          "bodyLatex": "In the $x$-axis negate $y$; in the $y$-axis negate $x$; in the origin negate both; in $y=x$ swap them; in $y=-x$ swap and negate both. The rule is that reflection in a line through the origin is the linear map that fixes the direction of the line and negates its perpendicular direction, and in these five cases that reduces to a swap or a sign change."
+        },
+        {
+          "slug": "reflect-in-line",
+          "name": "Reflect in a general line by projection",
+          "summaryLatex": "Find the foot of the perpendicular from the point to the line, then double the displacement.",
+          "bodyLatex": "With the line through $A$ in direction $u$, the foot is $A+\\frac{(P-A)\\cdot u}{u\\cdot u}u$ and the image is $2\\cdot\\text{foot}-P$. In slope-intercept form the foot is found by writing the line through the point in the perpendicular direction and solving the resulting linear equation. The midpoint of a point and its reflection is always the foot, which is the cheapest way to check the arithmetic."
+        },
+        {
+          "slug": "translation-as-vector",
+          "name": "Carry out a translation by adding a vector",
+          "summaryLatex": "Every point gains the same displacement, so add it to each coordinate.",
+          "bodyLatex": "A translation by $(a,b)$ sends $(x,y)$ to $(x+a, y+b)$ and preserves every distance, slope, and midpoint. Applied twice it is the same as a single translation by the sum, and combined with a reflection it produces a reflection, which is the standard way to handle problems in which a figure is described as a moved copy of another."
+        },
+        {
+          "slug": "collinearity-test",
+          "name": "Test collinearity without slopes",
+          "summaryLatex": "Two direction vectors from the same point are parallel when their cross product is zero.",
+          "bodyLatex": "For points $A,B,C$ the slopes $AB$ and $AC$ are equal exactly when $(x_2-x_1)(y_3-y_1) - (y_2-y_1)(x_3-x_1) = 0$, and this form keeps working when one of the slopes is undefined, which is exactly when the slope method fails. A right angle at $A$ is detected by the same expression equalling the sum of the squares of both vectors."
+        },
+        {
+          "slug": "reflect-to-shorten",
+          "name": "Reflect an endpoint to shorten a broken path",
+          "summaryLatex": "A shortest path constrained to touch a line is a straight segment to the reflected endpoint.",
+          "bodyLatex": "Reflect one endpoint of the broken path in the line, and the constrained sum becomes an ordinary straight distance to the reflected point, which lower-bounds it. Equality holds at the foot of the perpendicular, so the construction also produces the minimizing point. Check that the foot lies in whatever segment the path was restricted to, since otherwise the bound is not attained."
+        },
+        {
+          "slug": "count-lattice-points",
+          "name": "Count integer-coordinate solutions of a sum of two squares",
+          "summaryLatex": "Reduce the condition to a small sum of squares, then account for order and sign separately.",
+          "bodyLatex": "A fixed distance from the origin is the condition $x^{2}+y^{2}=n$ in integers, and for small $n$ the only squares available are $0$, $1$, $4$, $9$. List the pairs that sum to $n$, then for each pair multiply by the number of orderings and by the sign choices, subtracting the cases where a coordinate is $0$ because a sign choice then duplicates. Checking the count in one symmetric quadrant and multiplying by four is faster when the equation is symmetric in both coordinates."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "adding-not-pythagoras",
+          "titleLatex": "Adding the coordinate differences instead of taking their hypotenuse",
+          "wrongLatex": "$d = 3 + 4 = 7$",
+          "whyLatex": "The distance from the origin to the point $(3,4)$ is $5$, not $7$. The legs meet at a right angle, so the hypotenuse is shorter than the sum of the legs; adding them computes the length of the broken path along the axes instead of the straight one.",
+          "fixLatex": "Square each difference, add the squares, and take a single square root at the end. $\\sqrt{3^{2}+4^{2}}=\\sqrt{25}=5$"
+        },
+        {
+          "slug": "reflection-in-the-diagonal",
+          "titleLatex": "Reflecting in $y=x$ as though it were an axis",
+          "wrongLatex": "$(-4, 7) \\mapsto (-4, -7)$",
+          "whyLatex": "Negating a coordinate reflects in a coordinate axis. Reflection in $y=x$ swaps the coordinates, so the point $(-4,7)$ goes to $(7,-4)$. The error is not a small numerical slip: it produces a point that is the right distance from the origin but in the wrong quadrant.",
+          "fixLatex": "Write the map that fixes the direction of the mirror line and negates the perpendicular direction. For $y=x$ that is the swap $(x,y)\\mapsto (y,x)$; for $y=-x$ it is $(x,y)\\mapsto (-y,-x)$."
+        },
+        {
+          "slug": "ratio-from-the-wrong-end",
+          "titleLatex": "Reading a division ratio from the wrong endpoint",
+          "wrongLatex": "$P = (4, 8)$",
+          "whyLatex": "The point dividing the segment from $(0,0)$ to $(12,8)$ in the ratio $2:1$ measured from $(0,0)$ sits two thirds of the way along, which is $(8, \\frac{16}{3})$. The point $(4,8)$ is one third along, so it has the ratio the other way round.",
+          "fixLatex": "Fix an order: the parameter from $A$ is $\\frac{m}{m+n}$ when $AP:PB=m:n$, and the parameter from $B$ is $\\frac{n}{m+n}$. Then check that the two parameters sum to $1$ before computing anything."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m6-l1-p1",
+        "m6-l1-p2",
+        "m6-l1-p3",
+        "m6-l1-p4",
+        "m6-l1-p5",
+        "m6-l1-p6",
+        "m6-l1-p7",
+        "m6-l1-p8",
+        "m6-l1-p9",
+        "m6-l1-p10",
+        "m6-l1-p11",
+        "m6-l1-p12",
+        "m6-l1-p13",
+        "m6-l1-p14",
+        "m6-l1-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m6-l1-p1",
+        "m6-l1-p2",
+        "m6-l1-p3",
+        "m6-l1-p4",
+        "m6-l1-p5",
+        "m6-l1-p6",
+        "m6-l1-p7",
+        "m6-l1-p8",
+        "m6-l1-p9",
+        "m6-l1-p10",
+        "m6-l1-p11",
+        "m6-l1-p12",
+        "m6-l1-p13",
+        "m6-l1-p14",
+        "m6-l1-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m6-l1-m1",
+        "m6-l1-m2",
+        "m6-l1-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "coordinates",
+    "distance-formula",
+    "midpoint",
+    "reflections"
+  ]
+}

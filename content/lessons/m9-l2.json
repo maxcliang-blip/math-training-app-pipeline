@@ -1,0 +1,167 @@
+{
+  "id": "m9-l2",
+  "moduleId": "M9",
+  "order": 2,
+  "title": "Contradiction, the Pigeonhole Principle, and Invariants",
+  "topicSlug": "contradiction-pigeonhole-invariants",
+  "tiers": ["12", "A", "A+"],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": ["m9-l1", "m2-l3"],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Recognise the three argument forms in this lesson, and use each one to settle a claim: proof by contradiction, the pigeonhole principle in both its plain and its residue-class form, and the invariant argument. For each, state explicitly what must be written down before the argument starts, and show that a bound forced by pigeonhole is the best bound that can be forced."
+    },
+    "prerequisites": {
+      "items": ["m9-l1", "m2-l3"],
+      "noteLatex": "The direct-proof discipline of the previous lesson, especially chain-of-equivalences and the handling of quantifiers, plus modular arithmetic from the second module. Nothing here is new computation. What is new is a second way of organising a proof so that the computation can be skipped or the search can be cut off before it starts."
+    },
+    "concept": {
+      "conceptLatex": "A direct proof starts at what is given and walks forward to what is wanted. Sometimes no such walk exists. The claim is true, but the only route to it runs backward from a falsehood, and the route is shorter than any forward one. That is proof by contradiction, and it is the single most useful addition to the toolkit from the previous lesson.\n\nThe method has two halves, and beginners reliably get only the first. You assume the negation of the claim and then derive something impossible. The half that is skipped is the negation itself. Take the statement \"for every positive integer $n$ there exists a prime $p$ with $n < p < 2n$\". Its negation is not \"for every $n$ there is no such prime\", and it is certainly not \"for every $n$ there is a prime with $n > p > 2n$\". The quantifiers swap places and the predicate is negated: \"there exists a positive integer $n$ such that every prime $p$ fails $n < p < 2n$\". Write the negation on its own line before you start. If you cannot write it, you do not yet know what you are about to prove, and the derivation that follows will be a proof of something else.\n\nTwo warnings about how the contradiction has to end. The impossible statement must be a statement about the objects, never a remark about your own strategy: \"no integer has $n^2 = 2$\" is a legitimate dead end, while \"so we made a mistake somewhere\" is not a proof of anything. And the impossible statement has to be impossible for a stated reason, by a rule you can name. Contradicting an assumption you never made, or appealing to a rule that does not apply, produces an argument with no conclusion attached to it.\n\nThe pigeonhole principle is the counting counterpart, and it needs no cleverness to state. If $m$ objects are distributed among $n$ boxes with $m > n$, then some box holds at least two objects. The sharpened form says some box holds at least $\\lceil m/n \\rceil$, which is the form that actually answers questions about a minimum. Th...",
+      "figures": [
+        {
+          "id": "m9-l2-fig-1",
+          "captionLatex": "The general form of the pigeonhole principle, $m$ objects in $n$ boxes: some box receives at least $\\lceil m/n \\rceil$ of them. Seven objects in three boxes cannot spread out more evenly than this, so three is a floor and not merely a guess.",
+          "asymptoteSource": "// The pigeonhole principle in its general form: m objects, n boxes,\n// some box gets at least ceil(m/n).\n// The two-argument size() fixes the output box at 320 x 160, so the\n// declared aspect ratio 2 is exact and the reserved space cannot drift.\nsize(320,160);\nlabel(\"7 objects, 3 boxes\",(0,2.4),N);\nfor (int i = 0; i < 3; ++i) {\n  draw((3.5*i-1.7,-1.1)--(3.5*i+1.7,-1.1)--(3.5*i+1.7,1.1)--(3.5*i-1.7,1.1)--cycle, gray);\n}\ndot((-0.9,0.3),2.5pt);\ndot((-0.3,0.3),2.5pt);\ndot((0.3,0.3),2.5pt);\ndot((2.6,0.3),2.5pt);\ndot((3.2,0.3),2.5pt);\ndot((3.8,0.3),2.5pt);\ndot((6.5,0.3),2.5pt);\nlabel(\"3 here\",(-0.3,-0.5),S);\nlabel(\"3 here\",(3.2,-0.5),S);\nlabel(\"1 here\",(6.5,-0.5),S);\nlabel(\"the middle count cannot go below \\\\[ceil 7/3 \\\\rceil$\",(0,-1.7),S);",
+          "asymptoteAlt": "Three open boxes drawn side by side under a title reading seven objects and three boxes. The first box holds three filled dots, the second box also holds three filled dots, and the third box holds a single filled dot, with a one, two, and three count printed beneath the three boxes respectively. A caption below the row states that the middle count cannot go below the ceiling of seven thirds.",
+          "asymptoteAspectRatio": 2.0
+        },
+        {
+          "id": "m9-l2-fig-2",
+          "captionLatex": "The colouring invariant behind the domino argument. Every domino covers one light square and one dark square, so the difference between the two counts is unchanged by any placement. The two removed corners share a colour, which leaves the board unbalanced in a way no sequence of dominoes can repair.",
+          "asymptoteSource": "// The colouring invariant: each domino covers one square of each\n// colour, so the difference of the two colour counts is invariant.\n// The two-argument size() makes the declared ratio 1 exact.\nsize(320,320);\nfor (int i = 0; i < 8; ++i) {\n  for (int j = 0; j < 8; ++j) {\n    if ((i+j) % 2 == 0) fill((i,j)--(i+1,j)--(i+1,j+1)--(i,j+1), gray);\n  }\n}\nfor (int i = 0; i <= 8; ++i) {\n  draw((i,0)--(i,8),black+0.4pt);\n  draw((0,i)--(8,i),black+0.4pt);\n}\ndraw((0,0)--(1,1)--(1,0)--cycle,red+1.6pt);\ndraw((7,7)--(8,8)--(7,8)--cycle,red+1.6pt);\nlabel(\"removed\",(0.5,-0.8),S);\nlabel(\"removed\",(7.5,8.8),N);\nlabel(\"the two removed corners carry the same colour\",(4,-1.6),S);",
+          "asymptoteAlt": "A square chessboard of sixty-four cells with the cells shaded in an alternating light and dark pattern. Two cells in opposite corners, at the bottom left and at the top right, are outlined in red and left unshaded, and each is labelled as removed. A caption beneath the board states that the two removed corners carry the same colour.",
+          "asymptoteAspectRatio": 1.0
+        }
+      ],
+      "examples": [
+        {
+          "id": "m9-l2-ex-1",
+          "titleLatex": "Worked example: negating a statement before assuming it",
+          "bodyLatex": "The claim to be proved is that for every positive integer $n$ there is a prime $p$ with $n < p < 2n$. The whole difficulty sits in the first line of the proof, and getting that line wrong invalidates everything after it.\n\nNegate the quantifiers and the predicate together. \"For every $n$, there exists $p$ with $n < p < 2n$\" becomes \"there exists $n$ such that no prime $p$ satisfies $n < p < 2n$\", not \"for every $n$ there is no such prime\". So the proof starts by fixing one positive integer $n$ with the property that every prime lies at $n$ or below, or at $2n$ or above.\n\n$\\exists n \\ge 1 \\quad \\forall p \\text{ prime} \\implies p \\le n \\text{ or } p \\ge 2n$\n\nThe $n$ is now a single fixed integer, and the statement is about all primes. This is the form in which the rest of the argument can proceed.",
+          "answerLatex": "\\exists n \\ge 1 \\quad \\forall p \\text{ prime} \\implies p \\le n \\text{ or } p \\ge 2n"
+        },
+        {
+          "id": "m9-l2-ex-2",
+          "titleLatex": "Worked example: the ceiling form of the pigeonhole principle",
+          "bodyLatex": "Seven distinct books are placed on three shelves, and every shelf is allowed to be empty. The question is what must be true about the fullest shelf.\n\nDistribute the books as evenly as three shelves allow. Two shelves can hold three books each, which uses six, and the seventh book must go somewhere and cannot make a shelf hold fewer than three.\n\n$\\lceil 7/3 \\rceil = 3$\n\nSo at least three books share a shelf. The distribution $3$, $3$, $1$ exists, so no larger minimum can be forced, and $3$ is the answer rather than an estimate. Always show the even distribution, not only the bound.",
+          "answerLatex": "3"
+        },
+        {
+          "id": "m9-l2-ex-3",
+          "titleLatex": "Worked example: pigeonhole over residue classes, and proving the bound is sharp",
+          "bodyLatex": "The residue-class version says that among any $n$ integers there are two whose difference is a multiple of $n$. Reduce each integer modulo $n$; two integers with the same residue have a difference divisible by $n$, and with $n$ integers and $n$ residue classes the collision is forced.\n\nThe same reduction settles a harder question. Chosen from $\\{1,2,\\ldots,200\\}$ are some number $k$ of integers, and we want two of them to differ by exactly $100$. The numbers $1$ through $200$ split into $100$ pairs $\\{j, j+100\\}$, one pair per residue class.\n\n$P_j = \\{j, j+100\\} \\quad \\text{for } j = 1, \\ldots, 100$\n\nAvoiding the difference $100$ means taking at most one member from each pair, so at most $100$ numbers can be chosen without a collision. The set $\\{1,2,\\ldots,100\\}$ achieves that, so $k = 101$ both forces the pair and cannot be lowered.",
+          "answerLatex": "101"
+        },
+        {
+          "id": "m9-l2-ex-4",
+          "titleLatex": "Worked example: a parity invariant on a row of coins",
+          "bodyLatex": "Four coins lie in a row, all showing heads. A move flips exactly two coins that are next to each other. Ask which configurations are reachable, and what the fewest moves are to reach one of interest.\n\nWrite the row as four symbols, with $1$ for heads and $0$ for tails, and let $T$ be the number of $0$s. Flipping one coin changes $T$ by exactly $1$, so flipping two coins changes $T$ by $-2$, $0$, or $2$. Every move therefore preserves the parity of $T$, and since the starting position has $T = 0$, every reachable position has $T$ even.\n\n$5$ tails is impossible, and so is $1$ or $3$. To reach the all-tails position, flip the first two coins and then the last two.\n\n$(1,1,1,1) \\to (0,0,1,1) \\to (0,0,0,0)$\n\nTwo moves suffice, and zero or one move cannot, so the minimum is $2$. The invariant answered the question no move sequence could.",
+          "answerLatex": "2"
+        },
+        {
+          "id": "m9-l2-ex-5",
+          "titleLatex": "Worked example: a colouring invariant on a mutilated chessboard",
+          "bodyLatex": "An $8\\times 8$ chessboard has two opposite corners removed. Colour the remaining $62$ squares light and dark in the usual checkerboard pattern, and ask how many dominoes can be placed on it without overlapping.\n\nEvery domino covers one light square and one dark square, so the number of dark squares covered always equals the number of light squares covered. The board originally has $32$ squares of each colour, and two opposite corners carry the same colour, so what remains is $30$ of that colour and $32$ of the other.\n\n$(30,32) \\quad \\text{so at most } 30 \\text{ dominoes}$\n\nThirty dominoes need $30$ squares of the scarcer colour and there are exactly $30$, so thirty is achievable and is the maximum. Covering all $62$ squares would need $31$ dominoes, which would need $31$ squares of the scarcer colour, and only $30$ exist. The tiling is impossible, and the colour difference is the reason.",
+          "answerLatex": "30"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "negate-the-claim",
+          "name": "Write the negation of the claim before assuming it",
+          "summaryLatex": "To argue by contradiction, first turn the claim into its exact logical opposite: swap each pair of adjacent quantifiers and negate every predicate, including the inequalities. The derivation that follows is a proof of the negation, so a sloppy negation proves the wrong statement.",
+          "bodyLatex": "The rule in symbols: the negation of $\\forall x \\, P(x)$ is $\\exists x \\, \\neg P(x)$, and the negation of $\\exists x \\, P(x)$ is $\\forall x \\, \\neg P(x)$. Negating $n < p < 2n$ gives $p \\le n$ or $p \\ge 2n$, not $p \\le n$ and $p \\ge 2n$; the negation of a conjunction is a disjunction. A useful check on your own negation is to ask whether it could ever be true. If the original claim is known to hold, the negation must be false, and a negation that seems plausible is almost always wrong."
+        },
+        {
+          "slug": "proof-by-contradiction",
+          "name": "Assume the negation and derive a statement about the objects that cannot be",
+          "summaryLatex": "Assume the negation, work forward with legitimate steps, and end at something impossible. The final step must be a fact about the objects rather than a remark about the argument, and it must be impossible for a reason you can name.",
+          "bodyLatex": "A contradiction ends in a false statement, and you have to be able to produce the falsity. The productive way to end one is to reach a statement whose impossibility is already established: a residue that a square cannot take, a positive quantity forced to be at most zero, an integer forced to lie strictly between two consecutive integers. Ending on 'this is absurd' or 'we have gone wrong somewhere' is a sign that the derivation never reached a contradiction at all."
+        },
+        {
+          "slug": "pigeonhole-principle",
+          "name": "Count the objects against the classes they fall into",
+          "summaryLatex": "Identify the objects, identify the classes they are distributed among, and compare the two counts. More objects than classes forces a collision, and a collision is the thing your argument needs.",
+          "bodyLatex": "The classes must be a genuine partition: every object lands in exactly one class, and two objects in the same class give the conclusion you want. Reduce integers modulo $n$ to get residue classes, partition a set by a property its members share, or use the cases your own argument has created. If you cannot name the classes, you have not applied the principle yet."
+        },
+        {
+          "slug": "generalized-pigeonhole",
+          "name": "Use the ceiling form to get a guaranteed minimum rather than a bare collision",
+          "summaryLatex": "With $m$ objects in $n$ boxes, some box holds at least $\\lceil m/n \\rceil$ objects. This is the form that answers questions about a guaranteed minimum count.",
+          "bodyLatex": "When $m$ is not much larger than $n$, the plain principle only gives a pair, which is often too weak. Writing $m = qn + r$ with $0 \\le r < n$ shows directly that at least $n - r$ boxes hold $q+1$ objects and the rest hold $q$, so the guaranteed minimum is $q+1$ exactly when $r > 0$ and $q$ exactly when $r = 0$. In both cases the even distribution is attainable, so the bound is sharp and no better bound exists."
+        },
+        {
+          "slug": "residue-class-pigeonhole",
+          "name": "Reduce modulo $n$ to force a divisibility conclusion",
+          "summaryLatex": "Take $n$ integers into $n$ residue classes to force a pair whose difference is a multiple of $n$, or into fewer classes to force a stronger conclusion about how many share a residue.",
+          "bodyLatex": "Among $n$ integers, two share a residue modulo $n$, so their difference is divisible by $n$. Among $kn+1$ integers, one residue class receives at least $k+1$ of them, so $k+1$ integers are congruent to each other. The same reduction settles questions about a guaranteed difference of exactly $d$: the integers in $\\{1, \\ldots, N\\}$ fall into residue classes modulo $d$, each class is a chain with consecutive members differing by $d$, and avoiding that difference means taking at most every other member of each chain."
+        },
+        {
+          "slug": "parity-invariant",
+          "name": "Find a quantity that every move leaves unchanged",
+          "summaryLatex": "Compute what a single legal move does to a candidate quantity. If the change is always even, always zero, or always the same sign, that quantity is an invariant and it rules out every target whose value differs from the start.",
+          "bodyLatex": "Candidates worth trying first are the count of objects of a given type, the sum or the product of the entries, and the parity of either. Flipping two coins changes the tail count by an even amount, so its parity is invariant. Dividing a total into two equal parts requires that total to be even, so the parity of the total is an invariant of the target. The check is one line: apply one legal move and confirm the quantity is unchanged, and confirm it is unchanged for every legal move, not just the one you tried."
+        },
+        {
+          "slug": "coloring-invariant",
+          "name": "Colour the board so that each move covers one square of each colour",
+          "summaryLatex": "Find a two-colouring in which every allowed move covers exactly one square of each colour. Then any imbalance in the colouring is a permanent obstruction, and the maximum number of moves is at most the smaller colour count.",
+          "bodyLatex": "A checkerboard colouring is the standard one, because any two squares that share an edge differ in colour. But the colouring is yours to choose: the point is only that each move must cover one square of each colour, and the two corners a problem removes should turn out to share a colour. Once the colouring is fixed, the argument is arithmetic: count the colours before and after, compare, and the impossibility follows without enumerating any placement."
+        },
+        {
+          "slug": "extremal-and-partial-sums",
+          "name": "Take partial sums, or take the largest avoiding set, when a direct count runs out",
+          "summaryLatex": "Two moves that keep pigeonhole arguments honest when the classes are not a clean partition. Partial sums turn a block-sum question into a collision among sums; the extremal move finds the largest configuration that avoids the conclusion, and the answer is one more than that.",
+          "bodyLatex": "Partial sums are the tool for statements about a consecutive block. From $k$ numbers form the $k+1$ values $s_0 = 0$, $s_1 = n_1$, $s_2 = n_1 + n_2$, and so on; two of them agreeing modulo $m$ give a nonempty consecutive block whose sum is a multiple of $m$, and there are only $m$ residues to collide in. The extremal move is the tool for a guaranteed count. Build the largest family that avoids the conclusion, argue that nothing larger avoids it, and answer with one more than that size."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "negation-keeps-the-original-quantifiers",
+          "titleLatex": "Negating a quantified claim without moving the quantifiers",
+          "wrongLatex": "\\\\forall n \\ge 1 \\text{ the number } n^{2}+n+1 \\text{ is even}",
+          "whyLatex": "The negation of a universal claim is an existential one, so a sentence that still begins 'for every' is not the negation of anything. In this case the claim under discussion is that for every positive integer $n$, at least one of $n$, $n+1$ and $n+2$ is divisible by $3$; its negation says that there is a positive integer $n$ for which none of the three is divisible by $3$. A derivation from the stated form above is not a proof of the original claim and is not a proof of its negation either.",
+          "fixLatex": "Write the claim in symbols, then apply the two rules mechanically: swap $\\forall$ and $\\exists$, and negate each predicate, turning conjunctions into disjunctions. Then ask whether the sentence you wrote could be true. If the claim is one you believe, the negation must look false, and if it does not, the negation is wrong."
+        },
+        {
+          "slug": "bound-without-the-refuting-example",
+          "titleLatex": "Announcing a pigeonhole bound without the configuration that shows it is best possible",
+          "wrongLatex": "100",
+          "whyLatex": "Reducing chosen numbers modulo $100$ does prove that some two of them share a residue class, and for numbers taken from $\\{1,2,\\ldots,200\\}$ that means some two differ by $100$. It does not follow that $100$ numbers are enough. The $100$ numbers $1,2,\\ldots,100$ occupy $100$ distinct residue classes and contain no pair differing by $100$, so the stated bound is false and the correct forcing number is $101$.",
+          "fixLatex": "After a pigeonhole argument, spend one line exhibiting a set of the claimed size that avoids the conclusion, by spreading it as evenly as the classes allow. If the exhibit exists, the bound was one too low; if you cannot build it, say why the even spread is impossible. A pigeonhole bound without that exhibit is a lower bound on the truth and nothing more."
+        },
+        {
+          "slug": "counting-squares-not-colours",
+          "titleLatex": "Counting the pieces rather than the quantity the move preserves",
+          "wrongLatex": "31",
+          "whyLatex": "After two opposite corners are removed from an $8\\times 8$ board, $62$ squares remain and $31$ dominoes do cover $62$ squares, so the count of squares is consistent and appears to settle the question. It is the wrong count. The two removed corners share a colour, so the board now holds $30$ squares of one colour and $32$ of the other, and every domino covers one of each. Thirty-one dominoes would need $31$ squares of the scarcer colour, and only $30$ exist.",
+          "fixLatex": "Before counting anything, name the quantity the move cannot change, and evaluate it on the starting position and on the target position. Here it is the difference between the two colour counts, which a single domino leaves fixed. When the two evaluations differ, the target is unreachable, and the maximum is read off directly as the smaller colour count."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m9-l2-p1", "m9-l2-p2", "m9-l2-p3", "m9-l2-p4", "m9-l2-p5",
+        "m9-l2-p6", "m9-l2-p7", "m9-l2-p8", "m9-l2-p9", "m9-l2-p10",
+        "m9-l2-p11", "m9-l2-p12", "m9-l2-p13", "m9-l2-p14", "m9-l2-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m9-l2-p1", "m9-l2-p2", "m9-l2-p3", "m9-l2-p4", "m9-l2-p5",
+        "m9-l2-p6", "m9-l2-p7", "m9-l2-p8", "m9-l2-p9", "m9-l2-p10",
+        "m9-l2-p11", "m9-l2-p12", "m9-l2-p13", "m9-l2-p14", "m9-l2-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": ["m9-l2-m1", "m9-l2-m2", "m9-l2-m3"],
+      "passThreshold": 2
+    }
+  },
+  "tags": ["proof", "contradiction", "pigeonhole", "invariants", "quantifiers", "counterexample", "extremal", "structure-spotting"]
+}

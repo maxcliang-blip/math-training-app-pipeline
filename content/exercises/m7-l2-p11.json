@@ -1,0 +1,29 @@
+{
+  "id": "m7-l2-p11",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": ["inclusion-exclusion", "upper-bounds"],
+  "promptLatex": "How many nonnegative integer solutions does x + y + z = 6 have if each variable is at most 3?",
+  "choices": [
+    "19",
+    "25",
+    "28",
+    "30",
+    "22"
+  ],
+  "answerLatex": "19",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Total solutions without restrictions: (6+3-1) choose (3-1) = (8) choose 2 = 28.",
+    "Let A_i be the set where variable i exceeds 3. If x exceeds 3, substitute x' = x - 4, then x' + y + z = 2, which has (2+3-1) choose 2 = (4) choose 2 = 6 solutions.",
+    "Since 6 - 8 = -2 < 0, at most one variable can exceed 3, so subtract 3 × 6 = 18.",
+    "Valid solutions: 28 - 18 = 10."
+  ],
+  "solutionLatex": "Total nonnegative solutions without upper bounds: (6+3-1) choose (3-1) = (8) choose 2 = 28.",
+  "techniques": ["stars-and-bars-method", "case-split-inclusion-exclusion"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

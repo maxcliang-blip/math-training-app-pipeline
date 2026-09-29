@@ -1,0 +1,212 @@
+{
+  "id": "m8-l2",
+  "moduleId": "M8",
+  "order": 2,
+  "title": "Trigonometric Identities and Their Geometric Justification",
+  "topicSlug": "trig-identities",
+  "tiers": [
+    "12",
+    "A",
+    "A+"
+  ],
+  "estimatedMinutes": 70,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m8-l1"
+  ],
+  "tags": [
+    "trig-identities",
+    "exact-trig-values",
+    "trig-equations",
+    "unit-circle"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "State the five core identity families, prove each from the unit circle rather than memorizing it, select the right identity for a given algebraic task, and use a double-angle or half-angle formula to reach an exact value that no single right triangle provides."
+    },
+    "prerequisites": {
+      "items": [
+        {
+          "labelLatex": "[m8-l1](/M8/lessons/m8-l1) the unit circle",
+          "noteLatex": "for the Pythagorean identity and the exact values it produces"
+        },
+        {
+          "labelLatex": "[m1-l4](/M1/lessons/m1-l4) polynomial expansion",
+          "noteLatex": "for reading a difference of squares as a product"
+        }
+      ],
+      "noteLatex": "Every identity here is proved from $\\sin^2 x + \\cos^2 x = 1$ and the addition formulas, both of which come straight out of the unit circle covered in [m8-l1](/M8/lessons/m8-l1). The one genuinely new idea is that a formula may be used in reverse, and the exercises below are ordered so that most require that step."
+    },
+    "concept": {
+      "conceptLatex": "An identity is an equation that holds for every value of its variable wherever it is defined, and the whole subject is a short list of them plus the judgement to know which one an expression wants. There are five families, and each of the rest is a consequence of these five.\n\nThe reciprocal and quotient relations come straight from the ratios. $\\sec x = \\frac{1}{\\cos x}$, $\\csc x = \\frac{1}{\\sin x}$, and $\\tan x = \\frac{\\sin x}{\\cos x}$, so $\\sin x \\sec x = 1$, $\\cos x \\csc x = 1$, and $\\tan x \\cot x = 1$ wherever the denominators are nonzero. These are almost never useful in their forward direction. Their value is in the cancellations they license: a factor of $\\cos x$ in a numerator can be matched against a factor of $\\sec x$ in a denominator, and the two disappear.\n\nThe even and odd relations describe reflection. $\\sin(-x) = -\\sin x$ and $\\cos(-x) = \\cos x$, because the point at $-x$ is the mirror of the point at $x$ across the $x$-axis, which flips one coordinate and keeps the other. From these and the cofunction relation $\\sin\\left(\\frac{\\pi}{2} - x\\right) = \\cos x$ one obtains the two period identities $\\sin(x + 2\\pi) = \\sin x$ and $\\cos(x + 2\\pi) = \\cos x$, which say that a full turn is invisible.\n\nThe Pythagorean identity is the workhorse. $\\sin^2 x + \\cos^2 x = 1$ is the theorem that the point $(x, y)$ satisfies $x^2 + y^2 = 1$, and dividing it through by $\\cos^2 x$ or by $\\sin^2 x$ gives the two forms that show up constantly: $1 + \\tan^2 x = \\sec^2 x$ and $1 + \\cot^2 x = \\csc^2 x$. Note carefully what the squares mean. They are not $\\sin x^2$ and not $(\\sin x)^2$ written differently; they are the square of the whole value, which is why $\\sin^2 x$ at $x = 30^\\circ$ is $\\frac{1}{4}$ and not $\\frac{1}{2}$.\n\nThe angle-addition and subtraction formulas are the two that do the real work. $\\sin(a + b) = \\sin a \\cos b + \\cos a \\sin b$ and $\\cos(a + b) = \\cos a \\cos b - \\sin a \\sin b$, with the subtraction version obtained by replacing $b$ with $-b$ and using the odd and even relations. The geometric reason is a chord. Drop perpendiculars from the two radii at angles $a$ and $a + b$ onto the radius at angle $a + b$ and read the two pieces off: one is $\\cos a \\sin b$ and the other is $\\sin a \\cos b$, and they add. For the cosine the same two pieces subtract, because one of them points the other way.\n\nSetting $a = b = x$ in the addition formulas yields the double-angle identities, which are the second pillar: $\\sin 2x = 2 \\sin x \\cos x$ and $\\cos 2x = \\cos^2 x - \\sin^2 x$. The cosine version has a second form, $\\cos 2x = 1 - 2\\sin^2 x = 2\\cos^2 x - 1$, obtained by substituting $\\sin^2 x = 1 - \\cos^2 x$ and its mirror image. Choose the form by looking at which function you are given: use $1 - 2\\sin^2 x$ when a sine is known and $2\\cos^2 x - 1$ when a cosine is known. Solving the same equation for the half angle gives $\\sin^2\\frac{x}{2} = \\frac{1 - \\cos x}{2}$ and $\\cos^2\\frac{x}{2} = \\frac{1 + \\cos x}{2}$, and these two are how a $15^\\circ$ or $75^\\circ$ value is reached at all, since neither angle has a useful right triangle of its own.\n\nJudgement matters more than recall. When a problem gives one function value and asks for another, the Pythagorean family is the tool. When it gives two values of different functions and asks for a sum or difference of angles, the addition family is the tool. When it gives one value and asks about a doubled angle, the double-angle family is the tool, and the choice between its two cosine forms is made by which function you were handed. And a simplification problem is usually solved by transforming the expression until something cancels, rather than by substituting the given value first and simplifying afterwards, because the cancellation is invisible once numbers are in.",
+      "figures": [
+        {
+          "id": "m8-l2-fig-1",
+          "captionLatex": "The double-angle identities read off one picture: the chord from a point on the circle to the point at twice its angle has length $2 \\sin x$, and the radius to the midpoint of that chord is $\\cos 2x$, so the two halves of the chord's length are $\\sin x \\cos x$ each.",
+          "asymptoteSource": "// The two double-angle identities read off the same point P on the unit\n// circle. The chord from P to the point at twice the angle has length 2 sin x,\n// and the same picture gives cos 2x as the horizontal distance.\nsize(320,240);\npair O = (0,0);\npair P = dir(60);\npair Q = dir(120);\ndraw(unitcircle, gray(0.7));\ndraw(O--P);\ndraw(O--Q);\ndraw(P--Q, black);\ndraw((O+P+Q)/3*1.1, dashed);\nlabel(\"$O$\", O, SW);\nlabel(\"$P$\", P, SE);\nlabel(\"$Q$\", Q, NW);\nlabel(\"$2\\sin x$\", (P+Q)/2+(0.18,0.14), NE);\nlabel(\"$\\cos 2x$\", (O+P+Q)/3*1.1, E);\nlabel(\"$2x$\", Q*0.42, NW);\nlabel(\"$x$\", P*0.5, SE);\nlabel(\"$90^\\circ$\", (0.12,0.9), E);",
+          "asymptoteAlt": "A circle centred at a point on a horizontal axis, with two radii drawn out to two marked points on the circle. The first point sits in the first quadrant and the second in the second, and the angle between the two radii at the centre is a right angle, marked as such. The chord joining the two points is drawn boldly and labelled as twice the sine of the first angle. A dashed radius reaches the midpoint of that chord and is labelled as the cosine of twice the first angle. Both radii are labelled with the angle each one makes.",
+          "asymptoteAspectRatio": 1.333
+        },
+        {
+          "id": "m8-l2-fig-2",
+          "captionLatex": "One circle, three identities. The hypotenuse is $1$ and the legs are $\\sin x$ and \\cos x$, and dividing the same picture through by a leg turns it into the tangent and cotangent versions without any new geometry.",
+          "asymptoteSource": "// The Pythagorean identity, drawn. The unit circle's hypotenuse is 1, the\n// legs are sin and cos, and the two Pythagorean reformulations follow by\n// dividing the same picture through by a leg.\nsize(300,300);\npair O = (0,0);\npair P = dir(37);\ndraw(unitcircle, gray(0.7));\ndraw(O--P);\ndraw((O+P)/2, dashed);\ndraw((O+P)/2*0.5, dotted);\nlabel(\"$O$\", O, SW);\nlabel(\"$P$\", P, E);\nlabel(\"$\\cos^2 x$\", (O+P)/2*0.5, S);\nlabel(\"$1$\", (O+P)/2*0.78, NW);\nlabel(\"$\\sin^2 x$\", (O+P)/2 + (0.06,0.3), N);\nlabel(\"$\\sin^2 x + \\cos^2 x = 1$\", (0,-1.28), S);\nlabel(\"$1 + \\tan^2 x = \\sec^2 x$\", (0,1.3), N);\nlabel(\"$1 + \\cot^2 x = \\csc^2 x$\", (0.06,-1.02), S);",
+          "asymptoteAlt": "A circle centred on the left end of a horizontal radius that reaches a marked point on the circle. The radius is drawn boldly, a dashed segment marks the point halfway along it, and a dotted segment marks the point one quarter of the way along. The full length is labelled one, the shorter dotted piece is labelled as the square of the cosine, and the remaining piece of the dotted line up to the dashed marker is labelled as the square of the sine. Three lines of text sit below and above the circle, giving the Pythagorean identity and the two versions of it that come from dividing through by a leg.",
+          "asymptoteAspectRatio": 1.0
+        }
+      ],
+      "examples": [
+        {
+          "id": "m8-l2-wex-1",
+          "titleLatex": "Worked example: an exact value with no right triangle",
+          "bodyLatex": "Compute $\\sin 75^\\circ$ exactly.\n\nNo special triangle has a $75^\\circ$ angle, so write $75^\\circ = 45^\\circ + 30^\\circ$ and use the addition formula:\n\n$\\sin(45^\\circ + 30^\\circ) = \\sin 45^\\circ \\cos 30^\\circ + \\cos 45^\\circ \\sin 30^\\circ$\n\n$= \\frac{\\sqrt{2}}{2} \\cdot \\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2} \\cdot \\frac{1}{2} = \\frac{\\sqrt{6}}{4} + \\frac{\\sqrt{2}}{4} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$\n\nThe value is about $0.966$, which is right for a sine in the first quadrant close to $90^\\circ$.",
+          "answerLatex": "$\\frac{\\sqrt{6} + \\sqrt{2}}{4}$"
+        },
+        {
+          "id": "m8-l2-wex-2",
+          "titleLatex": "Worked example: a half angle from a known cosine",
+          "bodyLatex": "Suppose $\\cos x = \\frac{3}{5}$ with $x$ in the first quadrant. Find $\\cos 2x$ and $\\sin x$.\n\nFor the doubled angle the known function is the cosine, so the form to use is $\\cos 2x = 2\\cos^2 x - 1 = 2 \\cdot \\frac{9}{25} - 1 = \\frac{18}{25} - 1 = -\\frac{7}{25}$.\n\nFor the single angle, $\\sin^2 x = 1 - \\cos^2 x = 1 - \\frac{9}{25} = \\frac{16}{25}$, and the first quadrant makes it positive: $\\sin x = \\frac{4}{5}$.\n\nCheck: $\\sin^2 x + \\cos^2 x = \\frac{16}{25} + \\frac{9}{25} = 1$, and $\\sin 2x = 2 \\cdot \\frac{3}{5} \\cdot \\frac{4}{5} = \\frac{24}{25}$ squares to $\\frac{576}{625}$, which together with $\\frac{49}{625}$ gives $1$ as it must.",
+          "answerLatex": "$\\cos 2x = -\\frac{7}{25}$, $\\sin x = \\frac{4}{5}$"
+        },
+        {
+          "id": "m8-l2-wex-3",
+          "titleLatex": "Worked example: simplifying before substituting",
+          "bodyLatex": "Simplify $\\frac{1 - \\cos^2 x}{\\sin x}$ and then evaluate it at $x$ with $\\sin x = \\frac{3}{5}$ and $\\cos x = \\frac{4}{5}$.\n\nThe numerator is a difference of squares, and the Pythagorean identity is exactly one of them: $1 - \\cos^2 x = \\sin^2 x$. So the whole expression is\n\n$\\frac{\\sin^2 x}{\\sin x} = \\sin x$,\n\nwhich at the given values is $\\frac{3}{5}$. Substituting first would have produced $\\frac{1 - \\frac{16}{25}}{\\frac{3}{5}} = \\frac{\\frac{9}{25}}{\\frac{3}{5}}$, which is the same number reached the long way, and the simplification is what makes it trustworthy.",
+          "answerLatex": "$\\sin x$",
+          "asymptoteSource": "// The angle-addition identity as a chord-length statement. With the three\n// radii at 0, x, and x+y drawn, the chord lengths from the point at x+y down\n// to each of the other two are sin(x+y), sin y, and sin x in turn.\nsize(340,240);\npair O = (0,0);\npair A = dir(0);\npair B = dir(40);\npair C = dir(100);\ndraw(unitcircle, gray(0.7));\ndraw(O--A);\ndraw(O--B);\ndraw(O--C);\ndraw(C--A, black);\ndraw(C--B, black);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, SE);\nlabel(\"$B$\", B, E);\nlabel(\"$C$\", C, NW);\nlabel(\"$\\sin(x+y)$\", (C+A)/2+(0,-0.2), S);\nlabel(\"$\\sin y$\", (C+B)/2+(0.14,0), NE);\nlabel(\"$\\sin x$\", (B+A)/2+(0,-0.18), S);\nlabel(\"$x$\", B*0.5, S);\nlabel(\"$y$\", (B+C)/2*0.6, NE);",
+          "asymptoteAlt": "A circle with three radii drawn from the centre to three marked points: one at the right end of the horizontal axis, one in the first quadrant, and one in the second quadrant. Two chords are drawn boldly, one from the second quadrant point down to the point on the right and one from the second quadrant point to the first quadrant point. Each chord carries a label saying it is the sine of a sum of angles, the sine of the second angle, and the sine of the first angle, and the two arcs at the centre are labelled with the two angles being added.",
+          "asymptoteAspectRatio": 1.417
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "identity-selection",
+          "name": "Choosing which identity the problem wants",
+          "summaryLatex": "One known function value points to the Pythagorean family; two different functions pointing at a sum of angles points to the addition family.",
+          "bodyLatex": "Read what is given and what is asked before writing anything. A single function value and a request for the other, the same function at a doubled angle, or a reciprocal all point at the Pythagorean family. Two values of different functions and a request for $\\sin(a+b)$ or $\\cos(a-b)$ point at the addition family. A request to simplify a fraction points at cancellation, which almost always means factoring the numerator against a reciprocal in the denominator. Choosing wrong costs more time than choosing carefully, because the wrong identity turns a two-line problem into an unmotivated one."
+        },
+        {
+          "slug": "simplify-before-substituting",
+          "name": "Simplifying before substituting",
+          "summaryLatex": "Transform the expression until something cancels, and only then insert the given value.",
+          "bodyLatex": "Numbers hide structure. The expression $\\frac{1 - \\cos^2 x}{\\sin x}$ is opaque once it contains $\\frac{9}{25}$ and $\\frac{3}{5}$, and transparent before, because $1 - \\cos^2 x$ is visibly the Pythagorean identity and the factor $\\sin x$ then cancels. Work symbolically until the answer is a bare function of $x$, and substitute last. When an expression resists, the usual reason is that it has not been factored yet, so factor before doing anything else."
+        },
+        {
+          "slug": "factor-the-expression",
+          "name": "Factoring is most of the work",
+          "summaryLatex": "A difference of squares is a product, and a product with a reciprocal in the denominator cancels.",
+          "bodyLatex": "$1 - \\sin^2 x$ is $(1 - \\sin x)(1 + \\sin x)$, and $\\cos^2 x - \\sin^2 x$ is $(\\cos x - \\sin x)(\\cos x + \\sin x)$. Factoring is what creates a factor that can be cancelled. Once $\\frac{1 - \\cos^2 x}{\\sin x}$ is written as $\\frac{\\sin^2 x}{\\sin x}$ the answer is immediate, and the half-angle forms $\\frac{1 - \\cos x}{\\sin x}$ and $\\frac{\\sin x}{1 - \\cos x}$ are the same quotient reached from the other side, equal to $\\tan\\frac{x}{2}$ and $\\cot\\frac{x}{2}$ respectively."
+        },
+        {
+          "slug": "convert-to-sine-and-cosine",
+          "name": "Converting everything to sines and cosines",
+          "summaryLatex": "A tangent is a quotient of a sine and a cosine, and a secant or cosecant is a reciprocal, so any expression can be written with only $\\sin$ and $\\cos$.",
+          "bodyLatex": "This is the move that makes a sum of angles tractable. A formula such as $\\tan(x + y)$ is unusable in its own form because the addition formula is stated for sines and cosines, but $\\tan(x+y) = \\frac{\\tan x + \\tan y}{1 - \\tan x \\tan y}$ follows from writing out the sine and cosine of the sum and dividing. Whenever an expression mixes families, converting it to $\\sin$ and $\\cos$ first is almost always shorter than finding a special-case rule for the mixture."
+        },
+        {
+          "slug": "double-angle-recovery",
+          "name": "The two forms of the doubled cosine",
+          "summaryLatex": "$\\cos 2x$ reads as $2\\cos^2 x - 1$ when a cosine is given and as $1 - 2\\sin^2 x$ when a sine is given.",
+          "bodyLatex": "The three forms $\\cos 2x = \\cos^2 x - \\sin^2 x = 1 - 2\\sin^2 x = 2\\cos^2 x - 1$ are all the same identity, and the choice is mechanical: use the form whose known term is the one you were given, so the other square disappears immediately. The middle form is also the right one for solving, since it is linear in $\\sin^2 x$: a condition like $\\cos 2x = \\frac{7}{25}$ becomes $\\sin^2 x = \\frac{9}{25}$ in one step. For the doubled sine there is only one form, $\\sin 2x = 2\\sin x \\cos x$, and it needs both function values."
+        },
+        {
+          "slug": "angle-addition-expansion",
+          "name": "Expanding a sum or difference of angles",
+          "summaryLatex": "Replace $\\sin(a \\pm b)$ and $\\cos(a \\pm b)$ with the two products, then evaluate each product as a single special value.",
+          "bodyLatex": "The expansion is only useful because each product has angles that are special, so always look for a decomposition into two familiar angles before expanding. $75^\\circ = 45^\\circ + 30^\\circ$, $105^\\circ = 60^\\circ + 45^\\circ$, and $15^\\circ = 45^\\circ - 30^\\circ$ are the three worth memorizing. The two products then each involve a surd, and the sum $\\frac{\\sqrt{6}}{4} + \\frac{\\sqrt{2}}{4}$ over a common denominator of $4$ is where the exact answer comes from. Subtraction is handled by the same expansion with the second sign flipped in the sine case and unchanged in the cosine case."
+        },
+        {
+          "slug": "identity-proof-strategy",
+          "name": "How to prove an identity rather than use one",
+          "summaryLatex": "Move everything to one side, simplify the more complicated side, and never divide by something that might vanish.",
+          "bodyLatex": "The one legitimate method is to start from one side and end at the other through a chain of identities, and the standard advice is to begin with the side that looks more complicated, because it is the side that can be reduced. Two habits keep proofs honest. First, never divide by an expression without recording where it is zero, since dividing by $\\sin x$ silently discards the multiples of $\\pi$. Second, keep $\\sin^2 x$ intact rather than splitting it into $\\sin x \\sin x$ too early, because the squared form is exactly what the Pythagorean identity consumes."
+        },
+        {
+          "slug": "pythagorean-recovery",
+          "name": "Using the Pythagorean family in reverse",
+          "summaryLatex": "A known square plus or minus another known square gives the third, and the sign of the value comes from the quadrant.",
+          "bodyLatex": "Given $\\sin x$ the cosine follows from $\\cos^2 x = 1 - \\sin^2 x$; given $\\tan x$ the secant follows from $\\sec^2 x = 1 + \\tan^2 x$, and the tangent convention of a quotient means a tangent and a secant together give a sine and a cosine in one step. The sign is never fixed by the identity, only by the quadrant, so a problem that gives no quadrant has an under-determined sign and must have another source for it, usually the sign of the expression being simplified."
+        },
+        {
+          "slug": "cofunction-substitution",
+          "name": "Replacing an angle by its complement",
+          "summaryLatex": "The angle $\\frac{\\pi}{2} - x$ has its functions swapped, so an awkward angle often has an easy complement.",
+          "bodyLatex": "$\\sin\\left(\\frac{\\pi}{2} - x\\right) = \\cos x$ and $\\cos\\left(\\frac{\\pi}{2} - x\\right) = \\sin x$ in the first quadrant, and the relation keeps its meaning with a sign outside it. This is how a doubled angle is halved: $\\cos 2x = \\sin\\left(\\frac{\\pi}{2} - 2x\\right) = \\sin(2\\left(\\frac{\\pi}{4} - x\\right))$, and the half-angle formulas are the algebraic form of that same observation. An angle such as $\\frac{5\\pi}{12}$ is best attacked as $\\frac{\\pi}{2} - \\frac{\\pi}{12}$, with the remainder handled by the half-angle formulas."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "sin-squared-is-not-sine-of-the-square",
+          "titleLatex": "Reading $\\sin^2 x$ as $\\sin(x^2)$",
+          "wrongLatex": "$\\sin^2 30^\\circ = \\sin 900^\\circ = 0$",
+          "whyLatex": "The exponent binds to the value, not to the argument, so $\\sin^2 x$ means $(\\sin x)^2$ and at $x = 30^\\circ$ it is $\\left(\\frac{1}{2}\\right)^2 = \\frac{1}{4}$, not a sine of anything. The same reading error on $\\cos^2 x$ is the single most common way to lose a factor of four, and it turns $\\sin^2 x + \\cos^2 x = 1$ into the visibly false claim that the sum of two sines is $1$.",
+          "fixLatex": "Expand the square before evaluating: write $\\sin^2 x = (\\sin x)^2$ in your own work, and the squaring becomes explicit. A fifty-cent check is that $\\sin^2 x$ at $x = 30^\\circ$ must be $\\frac{1}{4}$ and not $\\frac{1}{2}$, and the identity then forces $\\cos^2 x = \\frac{3}{4}$, which agrees with $\\cos 30^\\circ = \\frac{\\sqrt{3}}{2}$."
+        },
+        {
+          "slug": "cancelling-a-common-zero",
+          "titleLatex": "Cancelling a factor that may be zero",
+          "wrongLatex": "$\\frac{\\sin^2 x}{\\sin x} = \\sin x$ claimed for every real $x$",
+          "whyLatex": "The two sides agree everywhere except where $\\sin x = 0$, that is at every multiple of $\\pi$, and at those angles the left side is $0$ over $0$ and is not defined. A simplification is therefore a statement about the domain as well as the value, and an exercise that asks for a simplified form is asking for the form that is valid wherever the original is.",
+          "fixLatex": "Note the restriction as you cancel: the identity holds when $\\sin x$ is not $0$, which is exactly the domain of the original fraction. If a problem's own conditions keep you away from the excluded values, which is the usual case in this module, the simplified form is the answer and no caveat is needed. If the problem is about solutions of a trigonometric equation, the excluded values must be checked separately, because they are precisely where a cancelled factor could have been zero."
+        },
+        {
+          "slug": "forgetting-the-sign-in-a-double-angle",
+          "titleLatex": "Taking the double-angle formulas as absolute values",
+          "wrongLatex": "$\\cos 2x = \\cos^2 x$ because $\\cos^2 x$ is a square and squares are nonnegative",
+          "whyLatex": "The identity is $\\cos 2x = \\cos^2 x - \\sin^2 x$, and the second term is not optional: dropping it turns a quantity that ranges over $[-1, 1]$ into one that can never be negative, which is wrong for every $x$ in the second or third quadrant. The same slip in the sine version replaces $2 \\sin x \\cos x$ with $2\\sin x$, and the identity check $\\sin^2 2x + \\cos^2 2x = 1$ catches it immediately.",
+          "fixLatex": "Memorize the doubled cosine in all three forms and use whichever matches the data: $\\cos^2 x - \\sin^2 x$, $1 - 2\\sin^2 x$, and $2\\cos^2 x - 1$. Whichever you use, substitute a value you can check, such as $x = 30^\\circ$, where $\\cos 60^\\circ = \\frac{1}{2}$ and all three forms give it."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m8-l2-p1",
+        "m8-l2-p2",
+        "m8-l2-p3",
+        "m8-l2-p4",
+        "m8-l2-p5",
+        "m8-l2-p6",
+        "m8-l2-p7",
+        "m8-l2-p8",
+        "m8-l2-p9",
+        "m8-l2-p10",
+        "m8-l2-p11",
+        "m8-l2-p12",
+        "m8-l2-p13",
+        "m8-l2-p14",
+        "m8-l2-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m8-l2-p1",
+        "m8-l2-p2",
+        "m8-l2-p3",
+        "m8-l2-p4",
+        "m8-l2-p5",
+        "m8-l2-p6",
+        "m8-l2-p7",
+        "m8-l2-p8",
+        "m8-l2-p9",
+        "m8-l2-p10",
+        "m8-l2-p11",
+        "m8-l2-p12",
+        "m8-l2-p13",
+        "m8-l2-p14",
+        "m8-l2-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m8-l2-m1",
+        "m8-l2-m2",
+        "m8-l2-m3"
+      ],
+      "passThreshold": 2
+    }
+  }
+}

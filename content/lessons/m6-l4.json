@@ -1,0 +1,213 @@
+{
+  "id": "m6-l4",
+  "moduleId": "M6",
+  "order": 4,
+  "title": "Loci, Transformations, and the Complex Plane",
+  "topicSlug": "loci-transformations-and-complex-numbers",
+  "tiers": [
+    "12",
+    "A",
+    "A+"
+  ],
+  "estimatedMinutes": 70,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m6-l3"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Translate a geometric condition into the equation of its locus, predict the effect of each standard graph transformation on an equation, and carry out arithmetic, powers, and loci in the complex plane using the modulus, the argument, and the conjugate."
+    },
+    "prerequisites": {
+      "items": [
+        "m6-l3"
+      ],
+      "noteLatex": "This lesson stands on the conics of [m6-l3](/M6/lessons/m6-l3), because a locus is named by the same distance conditions that define a parabola, an ellipse, and a hyperbola, and a translation of a graph is a translation of a conic. The only new machinery is the notation of the complex plane and the four transformations, none of which requires more than the algebra already established."
+    },
+    "concept": {
+      "conceptLatex": "A locus is a set of points, and the discipline of the subject is to notice that a set described in words can almost always be described by one equation. The method is to name the fixed points and the moving point, write the condition as an equation in the two coordinates of the moving point, and then recognize the resulting curve. The classical loci are worth knowing cold, because they are the reductions that make that recognition possible. Points equidistant from two fixed points form the perpendicular bisector of the segment joining them. Points equidistant from a fixed point and a fixed line form a parabola. Points whose distances to two fixed points have a fixed sum form an ellipse. Points whose distances to two fixed points have a fixed difference form a hyperbola. Points equidistant from three fixed points form a single point, the circumcenter of the triangle those points make.\n\nA condition in words is therefore a lookup rather than a puzzle. When two conditions are present, the answer is the intersection of the two loci, and a circle meeting a line in two points means two answers are owed rather than one.\n\nThe four graph transformations are a separate and shorter subject. A translation by $(h,k)$ replaces $x$ by $x-h$ and $y$ by $y-k$, which moves a graph without changing its shape. A reflection in the $x$-axis negates the whole right-hand side, and a reflection in the $y$-axis negates $x$ on both sides. A horizontal stretch replaces $x$ by $kx$ and a vertical stretch replaces $y$ by $ky$.\n\nThe one rule that catches people is order. Transformations do not commute, so a graph reflected and then translated is generally not the same as the graph translated and then reflected, and the two are told apart by where a recognizable point such as a vertex or an intercept ends up. The safe procedure is to apply the transformations one at a time to a single point and see where it lands.\n\n(3, 5) \\mapsto (3-h, 5-k) \\mapsto (3-h, -(5-k))\n\nThe complex plane is the same plane with the axes relabelled: the point $(a,b)$ is written $a+bi$, and nothing about the geometry changes. What changes is that the modulus and the argument are now written in a single notation, and both are read from the diagram. The modulus is the distance from the origin, so it is never negative, and the argument is the angle swept from the positive real axis, which is unique only up to a whole number of full turns.\n\n|z| = \\sqrt{a^{2}+b^{2}} \\qquad |z|^{2} = a^{2} + b^{2}\n\nArithmetic is ordinary algebra with $i^{2}=-1$ substituted, and multiplication has the rule that makes every later step shorter: the moduli multiply and the arguments add.\n\n(a+bi)(c+di) = (ac - bd) + (ad + bc)i \\qquad |z_{1}z_{2}| = |z_{1}||z_{2}|\n\n\\operatorname{arg}(z_{1}z_{2}) \\equiv (\\operatorname{arg} z_{1} + \\operatorname{arg} z_{2}) \\pmod{2\\pi}\n\nThe conjugate $\\overline{z}$ is the reflection of $z$ in the real axis, and it earns its place by making division rational: multiplying numerator and denominator by the conjugate of the denominator removes the imaginary part, because $(a+bi)(a-bi) = a^{2}+b^{2}$ is real.\n\n\\frac{a+bi}{c+di} = \\frac{(a+bi)(c-di)}{c^{2}+d^{2}}\n\nRaising to a power is then a single sentence, and it is the standard tool for any integer power of a complex number: the modulus is raised to that power and the argument is multiplied by the exponent and taken modulo a full turn.\n\n|z^{n}| = |z|^{n} \\qquad \\operatorname{arg}(z^{n}) \\equiv (n \\cdot (\\operatorname{arg} z)) \\pmod{2\\pi}\n\nThe $n$th roots of a complex number are equally spaced on a circle, and the $n$th roots of $1$ are the vertices of a regular $n$-gon on the unit circle. In particular the powers of $i$ cycle with period four, and the sum of more than one root of unity is $0$, which is what makes so many of these problems short.\n\n1, i, -1, -i, 1, \\ldots \\qquad z_{1}+z_{2}+z_{3}+z_{4} = 0\n\nFinally, a locus in the complex plane is the same geometric problem in new clothing, and the notation makes it shorter. The condition $|z-a| = r$ is a circle of radius $r$ centred at $a$, $|z-a| = |z-b|$ is the perpendicular bisector of the segment from $a$ to $b$, and $|z-a| + |z-b| = c$ is an ellipse whose major axis has length $c$. Three habits keep the errors out: convert to the modulus-and-argument description before computing a power rather than after, check a modulus result for sign by remembering that it is a distance, and reduce an argument modulo a full turn when the answer is supposed to be a single angle.",
+      "figures": [
+        {
+          "id": "m6-l4-fig-1",
+          "captionLatex": "The complex number $z=a+bi$ as a point in the plane: the modulus is the distance from the origin and the argument is the angle the segment makes with the positive real axis, measured counterclockwise.",
+          "asymptoteSource": "// A complex number as a point, with its modulus and its argument.\n// Two-argument size call fixes the output box, so the declared 1 is exact.\nsize(300,300);\npair z=(3,4);\ndraw((-4.4,0)--(4.4,0),Arrow);\ndraw((0,-4.4)--(0,4.4),Arrow);\nlabel(\"$\\operatorname{Re}$\",(4.5,0),E);\nlabel(\"$\\operatorname{Im}$\",(0,4.5),N);\nlabel(\"$1$\",(1,0),S);\nlabel(\"$i$\",(0,1),E);\ndraw(O--z);\nlabel(\"$|z|$\",(1.5,2.0),NW);\nlabel(\"$\\theta=\\arg z$\",(2.1,0.6),E);\ndot(z,2+3pt);\nlabel(\"$z$\",z,NE);\ndot((3,0),2+2.5pt);\nlabel(\"$\\operatorname{Re} z$\",(3,-0.35),S);",
+          "asymptoteAlt": "A pair of perpendicular axes with arrowheads is labelled as the real and imaginary axes, with unit points marked on each. A solid segment runs from the origin up and to the right to a filled dot labelled as the complex number, and a second filled dot marks its projection onto the real axis. The segment carries a label giving the modulus, an arc at the origin between the real axis and the segment is labelled as the argument, and the axes have unit tick labels at one.",
+          "asymptoteAspectRatio": 1
+        },
+        {
+          "id": "m6-l4-fig-2",
+          "captionLatex": "A translation and a reflection applied to a parabola: the curve is first moved up by three units and then reflected in the horizontal axis, which sends the vertex from $(0,3)$ to $(0,-3)$ and turns the parabola from opening upward to opening downward.",
+          "asymptoteSource": "// A parabola translated up and then reflected in the x-axis.\n// Two-argument size call fixes the output box, so the declared 1 is exact.\nsize(300,300);\ndraw(graph(new real(real t){return t*t-3;},-1.8,1.8),gray+dashed);\ndraw(graph(new real(real t){return 3-t*t;},-1.8,1.8));\ndraw((-2.2,0)--(2.2,0));\ndraw((0,-4.2)--(0,4.2));\nlabel(\"$x$\",(2.3,0),E);\nlabel(\"$y$\",(0,4.3),N);\ndot((0,3),2+2.5pt);\nlabel(\"$(0,3)$\",(0.2,3.2),NW);\ndot((0,-3),2+3pt);\nlabel(\"$(0,-3)$\",(0.2,-3.3),NE);",
+          "asymptoteAlt": "A downward-opening curve is drawn in solid line with its lowest point at a filled dot on the vertical axis below the origin, labelled with the coordinates of that point. A dashed upward-opening curve of the same shape is drawn above it, passing through a smaller filled dot on the vertical axis above the origin, also labelled with coordinates. The two axes are drawn through both vertices, showing that the reflection has carried the vertex across the horizontal axis and reversed the direction in which the curve opens.",
+          "asymptoteAspectRatio": 1
+        }
+      ],
+      "examples": [
+        {
+          "id": "m6-l4-wex-1",
+          "titleLatex": "Worked example: a locus written as a distance condition",
+          "bodyLatex": "Describe the locus of points $z$ satisfying $|z-1| = |z+1|$.\n\nThe condition says the point is equally far from the real points $1$ and $-1$.\n\nIn coordinates, with $z = x+bi$, this is $\\sqrt{(x-1)^{2}+y^{2}} = \\sqrt{(x+1)^{2}+y^{2}}$.\n\nSquaring and cancelling the $y^{2}$ gives $(x-1)^{2}=(x+1)^{2}$, so $-2x = 2x$ and $x=0$.\n\nThe locus is the imaginary axis, which is the perpendicular bisector of the segment joining the two foci.",
+          "answerLatex": "the imaginary axis"
+        },
+        {
+          "id": "m6-l4-wex-2",
+          "titleLatex": "Worked example: a power whose size needs no expansion",
+          "bodyLatex": "What is the modulus of $(3+4i)^{5}$?\n\nThe modulus of a product is the product of the moduli, so nothing has to be expanded.\n\n$|3+4i| = \\sqrt{9+16} = 5$\n\nRaising a number to the fifth power raises its modulus to the fifth power, so $|z^{5}| = 5^{5} = 3125$.\n\n$|z^{5}| = 3125$\n\nThis is the reason for the modulus-and-argument description: the size of a high power is available at once, even when its two components are not.",
+          "answerLatex": "$|z^{5}| = 3125$"
+        },
+        {
+          "id": "m6-l4-wex-3",
+          "titleLatex": "Worked example: a reflection followed by a translation",
+          "bodyLatex": "Start with $y=x^{2}$, reflect in the $x$-axis, and then translate up $5$ units.\n\nReflecting in the $x$-axis negates the value: $y = -x^{2}$.\n\nTranslating up $5$ adds $5$: $y = -x^{2} + 5$.\n\nCheck the vertex: it moves from $(0,0)$ to $(0,0)$ under the reflection and then to $(0,5)$ under the translation, and the equation gives $5$ at $x=0$.\n\n$y = -x^{2} + 5$",
+          "answerLatex": "$y = -x^{2} + 5$"
+        },
+        {
+          "id": "m6-l4-wex-4",
+          "titleLatex": "Worked example: a sum of distances as an ellipse in the complex plane",
+          "bodyLatex": "What is the minor axis of the ellipse $|z-1| + |z+1| = 6$?\n\nThe two points are the real numbers $1$ and $-1$, so they are the foci and the focal distance is $c=1$.\n\nThe constant sum is the major axis, so $2a=6$ and $a=3$.\n\n$b^{2} = a^{2}-c^{2} = 9-1 = 8$, so the minor axis is $2b = 2\\sqrt{8} = 4\\sqrt{2}$.\n\nThe minor axis is $4\\sqrt{2}$",
+          "answerLatex": "$4\\sqrt{2}$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "write-locus-equation",
+          "name": "Write a locus as one equation in two coordinates",
+          "summaryLatex": "Name the moving point, translate each condition into a distance or an equation, and eliminate the square roots.",
+          "bodyLatex": "A condition about distances becomes a distance formula in the coordinates of the moving point, and squaring is legitimate because distances are nonnegative. Recognize the resulting curve with the table of classical loci rather than trying to draw it. When two conditions are present, the answer is the intersection of the two loci, and a circle meeting a line in two points means two answers are owed, not one."
+        },
+        {
+          "slug": "translate-graph",
+          "name": "Translate a graph by replacing the variable",
+          "summaryLatex": "A translation by $(h,k)$ replaces $x$ by $x-h$ and $y$ by $y-k$ in the equation.",
+          "bodyLatex": "The replacement is what makes a translation rigid: the shape is untouched and only its position changes. To check the sign of each replacement, follow one recognizable point of the graph, such as a vertex or an intercept, through the change and confirm it lands where the words said. Translations commute with each other, so the order of two translations does not matter."
+        },
+        {
+          "slug": "reflect-graph",
+          "name": "Reflect a graph in an axis",
+          "summaryLatex": "Reflecting in the $x$-axis negates the whole right-hand side, and reflecting in the $y$-axis negates $x$ on both sides.",
+          "bodyLatex": "A reflection is a change of variable rather than a change of expression: the rule is derived by renaming the coordinate. A graph of the form $y=f(x)$ becomes $y=-f(x)$ under the horizontal reflection and $y=f(-x)$ under the vertical one, and this is what distinguishes reflecting a graph from reflecting a function, which negates the values. For an even function the horizontal reflection is invisible, a useful thing to check for."
+        },
+        {
+          "slug": "stretch-graph",
+          "name": "Stretch a graph horizontally or vertically",
+          "summaryLatex": "Replacing $x$ by $kx$ scales horizontal distances, and replacing $y$ by $ky$ scales vertical distances.",
+          "bodyLatex": "The stretch is attached to the variable, not to the axis, and the direction surprises people: $y=f(2x)$ compresses the graph horizontally by a factor of two because a given input value now appears at half the horizontal distance. Confirm the effect with a point: the curve $y=x^{2}$ becomes $y=4x^{2}$ under a vertical stretch by four, and the vertex stays at the origin while the arms quadruple in height."
+        },
+        {
+          "slug": "complex-modulus-argument",
+          "name": "Read the modulus and the argument of a complex number",
+          "summaryLatex": "The modulus is the distance from the origin and the argument is the angle from the positive real axis.",
+          "bodyLatex": "Compute the modulus as $\\sqrt{a^{2}+b^{2}}$ and remember it is a distance, so a modulus equation such as $|z|=5$ together with a known imaginary part gives two real parts until the quadrant is specified. Compute the argument modulo $2\\pi$ and check it against the quadrant of the number: a point in the third quadrant has argument between $\\pi$ and $\\frac{3\\pi}{2}$, never the acute angle whose tangent has the same ratio."
+        },
+        {
+          "slug": "complex-conjugate-arithmetic",
+          "name": "Divide complex numbers by multiplying by the conjugate",
+          "summaryLatex": "The conjugate of the denominator makes the product real, so the division becomes a real division.",
+          "bodyLatex": "Since $(a+bi)(a-bi) = a^{2}+b^{2}$, multiplying numerator and denominator by the conjugate of the denominator leaves the value unchanged and removes the imaginary part of the denominator. Always finish by rationalizing, because a result such as $\\frac{1+3i}{5}$ hides a real division that a grader will read differently from $\\frac{1}{5}+\\frac{3}{5}i$. The conjugate also commutes with addition and multiplication, so it can be taken through a whole expression at once."
+        },
+        {
+          "slug": "de-moivre-powers",
+          "name": "Compute an integer power from its modulus and argument",
+          "summaryLatex": "Raise the modulus to the power and multiply the argument by the exponent, reducing modulo a full turn.",
+          "bodyLatex": "Writing $z = ru$ with $|u|=1$, the $n$th power has modulus $r^{n}$ and argument $n(\\operatorname{arg} z)$; the unit part $u^{n}$ is then rebuilt with the multiplication rule $(a+bi)(c+di)=(ac-bd)+(ad+bc)i$. Reduce the argument modulo $2\\pi$ before rebuilding, so that only one quadrant has to be reconstructed. When the question asks only for the size, the work stops at $r^{n}$, which is why a high power has an immediate modulus and a laborious real part."
+        },
+        {
+          "slug": "roots-of-unity",
+          "name": "Use the equally spaced roots of unity",
+          "summaryLatex": "The $n$th roots of $1$ are the vertices of a regular $n$-gon, so their sum is $0$ for $n>1$.",
+          "bodyLatex": "The roots are $1,\\omega,\\omega^{2},\\ldots,\\omega^{n-1}$ with $\\omega$ a primitive $n$th root, and the geometric sum of the progression is $0$ because $\\omega \\ne 1$. Powers of $i$ are the special case $n=4$, which is why $i^{k}$ depends only on $k$ modulo $4$. Whenever a symmetric sum of roots appears, the sum being $0$ usually removes the whole problem."
+        },
+        {
+          "slug": "locus-as-modulus-equation",
+          "name": "Recognize a complex locus from its modulus equation",
+          "summaryLatex": "A modulus is a distance, so a sum or difference of moduli is a sum or difference of distances to fixed points.",
+          "bodyLatex": "The equation $|z-a| = r$ is a circle centred at $a$, $|z-a| = |z-b|$ is a perpendicular bisector, and $|z-a| + |z-b| = c$ is an ellipse whose major axis is $c$. Read the foci and the constant straight off the equation, then use the standard conic relations from m6-l3 for the semiaxes. The same three readings work in the real plane, so a complex locus question is never new mathematics, only new notation."
+        },
+        {
+          "slug": "complex-powers-by-squaring",
+          "name": "Compute a high power by repeated squaring",
+          "summaryLatex": "Square the base a few times, then multiply once, instead of expanding the binomial every time.",
+          "bodyLatex": "A fifth power costs four multiplications if done by repeated squaring and considerably more if each factor is expanded, because the intermediate values stay small and the rule $(a+bi)(c+di)=(ac-bd)+(ad+bc)i$ is applied to a single product at each step. The result is always worth checking against the modulus, since the modulus of the power is available independently: $\\sqrt{p^{2}+q^{2}}$ must equal $|z|^{n}$ exactly."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "reflection-not-translation",
+          "titleLatex": "Reading a reflection as a translation",
+          "wrongLatex": "$y = x^{2} + 5$ for reflecting $y=x^{2}$ in the $x$-axis and translating up $5$",
+          "whyLatex": "A translation raises the curve and leaves it opening upward, while a reflection in the $x$-axis turns it upside down. Doing only the translation gives a curve that is nowhere near the correct one, and the two are not a matter of degree: the vertex ends up on the wrong side of the axis.",
+          "fixLatex": "Apply the two changes one at a time and record the direction the curve opens. Reflecting in the $x$-axis negates the whole right-hand side, giving $y=-x^{2}$, and translating up $5$ then gives $y=-x^{2}+5$, with the vertex at $(0,5)$ and the curve opening downward."
+        },
+        {
+          "slug": "modulus-without-the-root",
+          "titleLatex": "Computing a modulus as a sum of squares",
+          "wrongLatex": "$|z| = a^{2} + b^{2}$",
+          "whyLatex": "The modulus is a length, so the sum of squares has to be taken under a square root, and the omission is not a small numerical slip: it turns a distance into an area. The error shows up immediately in a modulus equation, since $|z|$ would no longer be a circle at all.",
+          "fixLatex": "Use $|z| = \\sqrt{a^{2}+b^{2}}$, which is the distance formula from m6-l1 with the origin as one endpoint. For $z = 2-3i$ this gives $|z| = \\sqrt{4+9} = \\sqrt{13}$, a length comparable with the two components rather than several times larger."
+        },
+        {
+          "slug": "exponent-without-reducing",
+          "titleLatex": "Evaluating a large power of $i$ by pattern instead of by modulus",
+          "wrongLatex": "$i^{2025} = -1$",
+          "whyLatex": "The powers of $i$ repeat with period four, so only the exponent modulo four matters, and $2025$ leaves remainder $1$ on division by $4$. Guessing the cycle position instead of computing the remainder gives the wrong value, and the error is invisible unless the remainder is actually calculated.",
+          "fixLatex": "Reduce the exponent modulo the period: $2025 = 4 \\cdot 506 + 1$, so $i^{2025} = i^{1} = i$. The same arithmetic on a divisor other than $4$ would be a different problem, which is why the period should be written down before reducing."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m6-l4-p1",
+        "m6-l4-p2",
+        "m6-l4-p3",
+        "m6-l4-p4",
+        "m6-l4-p5",
+        "m6-l4-p6",
+        "m6-l4-p7",
+        "m6-l4-p8",
+        "m6-l4-p9",
+        "m6-l4-p10",
+        "m6-l4-p11",
+        "m6-l4-p12",
+        "m6-l4-p13",
+        "m6-l4-p14",
+        "m6-l4-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m6-l4-p1",
+        "m6-l4-p2",
+        "m6-l4-p3",
+        "m6-l4-p4",
+        "m6-l4-p5",
+        "m6-l4-p6",
+        "m6-l4-p7",
+        "m6-l4-p8",
+        "m6-l4-p9",
+        "m6-l4-p10",
+        "m6-l4-p11",
+        "m6-l4-p12",
+        "m6-l4-p13",
+        "m6-l4-p14",
+        "m6-l4-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m6-l4-m1",
+        "m6-l4-m2",
+        "m6-l4-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "loci",
+    "transformations",
+    "complex-numbers"
+  ]
+}

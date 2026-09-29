@@ -1,0 +1,29 @@
+{
+  "id": "m7-l2-m2",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": ["complementary-count"],
+  "promptLatex": "How many positive integer solutions does x + y + z + w = 15 have if each variable is at most 5?",
+  "choices": [
+    "10",
+    "15",
+    "18",
+    "21",
+    "25"
+  ],
+  "answerLatex": "10",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Use inclusion-exclusion on the upper bounds.",
+    "Total positive solutions without restrictions: (15-1) choose (4-1) = 14 choose 3 = 364.",
+    "Let A_i be the set where variable i exceeds 5. If x exceeds 5, substitute x' = x - 5, then count positive solutions for the reduced equation.",
+    "Any of the 4 variables could exceed 5, subtract 4 times the count for one variable."
+  ],
+  "solutionLatex": "Total positive integer solutions without upper bounds: x + y + z + w = 15, each >= 1, is (15-1) choose (4-1) = 14 choose 3 = 364.",
+  "techniques": ["stars-and-bars-method", "case-split-inclusion-exclusion"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

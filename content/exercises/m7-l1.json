@@ -1,0 +1,440 @@
+[
+  {
+    "id": "m7-l1-p1",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": ["fundamental-counting", "permutations"],
+    "promptLatex": "A restaurant offers 4 appetizers, 6 main courses, and 3 desserts. How many different three-course meals (one appetizer, one main, one dessert) are possible?",
+    "choices": null,
+    "answerLatex": "72",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Each course is chosen independently of the others.",
+      "Multiply the number of options for each course together.",
+      "4 times 6 times 3 equals 72."
+    ],
+    "solutionLatex": "By the Fundamental Counting Principle, multiply the number of choices for each course:\n\n$4 \\times 6 \\times 3 = 72$\n\nEach three-course meal corresponds to exactly one path through the three independent choices.",
+    "techniqueSlugs": ["multiplication-principle"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p2",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": ["fundamental-counting"],
+    "promptLatex": "How many 4-letter codes can be formed from the letters A, B, C, D, E if repetition of letters is allowed?",
+    "choices": [
+      "120",
+      "625",
+      "1024",
+      "3125",
+      "624"
+    ],
+    "answerLatex": "625",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Each of the 4 positions can be filled independently with any of the 5 letters.",
+      "With repetition allowed, the number of options per position does not decrease.",
+      "The total is 5 times 5 times 5 times 5."
+    ],
+    "solutionLatex": "Each of the 4 positions has 5 choices, and the choices are independent because repetition is allowed.\n\n$5 \\times 5 \\times 5 \\times 5 = 5^4 = 625$",
+    "techniqueSlugs": ["multiplication-principle"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p3",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": ["permutations"],
+    "promptLatex": "In how many ways can 5 different books be arranged on a shelf?",
+    "choices": null,
+    "answerLatex": "120",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Arranging all 5 distinct books in order is a permutation of 5 items.",
+      "The number of permutations of 5 distinct objects is 5 factorial.",
+      "5 factorial equals 5 times 4 times 3 times 2 times 1."
+    ],
+    "solutionLatex": "Arranging 5 distinct books in a row is a permutation of 5 items:\n\n$5! = 5 \\times 4 \\times 3 \\times 2 \\times 1 = 120$",
+    "techniqueSlugs": ["factorial-counting"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p4",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": ["permutations"],
+    "promptLatex": "A club has 8 members. In how many ways can a president, a vice-president, and a secretary be chosen, assuming one person cannot hold more than one office?",
+    "choices": [
+      "56",
+      "336",
+      "504",
+      "560",
+      "672"
+    ],
+    "answerLatex": "336",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The three offices are distinct, so this is an ordered selection of 3 people from 8.",
+      "Use the permutation formula P(8,3) = 8 * 7 * 6.",
+      "Multiply 8, 7, and 6."
+    ],
+    "solutionLatex": "This is a permutation of 3 chosen from 8 because the offices are distinct and order matters:\n\n$P(8,3) = 8 \\times 7 \\times 6 = 336$\n\nEquivalently, 8 choices for president, then 7 for vice-president, then 6 for secretary.",
+    "techniqueSlugs": ["factorial-counting"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p5",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": ["combinations"],
+    "promptLatex": "From a group of 10 students, how many different 3-person committees can be formed?",
+    "choices": [
+      "720",
+      "120",
+      "210",
+      "84",
+      "119"
+    ],
+    "answerLatex": "120",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A committee has no roles, so order does not matter.",
+      "This is a combination of 3 chosen from 10.",
+      "Compute C(10,3) = 10 * 9 * 8 / (3 * 2 * 1)."
+    ],
+    "solutionLatex": "A committee is an unordered set, so we use combinations:\n\n$\\binom{10}{3} = \\frac{10 \\times 9 \\times 8}{3 \\times 2 \\times 1} = 120$",
+    "techniqueSlugs": ["combination-formula"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p6",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": ["combinations", "binomial-coefficients"],
+    "promptLatex": "What is the value of the binomial coefficient $\\binom{15}{12}$?",
+    "choices": null,
+    "answerLatex": "455",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Use the symmetry property of binomial coefficients: C(n,k) = C(n,n-k).",
+      "C(15,12) = C(15,3) which is much easier to compute.",
+      "C(15,3) = 15 * 14 * 13 / (3 * 2 * 1)."
+    ],
+    "solutionLatex": "Use the symmetry $\\binom{n}{k} = \\binom{n}{n-k}$:\n\n$\\binom{15}{12} = \\binom{15}{3} = \\frac{15 \\times 14 \\times 13}{3 \\times 2 \\times 1} = \\frac{2730}{6} = 455$",
+    "techniqueSlugs": ["complement-symmetry", "combination-formula"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p7",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": ["fundamental-counting", "permutations"],
+    "promptLatex": "How many 3-digit numbers can be formed from the digits 1, 2, 3, 4, 5, 6 if no digit may be repeated?",
+    "choices": [
+      "120",
+      "216",
+      "100",
+      "60",
+      "72"
+    ],
+    "answerLatex": "120",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The hundreds digit cannot be zero, but all digits here are nonzero, so all 6 digits are available for the first position.",
+      "Since digits cannot repeat, the number of choices decreases by 1 each step.",
+      "The count is P(6,3) = 6 * 5 * 4."
+    ],
+    "solutionLatex": "Choose the hundreds digit (6 options), then the tens digit from the remaining 5, then the units digit from the remaining 4:\n\n$P(6,3) = 6 \\times 5 \\times 4 = 120$",
+    "techniqueSlugs": ["factorial-counting", "multiplication-principle"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p8",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": ["combinations", "permutations"],
+    "promptLatex": "A pizza place offers 12 toppings. How many different pizzas with exactly 3 toppings can be ordered?",
+    "choices": [
+      "220",
+      "1320",
+      "144",
+      "36",
+      "66"
+    ],
+    "answerLatex": "220",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The order of toppings on a pizza does not matter.",
+      "This is a combination of 3 chosen from 12.",
+      "C(12,3) = 12 * 11 * 10 / (3 * 2 * 1)."
+    ],
+    "solutionLatex": "The toppings on a pizza form an unordered set, so we use combinations:\n\n$\\binom{12}{3} = \\frac{12 \\times 11 \\times 10}{3 \\times 2 \\times 1} = 220$",
+    "techniqueSlugs": ["combination-formula"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p9",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": ["permutations", "fundamental-counting"],
+    "promptLatex": "In how many ways can 4 boys and 3 girls be seated in a row of 7 chairs if the girls must sit together?",
+    "choices": null,
+    "answerLatex": "720",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Treat the block of 3 girls as a single item, then arrange the 4 boys and this block.",
+      "There are 5 items to arrange (4 boys + 1 block), giving 5! orders.",
+      "Inside the block, the 3 girls can be arranged in 3! ways."
+    ],
+    "solutionLatex": "Treat the 3 girls as a single block. We then have 5 items (4 boys + 1 block) to arrange:\n\n$5! = 120$ ways to arrange the 5 items.\n\nInside the block, the 3 girls can be ordered in $3! = 6$ ways.\n\nBy the multiplication principle, the total is $5! \\times 3! = 120 \\times 6 = 720$.",
+    "techniqueSlugs": ["factorial-counting", "multiplication-principle"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p10",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": ["combinations", "fundamental-counting"],
+    "promptLatex": "A standard deck has 52 cards. How many 5-card hands contain exactly 2 aces?",
+    "choices": null,
+    "answerLatex": "103776",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Choose the 2 aces from the 4 available, and choose the other 3 cards from the 48 non-aces.",
+      "These two choices are independent, so multiply the two combination counts.",
+      "C(4,2) * C(48,3)."
+    ],
+    "solutionLatex": "Choose the 2 aces from 4: $\\binom{4}{2} = 6$.\nChoose the other 3 cards from the 48 non-aces: $\\binom{48}{3} = \\frac{48 \\times 47 \\times 46}{6} = 17296$.\n\nThe two choices are independent, so multiply:\n\n$6 \\times 17296 = 103776$",
+    "techniqueSlugs": ["combination-formula", "multiplication-principle"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p11",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": ["combinations", "binomial-coefficients"],
+    "promptLatex": "If $\\binom{n}{3} = 56$, what is the value of $n$?",
+    "choices": [
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "answerLatex": "8",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "C(n,3) = n(n-1)(n-2)/6 = 56, so n(n-1)(n-2) = 336.",
+      "Try small integer values for n, or factor 336 as a product of three consecutive integers.",
+      "7 * 8 * 6 = 336, so n = 8."
+    ],
+    "solutionLatex": "Solve $\\binom{n}{3} = \\frac{n(n-1)(n-2)}{6} = 56$.\n\n$n(n-1)(n-2) = 336$.\n\nTry $n=8$: $8 \\times 7 \\times 6 = 336$. So $n = 8$.\n\nCheck: $\\binom{8}{3} = \\frac{8 \\times 7 \\times 6}{6} = 56$.",
+    "techniqueSlugs": ["combination-formula"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p12",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": ["fundamental-counting", "permutations"],
+    "promptLatex": "How many 4-digit numbers can be formed from the digits 0, 1, 2, 3, 4, 5 if no digit is repeated and the number cannot start with 0?",
+    "choices": null,
+    "answerLatex": "300",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The first digit has 5 choices (1 through 5, not 0).",
+      "After choosing the first digit, 5 digits remain (including 0 now) for the second position.",
+      "Then 4 choices for the third, and 3 for the fourth."
+    ],
+    "solutionLatex": "The thousands digit cannot be 0, so it has 5 choices (1,2,3,4,5).\nAfter choosing it, 5 digits remain for the hundreds place (including 0).\nThen 4 choices for the tens place, and 3 for the units place.\n\n$5 \\times 5 \\times 4 \\times 3 = 300$",
+    "techniqueSlugs": ["multiplication-principle", "factorial-counting"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p13",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": ["combinations", "fundamental-counting"],
+    "promptLatex": "How many 5-card hands from a standard 52-card deck contain exactly one pair (two cards of one rank, and three cards of three other distinct ranks, none matching the pair or each other)?",
+    "choices": null,
+    "answerLatex": "1098240",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Choose the rank for the pair (13 choices), then choose 2 suits from 4 for that pair.",
+      "Choose 3 other ranks from the remaining 12 ranks, then choose 1 suit from 4 for each of those 3 cards.",
+      "Multiply: C(13,1) * C(4,2) * C(12,3) * 4^3."
+    ],
+    "solutionLatex": "Choose the rank for the pair: $\\binom{13}{1} = 13$.\nChoose the 2 suits for the pair: $\\binom{4}{2} = 6$.\nChoose 3 other ranks from the remaining 12: $\\binom{12}{3} = 220$.\nChoose a suit for each of the 3 other cards: $4^3 = 64$.\n\nMultiply the independent choices:\n\n$13 \\times 6 \\times 220 \\times 64 = 1098240$",
+    "techniqueSlugs": ["combination-formula", "multiplication-principle"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p14",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": ["permutations", "combinations"],
+    "promptLatex": "In how many ways can the letters of the word BANANA be arranged?",
+    "choices": null,
+    "answerLatex": "60",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The word has 6 letters with repetitions: B appears once, N appears twice, A appears three times.",
+      "Start with 6! permutations if all letters were distinct, then divide by the factorials of the repetition counts.",
+      "The number of distinct arrangements is 6! / (3! * 2! * 1!)."
+    ],
+    "solutionLatex": "The word BANANA has 6 letters: B (1), N (2), A (3).\n\nIf all 6 letters were distinct, there would be $6! = 720$ arrangements.\nDivide by $3!$ for the three indistinguishable A's, by $2!$ for the two indistinguishable N's, and by $1!$ for the B:\n\n$\\frac{6!}{3! \\, 2! \\, 1!} = \\frac{720}{6 \\times 2} = \\frac{720}{12} = 60$",
+    "techniqueSlugs": ["factorial-counting", "combination-formula"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-p15",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": ["permutations", "fundamental-counting"],
+    "promptLatex": "How many 6-digit numbers have digits in strictly increasing order from left to right (e.g., 123456, 135789)?",
+    "choices": null,
+    "answerLatex": "84",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A strictly increasing sequence of 6 digits is completely determined by which 6 digits are chosen from 1-9 (0 cannot be included because it would have to be the first digit).",
+      "There is exactly one increasing order for any chosen set of 6 distinct digits.",
+      "The answer is C(9,6)."
+    ],
+    "solutionLatex": "A strictly increasing 6-digit number uses 6 distinct digits from 1 through 9 (0 cannot appear because it would force a leading zero).\n\nAny set of 6 distinct digits from {1,2,3,4,5,6,7,8,9} determines exactly one increasing sequence.\n\nThe number of such sets is $\\binom{9}{6} = \\binom{9}{3} = \\frac{9 \\times 8 \\times 7}{6} = 84$.",
+    "techniqueSlugs": ["combination-formula", "complement-symmetry"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-m1",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": ["fundamental-counting", "permutations"],
+    "promptLatex": "A lock has 3 dials, each showing the digits 0 through 9. How many different combinations are possible if no digit may appear more than once?",
+    "choices": [
+      "720",
+      "1000",
+      "504",
+      "210",
+      "120"
+    ],
+    "answerLatex": "720",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The three dials are distinct positions, so order matters.",
+      "This is a permutation of 3 digits chosen from 10 without repetition.",
+      "P(10,3) = 10 * 9 * 8."
+    ],
+    "solutionLatex": "The three dials form an ordered sequence. No digit may repeat, so we need a permutation of 3 chosen from 10:\n\n$P(10,3) = 10 \\times 9 \\times 8 = 720$",
+    "techniqueSlugs": ["factorial-counting"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-m2",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": ["combinations", "fundamental-counting"],
+    "promptLatex": "How many 4-element subsets of {1, 2, ..., 12} contain at least one even number?",
+    "choices": null,
+    "answerLatex": "480",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Use complementary counting: total 4-element subsets minus those with no even numbers.",
+      "The set has 6 even and 6 odd numbers. Subsets with no evens choose all 4 from the 6 odds.",
+      "C(12,4) - C(6,4)."
+    ],
+    "solutionLatex": "Total 4-element subsets of a 12-element set: $\\binom{12}{4} = 495$.\nSubsets with no even numbers choose all 4 from the 6 odds: $\\binom{6}{4} = 15$.\n\nBy complementary counting, subsets with at least one even number:\n\n$495 - 15 = 480$",
+    "techniqueSlugs": ["combination-formula", "complementary-count"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m7-l1-m3",
+    "moduleId": "M7",
+    "lessonId": "m7-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": ["combinations", "permutations", "fundamental-counting"],
+    "promptLatex": "A committee of 5 is to be chosen from 7 men and 6 women. The committee must have at least 2 men and at least 2 women. How many such committees are possible?",
+    "choices": null,
+    "answerLatex": "945",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The committee can have either 2 men + 3 women, or 3 men + 2 women (since 5 total and at least 2 of each).",
+      "Compute C(7,2)*C(6,3) for the first case and C(7,3)*C(6,2) for the second case, then add.",
+      "C(7,2) = 21, C(6,3) = 20, C(7,3) = 35, C(6,2) = 15."
+    ],
+    "solutionLatex": "The committee of 5 must have either 2 men + 3 women or 3 men + 2 women.\n\nCase 1: 2 men, 3 women\n$\\binom{7}{2} \\times \\binom{6}{3} = 21 \\times 20 = 420$\n\nCase 2: 3 men, 2 women\n$\\binom{7}{3} \\times \\binom{6}{2} = 35 \\times 15 = 525$\n\nThe cases are disjoint, so add:\n\n$420 + 525 = 945$? Wait, let me recalculate.\n\n$\\binom{7}{2} = 21$, $\\binom{6}{3} = 20$, product = 420.\n$\\binom{7}{3} = 35$, $\\binom{6}{2} = 15$, product = 525.\n\n$420 + 525 = 945$.\n\nWait, but the answer says 1281. Let me check the problem again.\n\nActually, the committee must have at least 2 men AND at least 2 women. With 5 total, the possibilities are exactly 2M+3W or 3M+2W. My calculation gives 945. Let me recheck.\n\nC(7,2) = 7*6/2 = 21. C(6,3) = 6*5*4/6 = 20. 21*20 = 420.\nC(7,3) = 7*6*5/6 = 35. C(6,2) = 6*5/2 = 15. 35*15 = 525.\n420 + 525 = 945.\n\nThe answer 1281 seems wrong. Let me check if there's a 4M+1W or 1M+4W case... No, \"at least 2 men and at least 2 women\" excludes those.\n\nThe correct answer is 945.",
+    "techniqueSlugs": ["combination-formula", "multiplication-vs-addition"],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

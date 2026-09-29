@@ -1,0 +1,248 @@
+{
+  "id": "m8-l3",
+  "moduleId": "M8",
+  "order": 3,
+  "title": "The Law of Sines, the Law of Cosines, and Trigonometric Area",
+  "topicSlug": "law-of-sines-law-of-cosines-area",
+  "tiers": [
+    "12",
+    "A",
+    "A+"
+  ],
+  "estimatedMinutes": 75,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m8-l1",
+    "m8-l2"
+  ],
+  "tags": [
+    "law-of-sines",
+    "law-of-cosines",
+    "triangle-area",
+    "triangle-solving",
+    "oblique-triangles"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Solve an oblique triangle from two sides and the included angle, from two sides and a non-included angle, and from three sides; compute the area of a triangle from two sides and the included angle; and apply the extended law of sines to a circumradius, a chord, or a cyclic quadrilateral."
+    },
+    "prerequisites": {
+      "items": [
+        {
+          "labelLatex": "[m8-l1](/M8/lessons/m8-l1) the unit circle",
+          "noteLatex": "for the exact values of $30^\\circ$, $45^\\circ$, and $120^\\circ$ that the exercises rely on"
+        },
+        {
+          "labelLatex": "[m8-l2](/M8/lessons/m8-l2) trigonometric identities",
+          "noteLatex": "for turning a product of sines into a doubled-angle cosine"
+        }
+      ],
+      "noteLatex": "Everything here is [m1-l5](/M1/lessons/m1-l5) quadratic equations with a trigonometric coefficient: the law of cosines is a quadratic in the missing side, and the law of sines is a proportion. A reader who is comfortable solving for one unknown in $a^2 + b^2 = c^2$ is ready. No right-triangle trigonometry is assumed, since the triangles in this module are oblique by definition."
+    },
+    "concept": {
+      "conceptLatex": "A triangle is determined by three of its six quantities, and which three you are given decides which tool to reach for. There are exactly three solvable cases, and they are distinguished by where the known angle sits relative to the known sides.\n\nThe law of cosines handles the two cases where the angle is included between the two known sides, and it is the Pythagorean theorem with one extra term. For a triangle with sides $a, b, c$ opposite angles $A, B, C$:\n\n$c^2 = a^2 + b^2 - 2ab \\cos C$, and the same formula cyclically for the other two sides. The reason is visible by dropping a perpendicular: side $c$ splits into a piece of length $b \\cos C$ along the base and a piece of length $a \\sin C$ across it, and the Pythagorean theorem on the resulting right triangle gives $c^2 = (b \\cos C)^2 + (a - b\\cos C)^2 = a^2 + b^2 - 2ab\\cos C$ after expanding and collecting. Note the sign: the cosine appears with a minus, because the far endpoint of the base has moved in by $b\\cos C$ rather than out. Two consequences follow at once. The formula reduces to the Pythagorean theorem when $C = 90^\\circ$, since the cosine vanishes. And it gives a different side length for the same two sides depending on whether the included angle is $60^\\circ$ or $120^\\circ$, which is exactly the fact that a triangle grows as its included angle opens.\n\nThe same formula runs backwards. Given all three sides it is an equation in one unknown angle, and it is the only tool that works there, since neither of the other two can start from three sides. Rearranged, $\\cos C = \\frac{a^2 + b^2 - c^2}{2ab}$, and the resulting cosine is a perfectly ordinary number between $-1$ and $1$ whose sign alone tells you whether the angle is acute, right, or obtuse. A negative value is the fingerprint of an obtuse triangle and is worth checking for whenever the largest side is close in length to the sum of the other two.\n\nThe law of sines handles the case where the known angle is not the included one. It reads\n\n$\\frac{a}{\\sin A} = \\frac{b}{\\sin B} = \\frac{c}{\\sin C}$, and the geometric reason is that every triangle has a circumcircle, every side is a chord of it, and a chord subtending an inscribed angle $A$ has length $2R \\sin A$ where $R$ is the radius. Since the radius is the same for all three sides, the three ratios coincide, and the common value is $2R$. That last fact is the extended law of sines, $\\frac{a}{\\sin A} = \\frac{b}{\\sin B} = \\frac{c}{\\sin C} = 2R$, and it is the tool for a circumradius, for a chord subtending a known inscribed angle, and for a cyclic quadrilateral.\n\nThe ambiguity of the sine law is structural and must be handled deliberately. To find $B$ from $\\sin B = k$, the value $B_0 = \\arcsin k$ is only one candidate, because $\\sin(180^\\circ - B_0) = \\sin B_0$ as well. So there are two candidate angles, and both must be tested against the angle sum. The test is short: if $A + (180^\\circ - B_0)$ exceeds $180^\\circ$, the supplementary candidate is impossible and the triangle is unique. The two cases are named for the data that produces them, SAS and SSS being unique while SSA may give zero, one, or two triangles. A second early test is that $\\sin B$ must not exceed $1$, and if it does there is no triangle at all.\n\nThe area formula completes the module. A triangle of base $b$ and height $h$ has area $\\frac{1}{2}bh$, and taking the two sides $a$ and $b$ as the base and the height gives\n\n$K = \\frac{1}{2} a b \\sin C$,\n\nsince the height relative to side $b$ is $a \\sin C$. This is the formula that matters practically, because $K = \\frac{1}{2}bh$ needs a height, which a triangle specified by two sides and an angle does not supply. For a triangle given by three sides there is no angle at all, and Heron's formula $K = \\sqrt{s(s-a)(s-b)(s-c)}$ with $s = \\frac{a+b+c}{2}$ takes over.\n\nA useful habit unifies the two laws. A problem that says two sides and the included angle wants the law of cosines for the third side and then the area formula. A problem that says two sides, an angle, and one of the remaining angles wants the sine law, and there the supplementary test decides whether one triangle or two is meant. In every case, finishing with the area formula is often cheaper than the route to the third side, because $\\frac{1}{2}ab\\sin C$ needs only the two sides and the included angle.",
+      "figures": [
+        {
+          "id": "m8-l3-fig-1",
+          "captionLatex": "Where the cosine term comes from. Dropping a perpendicular from the far endpoint of side $a$ splits the base into $b \\cos C$ and the remainder, and applying the Pythagorean theorem to the resulting right triangle and expanding gives $c^2 = a^2 + b^2 - 2ab\\cos C$.",
+          "asymptoteSource": "// The two sides that enclose angle C, and the side c that closes the\n// triangle. Dropping a perpendicular from one endpoint of a to the line of b\n// splits side c into a horizontal piece b cos C and a vertical piece a sin C,\n// which is exactly where the cosine term in the law of cosines comes from.\nsize(340,240);\npair O = (0,0);\npair P = (4.5,0);\npair Q = (4.5*0.5, 4.5*0.866);\npair F = (4.5*0.5, 0);\ndraw(O--P--Q--cycle, black);\ndraw(Q--F, dashed);\ndraw(O--F, dotted);\nlabel(\"$O$\", O, SW);\nlabel(\"$P$\", P, SE);\nlabel(\"$Q$\", Q, N);\nlabel(\"$F$\", F, S);\nlabel(\"$b$\", (O+P)/2, S);\nlabel(\"$a$\", (P+Q)/2, E);\nlabel(\"$c$\", (O+Q)/2, NW);\nlabel(\"$b\\\\cos C$\", (O+F)/2, S);\nlabel(\"$a\\\\sin C$\", (F+Q)/2, E);\nlabel(\"$C$\", (0.4,0.1), NE);",
+          "asymptoteAlt": "A triangle with a long horizontal base, a vertex up and to the right of the base's midpoint, and a dashed vertical line dropping from that vertex to a dotted segment on the base. The base is labelled b, the right-hand side is labelled a, and the left slanted side is labelled c. The angle at the left end of the base is marked C. The dotted portion of the base under the dashed line is labelled b cosine C and the dashed vertical line is labelled a sine C, showing the two pieces the third side is made of.",
+          "asymptoteAspectRatio": 1.417
+        },
+        {
+          "id": "m8-l3-fig-2",
+          "captionLatex": "All three sides are chords of one circle. A chord subtending an inscribed angle $A$ has length $2R \\sin A$, and since the radius is common to all three, the three ratios are equal, which is the law of sines and its extended form at the same time.",
+          "asymptoteSource": "// The law of sines as a single circle. Inscribing a triangle in a circle of\n// radius R makes every side a chord, and the chord subtending angle A has\n// length 2R sin A, so one ratio a over sin A accounts for all three sides.\nsize(320,300);\npair O = (0,0);\npair A = dir(110);\npair B = dir(200);\npair C = dir(345);\ndraw(scale(1.15)*unitcircle, gray(0.7));\ndraw(A--B--C--cycle, black);\ndraw(O--A, gray(0.5));\ndraw(O--B, gray(0.5));\ndraw(O--C, gray(0.5));\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, NW);\nlabel(\"$B$\", B, S);\nlabel(\"$C$\", C, E);\nlabel(\"$a$\", (B+C)/2 + (0.16,0.1), SE);\nlabel(\"$b$\", (C+A)/2 + (0.2,0), E);\nlabel(\"$c$\", (A+B)/2 + (-0.2,0), W);\nlabel(\"$R$\", O*1.35, SW);\nlabel(\"$\\\\frac{a}{\\\\sin A} = \\\\frac{b}{\\\\sin B} = \\\\frac{c}{\\\\sin C} = 2R$\", (0,-1.42), S);",
+          "asymptoteAlt": "A circle with a bold triangle inscribed in it, its three vertices on the circle and its three sides drawn as chords. A point at the centre is joined by thin grey lines to all three vertices, and a short segment from the centre is labelled as the radius. Each side of the triangle carries a letter label matching the vertex opposite it. A line of text below the circle states that the ratio of each side to the sine of its opposite angle is the same for all three, and equals twice the radius.",
+          "asymptoteAspectRatio": 1.067
+        },
+        {
+          "id": "m8-l3-fig-3",
+          "captionLatex": "A diagonal splits a cyclic quadrilateral into two triangles that share a pair of sides; because opposite angles of a cyclic quadrilateral are supplementary, their sines agree, and the two areas differ only in the factor that is common to them.",
+          "asymptoteSource": "// The two triangles a diagonal cuts from a cyclic quadrilateral, showing\n// that opposite angles are supplementary and so the areas share the sine of\n// the same angle.\nsize(340,240);\npair O = (0,0);\npair A = dir(120);\npair B = dir(40);\npair C = dir(-30);\npair D = dir(210);\ndraw(scale(1.1)*unitcircle, gray(0.7));\ndraw(A--B--C--D--cycle, black);\ndraw(A--C, dashed);\nlabel(\"$A$\", A, NW);\nlabel(\"$B$\", B, NE);\nlabel(\"$C$\", C, E);\nlabel(\"$D$\", D, SW);\nlabel(\"$A$\", A, S);\nlabel(\"$\\\\frac{1}{2}bd\\\\sin A$\", (A+B+C)/3 - (0.15,0.1), NE);\nlabel(\"$\\\\frac{1}{2}bd\\\\sin D$\", (A+C+D)/3 - (0.15,-0.1), SW);\nlabel(\"$d$\", (B+C)/2 + (0.18,0), E);\nlabel(\"$\\\\sin D = \\\\sin A$\", (0,-1.28), S);",
+          "asymptoteAlt": "A circle with a bold four-sided figure inscribed in it, one vertex on the left labelled A, one at the top right labelled B, one at the right labelled C and one at the lower left labelled D, with the side from B to C labelled d. A dashed diagonal joins A to C, splitting the figure into two triangles. The upper triangle is labelled as one half the product of b and d times the sine of angle A, the lower triangle as one half the product of b and d times the sine of angle D, and a line of text below the circle states that the two sines are equal.",
+          "asymptoteAspectRatio": 1.417
+        }
+      ],
+      "examples": [
+        {
+          "id": "m8-l3-wex-1",
+          "titleLatex": "Worked example: the included angle, law of cosines",
+          "bodyLatex": "In a triangle with $a = 3$ and $b = 8$ and included angle $C = 60^\\circ$, find the third side exactly.\n\n$c^2 = a^2 + b^2 - 2ab\\cos C = 9 + 64 - 2(3)(8)\\left(\\frac{1}{2}\\right) = 73 - 24 = 49$, so $c = 7$.\n\nThe answer came out an integer because the cosine of $60^\\circ$ is $\\frac{1}{2}$ and the product $2ab$ is even, which is the usual reason a cosine-law problem is designed with a special angle. Compare the same two sides at $C = 120^\\circ$: $c^2 = 73 + 24 = 97$, a longer side, as opening the angle must produce.",
+          "answerLatex": "$7$"
+        },
+        {
+          "id": "m8-l3-wex-2",
+          "titleLatex": "Worked example: the ambiguous case, decided",
+          "bodyLatex": "In a triangle with $a = 5$, $A = 30^\\circ$, and $b = 9$, find $B$.\n\nThe sine law gives $\\sin B = \\frac{b \\sin A}{a} = \\frac{9 \\cdot \\frac{1}{2}}{5} = \\frac{9}{10}$, which is inside the range, so a triangle exists.\n\nThe first candidate is $B_0 = \\arcsin\\left(\\frac{9}{10}\\right) \\approx 64.16^\\circ$. The supplementary candidate is $180^\\circ - B_0 \\approx 115.84^\\circ$. Test the second against the angle sum: $30^\\circ + 115.84^\\circ = 145.84^\\circ < 180^\\circ$, so it is allowed, and there are two triangles.\n\nThe two give different third sides, which is the whole point of the ambiguity. The first has $C \\approx 85.84^\\circ$ and by the cosine law $c^2 = 25 + 81 - 90\\cos 85.84^\\circ \\approx 99.2$; the second has $C \\approx 34.16^\\circ$ and $c^2 = 25 + 81 - 90\\cos 34.16^\\circ \\approx 31.6$. Same two sides and the same angle between them at $A$, but genuinely different triangles.",
+          "answerLatex": "$B_0 \\approx 64.16^\\circ$ or $180^\\circ - B_0 \\approx 115.84^\\circ$; two triangles",
+          "asymptoteSource": "// The two sides that enclose angle C, and the side c that closes the\n// triangle. Dropping a perpendicular from one endpoint of a to the line of b\n// splits side c into a horizontal piece b cos C and a vertical piece a sin C,\n// which is exactly where the cosine term in the law of cosines comes from.\nsize(340,240);\npair O = (0,0);\npair P = (4.5,0);\npair Q = (4.5*0.5, 4.5*0.866);\npair F = (4.5*0.5, 0);\ndraw(O--P--Q--cycle, black);\ndraw(Q--F, dashed);\ndraw(O--F, dotted);\nlabel(\"$O$\", O, SW);\nlabel(\"$P$\", P, SE);\nlabel(\"$Q$\", Q, N);\nlabel(\"$F$\", F, S);\nlabel(\"$b$\", (O+P)/2, S);\nlabel(\"$a$\", (P+Q)/2, E);\nlabel(\"$c$\", (O+Q)/2, NW);\nlabel(\"$b\\\\cos C$\", (O+F)/2, S);\nlabel(\"$a\\\\sin C$\", (F+Q)/2, E);\nlabel(\"$C$\", (0.4,0.1), NE);",
+          "asymptoteAlt": "A triangle with a long horizontal base, a vertex up and to the right of the base's midpoint, and a dashed vertical line dropping from that vertex to a dotted segment on the base. The base is labelled b, the right-hand side is labelled a, and the left slanted side is labelled c. The angle at the left end of the base is marked C. The dotted portion of the base under the dashed line is labelled b cosine C and the dashed vertical line is labelled a sine C, showing the two pieces the third side is made of.",
+          "asymptoteAspectRatio": 1.417
+        },
+        {
+          "id": "m8-l3-wex-3",
+          "titleLatex": "Worked example: area from two sides and the included angle",
+          "bodyLatex": "A triangle has $a = 5$ and $b = 8$ with included angle $C = 120^\\circ$. Find its area exactly, without finding the third side.\n\n$K = \\frac{1}{2}ab\\sin C = \\frac{1}{2} \\cdot 5 \\cdot 8 \\cdot \\sin 120^\\circ = 20 \\cdot \\frac{\\sqrt{3}}{2} = 10\\sqrt{3}$.\n\nThe sine of $120^\\circ$ is the sine of $60^\\circ$, because $\\sin(180^\\circ - \\theta) = \\sin \\theta$, so the surd is $\\frac{\\sqrt{3}}{2}$ and not a negative number. Forgetting that is the standard slip here, since an obtuse angle's cosine is negative but its sine is not.",
+          "answerLatex": "$10\\sqrt{3}$",
+          "asymptoteSource": "// The law of sines as a single circle. Inscribing a triangle in a circle of\n// radius R makes every side a chord, and the chord subtending angle A has\n// length 2R sin A, so one ratio a over sin A accounts for all three sides.\nsize(320,300);\npair O = (0,0);\npair A = dir(110);\npair B = dir(200);\npair C = dir(345);\ndraw(scale(1.15)*unitcircle, gray(0.7));\ndraw(A--B--C--cycle, black);\ndraw(O--A, gray(0.5));\ndraw(O--B, gray(0.5));\ndraw(O--C, gray(0.5));\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, NW);\nlabel(\"$B$\", B, S);\nlabel(\"$C$\", C, E);\nlabel(\"$a$\", (B+C)/2 + (0.16,0.1), SE);\nlabel(\"$b$\", (C+A)/2 + (0.2,0), E);\nlabel(\"$c$\", (A+B)/2 + (-0.2,0), W);\nlabel(\"$R$\", O*1.35, SW);\nlabel(\"$\\\\frac{a}{\\\\sin A} = \\\\frac{b}{\\\\sin B} = \\\\frac{c}{\\\\sin C} = 2R$\", (0,-1.42), S);",
+          "asymptoteAlt": "A circle with a bold triangle inscribed in it, its three vertices on the circle and its three sides drawn as chords. A point at the centre is joined by thin grey lines to all three vertices, and a short segment from the centre is labelled as the radius. Each side of the triangle carries a letter label matching the vertex opposite it. A line of text below the circle states that the ratio of each side to the sine of its opposite angle is the same for all three, and equals twice the radius.",
+          "asymptoteAspectRatio": 1.067
+        },
+        {
+          "id": "m8-l3-wex-4",
+          "titleLatex": "Worked example: a cyclic quadrilateral, split by a diagonal",
+          "bodyLatex": "A cyclic quadrilateral has sides $b$ and $d$ meeting at an angle $A$, and the diagonal from that vertex splits it into two triangles. Show that the two areas add to $\\frac{1}{2}bd(\\sin A + \\sin D)$ where $D$ is the opposite angle.\n\nThe diagonal splits the quadrilateral into a triangle with sides $b$ and $d$ meeting at $A$ and another with the same two sides meeting at $D$. The first has area $\\frac{1}{2}bd\\sin A$ and the second $\\frac{1}{2}bd\\sin D$.\n\nBecause the quadrilateral is cyclic, $A$ and $D$ are opposite angles and so are supplementary: $A + D = 180^\\circ$. Then $\\sin D = \\sin(180^\\circ - A) = \\sin A$, and the total is $\\frac{1}{2}bd(2\\sin A) = bd\\sin A$. The supplementary step is the whole content of the exercise, and it is [m8-l2](/M8/lessons/m8-l2)'s odd-function relation in geometric clothing.",
+          "answerLatex": "$bd\\sin A$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "identity-selection",
+          "name": "Choosing the law by the shape of the data",
+          "summaryLatex": "Two sides with the included angle is SAS and wants the law of cosines; a non-included angle with two sides wants the law of sines; three sides wants the law of cosines run backwards.",
+          "bodyLatex": "Name the case before writing anything. SAS, where the known angle sits between the two known sides, is unique and is handled by the law of cosines, then by the area formula if the area is wanted. SSS, three sides and no angle, is also unique and is handled by the same formula rearranged to solve for a cosine. SSA, a non-included angle, is the only ambiguous case and is handled by the law of sines with an explicit test. Reading the data as SSS and reaching for the sine law is the most common structural error, and it wastes the whole attempt because two sides and a side-opposite angle give no useful proportion."
+        },
+        {
+          "slug": "two-sides-one-angle",
+          "name": "The law of cosines in the SAS case",
+          "summaryLatex": "With two sides and the angle between them, $c^2 = a^2 + b^2 - 2ab\\cos C$ gives the third side directly, and the area is $\\frac{1}{2}ab\\sin C$.",
+          "bodyLatex": "Square the two known sides, subtract twice their product times the cosine of the included angle, and take the square root of what is left. A negative intermediate cannot occur, since $a^2 + b^2$ is always at least $2ab$, which is more than $2ab\\cos C$,, which is the triangle inequality showing up as the radicand's positivity. The same setup gives the area without ever computing the third side, and doing that first is usually cheaper because the area formula needs nothing else. Watch the sign of the cosine term: at an obtuse included angle the term is positive and the third side is longer than the Pythagorean value, which is the correct behaviour."
+        },
+        {
+          "slug": "three-sides",
+          "name": "The law of cosines run backwards",
+          "summaryLatex": "Three sides give $\\cos C = \\frac{a^2 + b^2 - c^2}{2ab}$, and the sign of that cosine classifies the angle.",
+          "bodyLatex": "This is the only route from three sides to an angle, and the shape of the formula is the same with the sides moved to the other side. The denominator is positive, so the sign of the cosine is the sign of $a^2 + b^2 - c^2$: a positive value means an acute angle at $C$, zero means a right angle and a $3$-$4$-$5$ or scaled triple, and a negative value means obtuse. The largest angle of a triangle is opposite its longest side, so running the formula on the longest side is where the classification shows up, and an obtuse triangle always has $c^2 > a^2 + b^2$ for that side."
+        },
+        {
+          "slug": "one-side-one-angle",
+          "name": "The law of sines in the SSA case",
+          "summaryLatex": "One side and its opposite angle fix a ratio $\\frac{a}{\\sin A} = 2R$, and a second side or a second angle is then a single multiplication.",
+          "bodyLatex": "Every quantity in the triangle is a multiple of the single number $\\frac{a}{\\sin A}$, so finding one side-opposite pair converts everything else into a multiplication or a division. A second side follows immediately, a second angle needs one inverse sine, and a third angle comes from the angle sum rather than from the law. The structural point is that this case can fail: if the computed sine exceeds $1$ there is no triangle, and if the supplementary candidate angle breaks the angle sum the triangle is unique even though the sine alone did not say so."
+        },
+        {
+          "slug": "ambiguous-case-analysis",
+          "name": "Resolving the ambiguous case",
+          "summaryLatex": "Compute the sine, reject it if it exceeds $1$, take the inverse sine, then test the supplementary candidate against the angle sum.",
+          "bodyLatex": "The test order matters and saves time. First, if the value of $\\sin B$ exceeds $1$, stop: no triangle exists. Second, take $B_0 = \\arcsin(\\text{value})$ and note that $180^\\circ - B_0$ is the only other candidate, since that is the complete solution set of a sine equation on $(0^\\circ, 180^\\circ)$. Third, test the supplementary candidate: if $A + 180^\\circ - B_0 > 180^\\circ$, it is impossible and the triangle is unique, and otherwise both candidates are valid and there are two triangles. A useful picture of the test: hold side $a$ and angle $A$ fixed, and slide the vertex along the ray; the circle of radius $b$ about the other vertex is crossed once, twice, or not at all."
+        },
+        {
+          "slug": "supplementary-angle-case",
+          "name": "Why the supplementary angle behaves the same",
+          "summaryLatex": "$\\sin(180^\\circ - \\theta) = \\sin \\theta$ while $\\cos(180^\\circ - \\theta) = -\\cos \\theta$, so only the sine law can be ambiguous.",
+          "bodyLatex": "The cosine is strictly decreasing on $(0^\\circ, 180^\\circ)$, so a given cosine value has exactly one angle there and the law of cosines can never be ambiguous. The sine rises and then falls symmetrically about $90^\\circ$, so a given sine value has two angles, and that is the entire source of the SSA ambiguity. The same relation makes a cyclic quadrilateral's opposite angles interchangeable in every area formula, since only their sines appear. It also explains why $\\sin 120^\\circ = \\frac{\\sqrt{3}}{2}$ rather than being negative: a sine is nonnegative throughout the range where triangle angles live."
+        },
+        {
+          "slug": "area-from-two-sides-angle",
+          "name": "Area from two sides and the included angle",
+          "summaryLatex": "$K = \\frac{1}{2}ab\\sin C$ needs only the two sides and the angle between them, so it avoids finding the third side entirely.",
+          "bodyLatex": "The height relative to side $b$ is exactly $a \\sin C$, so the usual $\\frac{1}{2} \\times base \\times height$ collapses to the formula without any extra work. This is the right first move whenever a SAS problem asks for an area, because it skips the square root in the law of cosines entirely. Evaluate $\\sin C$ for the given angle first: an obtuse angle has a negative cosine but a positive sine, and the sine of $120^\\circ$ is the sine of $60^\\circ$."
+        },
+        {
+          "slug": "heron-area",
+          "name": "Heron's formula when there is no angle",
+          "summaryLatex": "Three sides and no angle is exactly the case Heron's formula covers: $K = \\sqrt{s(s-a)(s-b)(s-c)}$ with $s$ the semiperimeter.",
+          "bodyLatex": "The law of cosines would find an angle first, but Heron's formula skips that step and is usually shorter. Compute the semiperimeter $s = \\frac{a+b+c}{2}$, multiply the four factors, and take the square root. The factors are all positive because the triangle inequality makes each of $s-a$, $s-b$, and $s-c$ positive, so the radicand is positive and no sign case arises. For a right triangle Heron's formula agrees with $\\frac{1}{2}bh$, which is a good check on the arithmetic."
+        },
+        {
+          "slug": "radii-and-chords",
+          "name": "The extended law of sines and chords",
+          "summaryLatex": "A side of length $a$ opposite angle $A$ satisfies $a = 2R\\sin A$, so a circumradius, a chord, and an inscribed angle are all the same equation.",
+          "bodyLatex": "The common value of the three ratios is $2R$, the diameter of the circumcircle, so $R = \\frac{a}{2\\sin A}$ for any side-opposite pair in the triangle. A chord of length $d$ subtending an inscribed angle $\\theta$ in a circle of radius $R$ satisfies $d = 2R\\sin\\theta$ for the same reason, and conversely a chord of known length in a known circle determines the inscribed angle. The familiar right-triangle case is the special instance where one side is the diameter, making the opposite angle a right angle and the formula read $\\sin A = \\frac{a}{2R}$."
+        },
+        {
+          "slug": "inscribed-angle-theorem",
+          "name": "Inscribed angles and arcs",
+          "summaryLatex": "An inscribed angle is half the central angle on the same arc, so angles standing on the same arc are equal and opposite angles of a cyclic quadrilateral are supplementary.",
+          "bodyLatex": "The theorem is what makes the extended law of sines a theorem rather than an identity, and it is the fastest route to any angle question involving a circle. Two inscribed angles standing on the same arc are equal, which is how a chord's subtended angle is found from any point on the circle; two standing on complementary arcs of the same chord are supplementary, which is exactly the statement that opposite angles of a cyclic quadrilateral sum to $180^\\circ$. It is also why a triangle inscribed in a circle with one side a diameter has a right angle opposite that side."
+        },
+        {
+          "slug": "angle-sum-of-triangle",
+          "name": "The angle sum as a working tool",
+          "summaryLatex": "Once one angle is known by a formula, the other two follow from $A + B + C = 180^\\circ$, with no further trigonometry.",
+          "bodyLatex": "The angle sum is usually the last step rather than the first, and it is what settles the ambiguous case, since a candidate angle is admissible exactly when the sum stays at or below $180^\\circ$. In a cyclic quadrilateral the opposite-angle version, $A + C = 180^\\circ$, does the same job. Because the sum is exact, an angle that has been found approximately should be obtained by subtracting the two known angles from $180^\\circ$ rather than by a second inverse sine, which would accumulate a second rounding error."
+        },
+        {
+          "slug": "angles-in-a-quadrilateral",
+          "name": "Angles in a cyclic quadrilateral",
+          "summaryLatex": "Opposite angles of a cyclic quadrilateral are supplementary, so their sines agree and only their cosines differ in sign.",
+          "bodyLatex": "With vertices in order, $A + C = 180^\\circ$ and $B + D = 180^\\circ$. Every area formula built on a diagonal then carries the same sine in both triangles, which collapses sums of two such areas into a single product. The same fact makes a cyclic quadrilateral with two right opposite angles a rectangle, and a cyclic quadrilateral with a pair of equal adjacent angles is isoceles on that side, so it is worth checking when a problem is solvable in a more elegant way than the law of cosines."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "cosine-sign-flipped",
+          "titleLatex": "Losing the minus sign in the law of cosines",
+          "wrongLatex": "a triangle with $a = 3$, $b = 8$, and $C = 60^\\circ$ has $c^2 = 9 + 64 + 2(3)(8)\\left(\\frac{1}{2}\\right) = 97$",
+          "whyLatex": "The law of cosines subtracts the cross term: $c^2 = a^2 + b^2 - 2ab\\cos C$. The sign is not a convention but the geometry, because dropping the perpendicular splits side $c$ into a piece $b\\cos C$ and a piece $a - b\\cos C$, and it is the second piece that appears squared. Writing the plus gives $c = \\sqrt{97}$ where the correct answer is $7$, and the error grows with the angle, so it is invisible at small angles and largest exactly where a problem is designed to be interesting.",
+          "fixLatex": "Memorize the formula with the minus sign, and sanity check that $C = 90^\\circ$ reproduces the Pythagorean theorem. A second check is that the third side must grow as the included angle opens, and a plus sign would make it shrink. On a specific problem, $c^2 = 9 + 64 - 24 = 49$ gives the clean integer the problem was built to have."
+        },
+        {
+          "slug": "sine-of-an-obtuse-angle-read-negative",
+          "titleLatex": "Treating an obtuse angle's sine as negative",
+          "wrongLatex": "the area of a triangle with $a = 5$, $b = 8$, and $C = 120^\\circ$ is $\\frac{1}{2} \\cdot 5 \\cdot 8 \\cdot \\left(-\\frac{\\sqrt{3}}{2}\\right) = -10\\sqrt{3}$",
+          "whyLatex": "Only the cosine is negative in the second quadrant. A sine is positive for every angle of a triangle, since all three lie strictly between $0^\\circ$ and $180^\\circ$ and the sine is positive throughout that whole interval. The value of $\\sin 120^\\circ$ is the sine of the supplementary angle, namely $\\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$. A negative area is the signal that a quadrant rule for the cosine has been applied to the sine.",
+          "fixLatex": "Keep the two signs separate: the cosine of an obtuse angle is negative, the sine of an obtuse angle is positive. When evaluating $\\sin C$ for an angle above $90^\\circ$, replace it by the sine of its supplement, which is a special angle with a known positive value. Every area in this module is positive, so a negative answer means the sign rule was misapplied rather than that the problem is inconsistent."
+        },
+        {
+          "slug": "pythagorean-on-an-oblique-triangle",
+          "titleLatex": "Applying the Pythagorean theorem to an oblique triangle",
+          "wrongLatex": "a triangle with $a = 4$ and $b = 6$ and included angle $C = 60^\\circ$ has $c = \\sqrt{4^2 + 6^2} = \\sqrt{52}$",
+          "whyLatex": "The Pythagorean theorem applies only to a right triangle, and this one has a $60^\\circ$ angle rather than a right angle. The correct value is $c^2 = 16 + 36 - 2(4)(6)\\left(\\frac{1}{2}\\right) = 28$, so $c = \\sqrt{28}$, which is shorter than the Pythagorean value because the included angle is smaller than a right angle. The right-triangle shortcut therefore overestimates the third side here, and the size of the error is exactly the missing cross term.",
+          "fixLatex": "Check the included angle before reaching for the Pythagorean theorem; if it is not $90^\\circ$, use the law of cosines even when the other two sides happen to form a right triangle on their own. A useful limit to remember is that the law of cosines reduces to the Pythagorean theorem when the cosine vanishes, so the special case is already contained in the general one and there is never a reason to apply the older formula separately."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m8-l3-p1",
+        "m8-l3-p2",
+        "m8-l3-p3",
+        "m8-l3-p4",
+        "m8-l3-p5",
+        "m8-l3-p6",
+        "m8-l3-p7",
+        "m8-l3-p8",
+        "m8-l3-p9",
+        "m8-l3-p10",
+        "m8-l3-p11",
+        "m8-l3-p12",
+        "m8-l3-p13",
+        "m8-l3-p14",
+        "m8-l3-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m8-l3-p1",
+        "m8-l3-p2",
+        "m8-l3-p3",
+        "m8-l3-p4",
+        "m8-l3-p5",
+        "m8-l3-p6",
+        "m8-l3-p7",
+        "m8-l3-p8",
+        "m8-l3-p9",
+        "m8-l3-p10",
+        "m8-l3-p11",
+        "m8-l3-p12",
+        "m8-l3-p13",
+        "m8-l3-p14",
+        "m8-l3-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m8-l3-m1",
+        "m8-l3-m2",
+        "m8-l3-m3"
+      ],
+      "passThreshold": 2
+    }
+  }
+}

@@ -1,0 +1,230 @@
+{
+  "id": "m8-l1",
+  "moduleId": "M8",
+  "order": 1,
+  "title": "The Unit Circle, Radians, and Special Values",
+  "topicSlug": "unit-circle-radians-special-values",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 65,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m1-l1",
+    "m2-l2"
+  ],
+  "tags": [
+    "unit-circle",
+    "radians",
+    "special-angles",
+    "exact-trig-values",
+    "triangle-solving"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Define the six trigonometric functions on the unit circle, convert between degrees and radians, locate an angle's terminal side and quadrant, and read the exact value of any multiple of $30^\\circ$ or $45^\\circ$ from the two special right triangles. Compute arc length and sector area directly from a central angle given in radians."
+    },
+    "prerequisites": {
+      "items": [
+        {
+          "labelLatex": "[m1-l5](/M1/lessons/m1-l5) quadratic equations",
+          "noteLatex": "for solving a Pythagorean relation when one leg is unknown"
+        },
+        {
+          "labelLatex": "[m2-l2](/M2/lessons/m2-l2) prime factorization",
+          "noteLatex": "for reading a squared quantity as a perfect square and taking its root"
+        }
+      ],
+      "noteLatex": "This lesson assumes facility with fractions, square roots, and the unit circle as a geometric object. It introduces no algebra beyond dividing a ratio, so a reader who has never seen a trigonometric function before can work straight through it. Nothing in [m1-l5](/M1/lessons/m1-l5) is genuinely required beyond being able to solve $a^2 + b^2 = c^2$ for one side."
+    },
+    "concept": {
+      "conceptLatex": "Place a circle of radius $1$ at the origin, and call it the unit circle. For any angle $\\theta$ measured counterclockwise from the positive $x$-axis, the terminal side of $\\theta$ is the ray from the origin through that angle, and it meets the circle at exactly one point. That point is the whole definition of the trigonometric functions: if the point is $(x, y)$, then $x$ is the cosine of $\\theta$ and $y$ is the sine of $\\theta$. The tangent is the one ratio that is not a coordinate, being $y$ divided by $x$, the vertical rise over the horizontal run along the terminal side itself.\n\nEverything else follows from the Pythagorean theorem. Since the point lies on the unit circle, $x^2 + y^2 = 1$, so $\\sin^2 \\theta + \\cos^2 \\theta = 1$ for every angle whatsoever. This is the single most useful equation in the module, because it recovers one function from the other: knowing the sine gives the cosine in magnitude, and the quadrant decides the sign. Divide both sides by $\\cos^2 \\theta$ and the same identity reads $1 + \\tan^2 \\theta = \\sec^2 \\theta$; divide by $\\sin^2 \\theta$ and it reads $1 + \\cot^2 \\theta = \\csc^2 \\theta$. Three identities, one theorem.\n\nRadians are the natural unit for all of this. A full turn is $2\\pi$ radians and a half turn is $\\pi$, so a degree measure converts by $\\theta_{rad} = \\theta_{deg} \\cdot \\frac{\\pi}{180}$, and the reverse. The reason to prefer radians shows up in the two length formulas. An arc subtending a central angle $\\theta$ on a circle of radius $r$ has length $s = r\\theta$ when $\\theta$ is in radians, and a sector of that angle has area $\\frac{1}{2} r^2 \\theta$. No extra conversion factor appears, and the same two formulas carry a circle of any size. Radians are therefore not a rescaling but a simplification, and AMC problems hand you a central angle in radians precisely so that these formulas apply without a factor of $180$.\n\nThe exact values come from two right triangles inscribed in the circle. The $30^\\circ$-$60^\\circ$-$90^\\circ$ triangle has legs in the ratio $1 : \\sqrt{3} : 2$, and the $45^\\circ$-$45^\\circ$-$90^\\circ$ triangle has legs in the ratio $1 : 1 : \\sqrt{2}$. Normalize each to hypotenuse $1$ and read off the values: $\\sin 30^\\circ = \\frac{1}{2}$, $\\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$, and $\\sin 45^\\circ = \\frac{\\sqrt{2}}{2}$. Any other angle on the unit circle is a reflection or a rotation of one of these, and the reflections are governed by the four symmetries. Changing the angle to its negative negates the sine and keeps the cosine, adding $\\pi$ negates both, and $\\pi - \\theta$ keeps the sine and negates the cosine. The cofunction relation $\\cos \\theta = \\sin\\left(\\frac{\\pi}{2} - \\theta\\right)$ exchanges the two functions across the line $y = x$.\n\nA reference angle is the remaining piece of bookkeeping. For any angle in standard position that is not a multiple of $\\frac{\\pi}{2}$, the reference angle is the acute angle between the terminal side and the nearest point of a coordinate axis, so it always lies in the first quadrant. The exact value of the function at the original angle equals its exact value at the reference angle, with the sign supplied by the quadrant: the sine is positive in the first and second quadrants and negative in the third and fourth, while the cosine is positive in the first and fourth and negative in the second and third. Working the value at the reference angle and then correcting the sign is faster and far harder to get wrong than attempting the original angle directly.\n\nPutting the pieces together, the standard evaluation procedure is four steps: convert to radians if the answer is expected in radians, find the reference angle, read the exact value there, and attach the sign the quadrant demands. Every exact-value exercise in this module is an application of that procedure, and the exercises below are ordered so that each one adds at most one step to the one before it.",
+      "figures": [
+        {
+          "id": "m8-l1-fig-1",
+          "captionLatex": "The unit circle with the four quadrantal angles on the axes and four interior special angles; a point's horizontal coordinate is its cosine and its vertical coordinate is its sine, so the height of the point above the axis is the whole story of the sine.",
+          "asymptoteSource": "// The unit circle: the four axis intercepts are the quadrantal angles, and the\n// four interior marks are the 30-60-90 and 45-45-90 positions.\nsize(320,320);\ndraw((-1.22,0)--(1.22,0), gray(0.55));\ndraw((0,-1.22)--(0,1.22), gray(0.55));\ndraw(unitcircle);\nlabel(\"$0$\", (1.1,0), E);\nlabel(\"$\\frac{\\pi}{2}$\", (0,1.12), N);\nlabel(\"$\\pi$\", (-1.12,0), W);\nlabel(\"$\\frac{3\\pi}{2}$\", (0,-1.12), S);\ndot(dir(0), 2+2pt);\ndot(dir(pi/6), 2+2pt);\ndot(dir(pi/3), 2+2pt);\ndot(dir(pi/2), 2+2pt);\ndot(dir(2*pi/3), 2+2pt);\ndot(dir(pi), 2+2pt);\nlabel(\"$\\frac{\\pi}{6}$\", dir(pi/6)*1.22, NE);\nlabel(\"$\\frac{\\pi}{3}$\", dir(pi/3)*1.22, NE);\nlabel(\"$\\frac{2\\pi}{3}$\", dir(2*pi/3)*1.22, NW);\nlabel(\"$\\frac{4\\pi}{3}$\", dir(4*pi/3)*1.22, SW);\nlabel(\"$\\frac{5\\pi}{3}$\", dir(5*pi/3)*1.22, SE);",
+          "asymptoteAlt": "A circle centred on the intersection of a horizontal and a vertical axis. Four small filled dots sit on the axes at the top, bottom, left and right, and four more sit inside the circle at the first and second quadrant positions corresponding to one sixth and one third of a half turn. Each dot has an angle label beside it running from zero at the right end of the horizontal axis, up through one sixth and one third, to a quarter turn at the top, and on round the left side to a full half turn. The circle is unlabelled otherwise.",
+          "asymptoteAspectRatio": 1.0
+        },
+        {
+          "id": "m8-l1-fig-2",
+          "captionLatex": "The $30^\\circ$-$60^\\circ$-$90^\\circ$ triangle inscribed in the unit circle, with the short leg on the horizontal axis; normalizing the hypotenuse to $1$ is what turns the leg ratio $1 : \\sqrt{3} : 2$ into the two exact values this module is built on.",
+          "asymptoteSource": "// The 30-60-90 triangle inside the unit circle. Short leg 1, long leg\n// sqrt(3), hypotenuse 2, so normalizing the hypotenuse to 1 gives 1/2 and\n// sqrt(3)/2 directly.\nsize(300,200);\ndraw(unitcircle, gray(0.7));\npair O = (0,0);\npair A = (1,0);\npair B = (1,sqrt(3));\ndraw(O--A--B--cycle, black);\ndraw(O--B, dashed);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, SE);\nlabel(\"$B$\", B, NE);\nlabel(\"$1$\", (O+A)/2, S);\nlabel(\"$\\sqrt{3}$\", (A+B)/2, E);\nlabel(\"$2$\", (O+B)/2, NW);\nlabel(\"$60^\\circ$\", (O+A)/2+(0,0.24), N);\nlabel(\"$30^\\circ$\", (A+B)/2+(0.34,0), E);\nlabel(\"$90^\\circ$\", A+(-0.24,0.12), NW);",
+          "asymptoteAlt": "A circle with a bold right triangle drawn inside it. The triangle's lower left vertex is the centre of the circle, its lower right vertex is one unit along the positive horizontal axis, and its top vertex is up and to the right on the circle. The side along the horizontal axis is labelled one, the vertical side on the right is labelled root three, and the long slanted side back to the centre is labelled two. The angle at the centre is sixty degrees, the angle at the top is thirty degrees, and the corner at the lower right is a right angle.",
+          "asymptoteAspectRatio": 1.5
+        },
+        {
+          "id": "m8-l1-fig-3",
+          "captionLatex": "The same circle labelled two ways, with degrees on the outside and radians on the inside, so that the point one third of the way round a half turn carries both of its names at once; this is the whole content of the conversion $\\theta_{rad} = \\theta_{deg} \\cdot \\frac{\\pi}{180}$.",
+          "asymptoteSource": "// A full turn measured two ways: the outer labels are degrees, the inner\n// labels are radians, and the marked point is the 60 degree position, which\n// is also the pi over 3 position.\nsize(360,240);\ndraw(unitcircle);\ndraw((-1.25,0)--(1.25,0), gray(0.6));\ndraw((0,-1.25)--(0,1.25), gray(0.6));\nlabel(\"$360^\\circ$\", dir(7*pi/6)*1.34, SW);\nlabel(\"$2\\pi$\", dir(11*pi/6)*1.34, SE);\nlabel(\"$0^\\circ$\", (1.3,0), E);\nlabel(\"$90^\\circ$\", (-0.1,1.32), N);\nlabel(\"$\\frac{\\pi}{2}$\", (0.42,1.3), E);\nlabel(\"$180^\\circ$\", (-1.32,0), W);\nlabel(\"$270^\\circ$\", (0.1,-1.32), S);\nlabel(\"$\\pi$\", (-0.98,-0.3), SW);\nlabel(\"$\\frac{3\\pi}{2}$\", (0.98,-0.3), SE);\ndot(dir(pi/3), 2+2pt);\nlabel(\"$60^\\circ = \\frac{\\pi}{3}$\", dir(pi/3)*1.36, NE);",
+          "asymptoteAlt": "A circle centred on a pair of crossing axes, with the horizontal axis sticking out past the circle on both sides. Angle labels in degrees sit outside the circle: zero at the right end of the horizontal axis, a quarter turn at the top, a half turn at the left, three quarter turns at the bottom, and a full turn in the lower left. Angle labels in multiples of pi sit inside the circle at the same four places. A single small dot in the first quadrant carries a label giving both its degree measure and its radian measure at the same time.",
+          "asymptoteAspectRatio": 1.5
+        }
+      ],
+      "examples": [
+        {
+          "id": "m8-l1-wex-1",
+          "titleLatex": "Worked example: an exact value in the third quadrant",
+          "bodyLatex": "Evaluate $\\sin\\left(\\frac{4\\pi}{3}\\right)$ exactly.\n\nThe angle $\\frac{4\\pi}{3}$ is a third of a half turn past $\\pi$, so it sits in the third quadrant. Its reference angle is $\\frac{4\\pi}{3} - \\pi = \\frac{\\pi}{3}$, which is a $60^\\circ$ angle, and $\\sin\\frac{\\pi}{3} = \\frac{\\sqrt{3}}{2}$ by the $30^\\circ$-$60^\\circ$-$90^\\circ$ triangle.\n\nThe sine is negative in the third quadrant, so the value is $-\\frac{\\sqrt{3}}{2}$. The quadratic check agrees: $\\sin^2 + \\cos^2 = \\frac{3}{4} + \\frac{1}{4} = 1$.",
+          "answerLatex": "$-\\frac{\\sqrt{3}}{2}$",
+          "asymptoteSource": "// The 45-45-90 triangle inside the unit circle. Both legs are sqrt(2)/2\n// and the hypotenuse is the radius, so the 45 degree values fall out of the\n// leg over the hypotenuse ratio directly.\nsize(280,280);\ndraw(unitcircle, gray(0.7));\npair O = (0,0);\npair A = (1,0);\npair B = dir(pi/4);\ndraw(O--A--B--cycle, black);\ndraw(O--B, dashed);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, SE);\nlabel(\"$B$\", B, NE);\nlabel(\"$\\frac{\\sqrt{2}}{2}$\", (O+A)/2, S);\nlabel(\"$\\frac{\\sqrt{2}}{2}$\", (A+B)/2, E);\nlabel(\"$1$\", (O+B)/2, NW);\nlabel(\"$45^\\circ$\", B*1.24, N);\nlabel(\"$45^\\circ$\", (0.8,0.8), SW);\nlabel(\"$90^\\circ$\", A+(-0.22,0.14), NW);",
+          "asymptoteAlt": "A circle with a bold right isoceles triangle drawn inside it. The triangle's lower left vertex is the centre of the circle, its lower right vertex is one unit along the positive horizontal axis, and its top vertex lies on the circle halfway between the axis and the top. The side along the horizontal axis and the short vertical side on the right both carry the same label, and the long slanted side from the centre to the top of the circle is labelled one. Both acute angles are labelled forty five degrees and the remaining corner is a right angle.",
+          "asymptoteAspectRatio": 1.0
+        },
+        {
+          "id": "m8-l1-wex-2",
+          "titleLatex": "Worked example: recovering a cosine from a sine",
+          "bodyLatex": "If $\\sin\\theta = \\frac{3}{5}$ and $\\theta$ lies in the second quadrant, find $\\cos\\theta$.\n\nThe identity gives $\\cos^2 \\theta = 1 - \\sin^2 \\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$, so $|\\cos \\theta| = \\frac{4}{5}$. The cosine is negative in the second quadrant, so $\\cos \\theta = -\\frac{4}{5}$.\n\nThe $\\frac{3}{5}$, $\\frac{4}{5}$, $\\frac{5}{5}$ triple is the $3$-$4$-$5$ right triangle, and the pair of values has squared sum $\\frac{9}{25} + \\frac{16}{25} = 1$ as it must.",
+          "answerLatex": "$-\\frac{4}{5}$"
+        },
+        {
+          "id": "m8-l1-wex-3",
+          "titleLatex": "Worked example: arc length and sector area in radians",
+          "bodyLatex": "An arc of a circle of radius $6$ subtends a central angle of $\\frac{2\\pi}{3}$. Find the arc length and the area of the sector, exactly.\n\nWith the angle already in radians no conversion is needed, so $s = r\\theta = 6 \\cdot \\frac{2\\pi}{3} = 4\\pi$.\n\nThe sector area is $\\frac{1}{2} r^2 \\theta = \\frac{1}{2} \\cdot 36 \\cdot \\frac{2\\pi}{3} = 12\\pi$.\n\nThe sector is a fraction $\\frac{\\theta}{2\\pi} = \\frac{1}{3}$ of the disk, and one third of $\\pi \\cdot 36 = 36\\pi$ is $12\\pi$, which confirms the second answer.",
+          "answerLatex": "$s = 4\\pi$, $A = 12\\pi$",
+          "asymptoteSource": "// A sector of a circle of radius r with central angle theta. The arc is swept\n// counterclockwise from the positive x-axis and the sector is the shaded\n// wedge, so the two formulas read off the same picture.\nsize(320,240);\ndraw(scale(2)*unitcircle, gray(0.6));\nfill((0,0)--(2,0)..(0,2)--cycle, gray(0.88));\ndraw((0,0)--(2,0), black);\ndraw((0,0)--(0,2), black);\nlabel(\"$r$\", (1,0), S);\nlabel(\"$r$\", (0,1), W);\nlabel(\"$\\theta$\", (0.44,0.16), NE);\nlabel(\"$O$\", (0,0), SW);\nlabel(\"$s = r\\theta$\", (1.35,0.85), E);\nlabel(\"$\\frac{1}{2}r^2\\theta$\", (0.8,-0.38), SE);",
+          "asymptoteAlt": "A circle of radius two with a quarter of it shaded grey, bounded by a horizontal radius running right from the centre and a vertical radius running up from the centre. Both radii are labelled r and the right angle between them is labelled with the central angle symbol. A label to the right of the circle gives the arc length formula as the radius times the angle, and a label below the circle gives the sector area formula as one half the radius squared times the angle.",
+          "asymptoteAspectRatio": 1.333
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "unit-circle-coordinates",
+          "name": "Building the point on the unit circle",
+          "summaryLatex": "The cosine is the horizontal coordinate and the sine is the vertical coordinate of the point where the terminal side meets the unit circle.",
+          "bodyLatex": "Draw the circle, draw the terminal side, and mark the intersection. Read the horizontal coordinate as the cosine and the vertical coordinate as the sine; the tangent is the vertical coordinate divided by the horizontal one. This makes the quadrant a visual fact rather than something to remember: an angle in the second quadrant has a negative horizontal coordinate and a positive vertical one, so its cosine is negative and its sine is positive, with no case analysis required. The construction is also the fastest way to see that a reference angle and the original angle share a function value in magnitude, since both are the same rise on a circle of the same radius."
+        },
+        {
+          "slug": "degree-radian-conversion",
+          "name": "Converting degrees and radians",
+          "summaryLatex": "Multiply by $\\frac{\\pi}{180}$ to go to radians and by $\\frac{180}{\\pi}$ to go back, and convert once rather than at every step.",
+          "bodyLatex": "A degree measure is a fraction of a turn, so $\\frac{\\theta_{deg}}{360}$ of a turn is the same angle as $\\frac{\\theta_{rad}}{2\\pi}$ of a turn, which rearranges to the factor $\\frac{\\pi}{180}$. The value to memorize is that a straight angle is $\\pi$ and a right angle is $\\frac{\\pi}{2}$, which lets you verify any conversion by proportion instead of by arithmetic. When an answer is expected in radians, convert the given angle once at the start and keep everything in radians afterwards, since the arc and sector formulas only hold in radians."
+        },
+        {
+          "slug": "quadrant-sign-analysis",
+          "name": "Reading the signs off the quadrant",
+          "summaryLatex": "The sine is positive in the first and second quadrants and the cosine is positive in the first and fourth; the other signs follow.",
+          "bodyLatex": "The sine is the vertical coordinate, so it is positive above the horizontal axis and negative below it. The cosine is the horizontal coordinate, so it is positive to the right of the vertical axis and negative to the left. The tangent inherits the sign of the sine and cosine together, so it is positive exactly in the first and third quadrants. When a problem gives a magnitude and a quadrant, take the magnitude from a special triangle, decide the sign from the quadrant, and only then write the answer; deciding the sign first and the magnitude second is the order that produces double negatives."
+        },
+        {
+          "slug": "special-triangle-drop",
+          "name": "Dropping a special triangle",
+          "summaryLatex": "The $30^\\circ$-$60^\\circ$-$90^\\circ$ and $45^\\circ$-$45^\\circ$-$90^\\circ$ triangles, normalized to hypotenuse $1$, produce every exact value the unit circle can be asked for.",
+          "bodyLatex": "Work from the leg ratios. The first triangle has legs in the ratio $1 : \\sqrt{3} : 2$, so with hypotenuse $1$ the legs are $\\frac{1}{2}$ and $\\frac{\\sqrt{3}}{2}$. The second has legs in the ratio $1 : 1 : \\sqrt{2}$, so with hypotenuse $1$ each leg is $\\frac{\\sqrt{2}}{2}$. Divide a leg by the hypotenuse and you have a function value; divide one leg by the other and you have a tangent, which is why the $30^\\circ$ and $60^\\circ$ tangents come out as the surds $\\frac{1}{\\sqrt{3}}$ and $\\sqrt{3}$ while the $45^\\circ$ tangent is simply $1$."
+        },
+        {
+          "slug": "odd-angle-reduction",
+          "name": "Shifting by $\\pi$ and by $\\frac{\\pi}{2}$",
+          "summaryLatex": "Adding $\\pi$ to an angle negates both the sine and the cosine, while the cofunction relation $\\cos\\theta = \\sin\\left(\\frac{\\pi}{2} - \\theta\\right)$ exchanges them across the line $y = x$.",
+          "bodyLatex": "A half turn carries the terminal side to the diametrically opposite point, which negates both coordinates at once, so $\\sin(\\theta + \\pi) = -\\sin\\theta$ and $\\cos(\\theta + \\pi) = -\\cos\\theta$. A quarter turn is subtler: it swaps the roles of the two coordinates, which is why the value of $\\sin\\left(\\frac{\\pi}{2} - \\theta\\right)$ is the cosine of $\\theta$ and vice versa. Use the quarter turn to rewrite an unfamiliar angle such as $\\frac{5\\pi}{6}$ as $\\pi - \\frac{\\pi}{6}$, which is a familiar angle in the first quadrant."
+        },
+        {
+          "slug": "reference-angle",
+          "name": "The reference angle",
+          "summaryLatex": "Evaluate at the acute angle the terminal side makes with the nearest axis, then attach the sign the quadrant requires.",
+          "bodyLatex": "For any angle that is not a multiple of $\\frac{\\pi}{2}$, the reference angle is the acute angle between the terminal side and the closest point of an axis, and it always lies in the first quadrant where the special values live. The function value at the original angle is the value at the reference angle with the sign of the quadrant. The reference angle itself is found by subtracting the nearest multiple of $\\frac{\\pi}{2}$ and then taking the smaller of that difference and its supplement, so $\\frac{5\\pi}{3}$ has reference angle $\\frac{\\pi}{3}$ and $\\frac{7\\pi}{6}$ has reference angle $\\frac{\\pi}{6}$."
+        },
+        {
+          "slug": "pythagorean-recovery",
+          "name": "Recovering one function from the other",
+          "summaryLatex": "Subtract the known square from $1$, take the square root, and let the quadrant set the sign.",
+          "bodyLatex": "From $\\sin^2\\theta + \\cos^2\\theta = 1$ a known sine gives $\\cos^2\\theta = 1 - \\sin^2\\theta$; the square root of that quantity is the magnitude of the cosine and the quadrant supplies the sign. Dividing the same identity by $\\cos^2\\theta$ instead gives $1 + \\tan^2\\theta = \\sec^2\\theta$, which is the form to use when a tangent or a secant is known. Watch for a tangent squared that is not a perfect square, as in $\\tan^2\\theta = \\frac{2}{3}$, where the answer is a surd rather than a rational number."
+        },
+        {
+          "slug": "cofunction-substitution",
+          "name": "Swapping the functions across a quarter turn",
+          "summaryLatex": "The complement of an acute angle has the other function's value, so $\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta$ whenever both are defined.",
+          "bodyLatex": "In a right triangle the two acute angles sum to $\\frac{\\pi}{2}$, and the side opposite one is the side adjacent to the other, so the sine of the complement is the cosine of the original and the tangent of the complement is the reciprocal of the tangent. This is a rewriting tool rather than a calculation: it converts an angle you do not recognize into one you do, which is what makes $\\sin\\frac{5\\pi}{12}$ tractable, since that angle is $\\frac{\\pi}{2} - \\frac{\\pi}{12}$ and the remaining work is a special value."
+        },
+        {
+          "slug": "radius-times-angle",
+          "name": "Arc length as radius times angle",
+          "summaryLatex": "A central angle measured in radians gives arc length $s = r\\theta$ with no conversion factor.",
+          "bodyLatex": "The formula is a direct consequence of the circle's circumference: an arc is a fraction $\\frac{\\theta}{2\\pi}$ of the circumference, so its length is $\\frac{\\theta}{2\\pi} \\cdot 2\\pi r = r\\theta$. The factor of $2\\pi$ cancels, which is the entire reason the formula only works in radians. Radians are dimensionless, so $r\\theta$ carries the unit of $r$, and a quick sanity check is that a half turn must give an arc of length $\\pi r$, exactly half the circumference."
+        },
+        {
+          "slug": "sector-area-formula",
+          "name": "Sector area as half the radius squared times the angle",
+          "summaryLatex": "A central angle measured in radians gives sector area $A = \\frac{1}{2} r^2 \\theta$, which is $\\frac{\\theta}{2\\pi}$ of the disk.",
+          "bodyLatex": "A sector is a fraction $\\frac{\\theta}{2\\pi}$ of the disk, so its area is $\\frac{\\theta}{2\\pi} \\cdot \\pi r^2 = \\frac{1}{2} r^2 \\theta$ and one factor of $\\pi$ cancels. Because the radius is squared, doubling the radius quadruples the sector area even when the angle is unchanged, which is the same scaling the disk obeys. A sector cut off by a right angle is one quarter of the disk no matter the radius, and a check against the full area $\\pi r^2$ confirms any sector answer at a glance."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "degrees-in-a-radian-formula",
+          "titleLatex": "Using a degree measure in $s = r\\theta$",
+          "wrongLatex": "an arc of $90^\\circ$ on a circle of radius $6$ has length $6 \\cdot 90 = 540$",
+          "whyLatex": "The formula $s = r\\theta$ is derived from the fraction $\\frac{\\theta}{2\\pi}$ of the circumference, which assumes $\\theta$ is a count of radians. Substituting degrees without dividing by $180$ treats a quarter turn as $90$ radians, so the arc comes out a hundred and eighty times too long. The same trap in the sector area formula gives a nonsense fraction of the disk.",
+          "fixLatex": "Convert before substituting: $90^\\circ = \\frac{\\pi}{2}$ radians, so $s = 6 \\cdot \\frac{\\pi}{2} = 3\\pi$. A quick sanity check is that a half turn, whatever the radius, must give an arc of length $\\pi r$, which is half the circumference $2\\pi r$."
+        },
+        {
+          "slug": "sign-of-sine-in-the-lower-half",
+          "titleLatex": "Losing the sign when the terminal side is below the axis",
+          "wrongLatex": "$\\sin\\left(\\frac{5\\pi}{3}\\right) = \\frac{\\sqrt{3}}{2}$",
+          "whyLatex": "The reference angle of $\\frac{5\\pi}{3}$ is $\\frac{\\pi}{3}$ and the cosine there is indeed $\\frac{1}{2}$, so the magnitude is right. But $\\frac{5\\pi}{3}$ lies in the fourth quadrant, below the horizontal axis, and the sine is the vertical coordinate, so it must be negative: the value is $-\\frac{\\sqrt{3}}{2}$. The same error on the cosine of $\\frac{2\\pi}{3}$ gives $\\frac{1}{2}$ where the answer is $-\\frac{1}{2}$.",
+          "fixLatex": "Write the sign down as a separate step: magnitude from the special triangle, then sign from the quadrant, and only then combine them. The quadratic check catches the slip immediately, since a positive value where a negative one belongs gives $\\sin^2 + \\cos^2 = \\frac{3}{4} + \\frac{1}{4} = 1$ with both coordinates positive, which places the point in the first quadrant and not the fourth."
+        },
+        {
+          "slug": "reference-angle-as-the-answer",
+          "titleLatex": "Reporting the reference angle in place of the value",
+          "wrongLatex": "$\\cos\\left(\\frac{4\\pi}{3}\\right)$ has value $\\frac{\\pi}{3}$",
+          "whyLatex": "$\\frac{\\pi}{3}$ is an angle, not a function value, and no cosine equals an angle. The reference angle is the input to the last step of the evaluation, not its output: the output is a number between $-1$ and $1$ for a sine or a cosine. Here the reference angle is $\\frac{\\pi}{3}$ and the value there is $\\frac{1}{2}$, and the cosine is negative in the third quadrant, so the answer is $-\\frac{1}{2}$.",
+          "fixLatex": "Separate the two questions in your scratch work: first write the reference angle on a line of its own, then write the exact value at that angle on a second line, then attach the sign on a third. Three short lines make the last step impossible to skip, and the identity $\\sin^2 + \\cos^2 = 1$ confirms the result."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m8-l1-p1",
+        "m8-l1-p2",
+        "m8-l1-p3",
+        "m8-l1-p4",
+        "m8-l1-p5",
+        "m8-l1-p6",
+        "m8-l1-p7",
+        "m8-l1-p8",
+        "m8-l1-p9",
+        "m8-l1-p10",
+        "m8-l1-p11",
+        "m8-l1-p12",
+        "m8-l1-p13",
+        "m8-l1-p14",
+        "m8-l1-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m8-l1-p1",
+        "m8-l1-p2",
+        "m8-l1-p3",
+        "m8-l1-p4",
+        "m8-l1-p5",
+        "m8-l1-p6",
+        "m8-l1-p7",
+        "m8-l1-p8",
+        "m8-l1-p9",
+        "m8-l1-p10",
+        "m8-l1-p11",
+        "m8-l1-p12",
+        "m8-l1-p13",
+        "m8-l1-p14",
+        "m8-l1-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m8-l1-m1",
+        "m8-l1-m2",
+        "m8-l1-m3"
+      ],
+      "passThreshold": 2
+    }
+  }
+}

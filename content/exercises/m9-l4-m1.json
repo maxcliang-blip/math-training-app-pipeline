@@ -1,0 +1,22 @@
+{
+  "id": "m9-l4-m1",
+  "moduleId": "M9",
+  "lessonId": "m9-l4",
+  "tier": "A+",
+  "difficulty": 4,
+  "tags": ["counterexample", "proof-strategy"],
+  "promptLatex": "True or false: The claim 'every polynomial of even degree with real coefficients has a real root' is true. If false, provide a counterexample.",
+  "choices": null,
+  "answerLatex": "False. The polynomial x^4 + 1 has even degree 4 but no real root, since x^4 ≥ 0 and +1 > 0 for all real x.",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A real root means there exists some real x such that the polynomial evaluates to 0.",
+    "For a polynomial to have a real root, its graph must cross the x-axis.",
+    "Even-degree polynomials with positive leading coefficient are positive for large |x|."
+  ],
+  "solutionLatex": "The claim is false. Consider the polynomial p(x) = x^4 + 1. Its degree is 4 (even), and for all real x, x^4 ≥ 0, so p(x) = x^4 + 1 ≥ 1 > 0. Thus p(x) is never 0, and the polynomial has no real root. This serves as a counterexample to the claim.",
+  "techniqueSlugs": ["counterexample"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

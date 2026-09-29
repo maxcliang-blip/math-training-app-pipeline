@@ -1,0 +1,28 @@
+{
+  "id": "m7-l2-p1",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": ["inclusion-exclusion"],
+  "promptLatex": "How many positive integers less than or equal to 100 are divisible by 2 or 3?",
+  "choices": [
+    "33",
+    "50",
+    "67",
+    "66",
+    "40"
+  ],
+  "answerLatex": "67",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Use inclusion-exclusion: count multiples of 2, count multiples of 3, then subtract multiples of 6 (which are counted twice).",
+    "There are 50 multiples of 2, 33 multiples of 3, and 16 multiples of 6.",
+    "50 + 33 - 16 = 67."
+  ],
+  "solutionLatex": "Use the inclusion-exclusion principle.\n\nNumber of multiples of 2 up to 100: \\lfloor 100/2 \\rfloor = 50.\nNumber of multiples of 3 up to 100: \\lfloor 100/3 \\rfloor = 33.\nNumber of multiples of both 2 and 3 (i.e., multiples of 6) up to 100: \\lfloor 100/6 \\rfloor = 16.\n\nBy inclusion-exclusion: 50 + 33 - 16 = 67.",
+  "techniqueSlugs": ["inclusion-exclusion-principle"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

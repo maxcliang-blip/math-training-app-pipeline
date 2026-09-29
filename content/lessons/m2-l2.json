@@ -1,0 +1,200 @@
+{
+  "id": "m2-l2",
+  "moduleId": "M2",
+  "order": 2,
+  "title": "Prime Factorization and Exponent Structure",
+  "topicSlug": "prime-factorization-exponents",
+  "tiers": [
+    "10",
+    "12"
+  ],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m2-l1"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Write the unique prime factorization of a positive integer, count and sum its divisors from that factorization, classify integers by the number of their divisors, and compute the exponent of a prime in a factorial or a product."
+    },
+    "prerequisites": {
+      "items": [
+        "m2-l1"
+      ],
+      "noteLatex": "Requires [m2-l1](/MAX/issues/MAX-14), since the exponent of a prime in a gcd is the minimum of two exponents and in an lcm is the maximum. If trial division up to a square root feels slow, review it here first, because every formula in this lesson assumes a correct factorization."
+    },
+    "concept": {
+      "conceptLatex": "Every positive integer has a unique prime factorization, and almost every counting question about divisors is answered by reading that factorization instead of enumerating divisors. Uniqueness is what makes the method reliable: if $n = p_1^{a_1} p_2^{a_2} \\cdots p_k^{a_k}$ with distinct primes, then the divisors of $n$ are exactly the numbers $p_1^{b_1} \\cdots p_k^{b_k}$ with each exponent $b_i$ chosen freely from $0, 1, \\ldots, a_i$. Nothing else divides $n$, and nothing constructed this way fails to divide $n$, because a prime dividing a divisor must be one of the $a_i$ primes of $n$.\n\nCounting the divisors is therefore a product, because the choices are independent. Writing $\\tau(n)$ for the count and $\\sigma(n)$ for the sum, the two formulas that follow from the same structure are\n\n$\\tau(n) = \\prod_{i=1}^{k} \\left(a_i + 1\\right) \\qquad \\sigma(n) = \\prod_{i=1}^{k} \\left(1 + p_i + p_i^2 + \\cdots + p_i^{a_i}\\right)$\n\nThe divisor count is a product of one more than each exponent, which is why $360 = 2^3 3^2 5$ has $4 \\cdot 3 \\cdot 2 = 24$ divisors and why the count is almost never a prime. The divisor sum is a product of geometric sums, one per prime, and it factors because a divisor of a product of coprime pieces is a product of divisors of the pieces. Both formulas are worth recognizing in reverse, because the exponent pattern $a_1+1, \\ldots, a_k+1$ says how many divisors there are, and a contest problem will often hand you the count and ask for the number.\n\nThe exponent pattern also classifies integers. A number has exactly two divisors precisely when it is prime, that is $n=p^1$. It has exactly three precisely when it is $p^2$. It has exactly four precisely when it is $p^3$ or $pq$ for distinct primes, and those two forms are the only ones. Generally the number of divisors determines the possible multisets of exponents, which turns a question like count the integers up to $1000$ with exactly eight divisors into a finite case analysis over the forms $p^7$, $p^3q$, and $pqr$ rather than a search.\n\nThe valuation of a prime in a number, written $v_p(n)$ for the exponent of $p$ in the factorization of $n$, is the unit that makes multiplicative statements additive. Divisibility becomes an inequality, and a product becomes a sum:\n\n$p \\mid m \\cdot n \\iff v_p(m) + v_p(n) \\ge 1$ and $v_p(m^k) = k \\, v_p(m)$\n\nThis is what makes factorials tractable. The exponent of $p$ in $n!$ is the number of multiples of $p$ up to $n$, plus the number of multiples of $p^2$, plus the number of multiples of $p^3$, and so on, because every multiple of $p^2$ contributes a second $p$ and is therefore counted twice, once for each power that divides it. For $10!$ the count is $5+2+1 = 8$ twos, $3+1 = 4$ threes, $2$ fives, and $1$ seven, which is exactly the factorization $2^8 3^4 5^2 7$ used to get $270$ divisors.\n\nTwo habits keep this module honest. First, state the exponent of each prime explicitly before multiplying anything out, because a single misplaced exponent changes every count derived from it. Second, treat $\\sigma$ and $\\tau$ as different functions: $\\tau$ multiplies the exponents after adding one, while $\\sigma$ multiplies geometric sums, and confusing them is the most common way to produce a plausible wrong answer here.",
+      "figures": [
+        {
+          "id": "m2-l2-fig-1",
+          "captionLatex": "The twenty-four divisors of $360 = 2^{3} \\cdot 3^{2} \\cdot 5$ are built by choosing independently an exponent of $2$, an exponent of $3$, and an exponent of $5$; the three row lengths multiply to $4 \\cdot 3 \\cdot 2$.",
+          "asymptoteSource": "// The divisors of 360 = 2^3 * 3^2 * 5, one independent choice per row.\n// Two-argument size() fixes the output box, so the declared 8/5 is exact.\nsize(320,200);\nfor (int i = 0; i < 4; ++i) dot((60+32*i,0),3pt);\nfor (int i = 0; i < 3; ++i) dot((60+32*i,60),3pt);\nfor (int i = 0; i < 2; ++i) dot((60+32*i,120),3pt);\nlabel(\"$2$\",(30,0),E);\nlabel(\"$3$\",(30,60),E);\nlabel(\"$5$\",(30,120),E);\nlabel(\"$4 \\\\cdot 3 \\\\cdot 2 = 24$\",(110,180),N);",
+          "asymptoteAlt": "Three horizontal rows of filled dots are stacked one above the other, and a label to the left of each row names one prime. The top row has four dots, the middle row has three dots, and the bottom row has two dots, each row starting at the same left position. Above the top row, centred, is a label reading four times three times two equals twenty-four.",
+          "asymptoteAspectRatio": 1.6
+        },
+        {
+          "id": "m2-l2-fig-2",
+          "captionLatex": "A product grid for the divisors of $12 = 2^{2} \\cdot 3$: reading across a row multiplies by powers of $3$ and reading down a column multiplies by powers of $2$, so all six cells together are exactly the six divisors.",
+          "asymptoteSource": "// Divisors of 12 = 2^2 * 3 in a product grid: a column per power of 3, a row per\n// power of 2. Two-argument size() fixes the box, so the declared 16/9 is exact.\nsize(320,180);\ndraw((60,30)--(220,30)--(220,150)--(60,150)--cycle);\ndraw((140,30)--(140,150));\ndraw((60,90)--(220,90));\nlabel(\"$1$\",(100,50));\nlabel(\"$3$\",(180,50));\nlabel(\"$2$\",(100,70));\nlabel(\"$6$\",(180,70));\nlabel(\"$4$\",(100,130));\nlabel(\"$12$\",(180,130));",
+          "asymptoteAlt": "A rectangle is divided by one vertical line into two columns and one horizontal line across the middle into three rows, making six cells. Each cell contains a number: the top row reads one and three, the middle row two and six, and the bottom row four and twelve.",
+          "asymptoteAspectRatio": 1.778
+        }
+      ],
+      "examples": [
+        {
+          "id": "m2-l2-wex-1",
+          "titleLatex": "Worked example: the divisor count of a number with a repeated prime",
+          "bodyLatex": "The exponent of $2$ in $144$ is larger than it first appears.\n\n$144 = 2^4 \\cdot 3^2$\n\nEach divisor picks an exponent of $2$ from $0$ to $4$, giving $5$ choices, and an exponent of $3$ from $0$ to $2$, giving $3$ choices.\n\n$\\tau(144) = 5 \\cdot 3 = 15$",
+          "answerLatex": "$15$"
+        },
+        {
+          "id": "m2-l2-wex-2",
+          "titleLatex": "Worked example: a divisor sum that reveals a perfect number",
+          "bodyLatex": "$28 = 2^2 \\cdot 7$, so the divisor sum is a product of two geometric sums.\n\n$\\sigma(28) = \\left(1+2+4\\right)\\left(1+7\\right) = 7 \\cdot 8 = 56$\n\nThe sum of the proper divisors is $56 - 28 = 28$, which equals the number itself, so $28$ is perfect. The same computation on $496$ gives $31 \\cdot 32 = 992 = 2 \\cdot 496$, the second perfect number.",
+          "answerLatex": "$\\sigma(28)=56$"
+        },
+        {
+          "id": "m2-l2-wex-3",
+          "titleLatex": "Worked example: exponent bookkeeping in a factorial",
+          "bodyLatex": "Count the multiples of each power of $2$ up to $10$.\n\nMultiples of $2$: $5$ of them. Multiples of $4$: $2$ of them. Multiples of $8$: $1$ of it.\n\n$v_2(10!) = 5 + 2 + 1 = 8$\n\nSo $10! = 2^8 3^4 5^2 7$ and the divisor count is $(8+1)(4+1)(2+1)(1+1) = 270$.",
+          "answerLatex": "$270$"
+        },
+        {
+          "id": "m2-l2-wex-4",
+          "titleLatex": "Worked example: inverting the divisor count",
+          "bodyLatex": "How many integers up to $100$ have exactly four divisors?\n\nExactly four divisors means the exponent pattern is $3$ or $1,1$, that is the number is $p^3$ or $pq$ with $p \\ne q$ prime.\n\nOf the form $p^3$: only $2^3 = 8$ and $3^3 = 27$, giving $2$ numbers.\n\nOf the form $pq$ with $pq \\le 100$: pairing each prime $p$ with every larger prime $q \\le 100/p$ gives $13 + 9 + 5 + 2 = 29$ unordered pairs, and $p = 2$ contributes $14$, for $30$ numbers.\n\nThe total is $2 + 30 = 32$.",
+          "answerLatex": "$32$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "divisor-count-formula",
+          "name": "Count divisors from the exponent pattern",
+          "summaryLatex": "For $n = \\prod p_i^{a_i}$ the number of positive divisors is $\\prod (a_i+1)$.",
+          "bodyLatex": "Each divisor independently chooses one exponent for each prime, and the choices multiply because they are independent. Written in reverse, the exponent pattern is recovered by factoring the divisor count into factors at least $2$, one factor per distinct prime."
+        },
+        {
+          "slug": "divisor-sum-formula",
+          "name": "Sum divisors from the exponent pattern",
+          "summaryLatex": "For $n = \\prod p_i^{a_i}$ the sum of the positive divisors is $\\prod \\left(1 + p_i + \\cdots + p_i^{a_i}\\right)$.",
+          "bodyLatex": "Each divisor is a product of one choice from each prime's geometric sum, so the total is a product of those sums by distributivity. This is the formula that recognises perfect numbers, since $n$ is perfect exactly when $\\sigma(n) = 2n$."
+        },
+        {
+          "slug": "perfect-power-forms",
+          "name": "Classify numbers by divisor count",
+          "summaryLatex": "A small divisor count forces a specific list of possible forms.",
+          "bodyLatex": "Two divisors is $p$; three is $p^2$; four is $p^3$ or $pq$; six is $p^5$ or $p^2q$; eight is $p^7$, $p^3q$, or $pqr$. Each list follows by writing the divisor count as a product of factors at least $2$ and reading one exponent from each factor."
+        },
+        {
+          "slug": "valuation-counting",
+          "name": "Count the exponent of a prime in a factorial",
+          "summaryLatex": "$v_p(n!)$ is the number of multiples of $p$ up to $n$, plus those of $p^2$, and so on.",
+          "bodyLatex": "Each multiple of $p$ contributes one $p$, each multiple of $p^2$ a second, and a multiple of $p^k$ is therefore counted exactly $k$ times, which is precisely its exponent. For $p=2$ and $n=10$ the count is $5+2+1=8$, so the exponent of $2$ in $10!$ is $8$."
+        },
+        {
+          "slug": "unitary-decomposition",
+          "name": "Split a number into its prime-power blocks",
+          "summaryLatex": "Write $n = p_1^{a_1} \\cdots p_k^{a_k}$ and treat each prime power as a single indivisible block.",
+          "bodyLatex": "Once the blocks are separated, every question about divisors becomes a question about subsets of blocks, and every question about the gcd or lcm of two numbers becomes a min or max on the block exponents. Problems that look unrelated often become the same problem in this language."
+        },
+        {
+          "slug": "valuation-additivity",
+          "name": "Convert products into sums of valuations",
+          "summaryLatex": "$v_p(mn) = v_p(m) + v_p(n)$ and $p \\mid m \\iff v_p(m) \\ge 1$.",
+          "bodyLatex": "This is the statement that the exponents in a product add, which follows from uniqueness of prime factorization. It turns divisibility questions into inequalities and makes cancellation visible: $p \\nmid m$ and $p \\nmid n$ does not imply $p \\nmid mn$, whereas $v_p(m) = 0$ and $v_p(n) = 0$ does."
+        },
+        {
+          "slug": "factorial-valuation",
+          "name": "Read a prime out of a factorial directly",
+          "summaryLatex": "The exponent of $p$ in $n!$ is $\\left\\lfloor n/p \\right\\rfloor + \\left\\lfloor n/p^2 \\right\\rfloor + \\cdots$.",
+          "bodyLatex": "Each term counts the multiples of one power of $p$, and the sum counts each integer once for every power of $p$ dividing it, which is its exponent of $p$. The sum is finite because $p^k$ eventually exceeds $n$."
+        },
+        {
+          "slug": "prime-power-bounds",
+          "name": "Bound a number between consecutive prime powers",
+          "summaryLatex": "The largest $k$ with $p^k \\le n$ is found by squaring $p$ until the result exceeds $n$.",
+          "bodyLatex": "For $n=1000$ and $p=2$ the squares are $2,4,16,256,65536$, so $2^9=512 \\le 1000$ while $2^{10}=1024 > 1000$ and the answer is $9$. This is the same computation as the valuation sum, read as a logarithm by hand."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "tau-versus-sigma",
+          "titleLatex": "Using the divisor count where the divisor sum is wanted",
+          "wrongLatex": "$\\sigma(28) = (2+1)(7+1) = 24$",
+          "whyLatex": "The two formulas look alike and are not interchangeable. The count uses $a_i+1$ for each exponent, so $\\tau(28) = 3 \\cdot 2 = 6$. The sum uses the geometric series $1+p+\\cdots+p^{a}$, so $\\sigma(28) = 7 \\cdot 8 = 56$. Reading the count formula as a sum gives an answer that is neither.",
+          "fixLatex": "Ask whether the problem wants how many or how much. Counting multiplies the exponents after adding one; summing multiplies the geometric series in the prime itself."
+        },
+        {
+          "slug": "missing-repeated-prime",
+          "titleLatex": "Treating a number as squarefree when it is not",
+          "wrongLatex": "$144 = 2 \\cdot 3$",
+          "whyLatex": "$144$ is not squarefree. The correct reading is $2^4 3^2$, and the exponent of $2$ is $4$ because $2^4 = 16$ and $16 \\cdot 9 = 144$. Assuming a prime appears at most once turns every divisor count and every divisor sum into a small answer that looks reasonable and is wrong.",
+          "fixLatex": "Finish the trial division completely and write the exponents down explicitly before computing anything. Repeated primes are the normal case, not the exception."
+        },
+        {
+          "slug": "forget-the-plus-one",
+          "titleLatex": "Multiplying the exponents instead of one more than each",
+          "wrongLatex": "$\\tau(360) = 3 \\cdot 2 \\cdot 1 = 6$",
+          "whyLatex": "Each prime's exponent can be $0$, so the number of choices is $a+1$, not $a$. For $360 = 2^3 3^2 5$ the choices are $4$, $3$, and $2$, giving $24$. Dropping the $+1$ systematically removes the divisor $1$ and every divisor that omits a prime, which is most of them.",
+          "fixLatex": "Remember that exponent $0$ is a legal choice and means the prime is absent. That single extra option per prime is the entire difference."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m2-l2-p1",
+        "m2-l2-p2",
+        "m2-l2-p3",
+        "m2-l2-p4",
+        "m2-l2-p5",
+        "m2-l2-p6",
+        "m2-l2-p7",
+        "m2-l2-p8",
+        "m2-l2-p9",
+        "m2-l2-p10",
+        "m2-l2-p11",
+        "m2-l2-p12",
+        "m2-l2-p13",
+        "m2-l2-p14",
+        "m2-l2-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m2-l2-p1",
+        "m2-l2-p2",
+        "m2-l2-p3",
+        "m2-l2-p4",
+        "m2-l2-p5",
+        "m2-l2-p6",
+        "m2-l2-p7",
+        "m2-l2-p8",
+        "m2-l2-p9",
+        "m2-l2-p10",
+        "m2-l2-p11",
+        "m2-l2-p12",
+        "m2-l2-p13",
+        "m2-l2-p14",
+        "m2-l2-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m2-l2-m1",
+        "m2-l2-m2",
+        "m2-l2-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "prime-factorization",
+    "counting-integers",
+    "exponents"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "m9-l4-p2",
+  "moduleId": "M9",
+  "lessonId": "m9-l4",
+  "tier": "12",
+  "difficulty": 1,
+  "tags": ["counterexample", "quantifiers"],
+  "promptLatex": "The claim 'for every positive integer n, the number n^2+n+41 is prime' is false. What value of n provides a counterexample?",
+  "choices": null,
+  "answerLatex": "40",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Test the formula for small values of n.",
+    "The formula gives primes for n=1 through n=39, but fails at n=40.",
+    "Calculate 40^2+40+41 and factor the result."
+  ],
+  "solutionLatex": "The formula n^2+n+41 produces prime values for n=1 through n=39, but fails at n=40:\n\n40^2+40+41 = 1600+40+41 = 1681 = 41^2\n\nSince 1681 = 41 × 41, it is composite, not prime. Thus n=40 is a counterexample to the claim.",
+  "techniqueSlugs": ["counterexample"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,178 @@
+{
+  "id": "m1-l3",
+  "moduleId": "M1",
+  "order": 3,
+  "title": "Functions, Domain, Range, and Composition",
+  "topicSlug": "functions-domain-range-composition",
+  "tiers": ["10", "12"],
+  "estimatedMinutes": 70,
+  "lockMode": "soft",
+  "prerequisites": ["m1-l1", "m1-l2"],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Read and evaluate a function in any of its notations, state the domain and the range of a function from its rule, and compute a composition and the domain of that composition."
+    },
+    "prerequisites": {
+      "items": ["m1-l1", "m1-l2"],
+      "noteLatex": "Both earlier lessons feed this one: [m1-l1](/M1/lessons/m1-l1) supplies the linear and absolute-value rules whose domains are restricted, and [m1-l2](/M1/lessons/m1-l2) supplies the exponent rules that produce roots and reciprocals."
+    },
+    "concept": {
+      "conceptLatex": "A function is a rule that assigns exactly one output to each input in its domain. The word that matters is exactly: sending $2$ to two different outputs would not be a function at all, while sending $0$ to nothing is perfectly acceptable, because the domain is what the rule is allowed to refuse. Everything else in this lesson is bookkeeping on that one idea.\n\nThe domain is the set of inputs the rule actually accepts, and the range is the set of outputs it produces. A polynomial accepts every real number, because no real input makes a sum of even powers undefined. A square root does not: the expression $\\sqrt{x-4}$ is real exactly when $x-4$ is at least $0$, and that is the whole of the domain question for a radical.\n\n$f(x) = \\sqrt{x-4} \\text{ has domain } [4, \\infty) \\qquad f(x) = \\frac{1}{x+5} \\text{ has domain } x \\ne -5$\n\nA fraction is defined wherever its denominator is nonzero, and a denominator can vanish for only finitely many values, so a rational function has a domain that is the whole line minus a set of points. That is why the domain of a rational expression is written in interval notation with a union: each excluded point splits the line.\n\n$h(x) = \\frac{x+1}{x(x-3)} \\text{ has domain } (-\\infty, 0) \\cup (0, 3) \\cup (3, \\infty)$\n\nThe two halves of the notation are matched by the square root and the fraction, and a single failing term spoils the whole expression. A sum is defined only where every one of its terms is defined, so the domain of a sum is the intersection of the domains, and a product or a quotient is defined on the intersection with the zeros of the denominator removed.\n\nComposition runs one rule after another, and the order is not optional. In $f \\left( g(x) \\right)$ the inner rule $g$ is applied to $x$ first and its output becomes the input to $f$, which is the opposite of the order the letters are written in. Reading the composition from the inside outward removes the ambiguity entirely.\n\n$f(x) = x^{2} \\text{ and } g(x) = 2x - 1 \\implies f \\left( g(3) \\right) = f(5) = 25$\n\nThe domain of a composition is the strongest of the two conditions, and both are needed. The inner rule must be defined at $x$, and its output must be an input the outer rule accepts, so the domain of $f \\circ g$ is the part of the domain of $g$ whose values land in the domain of $f$. Substituting and solving the resulting inequality is the standard route, and it fails more often at the second condition than at the first.\n\n$f(x) = \\sqrt{x+1} \\text{ and } g(x) = 2x - 7 \\implies f \\left( g(x) \\right) = \\sqrt{2x-6} \\text{ is real when } x \\ge 3$\n\nAn inverse reverses a function, which is only possible when no two inputs share an output. The algebraic recipe is mechanical: write $y$ in place of the function output, exchange the roles of $x$ and $y$, and solve the resulting equation for $y$. The check is that the two steps undo each other, and composition alone is not enough, since a function with a restricted domain can be one-to-one and still have no inverse on all reals.\n\n$y = 3x - 7 \\implies x = \\frac{y+7}{3} \\implies f^{-1}(t) = \\frac{t+7}{3}$\n\nThe range is found either by inverting, which is what the last display does, or by asking what the lowest or highest output can be. For $g(x) = x^{2} + 1$ the smallest value of $x^{2}$ is $0$ and it is attained, so the range is $[1, \\infty)$ and the minimum is $1$. A range is a set of outputs, so the same two facts decide both questions at once.",
+      "figures": [
+        {
+          "id": "m1-l3-fig-1",
+          "captionLatex": "The curve of $f(x)=\\sqrt{x-2}$ is drawn only where the rule is real: the solid part begins at the marked endpoint on the axis, while the dashed part to the left of it has no meaning at all and is the reason the domain is not the whole line.",
+          "asymptoteSource": "// The graph of f(x) = sqrt(x-2), drawn only where the rule is real.\n// Two-argument size fixes the output box at 320 x 240, so the declared\n// aspect ratio 4/3 is exact and the reserved space cannot drift.\nsize(320,240);\nimport graph;\nreal f(real x){return sqrt(x-2);}\npair A=(-0.5,-1.2), B=(6.6,4.4);\ndraw(A--B,Arrow);\nlabel(\"$x$\",B,SE);\ndraw((0,-1.2)--(0,4.4),Arrow);\nlabel(\"$y$\",(0,4.4),N);\ndraw(graph(f,0,2,200),gray+dashed);\ndraw(graph(f,2,6.4,200),blue);\ndot((2,0),2.5pt+2.5pt);\nlabel(\"$2$\",(2,-0.9),S);\ndot((0,0),2+2pt);\nlabel(\"$O$\",(0,0),SW);\nlabel(\"$y=\\\\sqrt{x-2}$\",(5.4,3.7),N);",
+          "asymptoteAlt": "A Cartesian plane with arrowheaded axes. A curve shaped like the top-right quarter of a parabola starts at a solid dot on the horizontal axis to the right of the origin and rises to the right. To the left of that dot a fainter dashed piece of the same curve is drawn and stops, showing the part of the curve that the rule does not define.",
+          "asymptoteAspectRatio": 1.333
+        }
+      ],
+      "examples": [
+        {
+          "id": "m1-l3-ex-1",
+          "titleLatex": "Worked example: a domain forced by two conditions at once",
+          "bodyLatex": "The denominator vanishes at $0$ and at $3$, and those two points split the line into three pieces.\n\n$h(x) = \\frac{x+1}{x(x-3)} \\text{ has domain } (-\\infty, 0) \\cup (0, 3) \\cup (3, \\infty)$\n\nThe numerator contributes no restriction at all, since it vanishes at $-1$ without causing any problem.",
+          "answerLatex": "$(-\\infty, 0) \\cup (0, 3) \\cup (3, \\infty)$"
+        },
+        {
+          "id": "m1-l3-ex-2",
+          "titleLatex": "Worked example: reading a composition from the inside",
+          "bodyLatex": "The inner rule runs first, and its output becomes the input to the outer rule.\n\n$g(3) = 2(3) - 1 = 5 \\quad \\text{and then} \\quad f(5) = 5^{2} = 25$\n\nReversing the two steps would give $g(25) = 49$, which is the value of the other composition and not of this one.",
+          "answerLatex": "$25$"
+        },
+        {
+          "id": "m1-l3-ex-3",
+          "titleLatex": "Worked example: the domain of a composition",
+          "bodyLatex": "Both conditions must hold, and here the outer rule is the one that restricts things.\n\n$g(x) = 2x - 7 \\quad \\text{and} \\quad g(x) \\ge -1 \\implies 2x - 7 \\ge -1 \\implies x \\ge 3$\n\nSo the domain of the composite is $[3, \\infty)$, and the boundary is included because the radical is defined at $0$.",
+          "answerLatex": "$[3, \\infty)$"
+        },
+        {
+          "id": "m1-l3-ex-4",
+          "titleLatex": "Worked example: an inverse built by exchanging variables",
+          "bodyLatex": "The two steps have to undo each other, and the check is that they do.\n\n$y = 3x - 7 \\implies y + 7 = 3x \\implies x = \\frac{y+7}{3}$\n\nSubstituting back gives $f \\left( \\frac{t+7}{3} \\right) = t$ for every $t$, which is the defining test for an inverse.",
+          "answerLatex": "$f^{-1}(t) = \\frac{t+7}{3}$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "function-notation-unpack",
+          "name": "Unpack the notation before computing",
+          "summaryLatex": "$f(x) = 3x + 2$ is a rule, and $f(4)$ means substitute $4$ for $x$ everywhere in that rule.",
+          "bodyLatex": "The single most common error is treating $f$ as a number. Reading a statement such as $f(x+2) = f(x) + 6$ as a recurrence rather than as an identity is the same discipline applied repeatedly."
+        },
+        {
+          "slug": "domain-by-inspection",
+          "name": "Find the domain from the terms that can fail",
+          "summaryLatex": "A polynomial is defined everywhere, a root forces its radicand nonnegative, and a denominator forces its denominator nonzero.",
+          "bodyLatex": "Only two constructs restrict a domain, and a term multiplied by zero is not one of them. Each failing value is then removed from the line, which is what turns a condition into a union of intervals."
+        },
+        {
+          "slug": "range-by-analysis",
+          "name": "Locate the extreme output",
+          "summaryLatex": "The range follows from the smallest or largest value the rule can produce, and from whether that value is attained.",
+          "bodyLatex": "For a square the minimum is attained and the range is a closed interval; for a reciprocal there is no extreme value and the range is a union of two open intervals. Deciding which case applies answers the question faster than any algebra."
+        },
+        {
+          "slug": "piecewise-case-split",
+          "name": "Split at the breakpoints",
+          "summaryLatex": "A piecewise rule applies different formulas on different intervals, and the endpoint decides which formula owns it.",
+          "bodyLatex": "A boundary value is where the careless answer appears, because it is the one input for which the choice between two formulas matters. Reading the inequalities rather than assuming a convention is what settles it."
+        },
+        {
+          "slug": "composite-evaluate-inward",
+          "name": "Evaluate a composition from the inside out",
+          "summaryLatex": "In $f \\left( g(x) \\right)$ the rule $g$ is applied to $x$ first, and its output is then fed to $f$.",
+          "bodyLatex": "Writing the two intermediate values on separate lines removes the temptation to work left to right, which is never the right order for a composition and computes the other composition instead."
+        },
+        {
+          "slug": "domain-of-a-composite",
+          "name": "Impose both conditions on a composite",
+          "summaryLatex": "The domain of $f \\circ g$ requires that $g$ is defined at $x$ and that $g(x)$ is an input the rule $f$ accepts.",
+          "bodyLatex": "Substituting the inner rule into the outer one and solving the resulting inequality is the reliable method, and the second condition is the one that usually shrinks the answer set after the first has been checked."
+        },
+        {
+          "slug": "inverse-by-swapping-coordinates",
+          "name": "Build an inverse by exchanging the variables",
+          "summaryLatex": "Write the output as $y$, exchange $x$ and $y$, then solve for $y$.",
+          "bodyLatex": "The test that the result really is an inverse is that composing the two functions in either order gives the identity, and an inverse can exist only where the original function is one-to-one."
+        },
+        {
+          "slug": "graph-transformations",
+          "name": "Read a transformation off the coefficients",
+          "summaryLatex": "In $y = a \\left( x - h \\right)^{2} + k$ the horizontal shift is $h$, the vertical shift is $k$, and the sign of $a$ says which way the parabola opens.",
+          "bodyLatex": "The shift is opposite in sign to what it looks like, which is the standard trap: $x - 2$ shifts right, not left. The vertex sits at $h$, which makes the coefficients the fastest route to the extreme value of the function."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "composed-in-written-order",
+          "titleLatex": "Evaluating a composition in the order the letters are written",
+          "wrongLatex": "f \\left( g(3) \\right) = g(f(3))",
+          "whyLatex": "The inner rule is the one applied to the input, so $g$ runs first here and gives $5$, after which $f$ turns $5$ into $25$. The reversed computation gives $g(f(3)) = g(9) = 17$, which is a different function altogether.",
+          "fixLatex": "Name the inner output before touching the outer rule, and write the two steps on separate lines so the order is visible rather than assumed."
+        },
+        {
+          "slug": "domain-from-the-whole-line",
+          "titleLatex": "Taking the domain of a rational expression to be the whole line",
+          "wrongLatex": "f(x) = \\frac{x+1}{x(x-3)} \\text{ is defined for all real } x",
+          "whyLatex": "The denominator is $0$ at $x = 0$ and at $x = 3$, and dividing by zero is never defined, so both points must be removed. The expression is a perfectly ordinary rational function away from those two points.",
+          "fixLatex": "Solve the denominator for zero first, before writing any interval, and then remove exactly those values from the line. A denominator that can vanish always splits the domain into a union."
+        },
+        {
+          "slug": "domain-of-composite-ignores-outer",
+          "titleLatex": "Forgetting that the outer rule restricts the composite",
+          "wrongLatex": "f(x) = \\sqrt{x+1}, \\quad g(x) = 2x-7, \\text{ so } f \\left( g(x) \\right) \\text{ is defined for all } x",
+          "whyLatex": "The inner rule $2x-7$ is a polynomial and is defined everywhere, but the composite reduces to $\\sqrt{2x-6}$, which is real only when $x \\ge 3$. The inner function sends most of the line to numbers the outer rule refuses.",
+          "fixLatex": "Impose both conditions as separate steps and keep whichever is stricter, rather than stopping once the inner function has been found to be defined."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m1-l3-p1",
+        "m1-l3-p2",
+        "m1-l3-p3",
+        "m1-l3-p4",
+        "m1-l3-p5",
+        "m1-l3-p6",
+        "m1-l3-p7",
+        "m1-l3-p8",
+        "m1-l3-p9",
+        "m1-l3-p10",
+        "m1-l3-p11",
+        "m1-l3-p12",
+        "m1-l3-p13",
+        "m1-l3-p14",
+        "m1-l3-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m1-l3-p1",
+        "m1-l3-p2",
+        "m1-l3-p3",
+        "m1-l3-p4",
+        "m1-l3-p5",
+        "m1-l3-p6",
+        "m1-l3-p7",
+        "m1-l3-p8",
+        "m1-l3-p9",
+        "m1-l3-p10",
+        "m1-l3-p11",
+        "m1-l3-p12",
+        "m1-l3-p13",
+        "m1-l3-p14",
+        "m1-l3-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": ["m1-l3-m1", "m1-l3-m2", "m1-l3-m3"],
+      "passThreshold": 2
+    }
+  },
+  "tags": ["domain", "quadratics", "radicals", "intervals", "linear-equations"]
+}

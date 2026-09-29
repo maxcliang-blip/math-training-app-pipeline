@@ -1,0 +1,613 @@
+[
+  {
+    "id": "m2-l4-p1",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "digit-problems",
+      "place-value"
+    ],
+    "promptLatex": "What is the sum of the digits of $2^{10}$?",
+    "choices": [
+      "7",
+      "13",
+      "4",
+      "10",
+      "1"
+    ],
+    "answerLatex": "7",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number itself is small enough to write down, but a shortcut exists.",
+      "The digit sum gives the residue modulo $9$ without dividing.",
+      "$2^{10} = 1024$, and $1 + 0 + 2 + 4 = 7$."
+    ],
+    "solutionLatex": "Expand the power and add the digits.\n\n$2^{10} = 1024$\n\n$1 + 0 + 2 + 4 = 7$\n\nThe check is the modulo-$9$ version: $1024 \\equiv 7 \\pmod{9}$, which agrees. Note that the digit sum is not the residue; $7$ is small enough here that they coincide, but a digit sum of $18$ would mean a remainder of $0$.",
+    "techniqueSlugs": [
+      "digit-sum-mod-nine",
+      "place-value-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p2",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "digit-problems",
+      "counting-integers"
+    ],
+    "promptLatex": "How many three-digit positive integers have a digit sum of $18$?",
+    "choices": [
+      "54",
+      "45",
+      "55",
+      "63",
+      "36"
+    ],
+    "answerLatex": "54",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Count solutions to a fixed digit sum, enforcing the digit bounds.",
+      "Set $e = d_2 - 1$ so the leading-digit condition becomes a lower bound of zero, giving $e + d_1 + d_0 = 17$ with $e \\le 8$ and $d_1, d_0 \\le 9$.",
+      "Stars and bars gives $171$ before bounds; subtracting the $45$, $36$, and $36$ solutions that violate each bound leaves $54$."
+    ],
+    "solutionLatex": "Count solutions to a fixed digit sum, enforcing the digit bounds.\n\nLet the digits be $d_2 d_1 d_0$ with $1 \\le d_2 \\le 9$ and $0 \\le d_1, d_0 \\le 9$. Putting $e = d_2 - 1$ turns this into $e + d_1 + d_0 = 17$ with $0 \\le e \\le 8$ and $0 \\le d_1, d_0 \\le 9$.\n\nIgnoring the upper bounds, stars and bars gives $\\binom{19}{2} = 171$ solutions. Now remove the ones that violate a bound. If $e \\ge 9$ then writing $e = 9 + f$ leaves a sum of $8$, giving $\\binom{10}{2} = 45$ solutions. If $d_1 \\ge 10$ then writing $d_1 = 10 + g$ leaves a sum of $7$, giving $\\binom{9}{2} = 36$ solutions, and the same $36$ for $d_0 \\ge 10$.\n\nNo two violations can occur at once, because two of them would force the total to be at least $9 + 10 = 19 > 17$.\n\n$171 - 45 - 36 - 36 = 54$\n\nEvery one of these numbers is divisible by $9$, since its digit sum is $18$, so that follows automatically rather than being an extra condition.",
+    "techniqueSlugs": [
+      "digit-sum-counting",
+      "digit-sum-mod-nine"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p3",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "digit-problems",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers at most $1000$ have a digit sum of $9$?",
+    "choices": [
+      "55",
+      "45",
+      "54",
+      "46",
+      "64"
+    ],
+    "answerLatex": "55",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A single digit sum over a bounded range is a small counting problem.",
+      "Allowing leading zeros turns the numbers into triples of digits whose sum is fixed.",
+      "The count is the number of nonnegative solutions of $d_0+d_1+d_2 = 9$, which is $\\binom{11}{2}$."
+    ],
+    "solutionLatex": "Pad to three digits and count solutions.\n\nEvery integer from $0$ to $999$ is a triple of digits, and the digit sum of $9$ is invariant under adding leading zeros, so this counts the integers from $0$ to $999$ with that sum. The number $1000$ has digit sum $1$ and does not qualify.\n\nThe count is the number of nonnegative integer solutions of $d_0+d_1+d_2 = 9$. No digit can reach $10$ because the total is $9$, so no bound binds, and stars and bars gives\n\n$\\binom{9+2}{2} = \\binom{11}{2} = 55$\n\nNone of these numbers is $0$, since the digit sum there is $0$.",
+    "techniqueSlugs": [
+      "digit-sum-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p4",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "digit-problems",
+      "counting-integers"
+    ],
+    "promptLatex": "How many four-digit palindromes are there, that is, four-digit numbers that read the same forwards and backwards?",
+    "choices": [
+      "90",
+      "100",
+      "99",
+      "81",
+      "45"
+    ],
+    "answerLatex": "90",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A palindrome is determined by its first half, with the first digit not zero.",
+      "Count the choices for the leading half of the digits.",
+      "There are $9$ choices for the leading digit and $10$ for the next, giving $90$."
+    ],
+    "solutionLatex": "A four-digit palindrome is determined by its first two digits.\n\nThe form is $abba$: $a$ ranges over $1$ through $9$ and $b$ ranges over $0$ through $9$, and the last two digits are forced.\n\n$9 \\cdot 10 = 90$\n\nThe leading digit cannot be $0$ because the number must have four digits, and the second digit is unconstrained, which is why the count is $90$ rather than a square.",
+    "techniqueSlugs": [
+      "place-value-expansion",
+      "digit-sum-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p5",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "exponents",
+      "modular-arithmetic",
+      "periodicity"
+    ],
+    "promptLatex": "What is the remainder when $7^{20}$ is divided by $100$?",
+    "choices": [
+      "1",
+      "7",
+      "49",
+      "21",
+      "43"
+    ],
+    "answerLatex": "1",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Only the last two digits matter, and those follow a short cycle.",
+      "Multiplying the last two digits by the base and keeping the last two digits produces a cycle.",
+      "$7^{4} = 2401$ leaves remainder $1$ modulo $100$, and $20$ is a multiple of $4$."
+    ],
+    "solutionLatex": "Find the cycle of the last two digits.\n\n$7^{1} \\equiv 7$, $7^{2} = 49 \\equiv 49$, $7^{3} = 343 \\equiv 43$, $7^{4} = 2401 \\equiv 1 \\pmod{100}$.\n\nThe remainder $1$ at the fourth power means the cycle has length $4$, so $7^{4k} \\equiv 1 \\pmod{100}$ for every $k$.\n\nSince $20 = 4 \\cdot 5$, the remainder is $1$. The repetition is not a coincidence: the residue of $7^{n+1}$ depends only on the residue of $7^{n}$, and $100$ residues force a cycle.",
+    "techniqueSlugs": [
+      "periodicity-of-last-digits",
+      "trailing-digits"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p6",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "digit-problems",
+      "place-value"
+    ],
+    "promptLatex": "How many positive integers less than $1000$ have a digit sum of $1$?",
+    "choices": [
+      "3",
+      "9",
+      "2",
+      "10",
+      "1"
+    ],
+    "answerLatex": "3",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A digit sum of one is the most restrictive case there is.",
+      "Exactly one digit is $1$ and every other digit is $0$, so only the position of the $1$ matters.",
+      "The candidates are $1$, $10$, and $100$."
+    ],
+    "solutionLatex": "A digit sum of $1$ means a single $1$ and all other digits zero.\n\nWith at most three digits, the $1$ can occupy the units, tens, or hundreds place.\n\nThe numbers are $1$, $10$, and $100$, giving $3$ in total.\n\nThere is no fourth possibility, since a $1$ in the thousands place would make the number at least $1000$, which is outside the range.",
+    "techniqueSlugs": [
+      "place-value-expansion",
+      "digit-sum-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p7",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "exponents",
+      "modular-arithmetic",
+      "periodicity"
+    ],
+    "promptLatex": "What is the units digit of $3^{100}$?",
+    "choices": [
+      "1",
+      "3",
+      "7",
+      "9",
+      "0"
+    ],
+    "answerLatex": "1",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The units digit alone follows a cycle, and the exponent is large.",
+      "Multiplying by $3$ moves through four last digits and then returns to the start.",
+      "$3, 9, 7, 1$ repeats with period $4$, and $100$ is a multiple of $4$."
+    ],
+    "solutionLatex": "Build the cycle of units digits, then reduce the exponent.\n\n$3^{1}$ ends in $3$, $3^{2}$ in $9$, $3^{3}$ in $7$, and $3^{4}$ in $1$. Multiplying $1$ by $3$ gives $3$ again, so the cycle is $3, 9, 7, 1$ with period $4$.\n\n$100 \\equiv 0 \\pmod{4}$, and the entry at position $0$ of the cycle indexed from zero is $1$.\n\nSo the units digit is $1$. The cycle must eventually repeat because there are only ten possible last digits.",
+    "techniqueSlugs": [
+      "periodicity-of-last-digits",
+      "trailing-digits"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p8",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "exponents",
+      "place-value"
+    ],
+    "promptLatex": "What is the units digit of the sum of $2^{10}$ and $5^{3}$?",
+    "choices": [
+      "9",
+      "4",
+      "5",
+      "1",
+      "14"
+    ],
+    "answerLatex": "9",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Only the units digits of the two terms affect the units digit of their sum.",
+      "Reduce each term to its units digit, then add and reduce again.",
+      "$2^{10}$ ends in $4$ and $5^{3}$ ends in $5$, and $4 + 5 = 9$."
+    ],
+    "solutionLatex": "Reduce each term modulo $10$ and add.\n\n$2^{10} = 1024 \\equiv 4 \\pmod{10}$ and $5^{3} = 125 \\equiv 5 \\pmod{10}$.\n\n$2^{10} + 5^{3} = 1149$, whose units digit is $9$, matching $(4+5) \\bmod 10 = 9$.\n\nThe two units digits sum to less than $10$, so no carrying occurs and the units digit of the sum is simply their sum.",
+    "techniqueSlugs": [
+      "trailing-digits",
+      "place-value-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p9",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "place-value",
+      "digit-problems"
+    ],
+    "promptLatex": "In the number $46253$, what is the place value of the digit $6$?",
+    "choices": [
+      "600",
+      "60",
+      "6",
+      "6000",
+      "60,000"
+    ],
+    "answerLatex": "600",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The place value is a digit times a power of ten, not the digit itself.",
+      "Count the position of the digit from the right, starting at zero.",
+      "The $6$ is the third digit from the right, so it sits in the hundreds place."
+    ],
+    "solutionLatex": "The $6$ is the third digit from the right end of $46253$.\n\nThe units digit is $3$, the tens digit is $5$, and the hundreds digit is $6$.\n\nSo the $6$ contributes $6 \\cdot 100 = 600$ to the value of the number, and the expansion is $4 \\cdot 10000 + 6 \\cdot 100 + 2 \\cdot 1000 + 5 \\cdot 10 + 3$, which sums to $46253$.",
+    "techniqueSlugs": [
+      "place-value-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p10",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "divisibility",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers at most $1000$ are divisible by both $7$ and $49$?",
+    "choices": [
+      "20",
+      "142",
+      "14",
+      "7",
+      "49"
+    ],
+    "answerLatex": "20",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "One of the two conditions already implies the other.",
+      "A multiple of $49$ is automatically a multiple of $7$, so only one count is needed.",
+      "$\\left\\lfloor 1000/49 \\right\\rfloor = 20$."
+    ],
+    "solutionLatex": "Recognize that one condition subsumes the other.\n\nEvery multiple of $49$ is a multiple of $7$, since $49 = 7 \\cdot 7$. So the numbers divisible by both are exactly the multiples of $49$.\n\n$1000 = 20 \\cdot 49 + 20$, and the largest such multiple is $980$.\n\nSo there are $20$. Counting the multiples of $7$ and subtracting those not divisible by $49$ would give the same number with more work.",
+    "techniqueSlugs": [
+      "trailing-digits"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p11",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "place-value",
+      "exponents"
+    ],
+    "promptLatex": "The numeral $22222$ is written in base $3$. What is its value in base ten?",
+    "choices": [
+      "242",
+      "121",
+      "364",
+      "485",
+      "80"
+    ],
+    "answerLatex": "242",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Each digit is weighted by a successive power of the base.",
+      "Expand $2 \\cdot 3^{4} + 2 \\cdot 3^{3} + 2 \\cdot 3^{2} + 2 \\cdot 3 + 2$.",
+      "The powers are $81, 27, 9, 3, 1$, and their sum is $121$, doubled to $242$."
+    ],
+    "solutionLatex": "Expand the numeral in powers of the base.\n\n$22222_{3} = 2 \\cdot 3^{4} + 2 \\cdot 3^{3} + 2 \\cdot 3^{2} + 2 \\cdot 3 + 2$\n\nThe powers of $3$ are $81$, $27$, $9$, $3$, and $1$, which sum to $121$, and multiplying by $2$ gives $242$.\n\nSo $22222_{3} = 242_{10}$. The place-value rule is unchanged; only the base is different.",
+    "techniqueSlugs": [
+      "place-value-expansion",
+      "base-conversion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p12",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "digit-problems",
+      "counting-integers"
+    ],
+    "promptLatex": "How many integers from $1$ to $10000$ have a digit sum of $9$ and are even?",
+    "choices": [
+      "125",
+      "220",
+      "110",
+      "55",
+      "99"
+    ],
+    "answerLatex": "125",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Parity is decided entirely by the units digit, so split on it.",
+      "Fix the units digit to each of $0, 2, 4, 6, 8$ and count the remaining digits.",
+      "The counts are $55$, $36$, $21$, $10$, and $3$, summing to $125$."
+    ],
+    "solutionLatex": "Split on the units digit, which alone determines parity.\n\nPad to four digits $d_3 d_2 d_1 d_0$ and require $d_3 + d_2 + d_1 + d_0 = 9$ with $d_0$ even.\n\nFor $d_0 = 0$ the remaining three digits sum to $9$, giving $\\binom{11}{2} = 55$. For $d_0 = 2$ they sum to $7$, giving $\\binom{9}{2} = 36$. For $d_0 = 4$ they sum to $5$, giving $\\binom{7}{2} = 21$. For $d_0 = 6$ they sum to $3$, giving $\\binom{5}{2} = 10$. For $d_0 = 8$ they sum to $1$, giving $\\binom{3}{2} = 3$.\n\nNo digit can reach $10$ in any case, so no bound binds, and the total is $55 + 36 + 21 + 10 + 3 = 125$.\n\nThe number $10000$ has digit sum $1$ and does not contribute.",
+    "techniqueSlugs": [
+      "parity-restriction-on-digits",
+      "digit-sum-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p13",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "exponents",
+      "place-value"
+    ],
+    "promptLatex": "How many digits does $2^{30}$ have?",
+    "choices": [
+      "10",
+      "9",
+      "11",
+      "30",
+      "8"
+    ],
+    "answerLatex": "10",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The digit count is one more than the exponent of the leading power of ten.",
+      "Compare $2^{30}$ with the powers of ten bracketing it.",
+      "$2^{10} = 1024 > 10^{3}$, so $2^{30} > 10^{9}$ and $2^{30} < 10^{10}$, giving ten digits."
+    ],
+    "solutionLatex": "Bracket the value between consecutive powers of ten.\n\n$2^{10} = 1024$, so $2^{30} = (2^{10})^{3} = 1024^{3}$.\n\nSince $10^{3} < 1024 < 10^{4}$, cubing gives $10^{9} < 2^{30} < 10^{10}$. A number strictly between $10^{9}$ and $10^{10}$ has ten digits.\n\nIndeed $2^{30} = 1073741824$, which has ten digits, confirming the bound. The same bracketing works for any power of $2$ without expanding it.",
+    "techniqueSlugs": [
+      "place-value-expansion",
+      "trailing-digits"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p14",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "digit-problems",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers less than $1000$ have all their digits distinct?",
+    "choices": [
+      "738",
+      "729",
+      "648",
+      "900",
+      "700"
+    ],
+    "answerLatex": "738",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Count by number of digits, since the cases have different shapes.",
+      "One-digit numbers give $9$; two-digit give $9 \\cdot 9$; three-digit give $9 \\cdot 9 \\cdot 8$.",
+      "The total is $9 + 81 + 648 = 738$."
+    ],
+    "solutionLatex": "Count separately for one, two, and three digits.\n\nOne digit: all $9$ of them work.\n\nTwo digits: the leading digit has $9$ choices and the second must differ from it, giving $9 \\cdot 9 = 81$.\n\nThree digits: the leading digit has $9$ choices, the second must avoid it so has $9$ choices, and the third must avoid both so has $8$ choices, giving $9 \\cdot 9 \\cdot 8 = 648$.\n\n$9 + 81 + 648 = 738$\n\nThe three-digit count dominates, and the factor of $8$ rather than $9$ in the last position is exactly the distinctness condition.",
+    "techniqueSlugs": [
+      "digit-sum-counting",
+      "place-value-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-p15",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "modular-arithmetic",
+      "exponents"
+    ],
+    "promptLatex": "What is the remainder when $10^{6}$ is divided by $7$?",
+    "choices": [
+      "1",
+      "3",
+      "4",
+      "6",
+      "0"
+    ],
+    "answerLatex": "1",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The base reduces immediately, and small powers of a small residue are easy.",
+      "Reduce $10$ modulo $7$ to $3$, then compute $3^{6}$ modulo $7$.",
+      "$3^{6} = 729 = 104 \\cdot 7 + 1$, so the remainder is $1$."
+    ],
+    "solutionLatex": "Reduce the base before computing the power.\n\n$10 \\equiv 3 \\pmod{7}$, so $10^{6} \\equiv 3^{6} \\pmod{7}$.\n\n$3^{2} \\equiv 2$, $3^{3} \\equiv 6 \\equiv -1$, and therefore $3^{6} \\equiv (-1)^{2} \\equiv 1 \\pmod{7}$.\n\nDirectly, $3^{6} = 729 = 104 \\cdot 7 + 1$. So the remainder is $1$. This is Fermat's little theorem in a special case: since $7$ is prime and does not divide $3$, $3^{6} \\equiv 1 \\pmod{7}$.",
+    "techniqueSlugs": [
+      "place-value-expansion",
+      "trailing-digits"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-m1",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "digit-problems",
+      "divisibility"
+    ],
+    "promptLatex": "How many four-digit palindromes are divisible by $11$?",
+    "choices": [
+      "90",
+      "45",
+      "0",
+      "18",
+      "9"
+    ],
+    "answerLatex": "90",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Every four-digit palindrome shares a structural property that the divisibility test for eleven detects.",
+      "Apply the alternating digit sum test to the form $abba$.",
+      "The alternating sum is $a - b + b - a = 0$, so all of them qualify."
+    ],
+    "solutionLatex": "Use the alternating digit sum for divisibility by $11$.\n\nA four-digit palindrome has the form $abba$, and its alternating digit sum is $a - b + b - a = 0$.\n\nSince $0$ is a multiple of $11$, every four-digit palindrome is divisible by $11$, so the count equals the total number of four-digit palindromes.\n\nThere are $9$ choices for $a$ and $10$ for $b$, so $90$ such numbers, and all $90$ qualify. The same argument gives $1001a + 110b = 11(91a+10b)$ as a direct check.",
+    "techniqueSlugs": [
+      "alternating-sum-eleven",
+      "place-value-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-m2",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "digit-problems",
+      "exponents"
+    ],
+    "promptLatex": "What is the sum of the digits of $2^{50}$?",
+    "choices": [
+      "76",
+      "13",
+      "4",
+      "76 + 9",
+      "88"
+    ],
+    "answerLatex": "76",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number is far too large to expand by hand, but it is computable by squaring.",
+      "Build $2^{50}$ by repeated squaring, reducing nothing, and then add the digits.",
+      "$2^{50} = 1125899906842624$, and the digits sum to $76$."
+    ],
+    "solutionLatex": "Compute the power by repeated squaring, then add the digits.\n\n$2^{10} = 1024$, so $2^{20} = 1024^{2} = 1048576$ and $2^{50} = 2^{40} \\cdot 2^{10} = (2^{20})^{2} \\cdot 1024$.\n\nCarrying this out gives $2^{50} = 1125899906842624$, whose digits sum to $1+1+2+5+8+9+9+9+0+6+8+4+2+6+2+4 = 76$.\n\nThe modulo-$9$ check gives $76 \\equiv 4 \\pmod{9}$, and indeed $2^{50} \\equiv 4$ since the last digit is $4$ and $10 \\equiv 1 \\pmod{9}$ reduces the whole number to its digit sum.",
+    "techniqueSlugs": [
+      "place-value-expansion",
+      "digit-sum-mod-nine"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m2-l4-m3",
+    "moduleId": "M2",
+    "lessonId": "m2-l4",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "digit-problems",
+      "counting-integers"
+    ],
+    "promptLatex": "How many positive integers less than $1000$ have a digit sum of $13$?",
+    "choices": [
+      "75",
+      "55",
+      "66",
+      "84",
+      "105"
+    ],
+    "answerLatex": "75",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The digit sum is large enough that the upper bound on each digit actually binds.",
+      "Count solutions of the fixed sum and remove those where a digit exceeds nine by inclusion-exclusion.",
+      "There are $\\binom{15}{2} = 105$ unrestricted solutions and $3 \\cdot \\binom{5}{2} = 30$ bad ones."
+    ],
+    "solutionLatex": "Apply stars and bars, then correct for the digit bound.\n\nThe number of nonnegative integer solutions of $d_0+d_1+d_2 = 13$ is $\\binom{15}{2} = 105$.\n\nNow remove the solutions in which some digit is at least $10$. For a fixed digit, subtracting $10$ leaves a sum of $3$, with $\\binom{5}{2} = 10$ solutions, and there are three choices of digit, so $30$ are removed. Two digits cannot both be at least $10$ because the total is only $13$, so nothing is subtracted twice.\n\n$105 - 30 = 75$\n\nThe digit $0$ is not counted, since its sum is $0$.",
+    "techniqueSlugs": [
+      "digit-sum-counting",
+      "place-value-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

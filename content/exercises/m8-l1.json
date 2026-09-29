@@ -1,0 +1,564 @@
+[
+  {
+    "id": "m8-l1-p1",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "radians",
+      "degree-radian-conversion",
+      "special-angles"
+    ],
+    "promptLatex": "Express an angle of $150^\\circ$ in radians.",
+    "choices": [
+      "\\frac{5\\pi}{6}",
+      "\\frac{5\\pi}{3}",
+      "\\frac{3\\pi}{4}",
+      "\\frac{2\\pi}{3}",
+      "\\frac{7\\pi}{6}"
+    ],
+    "answerLatex": "\\frac{5\\pi}{6}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Think of a full turn as one whole circle, and measure the angle as a fraction of that turn.",
+      "A straight angle is $\\frac{\\pi}{2}$ radians, and a full turn is $2\\pi$, so a degree measure converts by the factor $\\frac{\\pi}{180}$.",
+      "$150^\\circ$ is five sixths of a full turn, so the radian measure is $\\frac{5}{6} \\cdot 2\\pi$."
+    ],
+    "solutionLatex": "A full turn is $2\\pi$ radians and $360$ degrees, so the angle is the fraction $\\frac{150}{360} = \\frac{5}{6}$ of a turn.\n\n$\\theta_{rad} = \\frac{5}{6} \\cdot 2\\pi = \\frac{5\\pi}{6}$\n\nCheck: $\\frac{5\\pi}{6} \\cdot \\frac{180}{\\pi} = 150$ degrees.",
+    "techniqueSlugs": [
+      "degree-radian-conversion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p2",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "unit-circle",
+      "exact-trig-values",
+      "unit-circle"
+    ],
+    "promptLatex": "An angle of $\\frac{5\\pi}{3}$ is drawn in standard position, and its terminal side meets the unit circle at a point $P$. What is the $x$-coordinate of $P$?",
+    "choices": null,
+    "answerLatex": "\\frac{1}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The $x$-coordinate of the point where a terminal side meets the unit circle is one of the two functions of the angle, and which one is decided by which coordinate you are reading.",
+      "The $x$-coordinate of the point is the cosine of the angle, and $\\frac{5\\pi}{3}$ is $300^\\circ$.",
+      "The reference angle of $\\frac{5\\pi}{3}$ is $\\frac{\\pi}{3}$, where the cosine is $\\frac{1}{2}$, and the fourth quadrant is the one where the cosine keeps its sign."
+    ],
+    "solutionLatex": "The angle $\\frac{5\\pi}{3}$ is $300^\\circ$, which lies in the fourth quadrant.\n\nThe $x$-coordinate of the intersection point is the cosine of the angle, so the value wanted is $\\cos\\left(\\frac{5\\pi}{3}\\right)$. The reference angle of $\\frac{5\\pi}{3}$ is $2\\pi - \\frac{5\\pi}{3} = \\frac{\\pi}{3}$, a $60^\\circ$ angle, and the cosine there is $\\frac{1}{2}$.\n\n$\\cos\\left(\\frac{5\\pi}{3}\\right) = \\cos\\left(\\frac{\\pi}{3}\\right) = \\frac{1}{2}$, because the cosine is positive throughout the fourth quadrant.",
+    "techniqueSlugs": [
+      "unit-circle-coordinates",
+      "reference-angle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p3",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "unit-circle",
+      "radians",
+      "quadrant-sign-analysis"
+    ],
+    "promptLatex": "In which quadrant does the terminal side of an angle of $\\frac{7\\pi}{4}$ lie?",
+    "choices": [
+      "first",
+      "second",
+      "third",
+      "fourth",
+      "on an axis"
+    ],
+    "answerLatex": "fourth",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A full turn is $2\\pi$, so compare the angle with the multiples of $\\frac{\\pi}{2}$ that mark out the four quadrants.",
+      "$\\frac{\\pi}{2}$, $\\pi$, and $\\frac{3\\pi}{2}$ are the three interior boundaries of the quadrants, read counterclockwise from the positive $x$-axis.",
+      "$\\frac{7\\pi}{4}$ is greater than $\\frac{3\\pi}{2} = \\frac{6\\pi}{4}$ and less than $2\\pi = \\frac{8\\pi}{4}$, so it lies past the last boundary and before the full turn."
+    ],
+    "solutionLatex": "The quadrant boundaries in standard position are at $\\frac{\\pi}{2}$, $\\pi$, and $\\frac{3\\pi}{2}$ on the way to $2\\pi$.\n\n$\\frac{3\\pi}{2} = \\frac{6\\pi}{4} < \\frac{7\\pi}{4} < \\frac{8\\pi}{4} = 2\\pi$\n\nSo the angle has passed the negative $y$-axis and has not yet completed its turn, which puts its terminal side below the positive $x$-axis: the fourth quadrant.",
+    "techniqueSlugs": [
+      "unit-circle-coordinates"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p4",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "circles",
+      "radians",
+      "radius-times-angle"
+    ],
+    "promptLatex": "An arc of a circle of radius $9$ subtends a central angle of $\\frac{2\\pi}{3}$. What is the length of the arc?",
+    "choices": [
+      "6\\pi",
+      "3\\pi",
+      "12\\pi",
+      "18\\pi",
+      "\\frac{2\\pi}{3}"
+    ],
+    "answerLatex": "6\\pi",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "An arc is a fixed fraction of the circumference, and the central angle measures that same fraction of a full turn.",
+      "The length of an arc cut off by a central angle in radians is the radius of the circle multiplied by that angle.",
+      "$\\frac{2\\pi}{3}$ is one third of a turn, so the arc is one third of $2\\pi \\cdot 9$."
+    ],
+    "solutionLatex": "The angle $\\frac{2\\pi}{3}$ is one third of the full angle $2\\pi$, so the arc is one third of the circumference.\n\n$s = r\\theta = 9 \\cdot \\frac{2\\pi}{3} = 6\\pi$\n\nCheck against the circumference: $\\frac{1}{3} \\cdot 2\\pi \\cdot 9 = 6\\pi$, the same value, and it is less than the full circumference $18\\pi$ as an arc must be.",
+    "techniqueSlugs": [
+      "radius-times-angle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p5",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "circles",
+      "radians",
+      "sector-area-formula"
+    ],
+    "promptLatex": "A sector of a circle of radius $5$ is cut off by a central angle of $90^\\circ$. What is the area of the sector, exactly?",
+    "choices": null,
+    "answerLatex": "\\frac{25\\pi}{4}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A sector is a fraction of the whole disk, and the size of that fraction is decided by how much of a turn the central angle takes.",
+      "The area of a sector with central angle in radians is one half the radius squared multiplied by that angle.",
+      "$90^\\circ$ is a quarter turn, so the sector is a quarter of the disk of radius $5$, whose area is $\\pi \\cdot 25$."
+    ],
+    "solutionLatex": "A $90^\\circ$ angle is a quarter turn, so the sector is $\\frac{1}{4}$ of the disk.\n\n$\\frac{1}{4} \\cdot \\pi \\cdot 5^2 = \\frac{25\\pi}{4}$\n\nEquivalently, $\\frac{1}{2} r^2\\theta = \\frac{1}{2} \\cdot 25 \\cdot \\frac{\\pi}{2} = \\frac{25\\pi}{4}$, which matches.",
+    "techniqueSlugs": [
+      "sector-area-formula",
+      "degree-radian-conversion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p6",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "circles",
+      "radians",
+      "sector-area-formula"
+    ],
+    "promptLatex": "A sector of a circle of radius $8$ is cut off by a central angle of $\\frac{5\\pi}{3}$. What is the area of the sector, exactly?",
+    "choices": null,
+    "answerLatex": "\\frac{160\\pi}{3}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The area of a sector scales with the central angle, so the whole angle $2\\pi$ corresponds to the whole disk.",
+      "The area of a sector with central angle in radians is one half the radius squared multiplied by that angle.",
+      "Substituting the radius and the angle into that formula gives $\\frac{1}{2} \\cdot 64 \\cdot \\frac{5\\pi}{3}$, and $64$ divides neatly by $2$."
+    ],
+    "solutionLatex": "The sector area formula for an angle in radians is $A = \\frac{1}{2} r^2 \\theta$.\n\n$A = \\frac{1}{2} \\cdot 8^2 \\cdot \\frac{5\\pi}{3} = \\frac{1}{2} \\cdot 64 \\cdot \\frac{5\\pi}{3} = \\frac{160\\pi}{3}$\n\nSanity check: the angle is $\\frac{5}{6}$ of a turn, so the area is $\\frac{5}{6}$ of $\\pi \\cdot 64 = 64\\pi$, namely $\\frac{320\\pi}{6} = \\frac{160\\pi}{3}$, and it is less than the whole disk as a sector must be.",
+    "techniqueSlugs": [
+      "sector-area-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p7",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "special-angles",
+      "reference-angle",
+      "angles"
+    ],
+    "promptLatex": "Find the reference angle of an angle of $250^\\circ$, in degrees.",
+    "choices": [
+      "70",
+      "20",
+      "30",
+      "50",
+      "110"
+    ],
+    "answerLatex": "70",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The reference angle is the acute angle between the terminal side and the nearest point of an axis, so find the closest multiple of $90$ first.",
+      "$250^\\circ$ is in the third quadrant, whose near axis is the $180^\\circ$ ray, and the reference angle is measured from there.",
+      "The difference $250 - 180 = 70$ is already acute, so it is the reference angle."
+    ],
+    "solutionLatex": "$250^\\circ$ lies between $180^\\circ$ and $270^\\circ$, so its terminal side is closest to the $180^\\circ$ ray.\n\nThe reference angle is the acute angle between them, namely $250^\\circ - 180^\\circ = 70^\\circ$.\n\nSince $70^\\circ$ is acute, no further reduction is needed, and the terminal side lies in the third quadrant.",
+    "techniqueSlugs": [
+      "reference-angle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p8",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "exact-trig-values",
+      "pythagorean-recovery",
+      "trig-conversion"
+    ],
+    "promptLatex": "Suppose $\\cos\\theta = \\frac{3}{5}$ and $\\theta$ lies in the fourth quadrant. Find $\\sin\\theta$.",
+    "choices": null,
+    "answerLatex": "-\\frac{4}{5}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "One function value plus a quadrant is enough information about a single angle, because the identity linking the two functions turns a known square into an unknown square.",
+      "Every angle on the unit circle satisfies $\\sin^2\\theta + \\cos^2\\theta = 1$, so the square of the sine is one minus the square of the cosine.",
+      "$\\frac{9}{25}$ leaves $\\frac{16}{25}$, whose root is $\\frac{4}{5}$, and the fourth quadrant is where the sine is negative."
+    ],
+    "solutionLatex": "From $\\sin^2\\theta + \\cos^2\\theta = 1$ and $\\cos\\theta = \\frac{3}{5}$:\n\n$\\sin^2\\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$, so $|\\sin\\theta| = \\frac{4}{5}$.\n\nThe fourth quadrant is below the positive $x$-axis, and the sine is the vertical coordinate, so $\\sin\\theta$ is negative there. Therefore $\\sin\\theta = -\\frac{4}{5}$.\n\nCheck: $\\frac{9}{25} + \\frac{16}{25} = 1$.",
+    "techniqueSlugs": [
+      "pythagorean-recovery",
+      "quadrant-sign-analysis"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p9",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "exact-trig-values",
+      "pythagorean-recovery",
+      "trig-conversion"
+    ],
+    "promptLatex": "Suppose $\\sin\\theta = \\frac{5}{13}$ and $\\theta$ lies in the second quadrant. Find $\\cos\\theta$.",
+    "choices": null,
+    "answerLatex": "-\\frac{12}{13}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A known function value and a quadrant together fix the other function value, and the identity on the unit circle is what connects them.",
+      "Substituting the known sine into $\\sin^2\\theta + \\cos^2\\theta = 1$ leaves a square for the cosine, and the quadrant supplies its sign.",
+      "$\\frac{25}{169}$ leaves $\\frac{144}{169}$, whose root is $\\frac{12}{13}$, and the second quadrant is where the cosine is negative."
+    ],
+    "solutionLatex": "The identity $\\sin^2\\theta + \\cos^2\\theta = 1$ gives\n\n$\\cos^2\\theta = 1 - \\sin^2\\theta = 1 - \\frac{25}{169} = \\frac{144}{169}$\n\nSo $|\\cos\\theta| = \\frac{12}{13}$. In the second quadrant the cosine is the horizontal coordinate of a point that lies to the left of the $y$-axis, so it is negative: $\\cos\\theta = -\\frac{12}{13}$.\n\nThe magnitudes $\\frac{5}{13}, \\frac{12}{13}, 1$ are the $5$-$12$-$13$ right triangle, and $\\frac{25}{169} + \\frac{144}{169} = 1$ confirms the pair.",
+    "techniqueSlugs": [
+      "pythagorean-recovery",
+      "quadrant-sign-analysis"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p10",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "exact-trig-values",
+      "pythagorean-recovery",
+      "pythagorean"
+    ],
+    "promptLatex": "Suppose $\\tan\\theta = \\frac{2}{3}$ and $\\theta$ lies in the first quadrant. Find $\\sin\\theta$.",
+    "choices": null,
+    "answerLatex": "\\frac{2\\sqrt{13}}{13}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A tangent is a ratio of two legs rather than a ratio of a leg to the hypotenuse, so it does not by itself give a function value.",
+      "Build a right triangle with the two legs in the ratio $2:3$, and then the hypotenuse and the sine follow from the Pythagorean theorem.",
+      "The hypotenuse is $\\sqrt{13}$, so the sine is $\\frac{2}{\\sqrt{13}}$, which rationalizes to $\\frac{2\\sqrt{13}}{13}$."
+    ],
+    "solutionLatex": "A tangent of $\\frac{2}{3}$ means the legs of the corresponding right triangle are in the ratio $2:3$, with opposite leg $2$ and adjacent leg $3$.\n\nThe hypotenuse is $\\sqrt{2^2 + 3^2} = \\sqrt{13}$, so $\\sin\\theta = \\frac{2}{\\sqrt{13}}$.\n\nRationalizing the denominator gives $\\sin\\theta = \\frac{2\\sqrt{13}}{13}$.\n\nCheck against the identity: $\\frac{4}{13} + \\left(\\frac{3}{\\sqrt{13}}\\right)^2 = \\frac{4}{13} + \\frac{9}{13} = 1$.",
+    "techniqueSlugs": [
+      "pythagorean-recovery",
+      "special-triangle-drop"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p11",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "exact-trig-values",
+      "pythagorean-recovery",
+      "trig-conversion"
+    ],
+    "promptLatex": "Suppose $\\sec\\theta = -\\frac{5}{3}$ and $\\theta$ lies in the second quadrant. Find $\\tan\\theta$.",
+    "choices": null,
+    "answerLatex": "-\\frac{4}{3}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A secant is a reciprocal, so inverting it turns the given value into a cosine, and from there the rest is a right triangle with known legs.",
+      "The second quadrant fixes the sign of the cosine as negative and the sign of the sine as positive, and the identity gives the sine once the cosine is known.",
+      "$\\cos\\theta = -\\frac{3}{5}$ gives $\\sin\\theta = \\frac{4}{5}$, so the tangent is their quotient, a positive number divided by a negative one."
+    ],
+    "solutionLatex": "Since $\\sec\\theta$ is the reciprocal of $\\cos\\theta$, the given value means $\\cos\\theta = -\\frac{3}{5}$, which is consistent with the second quadrant.\n\n$\\sin^2\\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$, and the second quadrant is above the axis, so $\\sin\\theta = \\frac{4}{5}$.\n\n$\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta} = \\frac{\\frac{4}{5}}{-\\frac{3}{5}} = -\\frac{4}{3}$\n\nThe legs $3$ and $4$ with hypotenuse $5$ give exactly this pair, and the tangent is negative in the second quadrant as it must be.",
+    "techniqueSlugs": [
+      "pythagorean-recovery",
+      "quadrant-sign-analysis"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p12",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "special-angles",
+      "exact-trig-values",
+      "quadrant-sign-analysis"
+    ],
+    "promptLatex": "Compute the exact value of $\\sin\\left(\\frac{7\\pi}{6}\\right)$.",
+    "choices": [
+      "-\\frac{1}{2}",
+      "\\frac{1}{2}",
+      "-\\frac{\\sqrt{3}}{2}",
+      "\\frac{\\sqrt{3}}{2}",
+      "-1"
+    ],
+    "answerLatex": "-\\frac{1}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Reduce the angle to one of the special positions, and then decide the sign from where the reduced position sits.",
+      "$\\frac{7\\pi}{6}$ is a little past $\\pi$, and its reference angle is the part of it that lies in the first quadrant.",
+      "The reference angle is $\\frac{7\\pi}{6} - \\pi = \\frac{\\pi}{6}$, where the sine is $\\frac{1}{2}$, and the third quadrant is where the sine is negative."
+    ],
+    "solutionLatex": "The angle $\\frac{7\\pi}{6}$ lies between $\\pi$ and $\\frac{3\\pi}{2}$, so it is in the third quadrant.\n\nIts reference angle is $\\frac{7\\pi}{6} - \\pi = \\frac{\\pi}{6}$, a $30^\\circ$ angle, and $\\sin\\frac{\\pi}{6} = \\frac{1}{2}$ by the $30^\\circ$-$60^\\circ$-$90^\\circ$ triangle.\n\nThe third quadrant is below the axis, so the sine is negative:\n\n$\\sin\\left(\\frac{7\\pi}{6}\\right) = -\\frac{1}{2}$",
+    "techniqueSlugs": [
+      "reference-angle",
+      "quadrant-sign-analysis",
+      "special-triangle-drop"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p13",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "special-angles",
+      "exact-trig-values",
+      "cofunction-substitution"
+    ],
+    "promptLatex": "Compute the exact value of $\\tan\\left(\\frac{7\\pi}{6}\\right)$.",
+    "choices": [
+      "\\frac{\\sqrt{3}}{3}",
+      "-\\frac{\\sqrt{3}}{3}",
+      "\\sqrt{3}",
+      "-\\sqrt{3}",
+      "\\frac{1}{3}"
+    ],
+    "answerLatex": "\\frac{\\sqrt{3}}{3}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A tangent is a ratio of two function values, so both the reference angle and the signs of the two coordinates are needed.",
+      "$\\frac{7\\pi}{6}$ has reference angle $\\frac{\\pi}{6}$, and a third quadrant point has both coordinates negative, so the quotient is positive.",
+      "At the reference angle the two coordinates are $\\frac{1}{2}$ and $\\frac{\\sqrt{3}}{2}$, and their quotient is the square root of three over three."
+    ],
+    "solutionLatex": "$\\frac{7\\pi}{6}$ is in the third quadrant, with reference angle $\\frac{7\\pi}{6} - \\pi = \\frac{\\pi}{6}$.\n\nAt $\\frac{\\pi}{6}$ the sine is $\\frac{1}{2}$ and the cosine is $\\frac{\\sqrt{3}}{2}$, so the tangent there is\n\n$\\frac{\\frac{1}{2}}{\\frac{\\sqrt{3}}{2}} = \\frac{1}{\\sqrt{3}} = \\frac{\\sqrt{3}}{3}$.\n\nBoth coordinates of a third quadrant point are negative, so their quotient is positive and the value carries over unchanged: $\\tan\\left(\\frac{7\\pi}{6}\\right) = \\frac{\\sqrt{3}}{3}$.",
+    "techniqueSlugs": [
+      "reference-angle",
+      "cofunction-substitution",
+      "special-triangle-drop"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p14",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "circles",
+      "radians",
+      "radius-times-angle"
+    ],
+    "promptLatex": "An arc of a circle subtends a central angle of $\\frac{2\\pi}{3}$ and has length $6\\pi$. What is the radius of the circle?",
+    "choices": null,
+    "answerLatex": "9",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The angle and the arc length are two of the three quantities in the arc length relationship, so the third is determined by them.",
+      "The length of an arc cut off by a central angle in radians is the radius of the circle multiplied by that angle.",
+      "Rearranging that relationship to solve for the radius gives the quotient of the arc length by the angle."
+    ],
+    "solutionLatex": "The arc length relationship for an angle in radians is $s = r\\theta$, with $s = 6\\pi$ and $\\theta = \\frac{2\\pi}{3}$.\n\n$r = \\frac{s}{\\theta} = \\frac{6\\pi}{\\frac{2\\pi}{3}} = 6\\pi \\cdot \\frac{3}{2\\pi} = 9$\n\nCheck: $9 \\cdot \\frac{2\\pi}{3} = 6\\pi$, which is one third of the circumference $2\\pi \\cdot 9 = 18\\pi$, as an arc of $\\frac{2\\pi}{3}$ must be.",
+    "techniqueSlugs": [
+      "radius-times-angle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-p15",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "unit-circle",
+      "exact-trig-values",
+      "pythagorean-recovery"
+    ],
+    "promptLatex": "A point $P$ on the unit circle lies in the third quadrant and its $y$-coordinate is $-\\frac{\\sqrt{3}}{2}$. What is the $x$-coordinate of $P$?",
+    "choices": null,
+    "answerLatex": "-\\frac{1}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A point on the unit circle has coordinates that are one function value each, and the circle itself fixes the pair of them.",
+      "The squared coordinates of any point on the unit circle add to $1$, so the known coordinate's square leaves the other's square.",
+      "$\\frac{3}{4}$ leaves $\\frac{1}{4}$, whose root is $\\frac{1}{2}$, and the third quadrant is where the horizontal coordinate is negative."
+    ],
+    "solutionLatex": "The point lies on the unit circle, so its squared coordinates satisfy $x^2 + y^2 = 1$ with $y = -\\frac{\\sqrt{3}}{2}$.\n\n$x^2 = 1 - \\left(\\frac{\\sqrt{3}}{2}\\right)^2 = 1 - \\frac{3}{4} = \\frac{1}{4}$, so $|x| = \\frac{1}{2}$.\n\nThe third quadrant is to the left of the $y$-axis, so $x$ is negative there: $x = -\\frac{1}{2}$.\n\nCheck: $\\frac{1}{4} + \\frac{3}{4} = 1$, and the point is the one at angle $\\frac{7\\pi}{6}$.",
+    "techniqueSlugs": [
+      "pythagorean-recovery",
+      "quadrant-sign-analysis",
+      "unit-circle-coordinates"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-m1",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "circles",
+      "radians",
+      "sector-area-formula"
+    ],
+    "promptLatex": "A circle of radius $4$ has an arc that is exactly one third of its circumference. What is the area of the sector cut off by that arc?",
+    "choices": [
+      "\\frac{16\\pi}{3}",
+      "\\frac{8\\pi}{3}",
+      "\\frac{32\\pi}{3}",
+      "\\frac{16\\pi}{9}",
+      "\\frac{4\\pi}{3}"
+    ],
+    "answerLatex": "\\frac{16\\pi}{3}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The arc's share of the circumference and the sector's share of the disk are the same fraction, so the two statements describe one angle.",
+      "A sector whose arc is $\\frac{1}{3}$ of the circumference is a sector whose central angle is $\\frac{1}{3}$ of a full turn.",
+      "A full turn is $2\\pi$ radians, so the central angle is $\\frac{2\\pi}{3}$ and the sector area is $\\frac{1}{2} \\cdot 16 \\cdot \\frac{2\\pi}{3}$."
+    ],
+    "solutionLatex": "An arc that is $\\frac{1}{3}$ of the circumference subtends a central angle that is $\\frac{1}{3}$ of a full turn, namely $\\frac{2\\pi}{3}$ radians.\n\n$A = \\frac{1}{2} r^2 \\theta = \\frac{1}{2} \\cdot 4^2 \\cdot \\frac{2\\pi}{3} = 8 \\cdot \\frac{2\\pi}{3} = \\frac{16\\pi}{3}$\n\nCheck by proportion: the whole disk has area $\\pi \\cdot 16 = 16\\pi$, and $\\frac{1}{3}$ of that is $\\frac{16\\pi}{3}$, matching.",
+    "techniqueSlugs": [
+      "sector-area-formula",
+      "radius-times-angle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-m2",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "unit-circle",
+      "radians",
+      "exact-trig-values"
+    ],
+    "promptLatex": "A point starts on the unit circle at the angle $\\frac{\\pi}{6}$ and then moves counterclockwise along the circle through an arc of length $\\frac{3\\pi}{2}$. What is the sine of the angle at the point's new position?",
+    "choices": null,
+    "answerLatex": "-\\frac{\\sqrt{3}}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Travel along a circle of radius $1$ for a given arc length corresponds to turning through a definite number of radians, and then the question is an exact-value evaluation like any other.",
+      "On the unit circle the arc length and the central angle in radians are the same number, so travelling $\\frac{3\\pi}{2}$ turns the terminal side through $\\frac{3\\pi}{2}$ radians.",
+      "The new angle is $\\frac{\\pi}{6} + \\frac{3\\pi}{2} = \\frac{5\\pi}{3}$, whose reference angle is $\\frac{\\pi}{3}$ and whose quadrant makes the sine negative."
+    ],
+    "solutionLatex": "On the unit circle the radius is $1$, so an arc of length $\\frac{3\\pi}{2}$ corresponds to a central angle of $\\frac{3\\pi}{2}$ radians.\n\nThe new angle is\n\n$\\frac{\\pi}{6} + \\frac{3\\pi}{2} = \\frac{\\pi}{6} + \\frac{9\\pi}{6} = \\frac{10\\pi}{6} = \\frac{5\\pi}{3}$.\n\nThe reference angle of $\\frac{5\\pi}{3}$ is $\\frac{\\pi}{3}$, where the sine is $\\frac{\\sqrt{3}}{2}$, and $\\frac{5\\pi}{3}$ is in the fourth quadrant where the sine is negative. Therefore the value is $-\\frac{\\sqrt{3}}{2}$.",
+    "techniqueSlugs": [
+      "unit-circle-coordinates",
+      "reference-angle",
+      "radius-times-angle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l1-m3",
+    "moduleId": "M8",
+    "lessonId": "m8-l1",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "circles",
+      "radians",
+      "sector-area-formula"
+    ],
+    "promptLatex": "A sector of a circle of radius $8$ has area $24\\pi$. What is the length of the arc that bounds the sector?",
+    "choices": null,
+    "answerLatex": "6\\pi",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two sector formulas share one angle, so knowing the area and the radius determines the angle, and the angle then gives the arc length.",
+      "The area of a sector with central angle in radians is one half the radius squared multiplied by that angle, so the angle can be read off from a known area.",
+      "$24\\pi = \\frac{1}{2} \\cdot 64 \\cdot \\theta$ gives $\\theta = \\frac{3\\pi}{4}$, and the arc is the radius times that angle."
+    ],
+    "solutionLatex": "From the sector area formula with $r = 8$:\n\n$24\\pi = \\frac{1}{2} \\cdot 8^2 \\cdot \\theta = 32\\theta$, so $\\theta = \\frac{24\\pi}{32} = \\frac{3\\pi}{4}$.\n\nThe bounding arc has length\n\n$s = r\\theta = 8 \\cdot \\frac{3\\pi}{4} = 6\\pi$.\n\nCheck: the sector is $\\frac{3}{8}$ of the disk, and $\\frac{3}{8} \\cdot 64\\pi = 24\\pi$, which is the given area.",
+    "techniqueSlugs": [
+      "sector-area-formula",
+      "radius-times-angle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

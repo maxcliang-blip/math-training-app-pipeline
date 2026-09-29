@@ -1,0 +1,28 @@
+{
+  "id": "m7-l2-p2",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": ["inclusion-exclusion"],
+  "promptLatex": "How many integers from 1 to 50 are divisible by 4 or 5?",
+  "choices": [
+    "15",
+    "19",
+    "20",
+    "21",
+    "18"
+  ],
+  "answerLatex": "20",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Count multiples of 4, count multiples of 5, then subtract multiples of 20 (LCM of 4 and 5).",
+    "There are 12 multiples of 4, 10 multiples of 5, and 2 multiples of 20.",
+    "12 + 10 - 2 = 20."
+  ],
+  "solutionLatex": "Use the inclusion-exclusion principle.\n\nMultiples of 4 from 1 to 50: \\lfloor 50/4 \\rfloor = 12.\nMultiples of 5 from 1 to 50: \\lfloor 50/5 \\rfloor = 10.\nMultiples of both 4 and 5 (i.e., multiples of 20) from 1 to 50: \\lfloor 50/20 \\rfloor = 2.\n\nBy inclusion-exclusion: 12 + 10 - 2 = 20.",
+  "techniqueSlugs": ["inclusion-exclusion-principle"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

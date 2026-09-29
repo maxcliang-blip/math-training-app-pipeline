@@ -1,0 +1,29 @@
+{
+  "id": "m7-l2-p12",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": ["pigeonhole-principle", "combinations"],
+  "promptLatex": "What is the minimum number of people that must be in a room to guarantee that at least 3 share the same birthday month?",
+  "choices": [
+    "25",
+    "26",
+    "27",
+    "35",
+    "36"
+  ],
+  "answerLatex": "25",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Use the pigeonhole principle. There are 12 months (boxes).",
+    "To guarantee at least 3 people share a birthday month, we need the smallest N such that \\lceil N/12 \\rceil ≥ 3.",
+    "This means N ≥ 2 × 12 + 1 = 25.",
+    "With 25 people and 12 months, by pigeonhole, some month has at least \\lceil 25/12 \\rceil = \\lceil 2.083 \\rceil = 3 people."
+  ],
+  "solutionLatex": "By the pigeonhole principle, if N people are placed into 12 months, some month contains at least \\lceil N/12 \\rceil people.",
+  "techniques": ["pigeonhole-application"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

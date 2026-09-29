@@ -1,0 +1,207 @@
+{
+  "id": "m6-l2",
+  "moduleId": "M6",
+  "order": 2,
+  "title": "Lines, Slopes, and Systems of Equations",
+  "topicSlug": "lines-slopes-and-systems",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m6-l1"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Write the equation of a line from geometric information in whichever form suits the question, use slopes to decide about parallelism, perpendicularity, and perpendicular distance, and solve systems of two linear equations including the degenerate cases."
+    },
+    "prerequisites": {
+      "items": [
+        "m6-l1"
+      ],
+      "noteLatex": "This lesson assumes the coordinate vocabulary of [m6-l1](/M6/lessons/m6-l1), in particular the distance formula and the projection idea, because the formula for the distance from a point to a line is that same projection with one division added. If the perpendicular foot on a line is unfamiliar, review the reflection in m6-l1 first."
+    },
+    "concept": {
+      "conceptLatex": "A line is a direction together with one point on it, and nearly every other fact about a line follows from those two. The direction is recorded by the slope, the change in $y$ per unit change in $x$.\n\nm = \\frac{y_2-y_1}{x_2-x_1}\n\nTwo cases sit outside that definition and both cause trouble. A vertical line has $x_2=x_1$, so the denominator vanishes and the slope does not exist; such a line is described by the equation $x=c$ instead. A horizontal line has slope $0$ and is described by $y=c$. Whenever a problem involves a vertical line the slope comparison test cannot be used on it, and the reliable habit is to dispatch the vertical and horizontal cases separately rather than hoping a formula that cannot see them will.\n\nParallelism and perpendicularity are then slope statements. Two nonvertical lines are parallel when their slopes agree, and perpendicular when the product of their slopes is $-1$, which is the negative reciprocal relation.\n\nm_1 m_2 = -1\n\nThe negative reciprocal is easy to get wrong in one direction, because $\\frac{1}{2}$ has negative reciprocal $-2$ while $-\\frac{1}{2}$ has negative reciprocal $2$. The sign always belongs to the number being inverted, never to the whole fraction.\n\nThe same line can be written in three standard forms, and choosing the right one removes most of the algebra.\n\ny - y_1 = m(x - x_1) \\qquad y = mx + b \\qquad Ax + By = C\n\nPoint-slope form is the definition with a point supplied, so it is the form to reach for when a point and a slope or a direction are given. Slope-intercept form is the one to reach for when the question is about a $y$-intercept or about comparing slopes, since both are then read off directly. Standard form is the one to reach for when the line bounds a region, when the coefficients must be integers with no common factor, or when a system will be eliminated by integer arithmetic; converting into it means moving every term to one side and clearing denominators.\n\nThe distance from a point to a line is that same projection with one division added. Writing the line as $Ax+By+C=0$ and the point as $(x_0,y_0)$, the length of the perpendicular from the point to the line is the absolute value of $Ax_0+By_0+C$ divided by $\\sqrt{A^{2}+B^{2}}$.\n\nd = \\frac{|Ax_0+By_0+C|}{\\sqrt{A^{2}+B^{2}}}\n\nThe denominator is the length of a normal vector to the line, and it is the part most often dropped. The result is a distance, so the absolute value is not optional. This is the right tool whenever a question asks how far a point is from a line, and it is the standard way to impose tangency by setting that distance equal to a radius.\n\nA system of two linear equations in two unknowns is a pair of lines, and only four outcomes are possible: a unique intersection, no intersection because the lines are parallel and distinct, infinitely many because they coincide, or a contradiction. The ordinary case is solved by two interchangeable methods. Elimination cancels a variable by taking linear combinations of the equations, and substitution replaces a variable by an expression solved out of the simpler equation, leaving a single-variable problem.\n\n2x + 3y = 7 \\qquad 4x - 3y = 10\n\nAdding these cancels $y$ at once and gives $6x=17$, so $x=\\frac{17}{6}$ and then $y=\\frac{4}{9}$. The decisive move in either method is noticing which variable is cheapest to remove, and a short preliminary adjustment often creates the opportunity: scaling one equation until a coefficient matches is almost always cheaper than carrying a three-term elimination.\n\nThe degenerate cases are detected rather than solved. If elimination leaves $0=c$ with $c \\ne 0$, the lines are parallel and distinct and there is no solution. If it leaves $0=0$, the two equations describe the same line and every point on it is a solution. The determinant $AD-BC$ of the coefficient matrix predicts which of the two is possible: a zero determinant means the system is degenerate, and the constants then decide between none and infinitely many.\n\nWord problems here are bookkeeping problems in disguise. Two stated quantities become two unknowns and each condition in the words becomes one equation. The discipline that makes them reliable is to declare both unknowns with their units, to write both equations before solving either, and afterwards to check the answer against the words rather than against the algebra, since an algebra error often cancels in a way that still satisfies the equations you wrote.",
+      "figures": [
+        {
+          "id": "m6-l2-fig-1",
+          "captionLatex": "The slope of a line is the ratio of the vertical change to the horizontal change between any two points on it, and the two legs of that right triangle are the only things the formula ever uses.",
+          "asymptoteSource": "// Slope read as rise over run between two points.\n// Two-argument size call fixes the output box, so the declared 4/3 is exact.\nsize(320,240);\npair A=(0,0), B=(4,3);\ndraw((-0.5,-0.4)--(4.9,3.67));\ndraw(A--(4,0));\ndraw((4,0)--B);\ndot(A,2+2.5pt);\ndot((4,0),2+2.5pt);\ndot(B,2+2.5pt);\nlabel(\"$A=(0,0)$\",A,SW);\nlabel(\"$B=(4,3)$\",B,NE);\nlabel(\"run $=4$\",(2,0),S);\nlabel(\"rise $=3$\",(4.15,1.5),E);\nlabel(\"$m=\\frac{3}{4}$\",(2,1.6),NW);",
+          "asymptoteAlt": "A straight line rises from the lower left to the upper right and continues past two marked points. A horizontal segment runs along the bottom from the leftmost point to a point directly below the right one, and a vertical segment rises from there to the right point, forming a right triangle beneath the sloping line. Filled dots mark the left point at the origin, the foot of the vertical leg, and the right point, each labelled with a letter and a coordinate pair. The bottom and right legs are labelled as the run and the rise, and the sloping line is labelled with the resulting slope.",
+          "asymptoteAspectRatio": 1.333
+        },
+        {
+          "id": "m6-l2-fig-2",
+          "captionLatex": "The solution of a two-equation system is the single point where the two lines cross, so it can be read off a graph before any algebra is done; the two unknowns are the axis values at that point.",
+          "asymptoteSource": "// Two lines meeting at the solution of a system.\n// Two-argument size call fixes the output box, so the declared 4/3 is exact.\nsize(320,240);\npair S=(2,3);\ndraw((-1.2,0.53)--(3.2,4.27));\ndraw((-1.2,4.27)--(3.2,0.53));\ndraw((-1.2,0)--(4.3,0),Arrow);\ndraw((0,-1.2)--(0,4.8),Arrow);\nlabel(\"$x$\",(4.4,0),E);\nlabel(\"$y$\",(0,4.85),N);\ndot(S,2+3.5pt);\nlabel(\"$S$\",S,NE);\nlabel(\"$x=2$\",(2,0.35),S);\nlabel(\"$y=3$\",(-0.3,3),E);\nlabel(\"the unknowns are the axis values where the lines cross\",(1.6,-0.95),S);",
+          "asymptoteAlt": "A pair of straight lines, one rising and one falling, cross at a single point marked with a large filled dot. Coordinate axes with arrowheads run along the bottom and up the left side, each labelled with its axis name. The crossing point is labelled S, and short notes beside the axes give the horizontal and vertical values at that point, with a sentence beneath the figure stating that the unknowns are the axis values where the lines cross.",
+          "asymptoteAspectRatio": 1.333
+        }
+      ],
+      "examples": [
+        {
+          "id": "m6-l2-wex-1",
+          "titleLatex": "Worked example: writing the line in the form the question needs",
+          "bodyLatex": "Find the equation of the line through $(1,4)$ and $(5,2)$.\n\nThe slope is $\\frac{2-4}{5-1} = -\\frac{1}{2}$.\n\nIn point-slope form this is $y-4 = -\\frac{1}{2}(x-1)$, and expanding gives the slope-intercept form.\n\n$y = -\\frac{1}{2}x + \\frac{9}{2}$\n\nThe same line in standard form is $x+2y=9$, obtained by clearing the fraction, which is the form to use if a system is coming.",
+          "answerLatex": "$y = -\\frac{1}{2}x + \\frac{9}{2}$"
+        },
+        {
+          "id": "m6-l2-wex-2",
+          "titleLatex": "Worked example: a perpendicular distance",
+          "bodyLatex": "How far is the point $(2,3)$ from the line $3x+4y=26$?\n\nWrite the line as $3x+4y-26=0$, so $A=3$, $B=4$, and $C=-26$.\n\nThe numerator is $|3(2)+4(3)-26| = |6+12-26| = 8$, and the denominator is $\\sqrt{3^{2}+4^{2}} = 5$.\n\n$d = \\frac{8}{5}$\n\nThe denominator is the length of the normal vector $(3,4)$, and dropping it is the single most common way to get this wrong.",
+          "answerLatex": "$d = \\frac{8}{5}$"
+        },
+        {
+          "id": "m6-l2-wex-3",
+          "titleLatex": "Worked example: creating the cancellation before eliminating",
+          "bodyLatex": "Solve $2x+3y=17$ and $x+y=6$.\n\nNeither variable cancels as written, so scale first: twice the second equation is $2x+2y=12$.\n\nSubtracting that from the first cancels $x$ and leaves $y=5$.\n\n$y = 17-12 = 5$\n\nThen $x+y=6$ gives $x=1$, and both original equations are satisfied.\n\n$(x,y) = (1,5)$",
+          "answerLatex": "$(x,y) = (1,5)$"
+        },
+        {
+          "id": "m6-l2-wex-4",
+          "titleLatex": "Worked example: a degenerate system with infinitely many solutions",
+          "bodyLatex": "How many solutions does the system $2x+3y=6$ and $4x+6y=12$ have?\n\nThe second equation is exactly twice the first, so it adds nothing to what is already known.\n\nEliminating gives $0x+0y=0$, which is true and so the system is consistent; geometrically both equations name the single line $2x+3y=6$.\n\nEvery point on that line is a solution, so the system has infinitely many solutions.",
+          "answerLatex": "infinitely many"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "slope-from-two-points",
+          "name": "Read a slope off two points",
+          "summaryLatex": "Divide the difference in $y$ coordinates by the difference in $x$ coordinates, in that order.",
+          "bodyLatex": "Slope is rise over run, and the order is not interchangeable: the difference in $y$ is always the numerator. Using the same order for both differences makes the sign of the slope agree with the direction of travel, and it also makes the sign of a mistake visible. A denominator of zero means the points share an $x$ coordinate and the line is vertical, which is a case to report rather than to divide through."
+        },
+        {
+          "slug": "point-slope-form",
+          "name": "Use point-slope form when a point and a direction are given",
+          "summaryLatex": "Write $y-y_1 = m(x-x_1)$ and stop.",
+          "bodyLatex": "This form needs no rearrangement and no intercept, so it is the shortest path from the given data to an equation. It is also the form that survives being extended to three dimensions later, which is why the general standard form is not the right first instinct. If the direction is given as a vector rather than a number, the slope is the ratio of the vector's entries."
+        },
+        {
+          "slug": "slope-intercept-form",
+          "name": "Use slope-intercept form to read a $y$-intercept or compare slopes",
+          "summaryLatex": "In $y=mx+b$ the slope is $m$ and the $y$-intercept is the point $(0,b)$.",
+          "bodyLatex": "Once a line is in this form, parallelism and perpendicularity are one coefficient comparison each, and the $y$-intercept is the constant term. Converting from standard form $Ax+By=C$ means isolating $y$, which requires $B \\ne 0$; a line with $B=0$ is vertical and has no slope-intercept form at all, so that case must be reported in its own form."
+        },
+        {
+          "slug": "clear-denominators-standard-form",
+          "name": "Convert to standard form with integer coefficients",
+          "summaryLatex": "Move all terms to one side, clear denominators, and divide out any common factor.",
+          "bodyLatex": "Standard form $Ax+By=C$ is the useful one for systems, because elimination then runs in integers with no new fractions appearing. Dividing out a common factor is part of the conversion, not an optional tidy-up: $2x+4y=6$ and $x+2y=3$ are the same line, and a system containing both is degenerate in a way that is easy to miss if the coefficients are left inflated."
+        },
+        {
+          "slug": "distance-point-to-line",
+          "name": "Compute the perpendicular distance from a point to a line",
+          "summaryLatex": "Divide $|Ax_0+By_0+C|$ by $\\sqrt{A^{2}+B^{2}}$.",
+          "bodyLatex": "The numerator measures how far the point has strayed from the line in units of the normal vector, and the denominator converts those units into a true length. The absolute value is required because the result is a distance, and a point on the far side of the line must give the same number. Setting this distance equal to a radius is the standard test that a line is tangent to a circle."
+        },
+        {
+          "slug": "elimination-two-variables",
+          "name": "Eliminate one variable by scaling and adding",
+          "summaryLatex": "Scale the equations until one variable's coefficients match, then add or subtract.",
+          "bodyLatex": "If the coefficients already match, add or subtract immediately; if they are multiples, scale once. When nothing matches, scale by the coefficients of the variable being removed, which is a one-step operation rather than a three-term combination. Subtracting a doubled equation from a single one is the version worth reaching for when one equation is simpler than the other."
+        },
+        {
+          "slug": "substitution-two-variables",
+          "name": "Substitute out the variable with the smallest coefficient",
+          "summaryLatex": "Solve one equation for a variable and insert it into the other.",
+          "bodyLatex": "Substitution is best when one equation already has a coefficient of $1$ or $-1$, or when the solved expression is short, as with $x-y=2$ giving $x=y+2$. It is worse when both solved expressions are long fractions, where elimination keeps the arithmetic integral. Either method is correct; the choice is about which produces fewer opportunities for error."
+        },
+        {
+          "slug": "consistent-or-parallel",
+          "name": "Recognize a degenerate system from what elimination leaves behind",
+          "summaryLatex": "A leftover $0=c$ with $c \\ne 0$ means no solution, and $0=0$ means infinitely many.",
+          "bodyLatex": "Elimination that cancels both variables has reached the end of the information, and the residue is the whole answer. Geometrurally, $0=c$ means the two lines are parallel and distinct, while $0=0$ means they are the same line. The determinant $AD-BC$ flags both situations before any work is done, which is worth checking when a system is supplied in standard form."
+        },
+        {
+          "slug": "two-equation-word-problem",
+          "name": "Turn the sentences of a word problem into two equations",
+          "summaryLatex": "Declare each unknown with its unit, then write one equation per stated condition before solving.",
+          "bodyLatex": "A total, a rate, a share, and a difference are the four conditions that appear most often, and each translates mechanically. Writing both equations first prevents the common failure of solving one equation for a quantity that the second equation constrains. Finally check the pair against the wording: a positive number of liters is required, so a solution with a negative amount is a signal that a condition was misread even if both equations hold."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "negative-reciprocal-sign",
+          "titleLatex": "Taking the reciprocal without the sign",
+          "wrongLatex": "$m_2 = \\frac{1}{m_1}$",
+          "whyLatex": "Perpendicularity needs a product of $-1$, not a product of $1$. Two positive slopes never multiply to $-1$, so a line of positive slope can never be perpendicular to another line of positive slope, and the reciprocal without the sign describes a parallel line instead.",
+          "fixLatex": "Invert the slope and change the sign together: $-\\frac{1}{m}$. Applied to $\\frac{2}{3}$ it gives $-\\frac{3}{2}$, whose product with $\\frac{2}{3}$ is exactly $-1$."
+        },
+        {
+          "slug": "no-denominator-in-distance",
+          "titleLatex": "Omitting the normal-vector length in the point-to-line distance",
+          "wrongLatex": "$d = |Ax_0+By_0+C|$",
+          "whyLatex": "The numerator is a distance measured in units of the normal vector $(A,B)$, not a length, so without the division the answer changes with the way the line is written. The same line $3x+4y=26$ and $6x+8y=52$ would then give distances $8$ and $16$ for the same point.",
+          "fixLatex": "Always divide by $\\sqrt{A^{2}+B^{2}}$, which is the length of the normal vector. The result is then independent of how many times the equation has been scaled, as a true distance must be."
+        },
+        {
+          "slug": "missing-elimination-move",
+          "titleLatex": "Eliminating before arranging a cancellation",
+          "wrongLatex": "$3x+2y=12$ and $2x+5y=19$ treated directly by one three-term combination",
+          "whyLatex": "A three-term elimination that does not cancel a variable produces a new equation with three terms, and a third such step is needed before anything cancels. The arithmetic triples at every stage and the sign errors it introduces are the usual reason a two-equation system comes out wrong.",
+          "fixLatex": "Scale first so one variable's coefficients match, then add or subtract. Multiplying the first equation by $5$ and the second by $2$ turns the $y$ coefficients into $10$ and $10$, and a single addition or subtraction then isolates a variable."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m6-l2-p1",
+        "m6-l2-p2",
+        "m6-l2-p3",
+        "m6-l2-p4",
+        "m6-l2-p5",
+        "m6-l2-p6",
+        "m6-l2-p7",
+        "m6-l2-p8",
+        "m6-l2-p9",
+        "m6-l2-p10",
+        "m6-l2-p11",
+        "m6-l2-p12",
+        "m6-l2-p13",
+        "m6-l2-p14",
+        "m6-l2-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m6-l2-p1",
+        "m6-l2-p2",
+        "m6-l2-p3",
+        "m6-l2-p4",
+        "m6-l2-p5",
+        "m6-l2-p6",
+        "m6-l2-p7",
+        "m6-l2-p8",
+        "m6-l2-p9",
+        "m6-l2-p10",
+        "m6-l2-p11",
+        "m6-l2-p12",
+        "m6-l2-p13",
+        "m6-l2-p14",
+        "m6-l2-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m6-l2-m1",
+        "m6-l2-m2",
+        "m6-l2-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "slopes",
+    "parallel-lines",
+    "systems-of-equations"
+  ]
+}

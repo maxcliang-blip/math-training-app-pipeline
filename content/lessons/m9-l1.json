@@ -1,0 +1,154 @@
+{
+  "id": "m9-l1",
+  "moduleId": "M9",
+  "order": 1,
+  "title": "Direct Proof, Quantifiers, and Without Loss of Generality",
+  "topicSlug": "direct-proof-quantifiers-wlog",
+  "tiers": ["12", "A"],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": ["m1-l1", "m2-l2"],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Write a complete direct proof: state a claim with its quantifiers, unfold the definitions it uses, justify each step in a chain of equivalences, invoke without loss of generality only where a genuine symmetry exists, and separate the two directions of every biconditional."
+    },
+    "prerequisites": {
+      "items": ["m1-l1", "m2-l2"],
+      "noteLatex": "The algebra of linear equations from the first lesson and the language of divisibility and prime factorization from the second. This lesson adds no new computation; it adds the discipline of writing the computation down so that someone else can check it."
+    },
+    "concept": {
+      "conceptLatex": "A proof is not a calculation that happens to reach the right answer. It is a finite sequence of statements, each justified, whose first statement is what you are given and whose last is what you must show. The part of the craft that is hardest to learn is not finding the steps; it is noticing which steps you are allowed to leave out and which you must not.\n\nStart with the quantifiers, because that is where direct proofs are lost. The statement 'for every positive integer $n$, there exists an integer $k$ with $n^2 \\le k < n^2+n$' carries two nested quantifiers, and a proof of it must produce a $k$ that depends on $n$, not a single $k$ that works for all $n$. The natural way to discharge the inner quantifier is to exhibit a witness rather than to argue that one exists. Writing $k=n^2$ is not a trick; it is the definition of 'there exists' turned inside out.\n\nThe second habit is to unfold a definition before using it. 'Divisible' is not a primitive; it is a compressed claim about existence. The proof that if $a \\mid b$ and $a \\mid c$ then $a \\mid (b+c)$ is three lines once divisibility is expanded into its own definition, and it is a paragraph of hand-waving if it is not. Unfolding is also how a claim gets refuted: to show a definition is not satisfied you only need one value that fails it, which is why a single counterexample settles a universal statement.\n\nChains of equivalences are the workhorse. A chain of the form $A \\iff B \\iff C \\iff D$ is stronger than a chain of the form $A \\implies B \\implies C$ because it can be read in either direction, so it doubles as a method for finding the proof and as a check on it. A chain that starts at the goal and ends at something known is read backwards to produce the proof.\n\n$(x+1)^2-(x-1)^2 \\iff x^2+2x+1-x^2+2x-1 \\iff 4x$\n\nCases must exhaust the possibilities. The claim $|x|+|x-6|$ is constant exactly on one closed interval follows from splitting the real line at $0$ and $6$, and the...",
+      "figures": [
+        {
+          "id": "m9-l1-fig-1",
+          "captionLatex": "The symmetry that licenses a without-loss-of-generality step when a claim treats two quantities identically: swapping the two labels reflects the configuration, so the case that is discarded is the case that is kept with the names exchanged.",
+          "asymptoteSource": "// The reflection that makes a without-loss-of-generality step legitimate.\n// Two-argument size fixes the output box at 320 x 120, so the declared\n// aspect ratio 8/3 is exact and the reserved space cannot drift.\nsize(320,120);\npair A=(-6,0), B=(6,0);\ndraw(A--B,Arrow);\nlabel(\"$x$\",B,SE);\nfor (int t = -6; t <= 6; ++t) {\n  draw((t,-0.1)--(t,0.1),gray);\n}\ndot((-1.5,0),2+2.5pt);\ndot((1.5,0),2+2.5pt);\nlabel(\"$a$\",(-1.5,0.45),NW);\nlabel(\"$b$\",(1.5,0.45),NE);\ndraw((-1.5,0.28)--(1.5,0.28),red+1pt);\ndraw((1.5,0.28)--(-1.5,0.28),red+1pt);\nlabel(\"swapping $a$ and $b$ reflects the picture\",(0,-1.15),S);",
+          "asymptoteAlt": "A horizontal number line with an arrow at the right end and a label x, with short tick marks running from minus six to six. Two filled points sit on the line, the left one labelled a and the right one labelled b, and two short red arrows drawn between them in opposite directions show that exchanging the two labels reflects the configuration.",
+          "asymptoteAspectRatio": 2.667
+        }
+      ],
+      "examples": [
+        {
+          "id": "m9-l1-ex-1",
+          "titleLatex": "Worked example: a chain of equivalences, read backwards",
+          "bodyLatex": "To evaluate the left side for $x \\ne 1$, start at the goal and rewrite until the goal becomes something known.\n\n$\\frac{x^2-1}{x-1} \\iff \\frac{(x-1)(x+1)}{x-1} \\iff x+1$\n\nRead backwards, this is the proof: the denominator is nonzero by the stated condition, so cancelling the factor $x-1$ is legal at every step.",
+          "answerLatex": "$x+1$"
+        },
+        {
+          "id": "m9-l1-ex-2",
+          "titleLatex": "Worked example: unfolding a definition into a witness",
+          "bodyLatex": "The claim is that for every positive integer $n$ there is a multiple of $n$ greater than $n$. The definition of 'a multiple of $n$' is the existence of an integer, so the proof must produce that integer.\n\nLet $n$ be a positive integer and put $k=n(n+1)$. Then $k$ is a multiple of $n$, and $k-n=n^2>0$, so $k>n$.\n\nThe witness depends on $n$, which is what the order of the quantifiers demands.",
+          "answerLatex": "$k=n(n+1)$"
+        },
+        {
+          "id": "m9-l1-ex-3",
+          "titleLatex": "Worked example: an exhaustive split into cases",
+          "bodyLatex": "Both absolute values change definition at a point, so the real line is split at those two points and a linear expression is solved in each region.\n\nFor $x \\le 0$ the sum is $-2x+6$, and for $x \\ge 6$ it is $2x-6$. For $0 \\le x \\le 6$ the two terms are $x$ and $6-x$, so the sum is $6$ on that whole interval.\n\nBecause the three regions cover the real line and agree at the shared endpoints, the sum is $6$ exactly when $0 \\le x \\le 6$, and it grows without bound outside.",
+          "answerLatex": "$0 \\le x \\le 6$"
+        },
+        {
+          "id": "m9-l1-ex-4",
+          "titleLatex": "Worked example: a justified without-loss-of-generality step",
+          "bodyLatex": "The claim is that $x^2+y^2-2xy \\ge 0$ for all real $x$ and $y$. The claim is symmetric in $x$ and $y$: interchanging them leaves the left side unchanged. So assume $x \\ge y$.\n\n$x^2+y^2-2xy=(x-y)^2 \\ge 0$\n\nThe assumption was used only to name the larger quantity, and the conclusion does not depend on it, so the proof holds without the assumption as well.",
+          "answerLatex": "$(x-y)^2 \\ge 0$"
+        },
+        {
+          "id": "m9-l1-ex-5",
+          "titleLatex": "Worked example: both directions of a biconditional, separately",
+          "bodyLatex": "Forward: $x^2=4$ gives $(x-2)(x+2)=0$, and a product of two real numbers is zero only when one of them is zero, so $x=2$ or $x=-2$.\n\nReverse: if $x=2$ then $x^2=4$, and if $x=-2$ then $x^2=(-2)(-2)=4$.\n\nA proof of only the forward direction would have claimed $x=2$ alone, which is false for $x=-2$.",
+          "answerLatex": "$x=2$ or $x=-2$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "chain-of-equivalences",
+          "name": "Chain equivalences so the proof reads both ways",
+          "summaryLatex": "Replace the goal by an equivalent statement repeatedly until it becomes something already known, then read the chain backwards to produce the proof.",
+          "bodyLatex": "Each link in an equivalence chain is justified, which is what makes the chain reversible. Start at the goal rather than at the givens: the last line should be something you can verify at sight, and every arrow is a step the reader can check in one breath."
+        },
+        {
+          "slug": "witness-for-existential",
+          "name": "Exhibit a witness for an existential claim",
+          "summaryLatex": "To prove that something exists, name a specific object built out of the quantified variable, then verify the defining property directly.",
+          "bodyLatex": "The witness may depend on the variable the claim quantified over. Proving existence by arguing that the object 'must be somewhere' is not a proof, because it never identifies the object and so cannot be checked."
+        },
+        {
+          "slug": "definition-unfolding",
+          "name": "Unfold a definition into its equivalent form",
+          "summaryLatex": "Replace a defined term by the statement it stands for before arguing about it, and replace a required property by one explicit failing value when refuting it.",
+          "bodyLatex": "Unfolding is what makes a claim about divisibility, primality, or lowest terms into a claim about ordinary integers that the reader can verify. Refutation is the same move in the other direction: a universal claim needs one counterexample, not a general argument."
+        },
+        {
+          "slug": "wlog-by-symmetry",
+          "name": "Invoke without loss of generality only after exhibiting the symmetry",
+          "summaryLatex": "An ordering assumption is free when interchanging the two names leaves the claim unchanged, so the discarded case is the kept case relabelled.",
+          "bodyLatex": "State the symmetry out loud before using the phrase. If no relabelling turns the discarded case into the kept one, the assumption has changed the problem and the proof is of a different claim, no matter how it is introduced."
+        },
+        {
+          "slug": "exhaustive-case-split",
+          "name": "Split into cases that exhaust the possibilities",
+          "summaryLatex": "List the regions or residues that cover the whole domain with no gap, and note that adjacent cases agree on the shared boundary.",
+          "bodyLatex": "A split with a missing case is a false proof even when every listed case is correct. Splitting at exactly the points where a definition changes is the smallest split that works, and it is the split that makes the middle case a constant."
+        },
+        {
+          "slug": "both-directions-of-biconditional",
+          "name": "Prove both directions of a biconditional separately",
+          "summaryLatex": "One direction usually needs factoring and the other needs substitution, and they are not the same argument run backwards.",
+          "bodyLatex": "Label the two directions before writing them. A statement phrased with 'if and only if' is two claims, and a proof that leaves either one unproved has established a different, weaker statement than the one asked."
+        },
+        {
+          "slug": "quantifier-order",
+          "name": "Respect the order of the quantifiers",
+          "summaryLatex": "In a claim of the form 'for every $n$ there is a $k$', the object produced must depend on $n$; a single $k$ that works for all $n$ proves a different and usually false claim.",
+          "bodyLatex": "Reading the two orders aloud settles most quantifier errors. 'Every $n$ has some $k$' and 'some single $k$ works for every $n$' differ on almost every concrete example, so a proof that silently switches orders has not proved the claim."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "wlog-without-symmetry",
+          "titleLatex": "Opening a proof with without loss of generality when no symmetry exists",
+          "wrongLatex": "x^2-2y=0",
+          "whyLatex": "The claim $x^2-2y=0$ does not treat $x$ and $y$ alike: interchanging them gives $y^2-2x=0$, which is a different statement. Assuming an order between $x$ and $y$ here discards a real case, and a proof that opens this way is proving a different claim from the one it was given.",
+          "fixLatex": "Before writing the phrase, exhibit the relabelling: say explicitly that the claim is unchanged when the two names are exchanged, or that every quantity appearing in it treats them identically. If no such relabelling exists, split into genuine cases instead."
+        },
+        {
+          "slug": "one-direction-of-biconditional",
+          "titleLatex": "Proving only one direction of a biconditional",
+          "wrongLatex": "x=2",
+          "whyLatex": "The claim $x^2=4 \\iff x=2 \\text{ or } x=-2$ needs a forward direction and a reverse direction. Factoring proves the forward direction, and the answer $x=2$ drops the solution $x=-2$, so half of the claim is unproved and the stated conclusion is false as it stands.",
+          "fixLatex": "Write the two directions under separate headings before starting, and finish each one. The reverse direction is usually a substitution, which takes a line, so omitting it is never a time-saving move."
+        },
+        {
+          "slug": "generalize-from-one-instance",
+          "titleLatex": "Generalizing a claim from a single example",
+          "wrongLatex": "n=5",
+          "whyLatex": "Checking one value of $n$ shows that the claim holds there and says nothing about any other value. The claim that $n^2$ is odd whenever $n$ is odd is true for $n=5$ and equally consistent with a claim that fails at $n=4$, so the example settles nothing.",
+          "fixLatex": "Let the quantified variable stay arbitrary, and replace the example with the general statement. If the claim actually is false, then the correct response is a single counterexample, not a proof that one example happened to work."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m9-l1-p1", "m9-l1-p2", "m9-l1-p3", "m9-l1-p4", "m9-l1-p5",
+        "m9-l1-p6", "m9-l1-p7", "m9-l1-p8", "m9-l1-p9", "m9-l1-p10",
+        "m9-l1-p11", "m9-l1-p12", "m9-l1-p13", "m9-l1-p14", "m9-l1-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m9-l1-p1", "m9-l1-p2", "m9-l1-p3", "m9-l1-p4", "m9-l1-p5",
+        "m9-l1-p6", "m9-l1-p7", "m9-l1-p8", "m9-l1-p9", "m9-l1-p10",
+        "m9-l1-p11", "m9-l1-p12", "m9-l1-p13", "m9-l1-p14", "m9-l1-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": ["m9-l1-m1", "m9-l1-m2", "m9-l1-m3"],
+      "passThreshold": 2
+    }
+  },
+  "tags": ["proof", "direct-proof", "quantifiers", "wlog", "chain-of-equivalences", "case-split"]
+}

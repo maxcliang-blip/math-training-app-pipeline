@@ -1,0 +1,148 @@
+{
+  "id": "m7-l2",
+  "moduleId": "M7",
+  "order": 2,
+  "title": "Inclusion-Exclusion, Stars and Bars, and the Pigeonhole Principle",
+  "topicSlug": "inclusion-exclusion-stars-and-bars-pigeonhole",
+  "tiers": ["10", "12", "A"],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": ["m7-l1"],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Apply the inclusion-exclusion principle to count unions of overlapping sets, use stars and bars to count integer solutions to equations, and apply the pigeonhole principle to prove existence statements."
+    },
+    "prerequisites": {
+      "items": [
+        {
+          "labelLatex": "[m7-l1](/M7/lessons/m7-l1) fundamental counting, permutations, combinations",
+          "noteLatex": "The multiplication principle, permutations, combinations, and complementary counting are used throughout this lesson."
+        }
+      ],
+      "noteLatex": "This lesson builds on the counting fundamentals from M7-L1. You should be comfortable with $\\binom{n}{k}$ and with the idea that counting the complement is often easier than counting directly."
+    },
+    "concept": {
+      "conceptLatex": "The inclusion-exclusion principle counts the union of sets by adding individual sizes, subtracting pairwise intersections, adding back triple intersections, and so on. For two sets: $|A \\cup B| = |A| + |B| - |A \\cap B|$. For three sets: $|A \\cup B \\cup C| = |A| + |B| + |C| - |A \\cap B| - |B \\cap C| - |C \\cap A| + |A \\cap B \\cap C|$. The alternating sum continues for any number of sets. The principle works because every element in the union is counted exactly once: if it belongs to exactly $k$ of the sets, it is added $k$ times, subtracted $\\binom{k}{2}$ times, added $\\binom{k}{3}$ times, etc., and the alternating sum of binomial coefficients is $1$.\n\nStars and bars counts the number of nonnegative integer solutions to $x_1 + x_2 + \\cdots + x_k = n$. Imagine $n$ identical stars in a row, and place $k-1$ bars to divide them into $k$ groups. The number of ways to choose positions for the bars among the $n+k-1$ total symbols is $\\binom{n+k-1}{k-1}$. If each variable must be positive ($x_i \\ge 1$), give one star to each variable first, leaving $n-k$ stars to distribute freely: $\\binom{n-1}{k-1}$. Upper bounds on variables require casework or inclusion-exclusion.\n\nThe pigeonhole principle states that if $n+1$ objects are placed into $n$ boxes, at least one box contains at least two objects. More generally, if $N$ objects are placed into $k$ boxes, some box contains at least $\\lceil N/k \\rceil$ objects. The principle is an existence tool: it proves that a configuration with a certain property must exist, without constructing it. The art is choosing the right \"pigeons\" and \"holes\" so that the conclusion matches the problem's claim.",
+      "figures": [
+        {
+          "id": "m7-l2-fig-1",
+          "captionLatex": "A Venn diagram showing three overlapping sets; the inclusion-exclusion formula adds the three individual circles, subtracts the three pairwise overlaps, and adds back the triple overlap to count every point exactly once.",
+          "asymptoteSource": "// Three-set Venn diagram for inclusion-exclusion.\n// Two-argument size fixes the output box, so the declared 4/3 is exact.\nsize(320,240);\nreal r = 1.2;\nreal d = 1.0;\npair A = (0,0);\npair B = (d,0);\npair C = (d/2, sqrt(3)/2*d);\ndraw(circle(A,r), black+1.5);\ndraw(circle(B,r), black+1.5);\ndraw(circle(C,r), black+1.5);\nlabel(\"$A$\", A + (-r*0.8, r*0.8), NW);\nlabel(\"$B$\", B + (r*0.8, r*0.8), NE);\nlabel(\"$C$\", C + (0, r*1.1), N);\nlabel(\"$|A|+|B|+|C|$\", (d/2, -r*1.3), S);\nlabel(\"$-|A\\cap B|-|B\\cap C|-|C\\cap A|$\", (d/2, -r*1.6), S);\nlabel(\"$+|A\\cap B\\cap C|$\", (d/2, -r*1.9), S);\nlabel(\"Each region counted exactly once\", (d/2, -r*2.2), S);",
+          "asymptoteAlt": "Three overlapping circles of equal size arranged in a triangle. The circles are labeled A, B, and C. Below the diagram, three lines show the inclusion-exclusion formula: sum of individual sets, minus sum of pairwise intersections, plus the triple intersection. A note explains that each region is counted exactly once.",
+          "asymptoteAspectRatio": 1.333
+        },
+        {
+          "id": "m7-l2-fig-2",
+          "captionLatex": "The stars-and-bars representation of a solution to x1 + x2 + x3 = 7: seven stars divided into three groups by two bars. The group sizes give the values of the variables.",
+          "asymptoteSource": "// Stars and bars for x1 + x2 + x3 = 7.\n// Two-argument size fixes the output box, so the declared 8/3 is exact.\nsize(400,150);\nreal starR = 0.12;\nreal y = 0;\nint n = 7, k = 3;\nint bars = k - 1;\nint total = n + bars;\n// One configuration: **|***|** (x1=2, x2=3, x3=2)\nint[] config = {0,0,1,0,0,0,1,0,0};\nfor (int i = 0; i < total; ++i) {\n  real x = i * 40;\n  if (config[i] == 0) {\n    filldraw(circle((x,y), starR), yellow, black);\n  } else {\n    draw((x, y+0.2)--(x, y-0.2), black+2);\n  }\n}\nlabel(\"$x_1=2$\", (1*40, -0.6), S);\nlabel(\"$x_2=3$\", (4*40, -0.6), S);\nlabel(\"$x_3=2$\", (7*40, -0.6), S);\nlabel(\"stars and bars: $\\binom{7+3-1}{3-1} = \\binom{9}{2} = 36$\", (total*40/2, 0.8), N);",
+          "asymptoteAlt": "A row of nine symbols: two stars, a vertical bar, three stars, a vertical bar, two stars. The groups of stars are labeled x1=2, x2=3, x3=2. A label above explains that the number of such configurations is C(9,2) = 36.",
+          "asymptoteAspectRatio": 2.667
+        }
+      ],
+      "examples": [
+        {
+          "id": "m7-l2-ex-1",
+          "titleLatex": "Worked example: inclusion-exclusion for three sets",
+          "bodyLatex": "How many integers from 1 to 100 are divisible by 2, 3, or 5?\n\nLet $A$ be multiples of 2, $B$ multiples of 3, $C$ multiples of 5.\n$|A| = 50$, $|B| = 33$, $|C| = 20$.\n$|A \\cap B| = \\lfloor 100/6 \\rfloor = 16$ (multiples of 6).\n$|B \\cap C| = \\lfloor 100/15 \\rfloor = 6$.\n$|C \\cap A| = \\lfloor 100/10 \\rfloor = 10$.\n$|A \\cap B \\cap C| = \\lfloor 100/30 \\rfloor = 3$.\nBy inclusion-exclusion: $50 + 33 + 20 - 16 - 6 - 10 + 3 = 74$.",
+          "answerLatex": "74"
+        },
+        {
+          "id": "m7-l2-ex-2",
+          "titleLatex": "Worked example: stars and bars with positive variables",
+          "bodyLatex": "How many positive integer solutions does $x_1 + x_2 + x_3 + x_4 = 10$ have?\n\nGive one star to each variable first, using 4 stars. Then distribute the remaining $10-4=6$ stars freely among 4 variables. The number of ways is $\\binom{6+4-1}{4-1} = \\binom{9}{3} = 84$.",
+          "answerLatex": "84"
+        },
+        {
+          "id": "m7-l2-ex-3",
+          "titleLatex": "Worked example: stars and bars with upper bounds",
+          "bodyLatex": "How many nonnegative integer solutions does $x_1 + x_2 + x_3 = 8$ have if each $x_i \\le 4$?\n\nTotal solutions without bounds: $\\binom{8+3-1}{3-1} = \\binom{10}{2} = 45$.\nLet $A_i$ be the set where $x_i \\ge 5$. Set $y_i = x_i - 5$, then $y_i + x_j + x_k = 3$.\n$|A_i| = \\binom{3+3-1}{2} = 10$. Intersections $A_i \\cap A_j$ require $x_i \\ge 5, x_j \\ge 5$, sum at least 10 > 8, so empty.\nBy inclusion-exclusion: $45 - 3 \\cdot 10 = 15$.",
+          "answerLatex": "15"
+        },
+        {
+          "id": "m7-l2-ex-4",
+          "titleLatex": "Worked example: pigeonhole principle",
+          "bodyLatex": "Show that among any 5 points in a unit square, two are at distance at most $\\frac{\\sqrt{2}}{2}$.\n\nDivide the square into 4 congruent smaller squares of side $\\frac{1}{2}$. Each small square has diagonal $\\frac{\\sqrt{2}}{2}$. By the pigeonhole principle, with 5 points and 4 squares, at least one small square contains at least 2 points. Their distance is at most the diagonal of that small square, which is $\\frac{\\sqrt{2}}{2}$.",
+          "answerLatex": "Proved: two points in the same quarter-square have distance $\\le \\frac{\\sqrt{2}}{2}$."
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "inclusion-exclusion-principle",
+          "name": "Count a union by alternating sum of intersections",
+          "summaryLatex": "$|A \\cup B| = |A|+|B|-|A \\cap B|$; for three sets add triple intersections back, etc.",
+          "bodyLatex": "The inclusion-exclusion principle handles overlapping sets by correcting for overcounts. For $n$ sets, the formula is an alternating sum: add all single sets, subtract all pairwise intersections, add all triple intersections, subtract all quadruple intersections, and so on. The key insight: an element in exactly $k$ sets is counted $\\binom{k}{1} - \\binom{k}{2} + \\binom{k}{3} - \\cdots = 1$ time. Always verify that intersections are computed correctly; a common error is using the wrong modulus or missing an intersection."
+        },
+        {
+          "slug": "stars-and-bars-method",
+          "name": "Count nonnegative integer solutions with stars and bars",
+          "summaryLatex": "Solutions to $x_1 + \\cdots + x_k = n$ with $x_i \\ge 0$ is $\\binom{n+k-1}{k-1}$; with $x_i \\ge 1$ it is $\\binom{n-1}{k-1}$.",
+          "bodyLatex": "Visualize $n$ identical stars in a row. Place $k-1$ bars to divide them into $k$ groups; the group sizes are the variable values. The bars can go in any of the $n+k-1$ gaps between or around stars, so choose $k-1$ of these positions: $\\binom{n+k-1}{k-1}$. For positive variables, give one star to each variable first, then distribute the remaining $n-k$ stars freely: $\\binom{n-1}{k-1}$. When upper bounds exist, use inclusion-exclusion on the complement (variables exceeding the bound)."
+        },
+        {
+          "slug": "pigeonhole-application",
+          "name": "Prove existence by pigeonhole principle",
+          "summaryLatex": "If $N$ objects go into $k$ boxes, some box gets at least $\\lceil N/k \\rceil$ objects.",
+          "bodyLatex": "The pigeonhole principle is an existence proof: it guarantees a configuration without constructing it. The hard part is defining the right pigeons and holes. Common templates: divide a region into subregions (holes), points are pigeons; consider residues modulo $m$ (holes), integers are pigeons; consider pairs of coordinates (holes), lattice points are pigeons. The conclusion $\\lceil N/k \\rceil$ gives the minimum guaranteed number in some hole."
+        },
+        {
+          "slug": "complementary-count",
+          "name": "Count the complement and subtract",
+          "summaryLatex": "When counting a set directly is hard, count its complement and subtract from the total.",
+          "bodyLatex": "If a set $A$ is a subset of a finite universal set $U$, then $|A| = |U| - |U \\setminus A|$. This is useful when the complement is simpler to count, such as counting subsets with at least one element of a certain type by subtracting those with none. The technique applies whenever the total and the complement are both easy to compute."
+        },
+        {
+          "slug": "case-split-inclusion-exclusion",
+          "name": "Split into cases by which constraints are violated",
+          "summaryLatex": "For upper bounds, use inclusion-exclusion on the events $x_i > b_i$.",
+          "bodyLatex": "When stars and bars has upper bounds $x_i \\le b_i$, define $A_i$ as the set of solutions where $x_i \\ge b_i+1$. Substitute $y_i = x_i - (b_i+1)$ to count $|A_i|$. Intersections $A_i \\cap A_j$ correspond to both variables exceeding their bounds. If the total required exceeds the sum, the intersection is empty. The valid solutions are the total minus the union of all $A_i$."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "ie-missing-intersection",
+          "titleLatex": "Forgetting a pairwise intersection in inclusion-exclusion",
+          "wrongLatex": "|A| + |B| + |C| - |A \\cap B| - |B \\cap C|",
+          "whyLatex": "The formula for three sets requires subtracting all three pairwise intersections: $|A \\cap B|$, $|B \\cap C|$, and $|C \\cap A|$. Omitting one leaves the elements in that intersection overcounted. The full formula is $|A|+|B|+|C| - |A\\cap B| - |B\\cap C| - |C\\cap A| + |A\\cap B\\cap C|$.",
+          "fixLatex": "List all intersections systematically: all pairs, all triples, etc. A three-set problem needs exactly three pairwise intersections and one triple intersection. Check that each intersection corresponds to a nonempty condition in the problem."
+        },
+        {
+          "slug": "stars-bars-positive-vs-nonnegative",
+          "titleLatex": "Using the wrong stars-and-bars formula for positive variables",
+          "wrongLatex": "\\binom{10+4-1}{4-1} = \\binom{13}{3} = 286",
+          "whyLatex": "The problem asks for positive integer solutions to $x_1+x_2+x_3+x_4=10$. The formula $\\binom{n+k-1}{k-1}$ is for nonnegative solutions. For positive solutions, give one to each variable first, then use $\\binom{n-1}{k-1} = \\binom{9}{3} = 84$.",
+          "fixLatex": "Check whether variables can be zero. If the problem says \"positive integers\" or \"at least 1\", use $\\binom{n-1}{k-1}$. If it says \"nonnegative integers\" or \"at least 0\", use $\\binom{n+k-1}{k-1}$. The difference is whether you pre-place one star in each bin."
+        },
+        {
+          "slug": "pigeonhole-wrong-holes",
+          "titleLatex": "Choosing holes that do not force the desired conclusion",
+          "wrongLatex": "To show two integers among five have the same parity, use 5 holes.",
+          "whyLatex": "Parity has only 2 values (even, odd). Using 5 holes would give at most 1 pigeon per hole, proving nothing. The holes must be the categories you want to force a collision in: for parity, use 2 holes (even/odd). With 5 integers and 2 holes, $\\lceil 5/2 \\rceil = 3$ integers share a parity.",
+          "fixLatex": "Identify the property you want to force a collision on (same parity, same residue mod m, same distance range, etc.). The number of holes equals the number of categories for that property. Then verify that the number of pigeons exceeds the number of holes."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m7-l2-p1", "m7-l2-p2", "m7-l2-p3", "m7-l2-p4", "m7-l2-p5",
+        "m7-l2-p6", "m7-l2-p7", "m7-l2-p8", "m7-l2-p9", "m7-l2-p10",
+        "m7-l2-p11", "m7-l2-p12", "m7-l2-p13", "m7-l2-p14", "m7-l2-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m7-l2-p1", "m7-l2-p2", "m7-l2-p3", "m7-l2-p4", "m7-l2-p5",
+        "m7-l2-p6", "m7-l2-p7", "m7-l2-p8", "m7-l2-p9", "m7-l2-p10",
+        "m7-l2-p11", "m7-l2-p12", "m7-l2-p13", "m7-l2-p14", "m7-l2-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": ["m7-l2-m1", "m7-l2-m2", "m7-l2-m3"],
+      "passThreshold": 2
+    }
+  },
+  "tags": ["inclusion-exclusion", "stars-and-bars", "pigeonhole-principle", "complementary-counting"]
+}

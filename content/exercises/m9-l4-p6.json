@@ -1,0 +1,22 @@
+{
+  "id": "m9-l4-p6",
+  "moduleId": "M9",
+  "lessonId": "m9-l4",
+  "tier": "A",
+  "difficulty": 3,
+  "tags": ["proof-strategy", "induction"],
+  "promptLatex": "Which proof strategy is most appropriate for proving 'for every integer n ≥ 1, 2^n > n'?",
+  "choices": ["direct proof", "proof by contradiction", "proof by induction", "counterexample", "pigeonhole principle"],
+  "answerLatex": "proof by induction",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Induction is the natural strategy for claims quantifying over all natural numbers.",
+    "Base case n=1: 2^1 = 2 > 1 holds.",
+    "Inductive step: assume 2^k > k, then 2^{k+1} = 2·2^k > 2·k ≥ k+1 for k ≥ 1."
+  ],
+  "solutionLatex": "Proof by induction: Base case n=1 gives 2^1 = 2 > 1, which holds. Inductive step: assume 2^k > k for some k ≥ 1. Then 2^{k+1} = 2 · 2^k > 2 · k ≥ k + 1 (since k ≥ 1). Thus 2^{k+1} > k+1, completing the inductive step. Therefore the claim holds for all n ≥ 1 by induction.",
+  "techniqueSlugs": ["induction"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,544 @@
+[
+  {
+    "id": "m4-l3-p1",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "series",
+      "geometric-sequences",
+      "sigma-notation"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=0}^{5} 2^{k}$?",
+    "choices": [
+      "63",
+      "64",
+      "62",
+      "32",
+      "31"
+    ],
+    "answerLatex": "63",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The summand is a power of two whose exponent runs from $0$ to $5$, so the sum is the list $1 + 2 + 4 + 8 + 16 + 32$.",
+      "A finite geometric sum is the first term times one minus the ratio to the number of terms, over one minus the ratio.",
+      "The first term is $1$, the ratio is $2$, and there are $6$ terms, so the sum is $\\frac{1(2^{6}-1)}{2-1}$."
+    ],
+    "solutionLatex": "The index runs from $0$ to $5$, so there are $6$ terms and the first of them is $2^{0} = 1$.\n\n$S_{6} = \\frac{a_1(2^{6}-1)}{2-1} = \\frac{1(64-1)}{1} = 63$\n\nAdding the six terms directly gives $1+2+4+8+16+32 = 63$, and the doubling pattern $1, 3, 7, 15, 31, 63$ gives the same value.",
+    "techniqueSlugs": [
+      "finite-geometric-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p2",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "series",
+      "geometric-sequences"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{8} 3^{k}$?",
+    "choices": null,
+    "answerLatex": "9840",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The index runs from $1$ to $8$, so the first term is $3$ rather than $1$ and the last is $3^{8}$.",
+      "A finite geometric sum needs the first term, the ratio, and the number of terms, and the number of terms is the number of values the index takes.",
+      "The first term is $3$, the ratio is $3$, and there are $8$ terms, giving $S_{8} = \\frac{3(3^{8}-1)}{2}$."
+    ],
+    "solutionLatex": "The index starts at $1$, so $a_1 = 3$ and there are $8$ terms.\n\n$S_{8} = \\frac{a_1(3^{8}-1)}{3-1} = \\frac{3(6561-1)}{2} = \\frac{3 \\cdot 6560}{2} = 9840$\n\nNote the first term: writing the sum as starting at $k=0$ would give a different first term and a different total, which is why the starting index is read before the formula is applied.",
+    "techniqueSlugs": [
+      "finite-geometric-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p3",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "infinite-sums",
+      "series-convergence",
+      "geometric-sequences"
+    ],
+    "promptLatex": "The series $\\sum_{k=1}^{\\infty} \\left(\\frac{1}{3}\\right)^{k}$ converges. What is its sum?",
+    "choices": null,
+    "answerLatex": "\\frac{1}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Identify the first term and the ratio, and confirm that the ratio has absolute value below one.",
+      "A convergent infinite geometric series sums to the first term divided by one minus the ratio.",
+      "The first term is $\\frac{1}{3}$ and the ratio is $\\frac{1}{3}$, so the sum is $\\frac{\\frac{1}{3}}{\\frac{2}{3}}$."
+    ],
+    "solutionLatex": "The first term is $\\left(\\frac{1}{3}\\right)^{1} = \\frac{1}{3}$ and the ratio is $\\frac{1}{3}$, whose absolute value is below $1$, so the series converges.\n\n$S = \\frac{a_1}{1-r} = \\frac{\\frac{1}{3}}{1 - \\frac{1}{3}} = \\frac{\\frac{1}{3}}{\\frac{2}{3}} = \\frac{1}{2}$\n\nThe first four partial sums are $\\frac{1}{3}, \\frac{4}{9}, \\frac{13}{27}, \\frac{40}{81}$, each a little above a half, consistent with a total of $\\frac{1}{2}$.",
+    "techniqueSlugs": [
+      "infinite-geometric-sum",
+      "convergence-test"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p4",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "infinite-sums",
+      "series-convergence",
+      "geometric-sequences"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=0}^{\\infty} \\left(-\\frac{1}{2}\\right)^{k}$?",
+    "choices": [
+      "\\frac{2}{3}",
+      "\\frac{3}{2}",
+      "\\frac{1}{3}",
+      "2",
+      "\\frac{3}{4}"
+    ],
+    "answerLatex": "\\frac{2}{3}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The terms alternate in sign, so write the first few out and see what the pattern is.",
+      "The infinite formula covers a negative ratio as long as its absolute value is below one, and here it is one half.",
+      "The first term is $1$ and the ratio is $-\\frac{1}{2}$, so the sum is $\\frac{1}{1+\\frac{1}{2}}$."
+    ],
+    "solutionLatex": "The series is $1 - \\frac{1}{2} + \\frac{1}{4} - \\frac{1}{8} + \\cdots$, so $a_1 = 1$ and $r = -\\frac{1}{2}$.\n\nSince $\\left| -\\frac{1}{2} \\right| < 1$ the series converges, and\n\n$S = \\frac{a_1}{1-r} = \\frac{1}{1 - (-\\frac{1}{2})} = \\frac{1}{\\frac{3}{2}} = \\frac{2}{3}$\n\nThe partial sums $1, \\frac{1}{2}, \\frac{3}{4}, \\frac{5}{8}, \\frac{11}{16}$ alternate above and below $\\frac{2}{3}$ and close in on it.",
+    "techniqueSlugs": [
+      "negative-ratio-case",
+      "infinite-geometric-sum"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p5",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "infinite-sums",
+      "geometric-sequences"
+    ],
+    "promptLatex": "An infinite geometric series has first term $9$ and sum $12$. What is its common ratio?",
+    "choices": null,
+    "answerLatex": "\\frac{1}{4}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The sum of a convergent geometric series relates the first term and the ratio in a single equation, so solve that equation.",
+      "Write the first term divided by one minus the ratio equal to the given total.",
+      "$9 = 12(1-r)$ gives $1-r = \\frac{3}{4}$, hence $r = \\frac{1}{4}$."
+    ],
+    "solutionLatex": "The sum formula is $S = \\frac{a_1}{1-r}$ with $a_1 = 9$ and $S = 12$.\n\n$12 = \\frac{9}{1-r} \\implies 12(1-r) = 9 \\implies 1 - r = \\frac{9}{12} = \\frac{3}{4} \\implies r = \\frac{1}{4}$\n\nCheck: $\\frac{9}{1 - \\frac{1}{4}} = \\frac{9}{\\frac{3}{4}} = 12$, and the ratio has absolute value below $1$ as a convergent series requires.",
+    "techniqueSlugs": [
+      "infinite-geometric-sum",
+      "convergence-test"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p6",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "series",
+      "geometric-sequences",
+      "negative-ratio-case"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{5} (-3)^{k}$?",
+    "choices": null,
+    "answerLatex": "-183",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Write the five terms out, keeping track of their signs, and look for the pattern before computing.",
+      "A finite geometric sum handles a negative ratio without any change to the formula.",
+      "The first term is $-3$, the ratio is $-3$, and there are $5$ terms, so $S_{5} = \\frac{-3((-3)^{5}-1)}{-4}$."
+    ],
+    "solutionLatex": "The sum is $-3 + 9 - 27 + 81 - 243$.\n\n$S_{5} = \\frac{a_1\\left(r^{5}-1\\right)}{r-1} = \\frac{-3\\left((-3)^{5}-1\\right)}{-4} = \\frac{-3(-244)}{-4} = \\frac{732}{-4} = -183$\n\nAdding the terms by hand gives the same value: $-3+9 = 6$, $6-27 = -21$, $-21+81 = 60$, and $60-243 = -183$.",
+    "techniqueSlugs": [
+      "negative-ratio-case",
+      "finite-geometric-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p7",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "series",
+      "partial-sums",
+      "geometric-sequences"
+    ],
+    "promptLatex": "A geometric sequence has first term $4$ and common ratio $\\frac{1}{2}$. What is the sum of its first six terms?",
+    "choices": [
+      "\\frac{63}{8}",
+      "\\frac{63}{4}",
+      "\\frac{127}{8}",
+      "\\frac{31}{4}",
+      "8"
+    ],
+    "answerLatex": "\\frac{63}{8}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Write the first six terms and add them as fractions with a common denominator.",
+      "The partial sum of six terms of a geometric sequence is the first term times one minus the ratio to the sixth power, over one minus the ratio.",
+      "$S_{6} = \\frac{4(1 - (\\frac{1}{2})^{6})}{1 - \\frac{1}{2}}$, and $1 - (\\frac{1}{2})^{6} = \\frac{63}{64}$."
+    ],
+    "solutionLatex": "The terms are $4, 2, 1, \\frac{1}{2}, \\frac{1}{4}, \\frac{1}{8}$.\n\n$S_{6} = \\frac{a_1(1-r^{6})}{1-r} = \\frac{4\\left(1 - \\frac{1}{64}\\right)}{\\frac{1}{2}} = \\frac{4 \\cdot \\frac{63}{64}}{\\frac{1}{2}} = \\frac{\\frac{63}{16}}{\\frac{1}{2}} = \\frac{63}{8}$\n\nAdding the six terms over the common denominator $8$ gives $(32+16+8+4+2+1)/8 = \\frac{63}{8}$ as well.",
+    "techniqueSlugs": [
+      "finite-geometric-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p8",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "infinite-sums",
+      "series-convergence",
+      "fractions"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{\\infty} \\frac{5}{7^{k}}$?",
+    "choices": null,
+    "answerLatex": "\\frac{5}{6}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The summand splits into a part that never changes and a part that does, and the changing part is what decides convergence.",
+      "Since $\\frac{5}{7^{k}} = \\frac{5}{7}\\left(\\frac{1}{7}\\right)^{k-1}$, the first term is $\\frac{5}{7}$ and the ratio is $\\frac{1}{7}$.",
+      "The sum is therefore $\\frac{\\frac{5}{7}}{1 - \\frac{1}{7}}$, and the denominator simplifies."
+    ],
+    "solutionLatex": "Write the series out: $\\frac{5}{7} + \\frac{5}{49} + \\frac{5}{343} + \\cdots$, so $a_1 = \\frac{5}{7}$ and $r = \\frac{1}{7}$.\n\nSince $\\frac{1}{7} < 1$ the series converges, and\n\n$S = \\frac{a_1}{1-r} = \\frac{\\frac{5}{7}}{1 - \\frac{1}{7}} = \\frac{\\frac{5}{7}}{\\frac{6}{7}} = \\frac{5}{6}$\n\nThe first three partial sums are $\\frac{5}{7}, \\frac{40}{49}, \\frac{285}{343}$, and each is a little below $\\frac{5}{6}$, as a convergent series with a positive first term must be.",
+    "techniqueSlugs": [
+      "infinite-geometric-sum",
+      "convergence-test"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p9",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "infinite-sums",
+      "word-problem",
+      "geometric-sequences"
+    ],
+    "promptLatex": "A geometric series begins $12 + 6 + 3 + \\frac{3}{2} + \\cdots$. What is its sum?",
+    "choices": null,
+    "answerLatex": "24",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Each term is half the one before it, so the series is geometric with a first term and a ratio that are easy to read off.",
+      "A convergent geometric series sums to the first term divided by one minus the ratio.",
+      "The first term is $12$ and the ratio is $\\frac{1}{2}$, so the sum is $\\frac{12}{1 - \\frac{1}{2}}$."
+    ],
+    "solutionLatex": "The series is $12, 6, 3, \\frac{3}{2}, \\frac{3}{4}, \\ldots$, so $a_1 = 12$ and $r = \\frac{1}{2}$.\n\n$S = \\frac{a_1}{1-r} = \\frac{12}{1 - \\frac{1}{2}} = \\frac{12}{\\frac{1}{2}} = 24$\n\nThe first four partial sums are $12, 18, 21, \\frac{45}{2}$, approaching $24$ from below and never reaching it, which is what convergence to $24$ means.",
+    "techniqueSlugs": [
+      "infinite-geometric-sum",
+      "growth-decay-modeling"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p10",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "infinite-sums",
+      "series-convergence",
+      "geometric-sequences"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{\\infty} \\frac{2^{k+1}}{5^{k}}$?",
+    "choices": null,
+    "answerLatex": "\\frac{4}{3}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Isolate the part of the summand that depends on the index, and confirm that what is left over is a small enough ratio for the series to converge.",
+      "$\\frac{2^{k+1}}{5^{k}} = 2\\left(\\frac{2}{5}\\right)^{k}$, and $\\frac{2}{5}$ is below $1$, so the series converges.",
+      "The first term is $2 \\cdot \\frac{2}{5} = \\frac{4}{5}$, so the sum is $\\frac{4/5}{1 - 2/5}$."
+    ],
+    "solutionLatex": "Write the summand as a constant times a power.\n\n$\\frac{2^{k+1}}{5^{k}} = \\frac{2 \\cdot 2^{k}}{5^{k}} = 2\\left(\\frac{2}{5}\\right)^{k}$\n\nSince the index starts at $k=1$, the first term is $2 \\cdot \\frac{2}{5} = \\frac{4}{5}$ and the ratio is $\\frac{2}{5}$, which is below $1$.\n\n$S = \\frac{\\frac{4}{5}}{1 - \\frac{2}{5}} = \\frac{\\frac{4}{5}}{\\frac{3}{5}} = \\frac{4}{3}$\n\nThe first three terms are $\\frac{4}{5}, \\frac{8}{25}, \\frac{16}{125}$, and their partial sums approach $\\frac{4}{3}$ from below.",
+    "techniqueSlugs": [
+      "infinite-geometric-sum",
+      "convergence-test"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p11",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "geometric-sequences",
+      "geometric-mean"
+    ],
+    "promptLatex": "In a geometric sequence with all terms positive, $a_5 = 6$ and $a_7 = 24$. What is $a_6$?",
+    "choices": [
+      "12",
+      "-12",
+      "6",
+      "15",
+      "30"
+    ],
+    "answerLatex": "12",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A term of a geometric sequence is the geometric mean of the terms on either side of it, so use the two known values rather than solving for the ratio.",
+      "The relation is $a_{6}^{2} = a_{5} a_{7}$.",
+      "$a_{6}^{2} = 6 \\cdot 24 = 144$, and the terms are positive, so $a_6 = 12$."
+    ],
+    "solutionLatex": "In a geometric sequence the product of the terms two apart is the square of the term between them.\n\n$a_{6}^{2} = a_{5} a_{7} = 6 \\cdot 24 = 144$\n\nSince every term is positive, $a_6 = 12$.\n\nAs a check, the ratio is $\\frac{a_7}{a_6} = \\frac{24}{12} = 2$, and then $a_5 r = 6 \\cdot 2 = 12$ as well, so the two neighbours of $a_6$ are consistent with each other.",
+    "techniqueSlugs": [
+      "geometric-mean"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p12",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "series",
+      "geometric-sequences",
+      "sigma-notation"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=0}^{8} 3 \\cdot 2^{k}$?",
+    "choices": null,
+    "answerLatex": "1533",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Pull the constant outside the summation, since it does not depend on the index, and then handle a plain power sum.",
+      "$\\sum_{k=0}^{8} 3 \\cdot 2^{k} = 3 \\sum_{k=0}^{8} 2^{k}$, and the sum in parentheses runs over $9$ powers starting at $2^{0}$.",
+      "The inner sum is $\\frac{2^{9}-1}{2-1} = 511$, so the total is three times that."
+    ],
+    "solutionLatex": "Factor out the constant.\n\n$\\sum_{k=0}^{8} 3 \\cdot 2^{k} = 3\\left(1 + 2 + 4 + \\cdots + 2^{8}\\right)$\n\nThe index runs from $0$ to $8$, so there are $9$ terms with first term $1$ and ratio $2$.\n\n$\\sum_{k=0}^{8} 2^{k} = \\frac{1(2^{9}-1)}{2-1} = 511$, and the total is $3 \\cdot 511 = 1533$.\n\nThe same value comes from the doubled sum: the terms are $3, 6, 12, \\ldots, 768$, and $3(1+2+\\cdots+2^{8}) = 3(511)$.",
+    "techniqueSlugs": [
+      "finite-geometric-formula",
+      "reindex-and-subtract"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p13",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "word-problem",
+      "infinite-sums",
+      "geometric-sequences"
+    ],
+    "promptLatex": "A ball is dropped from a height of $20$ units and each bounce reaches one third of the height of the previous drop. What is the total distance the ball falls, from the first drop until it comes to rest?",
+    "choices": [
+      "30",
+      "40",
+      "60",
+      "45",
+      "20"
+    ],
+    "answerLatex": "30",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "List the heights of the drops one at a time and identify the pattern before summing anything.",
+      "The drops form a geometric series with first term $20$ and ratio $\\frac{1}{3}$, and the total is their infinite sum.",
+      "$20 + \\frac{20}{3} + \\frac{20}{9} + \\cdots$ sums to $\\frac{20}{1 - \\frac{1}{3}}$."
+    ],
+    "solutionLatex": "The drops are $20, \\frac{20}{3}, \\frac{20}{9}, \\ldots$, since the ball falls back down after every bounce. Upward travel is not counted here, so each height appears exactly once.\n\n$S = \\frac{20}{1 - \\frac{1}{3}} = \\frac{20}{\\frac{2}{3}} = 30$\n\nThe partial sums $20$, $\\frac{80}{3}$, $\\frac{260}{9}$ approach $30$ from below, and the distance still to be fallen after $n$ drops is $\\frac{20}{1-\\frac{1}{3}} \\left(\\frac{1}{3}\\right)^{n}$, which shrinks by a factor of three with every drop.",
+    "techniqueSlugs": [
+      "growth-decay-modeling",
+      "infinite-geometric-sum"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p14",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "infinite-sums",
+      "geometric-sequences"
+    ],
+    "promptLatex": "An infinite geometric series with first term $12$ has sum $20$. What is the sum of the series with first term $24$ and the same common ratio?",
+    "choices": null,
+    "answerLatex": "40",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The sum of a geometric series is proportional to its first term once the ratio is fixed, so the ratio itself may not be needed.",
+      "For a fixed ratio, $S = \\frac{a_1}{1-r}$ scales in direct proportion to $a_1$.",
+      "Doubling the first term of a series with a fixed ratio doubles its total."
+    ],
+    "solutionLatex": "For a fixed ratio the total is the first term multiplied by the constant $\\frac{1}{1-r}$, so the total scales with the first term.\n\nThe first term here is doubled from $12$ to $24$, so the total is doubled as well.\n\n$S = 2 \\cdot 20 = 40$\n\nThe ratio is fixed by the first series if a check is wanted: $20 = \\frac{12}{1-r}$ gives $r = \\frac{2}{5}$, and then $\\frac{24}{1 - \\frac{2}{5}} = 40$.",
+    "techniqueSlugs": [
+      "infinite-geometric-sum",
+      "convergence-test"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-p15",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "infinite-sums",
+      "series-convergence",
+      "geometric-sequences"
+    ],
+    "promptLatex": "For a real number $x$ with $0 < x < 1$, the series $\\sum_{k=0}^{\\infty} x^{k}$ has sum $20$. What is the sum of $\\sum_{k=0}^{\\infty} x^{2k}$?",
+    "choices": null,
+    "answerLatex": "\\frac{400}{39}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The new series is geometric with ratio $x^{2}$, and the first series already tells you $x$ in terms of its sum.",
+      "From $\\frac{1}{1-x} = 20$ you get $1-x = \\frac{1}{20}$, so $x = \\frac{19}{20}$ and $x^{2} = \\frac{361}{400}$.",
+      "The new sum is $\\frac{1}{1 - \\frac{361}{400}}$, and the denominator is $\\frac{39}{400}$."
+    ],
+    "solutionLatex": "The first series is geometric with first term $1$ and ratio $x$.\n\n$\\frac{1}{1-x} = 20 \\implies 1 - x = \\frac{1}{20} \\implies x = \\frac{19}{20}$\n\nThe second series is $\\sum_{k=0}^{\\infty} (x^{2})^{k}$, geometric with first term $1$ and ratio $x^{2} = \\frac{361}{400}$, which is again below $1$.\n\n$S = \\frac{1}{1 - \\frac{361}{400}} = \\frac{400}{39}$\n\nThe new sum exceeds the old one, which is the expected direction: squaring a ratio between zero and one makes the series decay more slowly.",
+    "techniqueSlugs": [
+      "convergence-test",
+      "infinite-geometric-sum"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-m1",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "series",
+      "geometric-sequences",
+      "partial-sums"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{10} \\left(\\frac{1}{2}\\right)^{k}$?",
+    "choices": null,
+    "answerLatex": "\\frac{1023}{1024}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The list is a halving sequence, so write out the first few terms and see the denominators double.",
+      "A finite geometric sum is the first term times one minus the ratio to the number of terms, over one minus the ratio.",
+      "The first term is $\\frac{1}{2}$ and there are $10$ terms, so $S_{10} = \\frac{1}{2}\\left(1 - \\frac{1}{2^{10}}\\right) \\cdot 2$."
+    ],
+    "solutionLatex": "The terms are $\\frac{1}{2}, \\frac{1}{4}, \\ldots, \\frac{1}{1024}$, with first term $\\frac{1}{2}$ and ratio $\\frac{1}{2}$.\n\n$S_{10} = \\frac{a_1(1-r^{10})}{1-r} = \\frac{\\frac{1}{2}\\left(1 - \\frac{1}{1024}\\right)}{\\frac{1}{2}} = 1 - \\frac{1}{1024} = \\frac{1023}{1024}$\n\nThe result is one less than a whole, and in general the sum of the first $n$ halvings is $1 - \\frac{1}{2^{n}}$, which is why such a sum never quite reaches $1$.",
+    "techniqueSlugs": [
+      "finite-geometric-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-m2",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "infinite-sums",
+      "geometric-sequences",
+      "series-convergence"
+    ],
+    "promptLatex": "An infinite geometric series has first term $5$ and sum $\\frac{25}{3}$. What is its fifth term?",
+    "choices": null,
+    "answerLatex": "\\frac{16}{125}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The given total fixes the ratio, and a single term is then the first term times a power of that ratio.",
+      "From $\\frac{5}{1-r} = \\frac{25}{3}$ you get $1 - r = \\frac{3}{5}$, so $r = \\frac{2}{5}$.",
+      "The fifth term is $5\\left(\\frac{2}{5}\\right)^{4}$."
+    ],
+    "solutionLatex": "Recover the ratio from the total.\n\n$\\frac{5}{1-r} = \\frac{25}{3} \\implies 1 - r = \\frac{15}{25} = \\frac{3}{5} \\implies r = \\frac{2}{5}$\n\nThe series is $5, 2, \\frac{4}{5}, \\frac{8}{25}, \\frac{16}{125}, \\ldots$, so the fifth term is\n\n$a_5 = a_1 r^{4} = 5 \\cdot \\frac{16}{625} = \\frac{80}{625} = \\frac{16}{125}$\n\nThe ratio has absolute value below $1$, so the infinite sum is meaningful, and the terms decay as the list shows.",
+    "techniqueSlugs": [
+      "infinite-geometric-sum"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l3-m3",
+    "moduleId": "M4",
+    "lessonId": "m4-l3",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "infinite-sums",
+      "series-convergence",
+      "geometric-sequences"
+    ],
+    "promptLatex": "A geometric series with first term $a$ and ratio $r$ has infinite sum $6$, and the series formed by squaring each of its terms has infinite sum $3$. What is the common ratio?",
+    "choices": null,
+    "answerLatex": "\\frac{11}{13}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Write both totals with the infinite sum formula; the second one has first term $a^{2}$ and ratio $r^{2}$.",
+      "The two equations are $\\frac{a}{1-r} = 6$ and $\\frac{a^{2}}{1-r^{2}} = 3$, and the second left side is the first left side times $\\frac{a}{1+r}$.",
+      "Dividing the two equations gives $\\frac{a}{1+r} = \\frac{1}{2}$, which together with $\\frac{a}{1-r} = 6$ determines $r$."
+    ],
+    "solutionLatex": "Both series are geometric, so both totals follow from the infinite sum formula.\n\n$\\frac{a}{1-r} = 6 \\qquad \\frac{a^{2}}{1-r^{2}} = 3$\n\nSince $1-r^{2} = (1-r)(1+r)$, the second equation is the first one multiplied by $\\frac{a}{1+r}$, so\n\n$6 \\cdot \\frac{a}{1+r} = 3 \\implies \\frac{a}{1+r} = \\frac{1}{2}$\n\nDividing the two expressions for $a$ eliminates it: $\\frac{a}{1-r} \\div \\frac{a}{1+r} = 6 \\div \\frac{1}{2}$, which gives $\\frac{1+r}{1-r} = 12$, so $1 + r = 12 - 12r$ and $13r = 11$.\n\n$r = \\frac{11}{13}$\n\nCheck: $a = 6(1 - \\frac{11}{13}) = \\frac{12}{13}$, and $\\frac{a^{2}}{1-r^{2}} = \\frac{\\frac{144}{169}}{1 - \\frac{121}{169}} = \\frac{\\frac{144}{169}}{\\frac{48}{169}} = 3$, as required.",
+    "techniqueSlugs": [
+      "convergence-test",
+      "infinite-geometric-sum"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

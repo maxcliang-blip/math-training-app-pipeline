@@ -1,0 +1,557 @@
+[
+  {
+    "id": "m4-l2-p1",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "series",
+      "sigma-notation",
+      "arithmetic-sequences"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{10} k$?",
+    "choices": [
+      "55",
+      "45",
+      "50",
+      "65",
+      "100"
+    ],
+    "answerLatex": "55",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The summand is the index itself, so the sum is the list $1 + 2 + \\cdots + 10$ and the values form an arithmetic pattern.",
+      "The sum of $n$ consecutive integers starting at one is $n$ times the average of the first and the last.",
+      "There are $10$ terms with average $11/2$, so the total is $10 \\cdot \\frac{11}{2} = 55$."
+    ],
+    "solutionLatex": "The sum is $1 + 2 + 3 + \\cdots + 10$, an arithmetic pattern of $10$ terms from $1$ to $10$.\n\n$S_{10} = \\frac{10}{2}(1 + 10) = 5 \\cdot 11 = 55$\n\nThe same figure follows from $\\frac{n(n+1)}{2}$ with $n=10$, and adding the ten values in pairs gives $55$ as well.",
+    "techniqueSlugs": [
+      "arithmetic-sum-formula",
+      "sigma-notation-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p2",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "series",
+      "sigma-notation"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{12} (3k-2)$?",
+    "choices": null,
+    "answerLatex": "210",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Write the first few terms of the sum so the pattern is visible, and count how many terms there are.",
+      "The summand $3k - 2$ is linear in the index, so the terms form an arithmetic pattern and the sum formula applies.",
+      "The terms are $1, 4, 7, \\ldots, 34$, which is $12$ terms with average $35/2$."
+    ],
+    "solutionLatex": "Expanding, the sum is $1 + 4 + 7 + 10 + \\cdots + 34$, an arithmetic pattern with common difference $3$ and $12$ terms.\n\n$S_{12} = \\frac{12}{2}(1 + 34) = 6 \\cdot 35 = 210$\n\nGrouping the terms in threes gives seven groups each summing to $70$, so $7 \\cdot 70 = 210$, which confirms the total.",
+    "techniqueSlugs": [
+      "sigma-notation-expansion",
+      "arithmetic-sum-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p3",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "series",
+      "telescoping",
+      "sigma-notation"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=2}^{7} \\frac{1}{k(k+1)}$?",
+    "choices": null,
+    "answerLatex": "\\frac{3}{8}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The denominator is a product of two consecutive integers, which is the shape that splits into a difference of two reciprocals.",
+      "Look for constants $A$ and $B$ with $\\frac{1}{k(k+1)} = \\frac{A}{k} + \\frac{B}{k+1}$; consecutive factors force $A = 1$ and $B = -1$.",
+      "So the sum is $(\\frac{1}{2} - \\frac{1}{3}) + (\\frac{1}{3} - \\frac{1}{4}) + \\cdots + (\\frac{1}{7} - \\frac{1}{8}) = \\frac{1}{2} - \\frac{1}{8}$."
+    ],
+    "solutionLatex": "Write each summand as a difference.\n\n$\\frac{1}{k(k+1)} = \\frac{1}{k} - \\frac{1}{k+1}$\n\nThe sum becomes\n\n$(\\frac{1}{2} - \\frac{1}{3}) + (\\frac{1}{3} - \\frac{1}{4}) + (\\frac{1}{4} - \\frac{1}{5}) + (\\frac{1}{5} - \\frac{1}{6}) + (\\frac{1}{6} - \\frac{1}{7}) + (\\frac{1}{7} - \\frac{1}{8})$\n\nEvery interior piece cancels, leaving $\\frac{1}{2} - \\frac{1}{8} = \\frac{3}{8}$.\n\nNote that the sum starts at $k=2$, so the first surviving piece is $\\frac{1}{2}$ and not $1$; starting index is the only thing that changes.",
+    "techniqueSlugs": [
+      "telescoping-split",
+      "sigma-notation-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p4",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "series",
+      "telescoping"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{8} \\frac{1}{k(k+1)}$?",
+    "choices": [
+      "\\frac{8}{9}",
+      "1",
+      "\\frac{7}{8}",
+      "\\frac{9}{8}",
+      "\\frac{8}{7}"
+    ],
+    "answerLatex": "\\frac{8}{9}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Each summand can be written as the difference of two consecutive reciprocals, after which the interior terms cancel.",
+      "The decomposition is $\\frac{1}{k(k+1)} = \\frac{1}{k} - \\frac{1}{k+1}$, so only the first positive piece and the last negative piece survive.",
+      "The sum runs from $k=1$ to $k=8$, so what survives is $1 - \\frac{1}{9}$."
+    ],
+    "solutionLatex": "Decompose and expand.\n\n$1 - \\frac{1}{2} + \\frac{1}{2} - \\frac{1}{3} + \\frac{1}{3} - \\frac{1}{4} + \\frac{1}{4} - \\frac{1}{5} + \\frac{1}{5} - \\frac{1}{6} + \\frac{1}{6} - \\frac{1}{7} + \\frac{1}{7} - \\frac{1}{8} + \\frac{1}{8} - \\frac{1}{9}$\n\nEverything cancels except the leading $1$ and the trailing $-\\frac{1}{9}$, so the sum is $1 - \\frac{1}{9} = \\frac{8}{9}$.\n\nThe general pattern is that the sum from $k=1$ to $k=n$ is $1 - \\frac{1}{n+1}$, which for $n=8$ gives the answer.",
+    "techniqueSlugs": [
+      "telescoping-split"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p5",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "series",
+      "symmetric-pairing",
+      "sigma-notation"
+    ],
+    "promptLatex": "What is the exact value of $1 + 3 + 5 + 7 + \\cdots + 99$?",
+    "choices": null,
+    "answerLatex": "2500",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Pair the first term with the last, the second with the second-last, and check what every pair is worth.",
+      "In this list every outside-in pair sums to the same number, so the total is that number times the number of pairs.",
+      "The first and last terms sum to $100$, and the list holds $50$ odd numbers, hence $25$ pairs."
+    ],
+    "solutionLatex": "There are $50$ odd numbers from $1$ through $99$, so $25$ pairs.\n\n$1 + 99 = 100$, $3 + 97 = 100$, and every other outside-in pair is also $100$.\n\n$S = 25 \\cdot 100 = 2500$\n\nThe general identity behind this is that the sum of the first $n$ odd numbers is $n^{2}$, and $50^{2} = 2500$ agrees.",
+    "techniqueSlugs": [
+      "symmetric-pairing",
+      "arithmetic-sum-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p6",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "series",
+      "counting-integers",
+      "arithmetic-sequences"
+    ],
+    "promptLatex": "What is the sum of all positive multiples of $7$ that are less than $100$?",
+    "choices": null,
+    "answerLatex": "735",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The multiples form an arithmetic pattern, and the largest one below $100$ fixes how many terms there are.",
+      "The number of terms is one less than the quotient of $100$ by $7$, because $98$ is the last multiple and $105$ is not.",
+      "The sum is $7$ times the sum of the integers from $1$ to $14$, which is $7 \\cdot \\frac{14 \\cdot 15}{2} = 735$."
+    ],
+    "solutionLatex": "The multiples below $100$ are $7, 14, 21, \\ldots, 98$, and $98 = 7 \\cdot 14$, so there are $14$ of them.\n\n$S = 7(1 + 2 + \\cdots + 14) = 7 \\cdot \\frac{14 \\cdot 15}{2} = 7 \\cdot 105 = 735$\n\nEquivalently this is an arithmetic run of $14$ terms with first term $7$ and last term $98$, so $\\frac{14}{2}(7+98) = 7 \\cdot 105 = 735$ as well.",
+    "techniqueSlugs": [
+      "counting-by-sigma",
+      "arithmetic-sum-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p7",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "series",
+      "floor-ceiling",
+      "counting-integers"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{20} \\left\\lfloor \\frac{k}{7} \\right\\rfloor$?",
+    "choices": null,
+    "answerLatex": "21",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The floor is constant on each block of seven consecutive values of the index, so group the values of $k$ by block.",
+      "Read each floor as the number of multiples of $7$ at most $k$, and then notice that the same multiple is counted repeatedly.",
+      "The sum is three blocks each contributing $7$ times the block's floor value, namely $7 \\cdot (0+1+2)$."
+    ],
+    "solutionLatex": "For $k=1$ to $6$ the floor is $0$; for $k=7$ to $13$ it is $1$; for $k=14$ to $20$ it is $2$.\n\n$S = 6(0) + 7(1) + 7(2) = 0 + 7 + 14 = 21$\n\nThe count behind this: the first six values of $k$ see no multiple of $7$, the next seven each see one, and the last seven each see two, which totals $21$.",
+    "techniqueSlugs": [
+      "counting-by-sigma",
+      "sigma-notation-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p8",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "series",
+      "sigma-notation",
+      "partial-sums"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=2}^{10} \\left(k^{2} - (k-1)^{2}\\right)$?",
+    "choices": null,
+    "answerLatex": "99",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Each summand is a difference of two consecutive squares, so expanding the list will show most values appearing twice.",
+      "Write the terms out: $(4-1) + (9-4) + (16-9) + \\cdots$, and the middle values cancel.",
+      "What survives is the last square minus the first, that is $10^{2} - 1^{2} = 99$."
+    ],
+    "solutionLatex": "Expanding the sum term by term:\n\n$(4-1) + (9-4) + (16-9) + (25-16) + (36-25) + (49-36) + (64-49) + (81-64) + (100-81)$\n\nEach interior square appears once with a plus and once with a minus, so all of them cancel and only $100 - 1$ survives.\n\n$S = 100 - 1 = 99$",
+    "techniqueSlugs": [
+      "partial-sum-reindex",
+      "sigma-notation-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p9",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "series",
+      "subseries-split",
+      "sigma-notation"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{10} (-1)^{k} k$?",
+    "choices": [
+      "5",
+      "10",
+      "0",
+      "-5",
+      "20"
+    ],
+    "answerLatex": "5",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The signs alternate, so adjacent terms can be grouped into pairs and each pair simplified on its own.",
+      "Group as $(-1+2) + (-3+4) + (-5+6) + (-7+8) + (-9+10)$ and evaluate each bracket.",
+      "Every bracket is worth $1$ and there are five of them."
+    ],
+    "solutionLatex": "The sum is $-1 + 2 - 3 + 4 - 5 + 6 - 7 + 8 - 9 + 10$.\n\n$S = (-1+2) + (-3+4) + (-5+6) + (-7+8) + (-9+10) = 5 \\cdot 1 = 5$\n\nSince the signs alternate with the index, every odd-indexed term is negative and every even-indexed term is positive, and the pairing is exact because each pair covers one index of each parity.",
+    "techniqueSlugs": [
+      "subseries-split",
+      "sigma-notation-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p10",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "series",
+      "telescoping",
+      "fractions"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{5} \\frac{1}{k(k+2)}$?",
+    "choices": null,
+    "answerLatex": "\\frac{25}{42}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two factors in the denominator differ by $2$, so the numerators of the split must add to $2$ rather than to $1$.",
+      "Solve $\\frac{1}{k(k+2)} = \\frac{A}{k} + \\frac{B}{k+2}$ for $A$ and $B$; consecutive coefficients give $A = 1$ and $B = -1$.",
+      "The sum then telescopes to $(1 + \\frac{1}{2}) - (\\frac{1}{6} + \\frac{1}{7})$."
+    ],
+    "solutionLatex": "Find the decomposition first.\n\n$\\frac{1}{k(k+2)} = \\frac{1}{2}\\left(\\frac{1}{k} - \\frac{1}{k+2}\\right)$\n\nThe sum becomes\n\n$\\frac{1}{2}\\left[\\left(1 - \\frac{1}{3}\\right) + \\left(\\frac{1}{3} - \\frac{1}{5}\\right) + \\left(\\frac{1}{5} - \\frac{1}{7}\\right) + \\left(\\frac{1}{7} - \\frac{1}{9}\\right) + \\left(\\frac{1}{9} - \\frac{1}{11}\\right)\\right]$\n\nThe two negative pieces that survive are the ones beyond the last index reached, so\n\n$S = \\frac{1}{2}\\left(1 + \\frac{1}{2} - \\frac{1}{6} - \\frac{1}{7}\\right) = \\frac{1}{2}\\left(\\frac{3}{2} - \\frac{13}{42}\\right) = \\frac{1}{2} \\cdot \\frac{50}{42} = \\frac{25}{42}$",
+    "techniqueSlugs": [
+      "telescoping-split",
+      "partial-sum-reindex"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p11",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "series",
+      "telescoping",
+      "sigma-notation"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{20} \\frac{1}{(2k-1)(2k+1)}$?",
+    "choices": [
+      "\\frac{20}{41}",
+      "\\frac{41}{20}",
+      "\\frac{1}{2}",
+      "\\frac{40}{41}",
+      "\\frac{20}{40}"
+    ],
+    "answerLatex": "\\frac{20}{41}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two factors are odd numbers two apart, so the numerators of the split must add to $2$.",
+      "Write $\\frac{1}{(2k-1)(2k+1)} = \\frac{1}{2}\\left(\\frac{1}{2k-1} - \\frac{1}{2k+1}\\right)$ and expand.",
+      "Every interior piece cancels, and the survivors are the first reciprocal and the reciprocal one past the last index."
+    ],
+    "solutionLatex": "The decomposition is\n\n$\\frac{1}{(2k-1)(2k+1)} = \\frac{1}{2}\\left(\\frac{1}{2k-1} - \\frac{1}{2k+1}\\right)$\n\nso the sum is\n\n$\\frac{1}{2}\\left[\\left(1 - \\frac{1}{3}\\right) + \\left(\\frac{1}{3} - \\frac{1}{5}\\right) + \\cdots + \\left(\\frac{1}{39} - \\frac{1}{41}\\right)\\right]$\n\nThe interior reciprocals cancel, leaving $\\frac{1}{2}\\left(1 - \\frac{1}{41}\\right) = \\frac{1}{2} \\cdot \\frac{40}{41} = \\frac{20}{41}$.\n\nThe last index $k=20$ produces the pair $\\frac{1}{39} - \\frac{1}{41}$, which is why $41$ and not $40$ is the surviving denominator.",
+    "techniqueSlugs": [
+      "telescoping-split",
+      "partial-sum-reindex"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p12",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "series",
+      "telescoping",
+      "sigma-notation"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{4} \\frac{1}{k(k+1)(k+2)}$?",
+    "choices": null,
+    "answerLatex": "\\frac{7}{30}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A product of three consecutive factors splits in two stages, and each stage is a difference of two products.",
+      "Look first for $\\frac{1}{k(k+1)(k+2)} = A\\left(\\frac{1}{k(k+1)} - \\frac{1}{(k+1)(k+2)}\\right)$ and then split each remaining product.",
+      "The inner sums each telescope, leaving a single difference of two fractions at the ends."
+    ],
+    "solutionLatex": "Split once.\n\n$\\frac{1}{k(k+1)(k+2)} = \\frac{1}{2}\\left(\\frac{1}{k(k+1)} - \\frac{1}{(k+1)(k+2)}\\right)$\n\nEach of those products is itself a difference, so the whole sum is\n\n$\\frac{1}{2}\\left[\\left(\\frac{1}{2} - \\frac{1}{6}\\right) + \\left(\\frac{1}{6} - \\frac{1}{12}\\right) + \\left(\\frac{1}{12} - \\frac{1}{20}\\right) + \\left(\\frac{1}{20} - \\frac{1}{30}\\right)\\right]$\n\nThe interior fractions cancel, leaving\n\n$S = \\frac{1}{2}\\left(\\frac{1}{2} - \\frac{1}{30}\\right) = \\frac{1}{2} \\cdot \\frac{14}{30} = \\frac{7}{30}$",
+    "techniqueSlugs": [
+      "telescoping-split",
+      "partial-sum-reindex"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p13",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "series",
+      "telescoping",
+      "factoring"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=2}^{10} \\frac{1}{k^{2}-1}$?",
+    "choices": null,
+    "answerLatex": "\\frac{36}{55}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The denominator is a product of two pieces that differ by a constant, and a fraction of that shape comes apart into a difference of two simpler ones.",
+      "Since $k^{2}-1 = (k-1)(k+1)$, write $\\frac{1}{(k-1)(k+1)} = \\frac{1}{2}\\left(\\frac{1}{k-1} - \\frac{1}{k+1}\\right)$.",
+      "Expanding leaves $\\frac{1}{2}\\left(1 + \\frac{1}{2} - \\frac{1}{10} - \\frac{1}{11}\\right)$."
+    ],
+    "solutionLatex": "Factor and split.\n\n$\\frac{1}{k^{2}-1} = \\frac{1}{(k-1)(k+1)} = \\frac{1}{2}\\left(\\frac{1}{k-1} - \\frac{1}{k+1}\\right)$\n\nThe sum runs from $k=2$ to $k=10$, so the surviving pieces are the first two positive ones and the last two negative ones:\n\n$S = \\frac{1}{2}\\left(1 + \\frac{1}{2} - \\frac{1}{10} - \\frac{1}{11}\\right) = \\frac{1}{2}\\left(\\frac{3}{2} - \\frac{21}{110}\\right) = \\frac{1}{2} \\cdot \\frac{144}{110} = \\frac{72}{110} = \\frac{36}{55}$",
+    "techniqueSlugs": [
+      "telescoping-split",
+      "partial-sum-reindex"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p14",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "series",
+      "floor-ceiling",
+      "counting-integers"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{50} \\left\\lfloor \\sqrt{k} \\right\\rfloor$?",
+    "choices": [
+      "217",
+      "196",
+      "210",
+      "224",
+      "245"
+    ],
+    "answerLatex": "217",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The value of the floor stays the same on long blocks of $k$, so work out where each block starts and ends.",
+      "The floor equals $j$ exactly when $j^{2} \\le k < (j+1)^{2}$, and that block contains $2j+1$ integers.",
+      "The blocks for $j=1$ to $6$ are full and contribute $(2j+1) \\cdot j$ each, and $j=7$ covers only $k=49$ and $k=50$."
+    ],
+    "solutionLatex": "The floor takes the value $j$ for the $2j+1$ integers $k$ with $j^{2} \\le k < (j+1)^{2}$.\n\n$S = 3(1) + 5(2) + 7(3) + 9(4) + 11(5) + 13(6) + 2(7)$\n\nThe first six blocks give $3 + 10 + 21 + 36 + 55 + 78 = 203$, and only $k=49$ and $k=50$ reach the value $7$, contributing $14$.\n\n$S = 203 + 14 = 217$\n\nThe last block is the one to watch: it is short, because the range stops at $50$ rather than at $63$.",
+    "techniqueSlugs": [
+      "counting-by-sigma",
+      "sigma-notation-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-p15",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "series",
+      "place-value",
+      "counting-integers"
+    ],
+    "promptLatex": "What is the sum of the units digits of all the integers from $1$ through $100$?",
+    "choices": null,
+    "answerLatex": "450",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The units digits run through a fixed cycle, so group the integers into blocks that share a cycle position.",
+      "In any block of ten consecutive integers the units digits are $0, 1, 2, \\ldots, 9$ in some order, and their total is $45$.",
+      "There are ten such blocks in the integers from $1$ to $100$, so the total is $10 \\cdot 45$."
+    ],
+    "solutionLatex": "From $1$ to $10$ the units digits are $1, 2, \\ldots, 9, 0$, which total $45$.\n\nEvery subsequent block of ten repeats the same digits in the same order, and the integers from $1$ to $100$ form ten such blocks.\n\n$S = 10 \\cdot (0+1+2+\\cdots+9) = 10 \\cdot 45 = 450$\n\nExpressed as a sum, this is $\\sum_{k=1}^{100} \\left(k - 10\\left\\lfloor k/10\\right\\rfloor\\right)$, and the floor term is what removes the tens.",
+    "techniqueSlugs": [
+      "counting-by-sigma",
+      "sigma-notation-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-m1",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "series",
+      "floor-ceiling",
+      "counting-integers"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{30} \\left\\lfloor \\frac{k}{10} \\right\\rfloor$?",
+    "choices": [
+      "33",
+      "30",
+      "36",
+      "27",
+      "45"
+    ],
+    "answerLatex": "33",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The floor is $0$ until $k$ reaches $10$, then $1$ for ten values, and so on, with the last value standing alone.",
+      "Count how many values of $k$ produce each floor value before adding anything up.",
+      "The blocks contribute $9(0) + 10(1) + 10(2)$, and $k=30$ contributes $3$ on its own."
+    ],
+    "solutionLatex": "For $k=1$ to $9$ the floor is $0$; for $k=10$ to $19$ it is $1$; for $k=20$ to $29$ it is $2$; and $k=30$ alone gives $3$.\n\n$S = 0 + 10 + 20 + 3 = 33$\n\nThe uneven first block is the only irregularity: it holds nine values rather than ten, because the range begins at $1$ instead of at $0$.",
+    "techniqueSlugs": [
+      "counting-by-sigma",
+      "sigma-notation-expansion"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-m2",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "series",
+      "telescoping",
+      "sigma-notation"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{10} \\frac{1}{k(k+1)(k+2)}$?",
+    "choices": null,
+    "answerLatex": "\\frac{65}{264}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A product of three consecutive factors splits in two stages, and the first stage leaves two shorter sums rather than one telescoping list.",
+      "Use $\\frac{1}{k(k+1)(k+2)} = \\frac{1}{2}\\left(\\frac{1}{k(k+1)} - \\frac{1}{(k+1)(k+2)}\\right)$ and split the sum into those two sums.",
+      "The second of those runs from $k=2$ to $k=11$, so it evaluates as $\\frac{1}{2} - \\frac{1}{12}$ rather than starting at $1$."
+    ],
+    "solutionLatex": "Decompose once and split the sum in two.\n\n$\\frac{1}{k(k+1)(k+2)} = \\frac{1}{2}\\left(\\frac{1}{k(k+1)} - \\frac{1}{(k+1)(k+2)}\\right)$\n\nEach remaining product is a difference of reciprocals, so each of the two sums telescopes:\n\n$\\sum_{k=1}^{10} \\frac{1}{k(k+1)} = \\sum_{k=1}^{10}\\left(\\frac{1}{k} - \\frac{1}{k+1}\\right) = 1 - \\frac{1}{11} = \\frac{10}{11}$\n\n$\\sum_{k=1}^{10} \\frac{1}{(k+1)(k+2)} = \\sum_{k=2}^{11}\\left(\\frac{1}{k} - \\frac{1}{k+1}\\right) = \\frac{1}{2} - \\frac{1}{12} = \\frac{5}{12}$\n\nTherefore\n\n$S = \\frac{1}{2}\\left(\\frac{10}{11} - \\frac{5}{12}\\right) = \\frac{1}{2} \\cdot \\frac{120 - 55}{132} = \\frac{1}{2} \\cdot \\frac{65}{132} = \\frac{65}{264}$",
+    "techniqueSlugs": [
+      "telescoping-split",
+      "partial-sum-reindex"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m4-l2-m3",
+    "moduleId": "M4",
+    "lessonId": "m4-l2",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "series",
+      "telescoping",
+      "radicals"
+    ],
+    "promptLatex": "What is the exact value of $\\sum_{k=1}^{100} \\frac{1}{\\sqrt{k} + \\sqrt{k+1}}$?",
+    "choices": null,
+    "answerLatex": "\\sqrt{101}-1",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Rationalize a general summand, and look for the difference of a function at two consecutive arguments.",
+      "Multiply by the conjugate so that $\\frac{1}{\\sqrt{k}+\\sqrt{k+1}} = \\sqrt{k+1} - \\sqrt{k}$.",
+      "The whole sum then telescopes to $\\sqrt{101} - \\sqrt{1}$."
+    ],
+    "solutionLatex": "Rationalize each summand.\n\n$\\frac{1}{\\sqrt{k} + \\sqrt{k+1}} \\cdot \\frac{\\sqrt{k+1} - \\sqrt{k}}{\\sqrt{k+1} - \\sqrt{k}} = \\frac{\\sqrt{k+1} - \\sqrt{k}}{(\\sqrt{k+1})^{2} - (\\sqrt{k})^{2}} = \\sqrt{k+1} - \\sqrt{k}$\n\nSo the sum is\n\n$(\\sqrt{2}-\\sqrt{1}) + (\\sqrt{3}-\\sqrt{2}) + \\cdots + (\\sqrt{101} - \\sqrt{100})$\n\nEvery interior radical cancels, leaving $\\sqrt{101} - \\sqrt{1} = \\sqrt{101} - 1$.\n\nThis is the same shape as a sum of differences of reciprocals, and the conjugation is what reveals it.",
+    "techniqueSlugs": [
+      "telescoping-split",
+      "partial-sum-reindex"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

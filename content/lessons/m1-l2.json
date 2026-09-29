@@ -1,0 +1,176 @@
+{
+  "id": "m1-l2",
+  "moduleId": "M1",
+  "order": 2,
+  "title": "Exponents, Logarithms, and Scientific Notation",
+  "topicSlug": "exponents-logarithms-scientific-notation",
+  "tiers": ["10", "12"],
+  "estimatedMinutes": 65,
+  "lockMode": "soft",
+  "prerequisites": ["m1-l1"],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Combine powers of a common base, interpret negative and zero exponents, convert between powers and logarithms in both directions, and place a number in scientific notation so that its magnitude can be compared without expanding it."
+    },
+    "prerequisites": {
+      "items": ["m1-l1"],
+      "noteLatex": "The only prerequisite beyond [m1-l1](/M1/lessons/m1-l1) is comfort with fractions and with reading a coefficient as a multiplier, since a negative exponent is nothing more than a reciprocal."
+    },
+    "concept": {
+      "conceptLatex": "Exponents are a counting device, and nearly every error in this lesson comes from ignoring what the device counts. A positive integral power of a base means repeated multiplication, so the laws below are identities about the counting itself rather than conventions about notation. The base is the part that has to match: $2^{3} \\times 2^{4}$ collapses because both factors count copies of the same thing.\n\n$a^{m} \\times a^{n} = a^{m+n} \\qquad \\frac{a^{m}}{a^{n}} = a^{m-n} \\qquad (a^{m})^{n} = a^{mn} \\qquad a^{mn} = (a^{m})^{n}$\n\nPowers of different bases never combine. The product $2^{3} \\times 3^{2} = 72$ has no shorter form, so an answer that presents it as a single power is wrong rather than unsimplified. This is the whole of the first three laws, and every later mistake in this lesson is a violation of the phrase of the same base.\n\nA negative exponent counts downward, and it is a definition rather than a pattern: $a^{-n} = \\frac{1}{a^{n}}$ is exactly what makes the division law work for negative differences. Two special cases follow. For a nonzero base, $a^{0} = 1$, because the only multiplier that turns a stack of copies into a single copy is the empty product. At a zero base these rules collapse, and $0^{0}$ is deliberately left undefined.\n\n$5^{-2} = \\frac{1}{25} \\qquad \\left(\\frac{2}{3}\\right)^{-2} = \\frac{9}{4} \\qquad \\left(\\frac{1}{2}\\right)^{x} = 2^{-x}$\n\nThat last identity is the one worth carrying: inverting a base inverts the whole exponent, sign included.\n\nLogarithms exist to undo exponentiation, and the definition is the entire content of the topic. The statement $\\log_{b} n = x$ means precisely that $b^{x} = n$. The base must be positive and must not equal $1$, and the argument must be positive, which is why a logarithm never has a non-positive argument. From that one sentence every logarithm rule is a power rule read backwards, and none of them is a separate fact.\n\n$b^{\\log_{b} n} = n \\qquad \\log_{b} (mn) = \\log_{b} m + \\log_{b} n \\qquad \\log_{b} \\frac{m}{n} = \\log_{b} m - \\log_{b} n \\qquad \\log_{b} \\left(m^{k}\\right) = k \\log_{b} m$\n\nAn equation such as $3^{2x} = 81$ is a power equation, and the logarithm is one of two ways to solve it. When the bases are small powers of each other, matching exponents directly is shorter. When they are not, changing base turns the problem into arithmetic, and the logarithm becomes the natural language in which it is written.\n\n$\\log_{a} b = \\frac{\\log_{c} b}{\\log_{c} a} \\qquad \\log_{2} 8 + \\log_{5} 25 = 3 + 2 = 5$\n\nScientific notation is the last piece, and it is arithmetic rather than algebra. A number is written $a \\times 10^{n}$ with $1 \\le a < 10$, so the exponent records where the first significant digit sits and the coefficient is always a number between one and ten. Multiplying and dividing by powers of ten then becomes adding and subtracting exponents, and comparing two numbers of very different sizes reduces to comparing their exponents.\n\n$0.00045 = 4.5 \\times 10^{-4} \\qquad 2^{20} = 1048576 \\approx 1.0 \\times 10^{6}$\n\nEstimation is the habit that makes all of this pay. Since exactly one power of ten lies between $10^{5}$ and $10^{6}$, pinning a quantity between two consecutive powers of ten fixes its leading digit, which is frequently all a competition problem asks for.",
+      "figures": [],
+      "examples": [
+        {
+          "id": "m1-l2-ex-1",
+          "titleLatex": "Worked example: a product with a shared base",
+          "bodyLatex": "The bases already agree, so the exponents add.\n\n$2^{3} \\times 2^{4} = 2^{7} = 128$\n\nHad the second factor been $3^{4}$ the product would have been $24$, with no single-power form at all.",
+          "answerLatex": "$2^{7}$"
+        },
+        {
+          "id": "m1-l2-ex-2",
+          "titleLatex": "Worked example: a negative exponent on a fraction",
+          "bodyLatex": "A negative exponent inverts the base, and the outer negative then belongs to the fraction as a whole.\n\n$\\left(\\frac{2}{3}\\right)^{-2} = \\left(\\frac{3}{2}\\right)^{2} = \\frac{9}{4}$\n\nThe common error is to flip only the numerator, which would give $\\frac{2}{9}$ and change the sign of the exponent as well.",
+          "answerLatex": "$\\frac{9}{4}$"
+        },
+        {
+          "id": "m1-l2-ex-3",
+          "titleLatex": "Worked example: solving a logarithmic equation",
+          "bodyLatex": "The base is a power of itself, so the matching exponent can be read off directly rather than by a logarithm.\n\n$4^{x+1} = 8^{x-1} \\implies 2^{2x+2} = 2^{3x-3} \\implies 2x+2 = 3x-3 \\implies x = 5$\n\nThe substitution check is $4^{6} = 4096$ against $8^{4} = 4096$, which agree.",
+          "answerLatex": "$x = 5$"
+        },
+        {
+          "id": "m1-l2-ex-4",
+          "titleLatex": "Worked example: scientific notation and a comparison",
+          "bodyLatex": "The exponent is fixed by the position of the first nonzero digit, and the coefficient is whatever remains.\n\n$0.00045 = 4.5 \\times 10^{-4}$\n\nSince $10^{-4} < 10^{-3}$, the number is smaller than $10^{-3}$, and the normalized form is forced rather than chosen.",
+          "answerLatex": "$4.5 \\times 10^{-4}$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "law-of-exponents-multiply",
+          "name": "Add exponents when the base matches",
+          "summaryLatex": "$a^{m} \\times a^{n} = a^{m+n}$, and the rule applies only when the bases are identical.",
+          "bodyLatex": "When the bases differ, the product is already in simplest form and the only remaining work is arithmetic. Matching bases is the step to check first, because it is the step that is silently skipped."
+        },
+        {
+          "slug": "law-of-exponents-divide",
+          "name": "Subtract exponents when dividing like bases",
+          "summaryLatex": "$\\frac{a^{m}}{a^{n}} = a^{m-n}$, and the difference is negative whenever the denominator is the larger power.",
+          "bodyLatex": "Dividing by a power is the same as multiplying by its reciprocal, so the subtraction rule is really the multiplication rule in disguise and inherits both its base condition and its negative-exponent consequences."
+        },
+        {
+          "slug": "power-of-a-power-and-products",
+          "name": "Raise a power to a power, or build a power from a product",
+          "summaryLatex": "$(a^{m})^{n} = a^{mn}$ and $(ab)^{n} = a^{n}b^{n}$, so the exponent on the outside multiplies inward.",
+          "bodyLatex": "The second form is the one that gets skipped, because a product inside brackets looks like it might resist. It does not: distribute the outside exponent to each factor separately."
+        },
+        {
+          "slug": "negative-and-zero-exponents",
+          "name": "Read a negative exponent as a reciprocal",
+          "summaryLatex": "$a^{-n} = \\frac{1}{a^{n}}$ for $a \\ne 0$, and $a^{0} = 1$ for every nonzero $a$.",
+          "bodyLatex": "The value is always positive, since it is a reciprocal. Moving a negative exponent to the other side of a fraction inverts the base, so $\\left(\\frac{1}{b}\\right)^{x} = b^{-x}$."
+        },
+        {
+          "slug": "log-as-inverse-exponent",
+          "name": "Read a logarithm as an exponent",
+          "summaryLatex": "$\\log_{b} n = x$ means exactly that $b^{x} = n$, which converts a logarithm into a power equation and back.",
+          "bodyLatex": "This is the only definition of the logarithm needed. A power equation with small related bases is usually solved by matching exponents, and a logarithmic equation is solved by writing the definition into exponent form."
+        },
+        {
+          "slug": "log-product-and-power-rules",
+          "name": "Expand and contract sums of logarithms",
+          "summaryLatex": "$\\log_{b}(mn) = \\log_{b} m + \\log_{b} n$ and $\\log_{b}(m^{k}) = k \\log_{b} m$, and the quotient and power forms are the same identities read the other way.",
+          "bodyLatex": "Since these are just the power laws, the same base is required in every term. A sum of logarithms with different bases cannot be contracted, which is the usual reason a problem hands you a compatible pair."
+        },
+        {
+          "slug": "change-of-base",
+          "name": "Change base to compare magnitudes",
+          "summaryLatex": "$\\log_{a} b = \\frac{\\log_{c} b}{\\log_{c} a}$, which reduces every logarithm in a problem to one common base.",
+          "bodyLatex": "The form to remember is the ratio of two logarithms, not the version with a base inside a base. In practice it is used to settle an ordering question such as which of two logs is larger, and to prove that a product of logarithms equals $1$."
+        },
+        {
+          "slug": "normalize-scientific-notation",
+          "name": "Normalize so the coefficient lies in $[1, 10)$",
+          "summaryLatex": "A number is in scientific notation when it is written $a \\times 10^{n}$ with $1 \\le a < 10$, and the exponent is then forced.",
+          "bodyLatex": "The exponent counts the places the decimal point moved, negatively when the point moved left. A coefficient outside the interval means the form is not normalized, and $a = 0$ is the one case with no normalized form at all."
+        },
+        {
+          "slug": "estimate-by-bounding-powers",
+          "name": "Bound a quantity between consecutive powers of ten",
+          "summaryLatex": "Locating a large or small number between $10^{k}$ and $10^{k+1}$ determines its leading digit without expanding it.",
+          "bodyLatex": "The same bound is the practical route to comparing an exponential against a round number: compute the two consecutive powers of two that straddle the target and read the exponent off, which is how the position of a power of two inside a decade is found."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "add-exponents-different-bases",
+          "titleLatex": "Adding exponents whose bases are different",
+          "wrongLatex": "2^{3} \\times 3^{2} = 6^{5}",
+          "whyLatex": "The product law requires a single common base, and $6^{5}$ is a different number from $72$. Two bases cannot be merged into one, because the notation $a^{m} \\times a^{n}$ counts copies of the same object twice over.",
+          "fixLatex": "Cover the bases and read only the exponents. If the bases are not identical when the other terms are hidden, the answer is a product, not a power."
+        },
+        {
+          "slug": "negative-exponent-read-as-negative",
+          "titleLatex": "Reading a negative exponent as a negative value",
+          "wrongLatex": "2^{-3} = -8",
+          "whyLatex": "A negative exponent counts downward, so $2^{-3}$ is the reciprocal of $2^{3}$ and equals $\\frac{1}{8}$. It is the exponent that is negative, never the value, and a positive base raised to any power is positive.",
+          "fixLatex": "Say the definition out loud before simplifying. If a result is negative, the base was negative, since a power of a positive base can never be negative."
+        },
+        {
+          "slug": "logarithm-base-dropped",
+          "titleLatex": "Dropping the base of a logarithm",
+          "wrongLatex": "\\log (100) = 10",
+          "whyLatex": "A logarithm is meaningless without its base, and different bases give different values for the same argument. Here $10^{10}$ is a billion rather than $100$, so the claim fails before any rule is applied.",
+          "fixLatex": "Translate the whole statement into power form, $b^{x} = n$, before doing anything else, and check the answer by expanding that power. The check fails immediately when the base was the wrong one."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m1-l2-p1",
+        "m1-l2-p2",
+        "m1-l2-p3",
+        "m1-l2-p4",
+        "m1-l2-p5",
+        "m1-l2-p6",
+        "m1-l2-p7",
+        "m1-l2-p8",
+        "m1-l2-p9",
+        "m1-l2-p10",
+        "m1-l2-p11",
+        "m1-l2-p12",
+        "m1-l2-p13",
+        "m1-l2-p14",
+        "m1-l2-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m1-l2-p1",
+        "m1-l2-p2",
+        "m1-l2-p3",
+        "m1-l2-p4",
+        "m1-l2-p5",
+        "m1-l2-p6",
+        "m1-l2-p7",
+        "m1-l2-p8",
+        "m1-l2-p9",
+        "m1-l2-p10",
+        "m1-l2-p11",
+        "m1-l2-p12",
+        "m1-l2-p13",
+        "m1-l2-p14",
+        "m1-l2-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": ["m1-l2-m1", "m1-l2-m2", "m1-l2-m3"],
+      "passThreshold": 2
+    }
+  },
+  "tags": ["exponents", "fractions", "place-value", "word-problem"]
+}

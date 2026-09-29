@@ -1,0 +1,28 @@
+{
+  "id": "m7-l2-p3",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": ["inclusion-exclusion"],
+  "promptLatex": "How many numbers from 1 to 100 are NOT divisible by 2, 3, or 5?",
+  "choices": [
+    "26",
+    "30",
+    "32",
+    "40",
+    "24"
+  ],
+  "answerLatex": "26",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Use inclusion-exclusion with three sets.\nTotal = 100. Subtract counts for multiples of 2, 3, and 5, then add back intersections.",
+    "Multiples of 2: 50, multiples of 3: 33, multiples of 5: 20.\nPairs: multiples of 6: 16, multiples of 10: 10, multiples of 15: 6.\nTriple: multiples of 30: 3.",
+    "100 - (50 + 33 + 20) + (16 + 10 + 6) - 3 = 100 - 103 + 32 - 3 = 26."
+  ],
+  "solutionLatex": "Use inclusion-exclusion for three sets A (multiples of 2), B (multiples of 3), C (multiples of 5).\n\n|A ∪ B ∪ C| = |A| + |B| + |C| - |A ∩ B| - |B ∩ C| - |C ∩ A| + |A ∩ B ∩ C|.\n\n|A| = \\lfloor 100/2 \\rfloor = 50, |B| = \\lfloor 100/3 \\rfloor = 33, |C| = \\lfloor 100/5 \\rfloor = 20.\n|A ∩ B| = \\lfloor 100/6 \\rfloor = 16, |B ∩ C| = \\lfloor 100/15 \\rfloor = 6, |C ∩ A| = \\lfloor 100/10 \\rfloor = 10.\n|A ∩ B ∩ C| = \\lfloor 100/30 \\rfloor = 3.\n\n|A ∪ B ∪ C| = 50 + 33 + 20 - 16 - 6 - 10 + 3 = 74.\n\nNumbers NOT divisible by 2, 3, or 5: 100 - 74 = 26.",
+  "techniqueSlugs": ["inclusion-exclusion-principle"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

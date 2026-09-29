@@ -1,0 +1,533 @@
+[
+  {
+    "id": "m6-l2-p1",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "slopes",
+      "coordinates"
+    ],
+    "promptLatex": "What is the slope of the line passing through the points $(-2,5)$ and $(4,-3)$?",
+    "choices": [
+      "-\\frac{4}{3}",
+      "\\frac{4}{3}",
+      "-\\frac{3}{4}",
+      "\\frac{3}{4}",
+      "-\\frac{4}{5}"
+    ],
+    "answerLatex": "-\\frac{4}{3}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The slope of a line is the change in the vertical coordinate for each unit of horizontal travel, and both changes are negative here.",
+      "Put the difference in the second coordinate in the numerator and the difference in the first coordinate in the denominator.",
+      "The vertical change is $-3-5=-8$ and the horizontal change is $4-(-2)=6$, so the slope is $\\frac{-8}{6}$"
+    ],
+    "solutionLatex": "Slope is the rise over the run, with the $y$ difference first.\n\n$m = \\frac{-3-5}{4-(-2)} = \\frac{-8}{6} = -\\frac{4}{3}$\n\nThe line falls as $x$ increases, which is exactly what a negative slope means, and the sign agrees with the direction of travel from the first point to the second.",
+    "techniqueSlugs": [
+      "slope-from-two-points"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p2",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "slopes"
+    ],
+    "promptLatex": "Find the slope of the line through the points $(3,7)$ and $(11,-1)$.",
+    "choices": null,
+    "answerLatex": "-1",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Both coordinate differences are needed, and it helps to check whether they come out equal before simplifying.",
+      "Take the difference in the second coordinates and the difference in the first coordinates in that order.",
+      "The vertical change is $-1-7=-8$ and the horizontal change is $11-3=8$"
+    ],
+    "solutionLatex": "Compute the two differences.\n\n$m = \\frac{-1-7}{11-3} = \\frac{-8}{8} = -1$\n\nA slope of $-1$ means the line falls one unit for each unit it advances, which is the familiar forty-five degree descent.",
+    "techniqueSlugs": [
+      "slope-from-two-points"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p3",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "slopes",
+      "parallel-lines"
+    ],
+    "promptLatex": "Which of the following lines is parallel to the line $y = 3x - 5$?",
+    "choices": [
+      "y = 3x + 7",
+      "y = -3x + 7",
+      "y = \\frac{1}{3}x + 7",
+      "y = -\\frac{1}{3}x + 7",
+      "y = -x + 7"
+    ],
+    "answerLatex": "y = 3x + 7",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Two lines are parallel exactly when they rise at the same rate, and the constant term has no effect on that rate.",
+      "Read the coefficient of $x$ in each candidate and compare it with the coefficient of $x$ in the given line.",
+      "The given line has slope $3$, so the parallel candidate is the one with coefficient $3$ in front of $x$"
+    ],
+    "solutionLatex": "Parallel lines share a slope, and only the coefficient of $x$ records it.\n\nThe given line $y=3x-5$ has slope $3$. Among the candidates, only $y=3x+7$ has coefficient $3$ on $x$.\n\n$y = 3x + 7$\n\nChanging the constant from $-5$ to $7$ slides the line up without tilting it, which is exactly what a parallel line does.",
+    "techniqueSlugs": [
+      "slope-intercept-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p4",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "slopes",
+      "linear-equations"
+    ],
+    "promptLatex": "Write an equation for the line through the points $(1,4)$ and $(5,2)$ in slope-intercept form $y = mx + b$.",
+    "choices": null,
+    "answerLatex": "y = -\\frac{1}{2}x + \\frac{9}{2}",
+    "answerAlternatives": [
+      "y = -0.5x + 4.5"
+    ],
+    "hintLatex": [
+      "Slope-intercept form needs two things: the rate of change, and the value the line takes where it crosses the vertical axis.",
+      "The slope follows from the two given points, and then the constant is whatever value of $b$ makes the line pass through one of them.",
+      "The slope is $-\\frac{1}{2}$, and substituting $(1,4)$ gives $4 = -\\frac{1}{2} + b$"
+    ],
+    "solutionLatex": "The slope of the line through the two points is $\\frac{2-4}{5-1} = -\\frac{1}{2}$.\n\nSo the line has the form $y = -\\frac{1}{2}x + b$. Substituting the point $(1,4)$ gives $4 = -\\frac{1}{2} + b$, so $b = \\frac{9}{2}$.\n\n$y = -\\frac{1}{2}x + \\frac{9}{2}$\n\nCheck the other point: $-\\frac{1}{2}(5) + \\frac{9}{2} = -\\frac{5}{2} + \\frac{9}{2} = 2$, which is the required second coordinate.",
+    "techniqueSlugs": [
+      "point-slope-form",
+      "slope-intercept-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p5",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "slopes",
+      "linear-equations"
+    ],
+    "promptLatex": "What is the $x$-intercept of the line through the points $(2,5)$ and $(-3,1)$?",
+    "choices": [
+      "-\\frac{17}{4}",
+      "\\frac{17}{4}",
+      "-\\frac{17}{5}",
+      "\\frac{4}{17}",
+      "-\\frac{5}{17}"
+    ],
+    "answerLatex": "-\\frac{17}{4}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The $x$-intercept is the place where the line crosses the horizontal axis, so the second coordinate there is zero.",
+      "Get the line into a form that shows the second coordinate explicitly, then set that coordinate equal to zero and solve for the first.",
+      "The line is $y = \\frac{4}{5}x + \\frac{17}{5}$, and setting $y=0$ forces $x$ to be negative"
+    ],
+    "solutionLatex": "The slope through the two points is $\\frac{5-1}{2-(-3)} = \\frac{4}{5}$.\n\nSubstituting $(2,5)$ into $y=\\frac{4}{5}x+b$ gives $5 = \\frac{8}{5}+b$, so $b=\\frac{17}{5}$ and the line is $y=\\frac{4}{5}x+\\frac{17}{5}$.\n\nAt the $x$-intercept the second coordinate is $0$, so $0=\\frac{4}{5}x+\\frac{17}{5}$ gives $x=-\\frac{17}{4}$.\n\nThe intercept is negative, which is required because the line is rising and starts above the horizontal axis.",
+    "techniqueSlugs": [
+      "slope-intercept-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p6",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "slopes",
+      "parallel-lines"
+    ],
+    "promptLatex": "Find the equation in slope-intercept form of the line through $(4,1)$ that is perpendicular to the line $y = -2x + 3$.",
+    "choices": null,
+    "answerLatex": "y = \\frac{1}{2}x - 1",
+    "answerAlternatives": [
+      "y = \\frac{x}{2} - 1"
+    ],
+    "hintLatex": [
+      "The line you want must meet the given one at a right angle, and the slopes of two perpendicular lines are linked by a product.",
+      "Perpendicular slopes have product $-1$, so inverting the given slope and changing its sign gives the one you need.",
+      "The given slope is $-2$, so the required slope is $-\\frac{1}{-2}$, which is $\\frac{1}{2}$"
+    ],
+    "solutionLatex": "Perpendicularity requires a product of slopes of $-1$.\n\nThe required slope is $-\\frac{1}{-2} = \\frac{1}{2}$, so the line has the form $y = \\frac{1}{2}x + b$.\n\nSubstituting $(4,1)$ gives $1 = 2 + b$, so $b = -1$.\n\n$y = \\frac{1}{2}x - 1$\n\nCheck the product: $\\frac{1}{2} \\cdot (-2) = -1$, as required.",
+    "techniqueSlugs": [
+      "point-slope-form",
+      "slope-intercept-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p7",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "systems-of-equations",
+      "linear-equations"
+    ],
+    "promptLatex": "Solve the system of equations $2x+y=7$ and $x-y=2$. What is the value of $x$?",
+    "choices": null,
+    "answerLatex": "3",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "One variable appears with opposite signs in the two equations, so a single combination will make it disappear.",
+      "Add the two equations together, and the second coordinates will cancel because their coefficients sum to zero.",
+      "Adding gives $3x = 9$"
+    ],
+    "solutionLatex": "Adding the equations cancels $y$, since the coefficients are $1$ and $-1$.\n\n$2x+y+x-y = 7+2$ gives $3x = 9$.\n\n$x = 3$\n\nSubstituting back, $y = 7-6 = 1$, and the pair $(3,1)$ satisfies both original equations, so the system is consistent and the answer is unique.",
+    "techniqueSlugs": [
+      "elimination-two-variables"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p8",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "systems-of-equations",
+      "word-problem"
+    ],
+    "promptLatex": "A chemist mixes a $20\\%$ acid solution with a $50\\%$ acid solution to obtain $12$ liters of a $30\\%$ solution. How many liters of the $20\\%$ solution are used?",
+    "choices": null,
+    "answerLatex": "8",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "There are two quantities to determine, and two conditions in the wording: a total volume and a total amount of acid.",
+      "Let one volume be an unknown, and write the total volume as one equation and the amount of pure acid as a second one.",
+      "If $x$ liters of the weaker solution are used, then the amount of acid is $\\frac{x}{5} + \\frac{12-x}{2}$, which must equal $\\frac{30}{100} \\cdot 12$"
+    ],
+    "solutionLatex": "Let $x$ be the number of liters of the $20\\%$ solution, so $12-x$ liters of the $50\\%$ solution are used.\n\nThe total volume gives $x + (12-x) = 12$, and the amount of pure acid gives $\\frac{20}{100}x + \\frac{50}{100}(12-x) = \\frac{30}{100}(12)$.\n\nClearing the fractions: $20x + 50(12-x) = 30 \\cdot 12$, so $20x + 600 - 50x = 360$, which gives $30x = 240$.\n\n$x = 8$\n\nCheck: the mixture is $8$ liters of $20\\%$ and $4$ liters of $50\\%$, carrying $1.6 + 2.0 = 3.6$ liters of acid, and $3.6/12 = 30\\%$. Both volumes are positive, as the wording requires.",
+    "techniqueSlugs": [
+      "two-equation-word-problem",
+      "elimination-two-variables"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p9",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "distance-formula",
+      "slopes"
+    ],
+    "promptLatex": "What is the perpendicular distance from the point $(2,3)$ to the line $3x+4y=26$?",
+    "choices": null,
+    "answerLatex": "\\frac{8}{5}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The distance wanted is the length of the shortest segment from the point to the line, which is a perpendicular and not a distance to any particular point of the line.",
+      "There is a single formula that turns the coefficients of the line and the coordinates of the point into that length.",
+      "The numerator is $|3 \\cdot 2 + 4 \\cdot 3 - 26|$ and the denominator is the length of the normal vector $(3,4)$"
+    ],
+    "solutionLatex": "Write the line in the form $Ax+By+C=0$, which here is $3x+4y-26=0$.\n\nThe numerator is $|3(2)+4(3)-26| = |6+12-26| = 8$.\n\nThe denominator is $\\sqrt{3^{2}+4^{2}} = \\sqrt{25} = 5$.\n\n$d = \\frac{8}{5}$\n\nAs a check, the line passes through $(6,2)$ and $(2,5)$; the foot of the perpendicular is the point on the line at distance $\\frac{8}{5}$ from $(2,3)$, and the distance from $(2,3)$ to $(6,2)$ is $\\sqrt{16+1}=\\sqrt{17}$, which is larger, as a perpendicular must be the shortest.",
+    "techniqueSlugs": [
+      "distance-point-to-line"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p10",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "slopes",
+      "linear-equations"
+    ],
+    "promptLatex": "What is the $y$-intercept of the line $4x - 6y = 9$?",
+    "choices": [
+      "-\\frac{3}{2}",
+      "\\frac{3}{2}",
+      "-\\frac{2}{3}",
+      "\\frac{2}{3}",
+      "-\\frac{9}{4}"
+    ],
+    "answerLatex": "-\\frac{3}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The vertical intercept is found where the line meets the vertical axis, and on that axis the other coordinate is zero.",
+      "Substituting zero for the horizontal coordinate reduces the equation to a statement about the vertical one.",
+      "Putting $x=0$ leaves $-6y = 9$"
+    ],
+    "solutionLatex": "The $y$-intercept is the point with first coordinate $0$.\n\nSubstituting $x=0$ into $4x-6y=9$ gives $-6y=9$, so $y=-\\frac{3}{2}$.\n\nThe intercept is $-\\frac{3}{2}$, below the axis because the constant term on the left is positive while the right side is positive.\n\nCheck by converting to slope-intercept form: $y = \\frac{2}{3}x - \\frac{3}{2}$, whose constant term is the intercept found.",
+    "techniqueSlugs": [
+      "slope-intercept-form",
+      "clear-denominators-standard-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p11",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "systems-of-equations"
+    ],
+    "promptLatex": "How many solutions does the system $2x+3y=6$ and $4x+6y=12$ have?",
+    "choices": null,
+    "answerLatex": "infinitely many",
+    "answerAlternatives": [
+      "an infinite number",
+      "uncountably many"
+    ],
+    "hintLatex": [
+      "Before solving, compare the two equations directly and ask whether the second carries any information the first does not already give.",
+      "One equation is a multiple of the other when the ratios of corresponding coefficients agree.",
+      "The coefficients of the second equation are exactly twice those of the first, and so is the right-hand side"
+    ],
+    "solutionLatex": "The second equation is twice the first in every part, since $4x+6y=2(2x+3y)$ and $12 = 2 \\cdot 6$.\n\nThe two equations are therefore the same line, not two different lines.\n\nEliminating leaves $0=0$, an identity, so the system is consistent and every point of the line $2x+3y=6$ satisfies both equations.\n\nThe system has infinitely many solutions, and the coefficient determinant $2 \\cdot 6 - 3 \\cdot 4 = 0$ is what flags the degeneracy.",
+    "techniqueSlugs": [
+      "consistent-or-parallel"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p12",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "systems-of-equations"
+    ],
+    "promptLatex": "Solve the system $\\frac{x}{2} + \\frac{y}{4} = 6$ and $x - y = 6$. What is the value of $x$?",
+    "choices": null,
+    "answerLatex": "10",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The second equation has a coefficient of $1$ on one variable, so it is the natural one to solve for a variable and carry into the other.",
+      "Isolate the variable that the second equation gives cheaply, then insert that expression wherever it appears in the first equation.",
+      "The second equation gives $x = y+6$, and the first then has $x$ and $y$ expressed in terms of $y$ alone"
+    ],
+    "solutionLatex": "From the second equation, $x = y + 6$.\n\nSubstitute into the first: $\\frac{y+6}{2} + \\frac{y}{4} = 6$.\n\nClearing denominators by multiplying through by $4$ gives $2(y+6) + y = 24$, so $3y + 12 = 24$ and $y = 4$.\n\nThen $x = 4 + 6 = 10$.\n\nCheck both equations: $\\frac{10}{2} + \\frac{4}{4} = 5+1 = 6$ and $10-4=6$, so the pair is correct.",
+    "techniqueSlugs": [
+      "substitution-two-variables"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p13",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "slopes",
+      "parallel-lines"
+    ],
+    "promptLatex": "A line passes through $(2,3)$ and $(-4,k)$, and it is perpendicular to the line through $(2,3)$ and $(6,11)$. What is the value of $k$?",
+    "choices": null,
+    "answerLatex": "6",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two lines share the point $(2,3)$ and meet at a right angle there, so the two slopes are linked by the negative reciprocal relation.",
+      "The slope of the known line is determined by $(2,3)$ and $(6,11)$; the other slope must be its negative reciprocal, and $k$ is the unknown that produces it.",
+      "The known line has slope $2$, so the required slope is $-\\frac{1}{2}$, and the unknown line runs from $x=2$ to $x=-4$, a horizontal change of $-6$"
+    ],
+    "solutionLatex": "The line through $(2,3)$ and $(6,11)$ has slope $\\frac{11-3}{6-2} = \\frac{8}{4} = 2$.\n\nThe line through $(2,3)$ and $(-4,k)$ must therefore have slope $-\\frac{1}{2}$.\n\nIts slope is $\\frac{k-3}{-4-2} = \\frac{k-3}{-6}$, so $\\frac{k-3}{-6} = -\\frac{1}{2}$, giving $k - 3 = 3$ and $k = 6$.\n\nCheck: with $k=6$ the second line has slope $\\frac{3}{-6} = -\\frac{1}{2}$, and the product with $2$ is $-1$, as perpendicularity requires.",
+    "techniqueSlugs": [
+      "slope-from-two-points",
+      "slope-intercept-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p14",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "systems-of-equations",
+      "slopes"
+    ],
+    "promptLatex": "The line $y = mx + b$ passes through the point where the lines $2x + y = 6$ and $x - y = 0$ meet, and it is parallel to $3x - 4y = 12$. What is the value of $b$?",
+    "choices": null,
+    "answerLatex": "\\frac{1}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The three conditions are given in a fixed order: locate the intersection of the first two, then use the third only for a direction.",
+      "Solve the pair for the intersection point, and read the slope of the third line so that the desired line can be written through that point.",
+      "The system gives $x=y$ and $2x+y=6$, and the third line has slope $\\frac{3}{4}$"
+    ],
+    "solutionLatex": "Solve the two given equations for the intersection.\n\nFrom $x-y=0$ we have $x=y$, and substituting into $2x+y=6$ gives $3x=6$, so the point is $(2,2)$.\n\nThe line $3x-4y=12$ has slope $\\frac{3}{4}$, so the desired line, being parallel to it, also has slope $\\frac{3}{4}$.\n\nSince it passes through $(2,2)$, it is $y = \\frac{3}{4}x + b$ with $2 = \\frac{3}{2} + b$, so $b = \\frac{1}{2}$.\n\nCheck: at $x=2$ the line $y=\\frac{3}{4}x+\\frac{1}{2}$ gives $\\frac{3}{2}+\\frac{1}{2}=2$, so it does pass through the intersection, as required.",
+    "techniqueSlugs": [
+      "elimination-two-variables",
+      "slope-intercept-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-p15",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "systems-of-equations",
+      "coordinates"
+    ],
+    "promptLatex": "The lines $x=0$, $y=0$, and $\\frac{x}{4} + \\frac{y}{6} = 1$ enclose a triangle. What is its area?",
+    "choices": null,
+    "answerLatex": "12",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Two of the three lines are the coordinate axes, so the triangle has a right angle at the origin and its legs lie along the axes.",
+      "Find where the slanted line meets each axis, and those two intercepts are the leg lengths of a right triangle.",
+      "Setting $y=0$ gives $x=4$ and setting $x=0$ gives $y=6$"
+    ],
+    "solutionLatex": "Find the intercepts of the slanted line.\n\nWith $y=0$: $\\frac{x}{4}=1$, so $x=4$. With $x=0$: $\\frac{y}{6}=1$, so $y=6$.\n\nThe triangle has vertices $(0,0)$, $(4,0)$, and $(0,6)$, and the two sides along the axes are perpendicular.\n\nThe area of a right triangle is half the product of its legs, so the area is $\\frac{1}{2} \\cdot 4 \\cdot 6 = 12$.\n\nThe figure shows this configuration, with the intercept points marked on the two axes.",
+    "techniqueSlugs": [
+      "slope-intercept-form",
+      "clear-denominators-standard-form"
+    ],
+    "asymptoteSource": "// A triangle cut off by the coordinate axes and an intercept line.\n// Two-argument size call fixes the output box, so the declared 4/3 is exact.\nsize(320,240);\ndraw((0,0)--(4,0)--(0,6)--cycle);\ndraw((0,0)--(4.6,0),Arrow);\ndraw((0,0)--(0,6.6),Arrow);\nlabel(\"$x$\",(4.7,0),E);\nlabel(\"$y$\",(0,6.7),N);\nlabel(\"$A$\",(4,0),SE);\nlabel(\"$B$\",(0,6),NW);\nlabel(\"$4$\",(2,0),S);\nlabel(\"$6$\",(-0.35,3),E);\nlabel(\"$\\frac{x}{4}+\\frac{y}{6}=1$\",(1.9,2.4),NE);",
+    "asymptoteAlt": "A right triangle sits in the first quadrant with its right angle at the origin, one leg running along the horizontal axis to a point labelled A and the other rising along the vertical axis to a point labelled B. The two legs are labelled with their lengths and the hypotenuse joining the two intercept points carries the equation of the slanted line. Coordinate axes with arrowheads extend past the triangle in both directions and are labelled with their names.",
+    "asymptoteAspectRatio": 1.333
+  },
+  {
+    "id": "m6-l2-m1",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "10",
+    "difficulty": 3,
+    "tags": [
+      "slopes",
+      "coordinates"
+    ],
+    "promptLatex": "What is the equation of the line through the points $(-1,4)$ and $(3,4)$?",
+    "choices": [
+      "y = 4",
+      "y = -4",
+      "x = 4",
+      "y = x + 4",
+      "y = -x + 4"
+    ],
+    "answerLatex": "y = 4",
+    "answerAlternatives": [
+      "y=4"
+    ],
+    "hintLatex": [
+      "Both points share their second coordinate, so the line cannot rise or fall as the first coordinate changes.",
+      "A horizontal line has slope zero, which makes the slope formula give zero whenever the second coordinates are equal.",
+      "The difference in the first coordinates is $4$ and the difference in the second coordinates is $0$"
+    ],
+    "solutionLatex": "The second coordinate is $4$ at both points, so the slope is $\\frac{4-4}{3-(-1)} = 0$.\n\nA line of slope $0$ passing through $(-1,4)$ keeps the same second coordinate everywhere, so it is the horizontal line $y=4$.\n\n$y = 4$\n\nNote that this line has no $x$-intercept, which distinguishes it from $x=4$ and rules out that distractor.",
+    "techniqueSlugs": [
+      "slope-from-two-points",
+      "slope-intercept-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-m2",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "systems-of-equations"
+    ],
+    "promptLatex": "The lines $3x - y = 5$ and $x + 3y = 5$ meet at a single point. What is the sum of the two coordinates of that point?",
+    "choices": null,
+    "answerLatex": "3",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The first equation is small in $y$, so it is the natural one to use to remove a variable from the system.",
+      "Solve the first equation for the second variable, which has a coefficient of $-1$, and insert that into the second equation.",
+      "The first equation gives $y = 3x-5$, and the system then has one unknown"
+    ],
+    "solutionLatex": "From $3x - y = 5$, take $y = 3x - 5$.\n\nSubstitute into the second equation: $x + 3(3x-5) = 5$, so $x + 9x - 15 = 5$ and $10x = 20$.\n\n$x = 2$ and then $y = 3(2)-5 = 1$.\n\nThe sum of the coordinates is $2+1 = 3$, and the pair $(2,1)$ satisfies both equations: $6-1=5$ and $2+3=5$.\n\nA useful shortcut is to add the two equations after writing them symmetrically, since the determinant $3 \\cdot 3 - (-1) \\cdot 1 = 10 \\ne 0$ guarantees a unique solution exists.",
+    "techniqueSlugs": [
+      "substitution-two-variables",
+      "elimination-two-variables"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m6-l2-m3",
+    "moduleId": "M6",
+    "lessonId": "m6-l2",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "midpoint",
+      "slopes"
+    ],
+    "promptLatex": "A line passes through $(1,1)$ and through the midpoint of the segment joining $(7,1)$ and $(1,13)$. What is the $y$-coordinate of the point where this line meets the line $x=5$?",
+    "choices": null,
+    "answerLatex": "9",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The second point on the line is described geometrically rather than numerically, so it has to be converted into coordinates first.",
+      "A midpoint is the average of the coordinates of the two endpoints, and once it is known the rest is a slope computation.",
+      "The midpoint of $(7,1)$ and $(1,13)$ is $(4,7)$"
+    ],
+    "solutionLatex": "The midpoint of $(7,1)$ and $(1,13)$ is $\\left(\\frac{7+1}{2},\\frac{1+13}{2}\\right) = (4,7)$.\n\nThe line passes through $(1,1)$ and $(4,7)$, so its slope is $\\frac{7-1}{4-1} = 2$ and its equation is $y = 2x - 1$.\n\nAt $x=5$ this gives $y = 10-1 = 9$.\n\nCheck: the line through $(1,1)$ with slope $2$ also passes through $(4,7)$, since $2(4)-1=7$, so the construction is consistent.\n\nThe second coordinate at the point where the line meets $x=5$ is $9$.",
+    "techniqueSlugs": [
+      "point-slope-form",
+      "slope-intercept-form"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "id": "m9-l4-p10",
+  "moduleId": "M9",
+  "lessonId": "m9-l4",
+  "tier": "A",
+  "difficulty": 2,
+  "tags": ["proof-strategy", "biconditional"],
+  "promptLatex": "To prove 'a number is even if and only if it is divisible by 2', which proof strategy is most appropriate?",
+  "choices": ["direct proof only", "proof by contradiction only", "proof by induction only", "both directions of the biconditional separately", "counterexample"],
+  "answerLatex": "both directions of the biconditional separately",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A biconditional 'P iff Q' requires proving two directions: P implies Q, and Q implies P.",
+    "One direction usually needs factoring and the other needs substitution, and they are not the same argument run backwards.",
+    "Prove each direction under separate headings before finishing."
+  ],
+  "solutionLatex": "Proof of the biconditional requires two separate directions:\n\nForward direction (if even then divisible by 2): By definition, an even number is 2k for some integer k, so it is divisible by 2.\n\nReverse direction (if divisible by 2 then even): If n is divisible by 2, then n = 2k for some integer k, so by definition n is even.\n\nBoth directions are proved independently and the biconditional is established.",
+  "techniqueSlugs": ["both-directions-of-biconditional"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

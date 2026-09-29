@@ -1,0 +1,30 @@
+{
+  "id": "m7-l2-p6",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 2,
+  "tags": ["stars-and-bars", "upper-bounds"],
+  "promptLatex": "How many nonnegative integer solutions does x + y + z = 10 have if each variable is at most 5?",
+  "choices": [
+    "66",
+    "45",
+    "73",
+    "55",
+    "36"
+  ],
+  "answerLatex": "21",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Start with the total number of nonnegative solutions without restrictions: (10+3-1) choose (3-1) = (12) choose 2 = 66.",
+    "Let A_i be the set where variable i exceeds 5. If x exceeds 5, give it 6 extra initially, leaving x' + y + z = 4, which has (4+3-1) choose 2 = (6) choose 2 = 15 solutions.",
+    "Since any of the 3 variables could exceed 5, subtract 3 × 15 = 45.",
+    "Can two variables both exceed 5? If x > 5 and y > 5, then x + y > 10, leaving nothing for z, so the intersection is empty.",
+    "Valid solutions: 66 - 45 = 21."
+  ],
+  "solutionLatex": "Total nonnegative solutions without upper bounds: (10+3-1) choose (3-1) = (12) choose 2 = 66.",
+  "techniques": ["stars-and-bars-method", "case-split-inclusion-exclusion"],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

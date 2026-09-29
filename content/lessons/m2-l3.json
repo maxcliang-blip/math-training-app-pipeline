@@ -1,0 +1,211 @@
+{
+  "id": "m2-l3",
+  "moduleId": "M2",
+  "order": 3,
+  "title": "Congruences, Residue Classes, and the Chinese Remainder Theorem",
+  "topicSlug": "congruences-crt",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 70,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m2-l1",
+    "m2-l2"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Work with integers modulo a fixed modulus: reduce quantities to residues, solve linear congruences including the non-coprime case, find modular inverses, and combine several congruences into a single one by the Chinese Remainder Theorem."
+    },
+    "prerequisites": {
+      "items": [
+        "m2-l1",
+        "m2-l2"
+      ],
+      "noteLatex": "Requires [m2-l1](/MAX/issues/MAX-14) for divisibility and least common multiples, since the solvability test for a non-coprime system is a divisibility condition. Requires [m2-l2](/MAX/issues/MAX-14) for the fact that a residue depends only on a number modulo $m$."
+    },
+    "concept": {
+      "conceptLatex": "A congruence is a statement about a remainder. Writing $a \\equiv b \\pmod{m}$ to mean that $m$ divides $a - b$ makes the relation an equivalence relation on the integers, and the equivalence classes are the residue classes modulo $m$. There are exactly $m$ of them, one for each remainder $0, 1, \\ldots, m-1$, and each class is an arithmetic progression with common difference $m$. Everything about congruences follows from three facts: the residue of a sum is the sum of the residues, the residue of a product is the product of the residues, and two numbers are congruent exactly when they have the same residue.\n\nThose three facts are enough to reduce almost any question to arithmetic on small numbers, and the technique is always the same: replace each large quantity by its remainder, do the arithmetic, and replace the result by its own remainder. So $2^{10} \\equiv 2^{10} \\equiv 1024 \\equiv 24 \\pmod{1000}$ says that the last three digits of $2^{10}$ are $024$. Repeated squaring does the same job more efficiently when the exponent is large, which is why the last digits of a power are found by a short cycle rather than by expanding the power.\n\nSolving a linear congruence $ax \\equiv b \\pmod{m}$ is where cancellation matters. Dividing both sides by $a$ is legitimate exactly when $a$ and $m$ are coprime, in which case $a$ has a multiplicative inverse modulo $m$ and the solution is unique modulo $m$. When they are not coprime the system is solvable if and only if $d = \\gcd(a,m)$ divides $b$, and then it has exactly $d$ solutions modulo $m$, not one. Reducing the modulus along with the coefficients is the standard repair: dividing $a$, $b$, and $m$ by $d$ gives an equivalent system with coprime coefficient and modulus. The inverse itself is found by running the Euclidean algorithm and reading the coefficients off the last nonzero row, so no search over residues is ever needed.\n\n$3x \\equiv 1 \\pmod{7}$ and $3 \\cdot 5 = 15 \\equiv 1 \\pmod{7}$, so $x \\equiv 5 \\pmod{7}$\n\nCombining two congruences is the Chinese Remainder Theorem, and its coprime form is the one that matters. If $m$ and $n$ are coprime then the system $x \\equiv a \\pmod{m}$, $x \\equiv b \\pmod{n}$ has exactly one solution modulo $mn$, and there is a constructive way to find it. Write $x = a + mt$ and substitute: the second condition becomes $mt \\equiv b - a \\pmod{n}$, which is a linear congruence with a coefficient coprime to the modulus, so it is always solvable. Solve for $t$, then the answer is $x = a + mt$ reduced modulo $mn$. The two steps are the same two steps as before, applied in sequence.\n\n$x \\equiv 3 \\pmod{4}$ and $x \\equiv 2 \\pmod{7}$ give $x = 3 + 4t$, then $4t \\equiv -1 \\pmod{7}$, then $t \\equiv 5 \\pmod{7}$, so $x = 23$.\n\nCoprimality is what makes the solution unique. When the moduli share a factor the system may be inconsistent, and the test is a single divisibility condition: $x \\equiv a \\pmod{m}$ and $x \\equiv b \\pmod{n}$ are jointly solvable exactly when $a \\equiv b \\pmod{\\gcd(m,n)}$. If they are, the solution is unique modulo $\\operatorname{lcm}(m,n)$ rather than modulo $mn$, and the same substitution method works with the reduced modulus. The general form of the theorem, stated for any family of moduli, has exactly the same shape: solvability is a pairwise agreement condition on the residues, and the solution is unique modulo the least common multiple of the moduli.",
+      "figures": [
+        {
+          "id": "m2-l3-fig-1",
+          "captionLatex": "The three residue classes of $3$ modulo $4$, namely $3 \\equiv 7 \\equiv 11$ and continuing upward, are infinite; the diagram shows the three smallest members of each class, and the spacing between members of one class is always the modulus.",
+          "asymptoteSource": "// The three residue classes of 3 (mod 4) among the integers 0 to 11,\n// as vertical stacks over the residues they occupy.\n// Two-argument size() fixes the box, so the declared 4/3 is exact.\nsize(320,240);\nfor (int k = 0; k < 3; ++k) {\n  dot((20+40*k,0),3.5pt);\n  dot((20+40*k,-30),3.5pt);\n  dot((20+40*k,-60),3.5pt);\n}\nfor (int k = 0; k < 3; ++k) {\n  dot((140+40*k,0),3.5pt);\n  dot((140+40*k,-30),3.5pt);\n  dot((140+40*k,-60),3.5pt);\n}\nlabel(\"$0$\",(20,8),N);\nlabel(\"$4$\",(20,-68),S);\nlabel(\"$8$\",(20,8),N);\nlabel(\"$1$\",(60,8),N);\nlabel(\"$5$\",(60,-68),S);\nlabel(\"$9$\",(60,8),N);\nlabel(\"$2$\",(100,8),N);\nlabel(\"$6$\",(100,-68),S);\nlabel(\"$10$\",(100,8),N);\nlabel(\"$3$\",(140,8),N);\nlabel(\"$7$\",(140,-68),S);\nlabel(\"$11$\",(140,8),N);",
+          "asymptoteAlt": "Twelve filled dots are arranged in four columns of three, forming a grid. Each column is labelled with a residue at the top and again with a smaller residue at the bottom, showing that a column's dots differ by four from one row to the next. Reading down the columns gives three interleaved arithmetic sequences that together contain every integer from zero upward.",
+          "asymptoteAspectRatio": 1.333
+        },
+        {
+          "id": "m2-l3-fig-2",
+          "captionLatex": "Searching for a number that is $3$ modulo $4$ and $2$ modulo $7$: the rows list candidate values of the first condition and the columns list the second, and the intersection of the row for $23$ with the column for $2$ is the single solution below the modulus $4 \\cdot 7 = 28$.",
+          "asymptoteSource": "// The Chinese Remainder Theorem as a table: for moduli 4 and 7, one row per\n// candidate remainder of 4 and one column per remainder of 7, with the\n// surviving cell highlighted.\n// Two-argument size() fixes the box, so the declared 4/3 is exact.\nsize(320,240);\nfor (int r = 0; r < 3; ++r) {\n  for (int c = 0; c < 4; ++c) {\n    label(\"$\"+string(3+4*r)+\"$\",(20+60*c,-40*r),NW);\n    label(\"$\"+string(2+7*c)+\"$\",(20+60*c,8),NW);\n  }\n}\ndraw((14,-8)--(250,-8));\ndot((20,-40),4pt);\nlabel(\"the one number meeting both conditions\",(120,70),N);",
+          "asymptoteAlt": "A row of four numbers is printed across the top of the figure and, beneath each, a column of three numbers descending, so the layout reads as a small grid of four columns and three rows. A single large filled dot marks one cell in the middle row, and a horizontal rule separates the header row from the grid. Above the figure, centred, is a note reading the one number meeting both conditions.",
+          "asymptoteAspectRatio": 1.333
+        },
+        {
+          "id": "m2-l3-fig-3",
+          "captionLatex": "Successive powers of $3$ modulo $8$ alternate between $3$ and $1$, so the order of $3$ modulo $8$ is $2$ and the residue pattern is periodic from the start; this is what makes $3$ its own inverse of order two rather than of order four.",
+          "asymptoteSource": "// The multiplicative order of 3 modulo 8: successive powers cycle with\n// period 2, which is the reason an inverse or a residue problem terminates.\n// Two-argument size() fixes the box, so the declared 3/2 is exact.\nsize(320,220);\ndot((20,0),4pt);\ndot((120,0),4pt);\ndraw((28,2)--(112,2),Arrow);\ndraw((112,10)--(28,10),Arrow);\nlabel(\"$3$\",(20,20),S);\nlabel(\"$1$\",(120,20),S);\nlabel(\"multiplying by $3$ again returns to the first residue\",(70,70),N);\ndot((20,-90),4pt);\ndot((120,-90),4pt);\ndraw((28,-88)--(112,-88),Arrow);\ndraw((112,-96)--(28,-96),Arrow);\nlabel(\"$3$\",(20,-70),N);\nlabel(\"$9 \\\\equiv 1$\",(120,-70),N);\nlabel(\"so $3^{2} \\\\equiv 1 \\\\pmod{8}$ and the order of $3$ is $2$\",(70,-140),N);",
+          "asymptoteAlt": "Two separate rows of paired dots sit one above the other, and in each row a pair of horizontal arrows runs between the two dots in both directions, indicating that multiplication by three sends each dot to the other and back again. The first row is labelled three and one, and the second row is labelled three and nine reducing to one. Beneath the second row, centred, is a note stating that the square of three is congruent to one modulo eight and that the order is two.",
+          "asymptoteAspectRatio": 1.455
+        }
+      ],
+      "examples": [
+        {
+          "id": "m2-l3-wex-1",
+          "titleLatex": "Worked example: the two-step Chinese Remainder construction",
+          "bodyLatex": "Solve $x \\equiv 3 \\pmod{4}$ and $x \\equiv 2 \\pmod{7}$.\n\nWrite $x = 3 + 4t$ to satisfy the first condition, and substitute into the second.\n\n$3 + 4t \\equiv 2 \\pmod{7} \\implies 4t \\equiv -1 \\equiv 6 \\pmod{7}$\n\nThe inverse of $4$ modulo $7$ is $2$, since $4 \\cdot 2 = 8 \\equiv 1$, so $t \\equiv 12 \\equiv 5 \\pmod{7}$.\n\n$x = 3 + 4(5) = 23$\n\nCheck: $23 = 5(4) + 3$ and $23 = 3(7) + 2$. Since $4$ and $7$ are coprime, this is the only solution modulo $28$.",
+          "answerLatex": "$x = 23$"
+        },
+        {
+          "id": "m2-l3-wex-2",
+          "titleLatex": "Worked example: last digits from repeated squaring",
+          "bodyLatex": "The last three digits of $2^{10}$ are $2^{10} \\pmod{1000}$.\n\n$2^{10} = 2^{8} \\cdot 2^{2}$. Reduce each part: $2^{8} = 256 \\equiv 256$ and $2^{2} = 4$.\n\n$2^{10} \\equiv 256 \\cdot 4 = 1024 \\equiv 24 \\pmod{1000}$\n\nSince $2^{10} = 1024$, the remainder $24$ is correct, and it is written as the three digits $024$.",
+          "answerLatex": "$24$"
+        },
+        {
+          "id": "m2-l3-wex-3",
+          "titleLatex": "Worked example: a modular inverse from the Euclidean algorithm",
+          "bodyLatex": "Find the inverse of $3$ modulo $7$.\n\n$7 = 2(3) + 1$\n\n$1 = 7 - 2(3)$.\n\nReading the coefficient of $3$, which is $-2 \\equiv 5 \\pmod{7}$, gives the inverse.\n\n$3 \\cdot 5 = 15 = 2(7) + 1 \\equiv 1 \\pmod{7}$, so $5$ is the inverse. This is why the Euclidean algorithm, not trial multiplication, is the right tool.",
+          "answerLatex": "$5$"
+        },
+        {
+          "id": "m2-l3-wex-4",
+          "titleLatex": "Worked example: a system whose moduli are not coprime",
+          "bodyLatex": "Solve $x \\equiv 2 \\pmod{6}$ and $x \\equiv 5 \\pmod{9}$.\n\n$\\gcd(6,9) = 3$, and $2 \\equiv 5 \\pmod{3}$ since both are $2$ modulo $3$, so the system is consistent.\n\nWrite $x = 2 + 6t$ and substitute: $2 + 6t \\equiv 5 \\pmod{9}$ gives $6t \\equiv 3 \\pmod{9}$. Dividing all three terms by $3$ gives $2t \\equiv 1 \\pmod{3}$, and the inverse of $2$ modulo $3$ is $2$, so $t \\equiv 2 \\pmod{3}$.\n\n$x = 2 + 6(2) = 14$\n\nCheck: $14 = 2(6) + 2$ and $14 = 9 + 5$. The solution is unique modulo $\\operatorname{lcm}(6,9) = 18$, so the solutions are $14, 32, 50, \\ldots$.",
+          "answerLatex": "$x \\equiv 14 \\pmod{18}$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "residue-class-size",
+          "name": "Know how many classes there are",
+          "summaryLatex": "There are exactly $m$ residue classes modulo $m$, one per remainder, and each holds infinitely many integers.",
+          "bodyLatex": "The class of $r$ is $r, r+m, r+2m, \\ldots$, so the classes partition the integers. Any question about residues is therefore a question about $m$ objects, however large the modulus, and enumerating the classes is always finite."
+        },
+        {
+          "slug": "reduce-to-residue",
+          "name": "Replace every quantity by its residue",
+          "summaryLatex": "Reduce each number modulo $m$ before doing arithmetic, then reduce the result.",
+          "bodyLatex": "Because the residue of a sum is the sum of the residues and the residue of a product is the product of the residues, the computation is unchanged in meaning. This turns a question about a large number into a question about a number smaller than the modulus."
+        },
+        {
+          "slug": "solve-linear-congruence",
+          "name": "Solve a linear congruence by cancelling carefully",
+          "summaryLatex": "$ax \\equiv b \\pmod{m}$ is solvable exactly when $\\gcd(a,m)$ divides $b$, and then it has $\\gcd(a,m)$ solutions modulo $m$.",
+          "bodyLatex": "If $d = \\gcd(a,m)$ does not divide $b$, reducing modulo $d$ gives $0 \\equiv b \\pmod{d}$, a contradiction. If it does divide $b$, divide the whole system by $d$, which makes the new coefficient coprime to the new modulus and gives a unique solution there; lifting back multiplies the count by $d$."
+        },
+        {
+          "slug": "modular-inverse",
+          "name": "Find a multiplicative inverse with the Euclidean algorithm",
+          "summaryLatex": "For $\\gcd(a,m)=1$, run the Euclidean algorithm and read the coefficient of $a$ in the last row.",
+          "bodyLatex": "The algorithm terminates at a row of the form $r = sa + tm$, and when the last remainder is $1$ that row reads $1 = sa+tm$, so $s$ is the inverse of $a$ modulo $m$ reduced into range. For $7 = 2(3)+1$ the coefficient of $3$ is $-2$, which is $5$ modulo $7$."
+        },
+        {
+          "slug": "crt-substitution",
+          "name": "Combine two congruences by substitution",
+          "summaryLatex": "Write $x = a + mt$, substitute, and solve the resulting linear congruence in $t$.",
+          "bodyLatex": "The substitution enforces the first condition exactly, leaving one condition on $t$ whose coefficient $m$ is coprime to $n$ when $m$ and $n$ are coprime, so it is always solvable and gives $t$ modulo $n$, hence $x$ modulo $mn$. This is the constructive form of the theorem and it never requires a search."
+        },
+        {
+          "slug": "crt-general-form",
+          "name": "Check consistency when the moduli share a factor",
+          "summaryLatex": "A system $x \\equiv a \\pmod{m}$, $x \\equiv b \\pmod{n}$ is solvable exactly when $a \\equiv b \\pmod{\\gcd(m,n)}$.",
+          "bodyLatex": "Both conditions say something about $x$ modulo $\\gcd(m,n)$, so they must agree there; that is necessary, and after dividing the whole system by the common divisor the moduli are coprime and the constructive method applies, which shows it is sufficient. The solution is then unique modulo $\\operatorname{lcm}(m,n)$."
+        },
+        {
+          "slug": "periodicity-of-powers",
+          "name": "Exploit the cycle of a power's last digits",
+          "summaryLatex": "The last $k$ digits of $a^{n}$ are periodic in $n$ once $n$ is large enough, and the period divides $\\varphi(10^{k})$.",
+          "bodyLatex": "Squaring repeatedly modulo $10^{k}$ produces a finite sequence of residues, so some residue must repeat; the exponents giving that residue then repeat too. Reducing the exponent modulo the period is what makes the last digits of a large power computable without expanding it."
+        },
+        {
+          "slug": "quadratic-residues",
+          "name": "Recognize the squares modulo a small modulus",
+          "summaryLatex": "The squares modulo $m$ form a set that is often much smaller than $m$ and can be listed once.",
+          "bodyLatex": "Squaring collapses sign: $a$ and $-a$ have the same square, so a modulus of size $m$ has at most $\\left\\lfloor m/2 \\right\\rfloor + 1$ distinct squares. For $m=7$ the squares are $0, 1, 2, 4$, and knowing that list turns any question about a square modulo $7$ into a membership test."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "cancel-when-not-coprime",
+          "titleLatex": "Cancelling a coefficient that is not coprime to the modulus",
+          "wrongLatex": "$4x \\equiv 2 \\pmod{10} \\implies x \\equiv 5 \\pmod{10}$",
+          "whyLatex": "Dividing by $4$ requires an inverse of $4$ modulo $10$, and none exists since $\\gcd(4,10) = 2$. The system $4x \\equiv 2 \\pmod{10}$ is in fact equivalent to $2x \\equiv 1 \\pmod{5}$, whose solutions are $x \\equiv 3 \\pmod{5}$, that is $x \\equiv 3$ or $8$ modulo $10$. The claimed value $5$ satisfies neither.",
+          "fixLatex": "Check whether the coefficient and the modulus are coprime before cancelling. If they are not, divide the entire system by their gcd first, and remember the answer is then determined only modulo the reduced modulus."
+        },
+        {
+          "slug": "assume-coprime",
+          "titleLatex": "Applying the Chinese Remainder Theorem to moduli that share a factor",
+          "wrongLatex": "$x \\equiv 1 \\pmod{4}$ and $x \\equiv 2 \\pmod{6} \\implies x \\equiv 10 \\pmod{24}$",
+          "whyLatex": "Here $\\gcd(4,6) = 2$ and the residues $1$ and $2$ disagree modulo $2$, so the system has no solution at all. The theorem's coprime hypothesis is what guarantees existence, and dropping it does not merely weaken the uniqueness, it can destroy the solution.",
+          "fixLatex": "Compute the gcd of the moduli and compare the residues modulo it before starting. If they agree, reduce the system by that gcd and the coprime version applies, with the modulus replaced by the least common multiple."
+        },
+        {
+          "slug": "forget-the-modulus",
+          "titleLatex": "Reporting a single integer where a residue class is required",
+          "wrongLatex": "$x \\equiv 2 \\pmod{5}$ has the solution $x = 2$",
+          "whyLatex": "A congruence describes an infinite arithmetic progression, not one integer. The solution set of $x \\equiv 2 \\pmod{5}$ is $2, 7, 12, \\ldots$, so any question about the least positive solution and any question about all solutions are different questions with different answers.",
+          "fixLatex": "State the modulus alongside the value, and decide explicitly whether the problem wants the least positive representative, the full class, or a count in a bounded range."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m2-l3-p1",
+        "m2-l3-p2",
+        "m2-l3-p3",
+        "m2-l3-p4",
+        "m2-l3-p5",
+        "m2-l3-p6",
+        "m2-l3-p7",
+        "m2-l3-p8",
+        "m2-l3-p9",
+        "m2-l3-p10",
+        "m2-l3-p11",
+        "m2-l3-p12",
+        "m2-l3-p13",
+        "m2-l3-p14",
+        "m2-l3-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m2-l3-p1",
+        "m2-l3-p2",
+        "m2-l3-p3",
+        "m2-l3-p4",
+        "m2-l3-p5",
+        "m2-l3-p6",
+        "m2-l3-p7",
+        "m2-l3-p8",
+        "m2-l3-p9",
+        "m2-l3-p10",
+        "m2-l3-p11",
+        "m2-l3-p12",
+        "m2-l3-p13",
+        "m2-l3-p14",
+        "m2-l3-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m2-l3-m1",
+        "m2-l3-m2",
+        "m2-l3-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "modular-arithmetic",
+    "congruences",
+    "crt",
+    "residues"
+  ]
+}

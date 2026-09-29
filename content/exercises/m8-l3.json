@@ -1,0 +1,565 @@
+[
+  {
+    "id": "m8-l3-p1",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "law-of-cosines",
+      "sas-triangles",
+      "triangle-solving"
+    ],
+    "promptLatex": "A triangle has two sides of lengths $3$ and $8$ with an included angle of $60^\\circ$. What is the length of the third side?",
+    "choices": [
+      "7",
+      "\\sqrt{73}",
+      "5",
+      "11",
+      "\\sqrt{97}"
+    ],
+    "answerLatex": "7",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Two sides and the angle between them is the case with a single answer, and there is one formula that produces it.",
+      "The law of cosines squares the two known sides, subtracts twice their product times the cosine of the included angle, and the third side is the square root of what remains.",
+      "The cosine of $60^\\circ$ is $\\frac{1}{2}$, so the subtracted term is $2 \\cdot 3 \\cdot 8 \\cdot \\frac{1}{2} = 24$."
+    ],
+    "solutionLatex": "The included angle is known, so the law of cosines gives the third side directly.\n\n$c^2 = a^2 + b^2 - 2ab\\cos C = 3^2 + 8^2 - 2(3)(8)\\cos 60^\\circ = 9 + 64 - 48 \\cdot \\frac{1}{2} = 73 - 24 = 49$\n\n$c = 7$\n\nThe answer is shorter than the Pythagorean value $\\sqrt{73} \\approx 8.54$, which is right because a $60^\\circ$ included angle is smaller than a right angle.",
+    "techniqueSlugs": [
+      "two-sides-one-angle",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p2",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "law-of-cosines",
+      "sas-triangles",
+      "triangle-solving"
+    ],
+    "promptLatex": "A triangle has two sides of lengths $3$ and $5$ with an included angle of $120^\\circ$. What is the length of the third side?",
+    "choices": [
+      "7",
+      "\\sqrt{19}",
+      "\\sqrt{49}",
+      "\\sqrt{79}",
+      "\\sqrt{34}"
+    ],
+    "answerLatex": "7",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "As with the previous case, the included angle is known, so a single formula gives the third side.",
+      "The law of cosines is the only formula that handles an obtuse included angle, and the cosine of $120^\\circ$ is negative, which makes the subtracted term add instead.",
+      "$\\cos 120^\\circ = -\\frac{1}{2}$, so the cross term becomes $+ 2 \\cdot 3 \\cdot 5 \\cdot \\frac{1}{2} = 15$."
+    ],
+    "solutionLatex": "With the included angle known, apply the law of cosines. Since $\\cos 120^\\circ = -\\frac{1}{2}$, the cross term adds:\n\n$c^2 = 3^2 + 5^2 - 2(3)(5)\\cos 120^\\circ = 9 + 25 - 30 \\cdot \\left(-\\frac{1}{2}\\right) = 34 + 15 = 49$\n\n$c = 7$\n\nCompare with the $60^\\circ$ case on the same two sides, which gives $c^2 = 34 - 15 = 19$. Opening the included angle lengthens the third side, as it must.",
+    "techniqueSlugs": [
+      "two-sides-one-angle",
+      "supplementary-angle-case"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p3",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "triangle-area",
+      "trigonometric-area",
+      "sas-triangles"
+    ],
+    "promptLatex": "A triangle has two sides of lengths $5$ and $8$ with an included angle of $120^\\circ$. What is the area of the triangle?",
+    "choices": [
+      "10\\sqrt{3}",
+      "20\\sqrt{3}",
+      "5\\sqrt{3}",
+      "10",
+      "-10\\sqrt{3}"
+    ],
+    "answerLatex": "10\\sqrt{3}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The area of a triangle with two sides and the angle between them has its own formula, and using it avoids finding the third side at all.",
+      "The formula is one half the product of the two sides multiplied by the sine of the included angle, and the sine of an obtuse angle is positive.",
+      "$\\sin 120^\\circ = \\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$, so the area is $\\frac{1}{2} \\cdot 5 \\cdot 8 \\cdot \\frac{\\sqrt{3}}{2}$."
+    ],
+    "solutionLatex": "The area formula needs only the two sides and the included angle:\n\n$K = \\frac{1}{2}ab\\sin C = \\frac{1}{2} \\cdot 5 \\cdot 8 \\cdot \\sin 120^\\circ$\n\nThe sine of an obtuse angle is positive, and $\\sin 120^\\circ = \\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$, so\n\n$K = 20 \\cdot \\frac{\\sqrt{3}}{2} = 10\\sqrt{3}$\n\nNote that the same two sides at a $60^\\circ$ included angle give the same area, because the sines agree; it is the third side, not the area, that distinguishes the two configurations.",
+    "techniqueSlugs": [
+      "area-from-two-sides-angle",
+      "supplementary-angle-case"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p4",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "triangle-area",
+      "trigonometric-area",
+      "sas-triangles"
+    ],
+    "promptLatex": "A triangle has two sides of lengths $6$ and $8$ with an included angle of $45^\\circ$. What is the area of the triangle, exactly?",
+    "choices": null,
+    "answerLatex": "12\\sqrt{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The formula for the area of a triangle from two sides and their included angle is a single product, so the only work is evaluating one exact value.",
+      "The two sides are given, the included angle is given, and the sine of a $45^\\circ$ angle is a standard surd.",
+      "$\\frac{1}{2} \\cdot 6 \\cdot 8 = 24$, and multiplying by $\\frac{\\sqrt{2}}{2}$ leaves $12\\sqrt{2}$."
+    ],
+    "solutionLatex": "Use the two-sides-and-included-angle area formula:\n\n$K = \\frac{1}{2}ab\\sin C = \\frac{1}{2} \\cdot 6 \\cdot 8 \\cdot \\sin 45^\\circ = 24 \\cdot \\frac{\\sqrt{2}}{2} = 12\\sqrt{2}$\n\nCross-check with the law of cosines: $c^2 = 36 + 64 - 96 \\cdot \\frac{\\sqrt{2}}{2} = 100 - 48\\sqrt{2}$, and the height relative to side $b$ is $6\\sin 45^\\circ = 3\\sqrt{2}$, so $K = \\frac{1}{2} \\cdot 8 \\cdot 3\\sqrt{2} = 12\\sqrt{2}$ as required.",
+    "techniqueSlugs": [
+      "area-from-two-sides-angle",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p5",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "law-of-sines",
+      "oblique-triangles",
+      "triangle-solving"
+    ],
+    "promptLatex": "In a triangle, side $a$ has length $6$ and its opposite angle $A$ is $30^\\circ$, while angle $B$ is a right angle. What is the length of side $b$?",
+    "choices": null,
+    "answerLatex": "12",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "One side and its opposite angle fix a single ratio for the whole triangle, and every other quantity is then one multiplication away.",
+      "The law of sines says every side divided by the sine of its opposite angle gives the same number, so a second angle turns into a second side directly.",
+      "$\\sin 90^\\circ = 1$ and $\\sin 30^\\circ = \\frac{1}{2}$, so the common ratio is $6 \\div \\frac{1}{2} = 12$."
+    ],
+    "solutionLatex": "The law of sines gives $\\frac{a}{\\sin A} = \\frac{b}{\\sin B}$.\n\nThe common ratio is $\\frac{6}{\\sin 30^\\circ} = \\frac{6}{\\frac{1}{2}} = 12$, and since $\\sin 90^\\circ = 1$:\n\n$b = 12 \\cdot \\sin 90^\\circ = 12$\n\nThe same triangle viewed as a $30^\\circ$-$60^\\circ$-$90^\\circ$ one has the side opposite $30^\\circ$ equal to half the hypotenuse, so the hypotenuse, which is side $b$, is twice $6$, namely $12$.",
+    "techniqueSlugs": [
+      "one-side-one-angle",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p6",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "law-of-sines",
+      "oblique-triangles",
+      "triangle-solving"
+    ],
+    "promptLatex": "In a triangle, side $a$ has length $6$ and its opposite angle $A$ is $45^\\circ$, and $C$ is a right angle. What is the length of side $b$?",
+    "choices": [
+      "6\\sqrt{2}",
+      "\\frac{6}{\\sqrt{2}}",
+      "12",
+      "6",
+      "\\sqrt{72}"
+    ],
+    "answerLatex": "6\\sqrt{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The law of sines converts a known angle into the matching side once the common ratio is known, and here one angle is a right angle.",
+      "Compute the common ratio from the side-opposite pair, then multiply by the sine of the angle opposite the side you want.",
+      "The ratio is $6 \\div \\frac{\\sqrt{2}}{2} = 6\\sqrt{2}$, and $\\sin 90^\\circ = 1$ leaves it unchanged."
+    ],
+    "solutionLatex": "From the law of sines, the common ratio is\n\n$\\frac{a}{\\sin A} = \\frac{6}{\\sin 45^\\circ} = \\frac{6}{\\frac{\\sqrt{2}}{2}} = 6\\sqrt{2}$.\n\nSince $C = 90^\\circ$, $\\sin C = 1$, so $b = 6\\sqrt{2} \\cdot 1 = 6\\sqrt{2}$.\n\nEquivalently, this is a $45^\\circ$-$45^\\circ$-$90^\\circ$ triangle in which the legs are equal, so $b$ is the leg paired with side $a = 6$ and equals $6\\sqrt{2}$.",
+    "techniqueSlugs": [
+      "one-side-one-angle",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p7",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "angle-chasing",
+      "triangle-solving",
+      "trig-identities"
+    ],
+    "promptLatex": "In a triangle, angle $A$ is $80^\\circ$ and angle $B$ is $60^\\circ$. What is the measure of angle $C$, in degrees?",
+    "choices": [
+      "40",
+      "50",
+      "60",
+      "80",
+      "100"
+    ],
+    "answerLatex": "40",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "No trigonometry is needed here at all, only the fact that the three angles of a triangle add up.",
+      "The angles of a triangle sum to $180^\\circ$, so the third is what remains after the other two are subtracted.",
+      "$80^\\circ$ and $60^\\circ$ come to $140^\\circ$, leaving $180^\\circ - 140^\\circ = 40^\\circ$."
+    ],
+    "solutionLatex": "The angles of a triangle sum to $180^\\circ$.\n\n$C = 180^\\circ - A - B = 180^\\circ - 80^\\circ - 60^\\circ = 40^\\circ$\n\nThe three angles $80^\\circ$, $60^\\circ$, and $40^\\circ$ are all acute, which is consistent, and the result is exact because it came from a subtraction rather than an inverse sine.",
+    "techniqueSlugs": [
+      "angle-sum-of-triangle",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p8",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "radii-and-chords",
+      "inscribed-angle-theorem",
+      "law-of-sines"
+    ],
+    "promptLatex": "A chord of a circle subtends an inscribed angle of $30^\\circ$ at a point on the circle, and the circle has radius $10$. What is the length of the chord?",
+    "choices": [
+      "10",
+      "20",
+      "5\\sqrt{3}",
+      "5",
+      "\\frac{10}{3}"
+    ],
+    "answerLatex": "10",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A chord and an inscribed angle are related through the radius, and the same relation that the law of sines uses applies here.",
+      "The extended law of sines says a side of length $a$ opposite angle $A$ satisfies $a = 2R\\sin A$, and a chord is exactly such a side of the inscribed triangle.",
+      "$2R = 20$ and $\\sin 30^\\circ = \\frac{1}{2}$, so the chord is $20 \\cdot \\frac{1}{2}$."
+    ],
+    "solutionLatex": "A chord of length $d$ subtending an inscribed angle $\\theta$ satisfies $d = 2R\\sin \\theta$, the same relation as the extended law of sines applied to the triangle formed by the chord and the point.\n\n$d = 2 \\cdot 10 \\cdot \\sin 30^\\circ = 20 \\cdot \\frac{1}{2} = 10$\n\nThe inscribed angle is half the central angle on the same arc, so the central angle is $60^\\circ$, and a $60^\\circ$ chord in a circle of radius $10$ is indeed a side of an equilateral triangle of side $10$.",
+    "techniqueSlugs": [
+      "radii-and-chords",
+      "inscribed-angle-theorem"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p9",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "radii-and-chords",
+      "law-of-sines",
+      "triangle-solving"
+    ],
+    "promptLatex": "A triangle is inscribed in a circle of radius $13$, and one of its sides has length $26$. What is the measure of the angle opposite that side, in degrees?",
+    "choices": null,
+    "answerLatex": "90",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A side of a triangle inscribed in a circle is a chord, and one chord in particular has a well-known angle standing on it.",
+      "The extended law of sines reads $a = 2R\\sin A$, and here the side equals the diameter, which pins the sine at its maximum.",
+      "$a = 2R$, so $2R\\sin A = 2R$ forces $\\sin A = 1$."
+    ],
+    "solutionLatex": "By the extended law of sines, $a = 2R\\sin A$.\n\nHere $2R = 26$ and $a = 26$, so $26 = 26\\sin A$, giving $\\sin A = 1$ and therefore $A = 90^\\circ$.\n\nGeometrically, a chord equal to the diameter is a straight line through the centre, and an angle standing on a diameter is a right angle by Thales' theorem.",
+    "techniqueSlugs": [
+      "radii-and-chords",
+      "inscribed-angle-theorem"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p10",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "sss-triangles",
+      "law-of-cosines",
+      "triangle-solving"
+    ],
+    "promptLatex": "A triangle has sides of lengths $7$, $8$, and $13$. What is the measure of the angle between the sides of length $7$ and $8$, in degrees?",
+    "choices": null,
+    "answerLatex": "120",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Three sides and no angle is the case that only one formula can start, since a proportion needs an angle and there is none.",
+      "Rearrange the law of cosines to solve for the cosine of the wanted angle, then read the angle off the resulting value.",
+      "$\\frac{7^2 + 8^2 - 13^2}{2 \\cdot 7 \\cdot 8} = \\frac{49 + 64 - 169}{112} = -\\frac{56}{112} = -\\frac{1}{2}$, and a cosine of $-\\frac{1}{2}$ is a $120^\\circ$ angle."
+    ],
+    "solutionLatex": "With three sides, use the law of cosines rearranged:\n\n$\\cos C = \\frac{a^2 + b^2 - c^2}{2ab} = \\frac{7^2 + 8^2 - 13^2}{2 \\cdot 7 \\cdot 8} = \\frac{49 + 64 - 169}{112} = \\frac{-56}{112} = -\\frac{1}{2}$.\n\nA cosine of $-\\frac{1}{2}$ in the range of a triangle angle is $C = 120^\\circ$.\n\nThe negative cosine identifies this as an obtuse triangle, which is consistent with $13$ being the longest side and $13^2 = 169 > 49 + 64 = 113$.",
+    "techniqueSlugs": [
+      "three-sides",
+      "supplementary-angle-case"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p11",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "ssa-triangles",
+      "ambiguous-case-analysis",
+      "triangle-solving"
+    ],
+    "promptLatex": "In a triangle, $a = 5$, $A = 30^\\circ$, and $b = 6$. How many distinct triangles satisfy these conditions?",
+    "choices": null,
+    "answerLatex": "2",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A non-included angle with two sides is the only case that can fail to give a unique answer, so the count depends on a test rather than on a single computation.",
+      "The law of sines produces a value for the sine of $B$, which has two candidate angles, and both must be checked against the angle sum.",
+      "$\\sin B = \\frac{6 \\cdot \\frac{1}{2}}{5} = \\frac{3}{5}$ gives a first candidate near $37^\\circ$ and a second near $143^\\circ$; adding $A = 30^\\circ$ to the second gives about $173^\\circ$, which still leaves room for a third angle."
+    ],
+    "solutionLatex": "The law of sines gives $\\sin B = \\frac{b \\sin A}{a} = \\frac{6 \\cdot \\frac{1}{2}}{5} = \\frac{3}{5}$, which is inside the range, so a triangle exists.\n\nThe two candidate angles for $B$ are $B_0 \\approx 36.87^\\circ$ and $180^\\circ - B_0 \\approx 143.13^\\circ$.\n\nThe second passes the angle-sum test: $30^\\circ + 143.13^\\circ = 173.13^\\circ < 180^\\circ$, which still leaves a positive third angle of about $6.87^\\circ$.\n\nBoth candidates are therefore admissible and there are two distinct triangles, whose third angles are $113.13^\\circ$ and $6.87^\\circ$ respectively.",
+    "techniqueSlugs": [
+      "ambiguous-case-analysis",
+      "supplementary-angle-case"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p12",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "cyclic-quadrilaterals",
+      "angles-in-a-quadrilateral",
+      "angle-chasing"
+    ],
+    "promptLatex": "A quadrilateral is inscribed in a circle. Three of its angles measure $80^\\circ$, $100^\\circ$, and $110^\\circ$ in that order around the figure. What is the measure of the fourth angle, in degrees?",
+    "choices": null,
+    "answerLatex": "70",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A quadrilateral inscribed in a circle is a cyclic quadrilateral, and there is one fact about such figures that settles the question.",
+      "Opposite angles of a cyclic quadrilateral are supplementary, so each pair of opposite angles sums to a straight angle.",
+      "The angle opposite the $80^\\circ$ one is therefore $100^\\circ$, leaving the $110^\\circ$ angle and the unknown one to sum to $180^\\circ$."
+    ],
+    "solutionLatex": "Opposite angles of a cyclic quadrilateral are supplementary.\n\nThe angle opposite the $80^\\circ$ angle is the $100^\\circ$ one, since $80^\\circ + 100^\\circ = 180^\\circ$, which confirms the ordering.\n\nThe remaining pair is the $110^\\circ$ angle and the unknown fourth angle $x$, so $110^\\circ + x = 180^\\circ$ and $x = 70^\\circ$.\n\nAs a check on the ordering, the pair $80^\\circ$ and $110^\\circ$ is not opposite, since they do not sum to $180^\\circ$, so the fourth angle must be opposite the $110^\\circ$ one.",
+    "techniqueSlugs": [
+      "angles-in-a-quadrilateral",
+      "supplementary-angle-case"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p13",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "ssa-triangles",
+      "ambiguous-case-analysis",
+      "law-of-sines"
+    ],
+    "promptLatex": "In a triangle, $a = 5$, $A = 30^\\circ$, and $b = 9$. How many distinct triangles satisfy these conditions?",
+    "choices": null,
+    "answerLatex": "2",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The count again depends on a test rather than on a single computation, and the test is applied to the supplementary candidate angle.",
+      "The law of sines gives a sine value for $B$, whose two candidate angles must both be checked against the angle sum.",
+      "$\\sin B = \\frac{9 \\cdot \\frac{1}{2}}{5} = \\frac{9}{10}$, whose candidates are near $64^\\circ$ and near $116^\\circ$; adding $A = 30^\\circ$ to the second gives less than $180^\\circ$, so it survives."
+    ],
+    "solutionLatex": "The law of sines gives $\\sin B = \\frac{b \\sin A}{a} = \\frac{9 \\cdot \\frac{1}{2}}{5} = \\frac{9}{10}$, which is inside the range, so a triangle exists.\n\nThe two candidates are $B_0 \\approx 64.16^\\circ$ and $180^\\circ - B_0 \\approx 115.84^\\circ$.\n\nThe second passes the angle-sum test: $30^\\circ + 115.84^\\circ = 145.84^\\circ < 180^\\circ$, leaving a third angle of $34.16^\\circ$.\n\nBoth candidates are therefore valid and there are two distinct triangles, with third angles of about $85.84^\\circ$ and $34.16^\\circ$.",
+    "techniqueSlugs": [
+      "ambiguous-case-analysis",
+      "supplementary-angle-case"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p14",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "cyclic-quadrilaterals",
+      "trigonometric-area",
+      "triangle-area"
+    ],
+    "promptLatex": "A cyclic quadrilateral has consecutive sides $b$ and $d$ meeting at an angle of $60^\\circ$ at one vertex. The two triangles cut off by the diagonal from that vertex have combined area equal to $bd$ times the sine of that angle. Find the value of the sine of the opposite angle, in simplest form.",
+    "choices": null,
+    "answerLatex": "\\frac{\\sqrt{3}}{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The opposite angle of a cyclic quadrilateral is fixed in relation to the given one, and only the sine of it is asked for.",
+      "Opposite angles of a cyclic quadrilateral are supplementary, and the sine of a supplementary angle equals the sine of the original.",
+      "$\\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$, and the supplementary angle has the same sine."
+    ],
+    "solutionLatex": "The opposite angle $D$ of a cyclic quadrilateral satisfies $A + D = 180^\\circ$, so $D = 180^\\circ - 60^\\circ = 120^\\circ$.\n\n$\\sin D = \\sin(180^\\circ - A) = \\sin A = \\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$.\n\nThis is why the combined area of the two triangles is $\\frac{1}{2}bd\\sin A + \\frac{1}{2}bd\\sin D = bd\\sin A$: the two area terms share their sine, and the two halves cancel. The sine is positive, since an obtuse angle of a triangle still has a positive sine.",
+    "techniqueSlugs": [
+      "angles-in-a-quadrilateral",
+      "area-from-two-sides-angle",
+      "supplementary-angle-case"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-p15",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "sss-triangles",
+      "heron-area",
+      "triangle-area"
+    ],
+    "promptLatex": "A triangle has sides of lengths $5$, $6$, and $7$. What is the product of its area with twice the length of its longest side?",
+    "choices": null,
+    "answerLatex": "84\\sqrt{6}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "No angle is given, so the area must come from the three sides, and the quantity asked for is a product rather than the area alone.",
+      "Heron's formula gives the area from the three sides and the semiperimeter, and the semiperimeter here is a whole number, which is the sign the problem was built to be tidy.",
+      "$s = \\frac{5+6+7}{2} = 9$, so the area is $\\sqrt{9 \\cdot 4 \\cdot 3 \\cdot 2} = \\sqrt{216} = 6\\sqrt{6}$."
+    ],
+    "solutionLatex": "With three sides and no angle, use Heron's formula with $s = \\frac{5+6+7}{2} = 9$.\n\n$K = \\sqrt{s(s-a)(s-b)(s-c)} = \\sqrt{9 \\cdot 4 \\cdot 3 \\cdot 2} = \\sqrt{216} = 6\\sqrt{6}$\n\nThe longest side is $7$, so twice its length is $14$, and the requested product is\n\n$14 \\cdot 6\\sqrt{6} = 84\\sqrt{6}$.\n\nCheck the area against the law of cosines: $\\cos C = \\frac{25 + 36 - 49}{60} = \\frac{1}{5}$, so $K = \\frac{1}{2} \\cdot 5 \\cdot 6 \\cdot \\sqrt{1 - \\frac{1}{25}} = 15 \\cdot \\frac{\\sqrt{24}}{5} = \\frac{15 \\cdot 2\\sqrt{6}}{5} = 6\\sqrt{6}$, the same value.",
+    "techniqueSlugs": [
+      "heron-area",
+      "three-sides",
+      "area-from-two-sides-angle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-m1",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "radii-and-chords",
+      "law-of-sines",
+      "triangle-solving"
+    ],
+    "promptLatex": "A triangle is inscribed in a circle of radius $10$, and its longest side has length $10\\sqrt{3}$. What is the measure of the angle opposite that side, in degrees?",
+    "choices": null,
+    "answerLatex": "120",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "An inscribed side is a chord, and the chord's length together with the circle's radius pins down the angle that stands on it.",
+      "The extended law of sines reads $a = 2R\\sin A$, and the ratio of the side to the diameter is the sine of the opposite angle.",
+      "$\\sin A = \\frac{10\\sqrt{3}}{20} = \\frac{\\sqrt{3}}{2}$, which is the sine of $60^\\circ$ or of $120^\\circ$."
+    ],
+    "solutionLatex": "By the extended law of sines, $\\sin A = \\frac{a}{2R} = \\frac{10\\sqrt{3}}{20} = \\frac{\\sqrt{3}}{2}$.\n\nThat value is the sine of both $60^\\circ$ and $120^\\circ$, and the ambiguity is settled by the side lengths: $a = 10\\sqrt{3}$ is the longest side, so $A$ is the largest angle of the triangle. An angle of $60^\\circ$ would leave room for two larger angles, which is impossible, so $A = 120^\\circ$.\n\nCross-check with the law of cosines on a $120^\\circ$ angle: if the other sides are $b$ and $c$, then $a^2 = b^2 + c^2 + bc$, and the chord picture in a circle of radius $10$ subtending $120^\\circ$ at the circumference subtends $240^\\circ$ at the centre, giving a chord of $2 \\cdot 10 \\cdot \\sin 60^\\circ = 10\\sqrt{3}$ as required.",
+    "techniqueSlugs": [
+      "radii-and-chords",
+      "supplementary-angle-case",
+      "ambiguous-case-analysis"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-m2",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "trigonometric-area",
+      "cyclic-quadrilaterals",
+      "triangle-area"
+    ],
+    "promptLatex": "A cyclic quadrilateral has a diagonal that splits it into two triangles sharing two sides of lengths $6$ and $9$, with the angle between them measuring $120^\\circ$ at one end and $D$ at the other. Find the total area of the two triangles, exactly.",
+    "choices": null,
+    "answerLatex": "27\\sqrt{3}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two areas share the same pair of side lengths, so only the two included angles differ, and one of them is already known.",
+      "Each area is one half the product of the two sides times the sine of its included angle, and the sine of the opposite angle equals the sine of the given one.",
+      "$\\frac{1}{2} \\cdot 6 \\cdot 9 \\cdot \\sin 120^\\circ = 27 \\cdot \\frac{\\sqrt{3}}{2}$, and there are two such terms."
+    ],
+    "solutionLatex": "The two triangles have the same two sides, $6$ and $9$, so each has area $\\frac{1}{2} \\cdot 6 \\cdot 9 \\cdot \\sin$ of its included angle.\n\nBecause the quadrilateral is cyclic, the two opposite angles are supplementary, so $\\sin D = \\sin 120^\\circ = \\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$. Each triangle therefore has area $27 \\cdot \\frac{\\sqrt{3}}{2} = \\frac{27\\sqrt{3}}{2}$.\n\nThe total is twice that, namely $27\\sqrt{3}$. Equivalently the total is $bd\\sin A$ with $b = 6$ and $d = 9$, giving $54 \\cdot \\frac{\\sqrt{3}}{2} = 27\\sqrt{3}$.",
+    "techniqueSlugs": [
+      "angles-in-a-quadrilateral",
+      "area-from-two-sides-angle",
+      "supplementary-angle-case"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l3-m3",
+    "moduleId": "M8",
+    "lessonId": "m8-l3",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "law-of-cosines",
+      "sas-triangles",
+      "triangle-area"
+    ],
+    "promptLatex": "A triangle has two sides of lengths $7$ and $13$ with an included angle of $90^\\circ$. What is the sum of the square of the third side and four times the area of the triangle?",
+    "choices": null,
+    "answerLatex": "400",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The requested sum mixes the two quantities this module produces from one pair of sides and one angle, and a right angle makes both of them rational.",
+      "The law of cosines gives the squared third side and the area formula gives the area, and at a right angle both involve no surds at all.",
+      "The third side squares to $7^2 + 13^2 = 218$ and the area is $\\frac{1}{2} \\cdot 7 \\cdot 13$, so four times the area is $182$."
+    ],
+    "solutionLatex": "With the included angle a right angle, both quantities are rational.\n\nThe law of cosines has a vanishing cosine term:\n\n$c^2 = 7^2 + 13^2 - 2(7)(13)\\cos 90^\\circ = 49 + 169 = 218$.\n\nThe area is $K = \\frac{1}{2} \\cdot 7 \\cdot 13 \\cdot \\sin 90^\\circ = \\frac{91}{2}$, so $4K = 182$.\n\nThe sum is $218 + 182 = 400$.\n\nThere is a tidy reason for the round answer: for a right included angle the two terms are $a^2 + b^2$ and $2ab$, whose sum is $(a+b)^2 = 20^2 = 400$.",
+    "techniqueSlugs": [
+      "two-sides-one-angle",
+      "area-from-two-sides-angle",
+      "identity-selection"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]

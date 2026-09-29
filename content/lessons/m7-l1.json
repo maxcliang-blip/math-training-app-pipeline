@@ -1,0 +1,148 @@
+{
+  "id": "m7-l1",
+  "moduleId": "M7",
+  "order": 1,
+  "title": "The Fundamental Counting Principle, Permutations, and Combinations",
+  "topicSlug": "fundamental-counting-permutations-combinations",
+  "tiers": ["10", "12", "A"],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": [],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Apply the multiplication principle to count sequences of choices, distinguish between ordered arrangements (permutations) and unordered selections (combinations), and compute both using factorials and binomial coefficients."
+    },
+    "prerequisites": {
+      "items": [],
+      "noteLatex": "No earlier lesson is required. Facility with factorials and with canceling common factors in fractions is assumed; if $n! = n(n-1)!$ and $\\frac{n!}{k!(n-k)!}$ feel unfamiliar, review factorial notation before starting."
+    },
+    "concept": {
+      "conceptLatex": "The Fundamental Counting Principle is the single engine that drives every counting problem: if a choice can be made in $a$ ways and a subsequent independent choice can be made in $b$ ways, then the two choices together can be made in $a \\cdot b$ ways. Extending this, a sequence of $k$ independent choices with $n_1, n_2, \\ldots, n_k$ options each yields $n_1 n_2 \\cdots n_k$ total outcomes.\n\nA permutation is an ordered arrangement. The number of permutations of $n$ distinct objects is $n! = n(n-1) \\cdots 1$. The number of permutations of $k$ objects chosen from $n$ distinct objects is $P(n,k) = n(n-1)\\cdots(n-k+1) = \\frac{n!}{(n-k)!}$. Every position in the sequence matters, so swapping two elements produces a different permutation.\n\nA combination is an unordered selection. The number of combinations of $k$ objects chosen from $n$ distinct objects is $\\binom{n}{k} = \\frac{n!}{k!(n-k)!}$. Swapping two selected elements does not change the combination; the $k!$ orders of the same $k$ elements are identified, which is why the permutation count is divided by $k!$.\n\nThe binomial coefficient satisfies $\\binom{n}{k} = \\binom{n}{n-k}$ (complement symmetry) and Pascal's recurrence $\\binom{n}{k} = \\binom{n-1}{k-1} + \\binom{n-1}{k}$. These identities turn many counting problems into algebraic manipulations rather than casework.\n\nA quick decision rule: if the problem describes a sequence, a line, a code, a password, or any arrangement where order is visible, it is a permutation. If it describes a committee, a hand, a subset, or a group where order is invisible, it is a combination.",
+      "figures": [
+        {
+          "id": "m7-l1-fig-1",
+          "captionLatex": "A tree diagram for choosing a three-course meal with 2 appetizers, 3 mains, and 2 desserts; each complete path from left to right is one meal, and the total number of paths is the product of the branching factors.",
+          "asymptoteSource": "// Tree diagram for the Fundamental Counting Principle: 2 appetizers, 3 mains, 2 desserts.\n// Two-argument size fixes the output box, so the declared 16/3 is exact.\nsize(480,360);\npen thin = gray(0.6) + 1;\npen thick = black + 1.5;\nreal x0 = 0, dx = 140;\nreal y0 = 160, dy = 50;\n// Appetizers\nlabel(\"Appetizer\", (x0, y0+20), N);\ndot((x0-dx, y0+dy), 3);\ndot((x0-dx, y0-dy), 3);\ndraw((x0-dx, y0+dy)--(x0+dx, y0+2*dy), thin);\ndraw((x0-dx, y0+dy)--(x0+dx, y0), thin);\ndraw((x0-dx, y0+dy)--(x0+dx, y0-2*dy), thin);\ndraw((x0-dx, y0-dy)--(x0+dx, y0+2*dy), thin);\ndraw((x0-dx, y0-dy)--(x0+dx, y0), thin);\ndraw((x0-dx, y0-dy)--(x0+dx, y0-2*dy), thin);\nlabel(\"$A_1$\", (x0-dx, y0+dy), W);\nlabel(\"$A_2$\", (x0-dx, y0-dy), W);\nlabel(\"$M_1$\", (x0, y0+2*dy), N);\nlabel(\"$M_2$\", (x0, y0), N);\nlabel(\"$M_3$\", (x0, y0-2*dy), N);\n// Desserts\nlabel(\"Dessert\", (x0+2*dx, y0+20), N);\ndraw((x0+dx, y0+2*dy)--(x0+2*dx, y0+3*dy), thick);\ndraw((x0+dx, y0+2*dy)--(x0+2*dx, y0+dy), thick);\ndraw((x0+dx, y0)--(x0+2*dx, y0+dy), thick);\ndraw((x0+dx, y0)--(x0+2*dx, y0-dy), thick);\ndraw((x0+dx, y0-2*dy)--(x0+2*dx, y0+dy), thick);\ndraw((x0+dx, y0-2*dy)--(x0+2*dx, y0-dy), thick);\ndraw((x0+dx, y0-2*dy)--(x0+2*dx, y0-3*dy), thick);\nlabel(\"$D_1$\", (x0+2*dx, y0+3*dy), E);\nlabel(\"$D_2$\", (x0+2*dx, y0+dy), E);\nlabel(\"$D_1$\", (x0+2*dx, y0-dy), E);\nlabel(\"$D_2$\", (x0+2*dx, y0-3*dy), E);\nlabel(\"$2 \\times 3 \\times 2 = 12$ meals\", (x0+dx, y0-4.5*dy), S);",
+          "asymptoteAlt": "A left-to-right tree diagram with three levels labeled Appetizer, Main, and Dessert. The first level splits into two branches labelled A1 and A2. Each of those splits into three branches labelled M1, M2, M3. Each of those six splits into two branches labelled D1 and D2. The total number of complete paths from left to right is twelve, shown at the bottom.",
+          "asymptoteAspectRatio": 1.333
+        }
+      ],
+      "examples": [
+        {
+          "id": "m7-l1-ex-1",
+          "titleLatex": "Worked example: a password with constraints",
+          "bodyLatex": "A password must be 6 characters long. The first character is a letter (26 choices), the last is a digit (10 choices), and the middle four are letters or digits (36 choices each). How many such passwords exist?\n\nBy the multiplication principle, the total is $26 \\times 36^4 \\times 10$. The choices for each position are independent, so we multiply the number of options per position.",
+          "answerLatex": "$26 \\times 36^4 \\times 10$"
+        },
+        {
+          "id": "m7-l1-ex-2",
+          "titleLatex": "Worked example: arranging books on a shelf",
+          "bodyLatex": "In how many ways can 4 different math books and 3 different science books be arranged on a shelf if the math books must stay together?\n\nTreat the 4 math books as one block. We then have 4 items to arrange (the block and the 3 science books), giving $4!$ orders. Inside the block, the 4 math books can be ordered in $4!$ ways. By the multiplication principle, the total is $4! \\times 4! = 24 \\times 24 = 576$.",
+          "answerLatex": "576"
+        },
+        {
+          "id": "m7-l1-ex-3",
+          "titleLatex": "Worked example: choosing a committee with roles",
+          "bodyLatex": "A club has 12 members. In how many ways can we choose a president, a vice-president, and a treasurer, all distinct?\n\nThis is a permutation of 3 chosen from 12 because the roles are distinct and order matters. $P(12,3) = 12 \\times 11 \\times 10 = 1320$. Equivalently, 12 choices for president, then 11 for vice-president, then 10 for treasurer.",
+          "answerLatex": "1320"
+        },
+        {
+          "id": "m7-l1-ex-4",
+          "titleLatex": "Worked example: choosing a committee without roles",
+          "bodyLatex": "From the same 12 members, how many ways to choose a 3-person committee with no designated roles?\n\nThis is a combination because the committee is an unordered set. $\\binom{12}{3} = \\frac{12 \\times 11 \\times 10}{3 \\times 2 \\times 1} = 220$. Note that $1320 = 220 \\times 3!$, since each committee of 3 can be assigned roles in $3!$ ways.",
+          "answerLatex": "220"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "multiplication-principle",
+          "name": "Multiply independent choice counts",
+          "summaryLatex": "If the first step has $a$ options and the second has $b$ options independently, the total is $a \\cdot b$.",
+          "bodyLatex": "Identify the independent stages of the choice. Multiply the number of options at each stage. The stages must be independent: the number of options at a later stage cannot depend on which option was chosen at an earlier stage. If it does, split into cases or use a different technique."
+        },
+        {
+          "slug": "factorial-counting",
+          "name": "Count permutations with factorials",
+          "summaryLatex": "Arranging $n$ distinct items in order is $n!$; arranging $k$ out of $n$ is $P(n,k) = n!/(n-k)!$.",
+          "bodyLatex": "Write out the product of decreasing integers. For $n!$ the product goes down to 1. For $P(n,k)$ it stops after $k$ factors. Cancel common factors before multiplying when the numbers are large. The formula $P(n,k) = \\frac{n!}{(n-k)!}$ is a compact notation; the product form is often faster to compute by hand."
+        },
+        {
+          "slug": "combination-formula",
+          "name": "Count combinations with binomial coefficients",
+          "summaryLatex": "Choosing $k$ unordered items from $n$ is $\\binom{n}{k} = \\frac{n!}{k!(n-k)!}$.",
+          "bodyLatex": "The binomial coefficient counts subsets of size $k$. Compute by multiplying the $k$ factors of the numerator and dividing by $k!$, or use the symmetry $\\binom{n}{k} = \\binom{n}{n-k}$ to choose the smaller $k$. The product $\\binom{n}{k} = \\frac{n(n-1)\\cdots(n-k+1)}{k(k-1)\\cdots 1}$ avoids large factorials and is the form to use in contest conditions."
+        },
+        {
+          "slug": "complement-symmetry",
+          "name": "Use $\\binom{n}{k} = \\binom{n}{n-k}$",
+          "summaryLatex": "Choosing $k$ is the same as choosing the $n-k$ items to leave out.",
+          "bodyLatex": "When $k > n/2$, replace $\\binom{n}{k}$ with $\\binom{n}{n-k}$. The arithmetic becomes smaller and often reveals structure, such as $\\binom{20}{17} = \\binom{20}{3} = 1140$."
+        },
+        {
+          "slug": "pascal-recurrence",
+          "name": "Apply Pascal's identity",
+          "summaryLatex": "$\\binom{n}{k} = \\binom{n-1}{k-1} + \\binom{n-1}{k}$ splits a choice by whether a distinguished element is included.",
+          "bodyLatex": "Fix one element. The subsets of size $k$ either contain it (choose $k-1$ from the remaining $n-1$) or do not contain it (choose $k$ from the remaining $n-1$). This is the combinatorial proof of Pascal's rule and is useful when building a counting argument recursively or when a problem gives a condition on a specific element."
+        },
+        {
+          "slug": "multiplication-vs-addition",
+          "name": "Multiply for sequences, add for disjoint cases",
+          "summaryLatex": "A sequence of choices multiplies; a union of disjoint cases adds.",
+          "bodyLatex": "If a process has stages, multiply the options at each stage. If a process has alternatives (case 1 OR case 2) and the cases are disjoint, add the counts. A common error is adding when the choices are sequential (which multiplies) or multiplying when the choices are alternatives (which adds). Identify the logical structure: AND means multiply, exclusive OR means add."
+        },
+        {
+          "slug": "complementary-count",
+          "name": "Count the complement and subtract",
+          "summaryLatex": "When counting a set directly is hard, count its complement and subtract from the total.",
+          "bodyLatex": "If a set $A$ is a subset of a finite universal set $U$, then $|A| = |U| - |U \\setminus A|$. This is useful when the complement is simpler to count, such as counting subsets with at least one element of a certain type by subtracting those with none. The technique applies whenever the total and the complement are both easy to compute."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "order-matters-when-it-doesnt",
+          "titleLatex": "Treating a combination as a permutation",
+          "wrongLatex": "$P(10,3) = 720$",
+          "whyLatex": "The problem asks for a committee of 3 from 10 people. A committee has no roles, so order does not matter. The permutation $P(10,3) = 10 \\times 9 \\times 8 = 720$ counts every set of 3 people $3! = 6$ times, once for each ordering. The correct count is $\\binom{10}{3} = 120$.",
+          "fixLatex": "Ask: does swapping two selected items change the outcome? If no, use combinations. If yes, use permutations. The words \"committee\", \"team\", \"hand\", \"subset\" signal combinations; \"password\", \"lineup\", \"code\", \"sequence\" signal permutations."
+        },
+        {
+          "slug": "missing-independence",
+          "titleLatex": "Multiplying when choices are not independent",
+          "wrongLatex": "$4 \\times 3 \\times 2 = 24$",
+          "whyLatex": "A 3-digit number with distinct digits from 1,2,3,4: the first digit has 4 choices, the second has 3 remaining choices, and the third has 2 remaining choices. The product $4 \\times 3 \\times 2 = 24$ is actually correct here, but the reasoning \"first 4 choices, then 3, then 2\" only works because each later choice is from the remaining pool. If the pool changed unpredictably, the multiplication principle would need a case split.",
+          "fixLatex": "Check whether the number of options at a stage depends on the specific choice made earlier. If it depends only on how many have been used (not which ones), the decreasing product still applies. If it depends on which specific items were chosen, split into cases."
+        },
+        {
+          "slug": "double-counting-complements",
+          "titleLatex": "Forgetting that choosing a subset determines its complement",
+          "wrongLatex": "$\\binom{8}{5} = 56$, then computing $\\binom{8}{3}$ separately as $56$ and adding them",
+          "whyLatex": "Choosing a 5-element subset from 8 automatically chooses the 3-element complement. The number of 5-subsets equals the number of 3-subsets; they are the same subsets viewed from the other side. Adding them would double-count the same structures.",
+          "fixLatex": "Use the symmetry $\\binom{n}{k} = \\binom{n}{n-k}$ to simplify arithmetic, not to create a new case. If a problem asks for the number of subsets of size $k$, the answer is $\\binom{n}{k}$ and the complement symmetry is only a computational shortcut."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m7-l1-p1", "m7-l1-p2", "m7-l1-p3", "m7-l1-p4", "m7-l1-p5",
+        "m7-l1-p6", "m7-l1-p7", "m7-l1-p8", "m7-l1-p9", "m7-l1-p10",
+        "m7-l1-p11", "m7-l1-p12", "m7-l1-p13", "m7-l1-p14", "m7-l1-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m7-l1-p1", "m7-l1-p2", "m7-l1-p3", "m7-l1-p4", "m7-l1-p5",
+        "m7-l1-p6", "m7-l1-p7", "m7-l1-p8", "m7-l1-p9", "m7-l1-p10",
+        "m7-l1-p11", "m7-l1-p12", "m7-l1-p13", "m7-l1-p14", "m7-l1-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": ["m7-l1-m1", "m7-l1-m2", "m7-l1-m3"],
+      "passThreshold": 2
+    }
+  },
+  "tags": ["fundamental-counting", "permutations", "combinations"]
+}

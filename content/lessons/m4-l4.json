@@ -1,0 +1,216 @@
+{
+  "id": "m4-l4",
+  "moduleId": "M4",
+  "order": 4,
+  "title": "The Binomial Theorem and Multinomial Coefficients",
+  "topicSlug": "binomial-theorem-multinomials",
+  "tiers": [
+    "12",
+    "A",
+    "A+"
+  ],
+  "estimatedMinutes": 65,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m1-l4",
+    "m3-l2"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Expand a power of a binomial or multinomial, read a single coefficient or a single term off the expansion, count the terms of a multinomial expansion, and evaluate a sum of binomial coefficients at a point other than one."
+    },
+    "prerequisites": {
+      "items": [
+        {
+          "labelLatex": "[m1-l4](/M1/lessons/m1-l4) polynomial expansion and factoring",
+          "noteLatex": "why the coefficients are what they are"
+        },
+        {
+          "labelLatex": "[m3-l2](/M3/lessons/m3-l2) permutations and combinations",
+          "noteLatex": "the counting reading of a coefficient"
+        }
+      ],
+      "noteLatex": "Both prerequisites are used in one direction each: expansion shows what the coefficients must be, and counting shows why the formula is right. A learner who can already expand $(a+b)^{4}$ by hand will find this lesson mostly about not expanding."
+    },
+    "concept": {
+      "conceptLatex": "The binomial theorem names a pattern that appears every time a power of a sum is written out. Squaring a binomial and cubing it shows the pattern: each power of $a$ appears with a coefficient that is a binomial coefficient, the powers of $b$ are counted down as the powers of $a$ are counted up, and the coefficients of the middle terms are largest.\n\n$(a+b)^{n} = \\sum_{k=0}^{n} \\binom{n}{k} a^{n-k} b^{k} \\qquad \\binom{n}{k} = \\frac{n!}{k!(n-k)!}$\n\nWritten out, the term with index $k$ takes $b$ exactly $k$ times and $a$ the remaining $n-k$ times, so the powers always add to $n$ and the coefficient counts which of the $n$ factors supplied the $b$'s. That is the whole reason the coefficient is a binomial coefficient and the reason it is symmetric: $\\binom{n}{k} = \\binom{n}{n-k}$, since choosing $k$ positions for the $b$'s leaves the same freedom as choosing $n-k$.\n\nThe table of these coefficients, with the boundary entries taken as $1$, is Pascal's triangle, and each interior entry is the sum of the two above it. Building a row is usually the fastest route to a coefficient: the row for $8$ is $1, 8, 28, 56, 70, 56, 28, 8, 1$, and the answer to a coefficient question is read off it in one glance. The factorial formula and the table are two views of one object, and the factorial formula is the wrong tool for large $n$.\n\nTwo facts about the expansion do most of the work in this lesson. First, the $r$th term is $\\binom{n}{r-1} a^{n-r+1} b^{r-1}$, where the index is one less than the term number because the summation counts from zero. Second, a sum of all the coefficients is the value of the polynomial at $x = 1$, since that is what plugging in $1$ does to every power.\n\n$(a+b)^{n} \\text{ evaluated at } a=b=1 \\text{ gives } 2^{n}, \\text{ and } \\sum_{k=0}^{n} \\binom{n}{k} x^{k} \\text{ evaluated at } x=1 \\text{ gives } 2^{n}$\n\nThe same expansion has more than two summands. In $(a+b+c)^{n}$ a term is specified by how the $n$ factors split among the three letters, say $p$, $q$, and $r$ of them, and the number of ways to make that split is the multinomial coefficient $\\frac{n!}{p! q! r!}$. Nothing else changes: the powers still add to the exponent, and the coefficient is still counting positions. The number of distinct terms in the expansion is the number of ways to write $n$ as a sum of powers with the counts ordered, which for three letters is $\\frac{(n+2)(n+1)}{2}$.\n\nCoefficient questions do not always need the whole expansion. When a polynomial is raised to a power and only one coefficient is wanted, it is usually cheaper to enumerate the ways that coefficient can be produced. The coefficient of $x^{2}$ in $(x^{2}+x+1)^{8}$, for instance, comes from two squares, from a square and a linear term, or from two linear terms, and the three contributions are $\\binom{8}{2} + 8 \\cdot 7 + \\binom{8}{2}$.",
+      "figures": [
+        {
+          "id": "m4-l4-fig-1",
+          "captionLatex": "The first seven rows of Pascal's triangle, each entry labelled by the row and column that produce it; every interior entry is the sum of the two directly above it, and the two outer entries of each row are one.",
+          "asymptoteSource": "// Pascal's triangle, rows zero through six. Two-argument size fixes the\n// output box exactly.\nsize(300,240);\nfor (int r=0; r<=6; ++r) {\n  for (int c=0; c<=r; ++c) {\n    pair P = (2.4*(c - r/2.0), 1.6*(6-r));\n    dot(P, 1.5pt);\n    label(\"$\"+string(r)+\",\"+string(c)+\"$\", P, NE);\n  }\n}\nlabel(\"each entry is the sum of the two above it\", (3.0,-0.7), S);",
+          "asymptoteAlt": "A triangular array of small filled dots arranged in seven rows, the top row holding one dot and each row below holding one more than the row above it, so the shape is a symmetric triangle. Every dot carries a small two-number label placed just above and to the right of it, the numbers counting the row and then the position within that row. A note beneath the triangle states the rule that generates the entries.",
+          "asymptoteAspectRatio": 1.25
+        },
+        {
+          "id": "m4-l4-fig-2",
+          "captionLatex": "One way of choosing letters from three groups: two of the five letters in the first group, one of the four in the second, and two of the four in the third, with the chosen letters drawn as larger dots and the rest as smaller ones.",
+          "asymptoteSource": "// Choosing two letters from the first group, one from the second, and two\n// from the third. Two-argument size fixes the output box exactly.\nsize(320,200);\ndraw((-1.2,0)--(1.4,0)--(1.4,0.9)--(-1.2,0.9)--cycle);\ndraw((0.5,0)--(3.1,0)--(3.1,0.9)--(0.5,0.9)--cycle);\ndraw((2.2,0)--(4.8,0)--(4.8,0.9)--(2.2,0.9)--cycle);\ndot((-0.8,0.45),2+3pt);\ndot((-0.1,0.45),2+3pt);\ndot((0.5,0.45),2pt);\ndot((1.0,0.45),2pt);\ndot((0.8,0.45),2+3pt);\ndot((1.6,0.45),2pt);\ndot((2.3,0.45),2pt);\ndot((2.9,0.45),2pt);\ndot((2.6,0.45),2+3pt);\ndot((3.4,0.45),2+3pt);\ndot((4.0,0.45),2pt);\ndot((4.5,0.45),2pt);\nlabel(\"$a$\", (0.1,-0.3), N);\nlabel(\"$b$\", (1.8,-0.3), N);\nlabel(\"$c$\", (3.5,-0.3), N);\nlabel(\"two, one, two\", (1.8,-0.9), S);",
+          "asymptoteAlt": "Three rectangles sit side by side and overlap slightly, each outlined and each holding a row of four small dots. In the left rectangle the first two dots are drawn noticeably larger than the remaining two, in the middle rectangle only the first dot is enlarged, and in the right rectangle the first two dots are enlarged. A single-letter label sits beneath each rectangle and a short note beneath all three records the counts that the enlarged dots represent.",
+          "asymptoteAspectRatio": 1.6
+        }
+      ],
+      "examples": [
+        {
+          "id": "m4-l4-wex-1",
+          "titleLatex": "Worked example: a coefficient with a factor attached",
+          "bodyLatex": "Take the coefficient of $x^{3}$ in $(1+2x)^{5}$. Row $5$ of Pascal's triangle is $1, 5, 10, 10, 5, 1$, and the $x^{3}$ term is the one with three factors supplying $2x$.\n\n$\\binom{5}{3}(2x)^{3} = 10 \\cdot 8x^{3} = 80x^{3}$\n\nThe exponent $3$ on $2$ comes from the chosen factor, not from the binomial, which is the part that makes these questions worth asking.",
+          "answerLatex": "$\\text{coefficient of } x^{3} = 80$"
+        },
+        {
+          "id": "m4-l4-wex-2",
+          "titleLatex": "Worked example: the r-th term of a binomial expansion",
+          "bodyLatex": "For the fifth term of $(x-1)^{6}$, the term number $5$ means four factors supplied the $-1$.\n\n$T_{5} = \\binom{6}{4} x^{6-4} (-1)^{4} = 15 x^{2}$\n\nThe general term is $T_{r} = \\binom{n}{r-1} a^{n-r+1} b^{r-1}$, and the check is that the two exponents add to $n$ and the term number counts from one.",
+          "answerLatex": "$T_{5} = 15x^{2}$"
+        },
+        {
+          "id": "m4-l4-wex-3",
+          "titleLatex": "Worked example: one coefficient, three contributions",
+          "bodyLatex": "For the coefficient of $x^{2}$ in $(x^{2}+x+1)^{6}$, the eight of degree two can be assembled in three ways: two squares, one square with one linear term, or two linear terms.\n\n$\\binom{6}{2} \\cdot 1 + 6 \\cdot 5 \\cdot 1 + \\binom{6}{2} \\cdot 1 = 15 + 30 + 15 = 60$\n\nEnumerating the ways beats expanding, since the full expansion of a trinomial to the sixth power has $28$ terms and only three of them can contribute here.",
+          "answerLatex": "$\\text{coefficient of } x^{2} = 60$"
+        },
+        {
+          "id": "m4-l4-wex-4",
+          "titleLatex": "Worked example: a multinomial with four letters",
+          "bodyLatex": "In $(a+b+c+d)^{4}$ every term takes exactly one letter from each factor, so the term $abcd$ arises once for each of the $4!$ orderings of the four letters.\n\n$\\text{coefficient of } abcd = \\frac{4!}{1!1!1!1!} = 24$\n\nBecause all four exponents are $1$, the multinomial coefficient reduces to a plain factorial, which is the most symmetric case of the whole subject.",
+          "answerLatex": "$24$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "pascal-triangle",
+          "name": "Building and reading Pascal's triangle",
+          "summaryLatex": "Add the two entries above to get the next, and read a coefficient straight off the row.",
+          "bodyLatex": "Row $n$ of the triangle has $n+1$ entries and the entry in position $k$ is $\\binom{n}{k}$. Building up to the row in question is faster than any factorial arithmetic once $n$ is more than about $8$, and the symmetry $\\binom{n}{k} = \\binom{n}{n-k}$ halves the work. Pascal's rule $\\binom{n}{k} = \\binom{n-1}{k-1} + \\binom{n-1}{k}$ is also the identity behind Vandermonde's identity."
+        },
+        {
+          "slug": "binomial-symmetry",
+          "name": "Symmetry of the coefficients",
+          "summaryLatex": "The k-th entry of a row equals the entry counted the same number of steps from the other end.",
+          "bodyLatex": "$\\binom{n}{k} = \\binom{n}{n-k}$ because choosing $k$ positions is the same as leaving $n-k$ of them. In practice it turns $\\binom{20}{17}$ into $\\binom{20}{3}$, which is the difference between a factorial with four digits in it and one with thirty."
+        },
+        {
+          "slug": "binomial-expansion",
+          "name": "The expansion itself",
+          "summaryLatex": "Each term is a binomial coefficient times a power of each part, with the powers adding to the exponent.",
+          "bodyLatex": "$(a+b)^{n} = \\sum_{k=0}^{n} \\binom{n}{k} a^{n-k}b^{k}$. There are $n+1$ terms, the first is $a^{n}$ and the last is $b^{n}$, and the coefficients rise to the middle and fall again."
+        },
+        {
+          "slug": "specific-term",
+          "name": "The r-th term",
+          "summaryLatex": "Multiply the binomial coefficient by the parts raised to the powers the term number demands.",
+          "bodyLatex": "$T_{r} = \\binom{n}{r-1} a^{n-r+1} b^{r-1}$. The $r-1$ is the single most common error in this lesson: the summation is indexed from zero while the question numbers its terms from one. Writing down the powers first and then matching them to a coefficient removes the error entirely."
+        },
+        {
+          "slug": "coefficient-extraction",
+          "name": "Extracting one coefficient without expanding",
+          "summaryLatex": "Enumerate the ways the exponent can be assembled from the available degrees.",
+          "bodyLatex": "When a power of a polynomial is raised and one coefficient is wanted, list the ways to hit the exponent. In $(x^{2}+x+1)^{8}$ the coefficient of $x^{2}$ is $\\binom{8}{2} + 8 \\cdot 7 + \\binom{8}{2}$, one contribution from each way of assembling two units of degree out of squares and linear terms. Expanding first is always correct and frequently wasteful."
+        },
+        {
+          "slug": "multinomial-coefficients",
+          "name": "More than two parts",
+          "summaryLatex": "Split the exponent among every part, and divide the factorial of the power by the factorial of each count.",
+          "bodyLatex": "The coefficient of $a^{p}b^{q}c^{r}$ in $(a+b+c)^{n}$ is $\\frac{n!}{p!q!r!}$ when $p+q+r=n$, and the count of distinct terms is $\\frac{(n+2)(n+1)}{2}$. The denominator is the part that is easy to drop: the positions of the $a$'s, the $b$'s and the $c$'s are chosen independently, and each factorial belongs to one of those choices."
+        },
+        {
+          "slug": "combinatorial-counting",
+          "name": "Counting the thing the coefficient counts",
+          "summaryLatex": "A coefficient is the number of ways to make a choice, so read it as a count whenever that is clearer.",
+          "bodyLatex": "The coefficient of $a^{k}b^{n-k}$ in $(a+b)^{n}$ is the number of $k$-element subsets of an $n$-element set, and the coefficient of $a^{p}b^{q}c^{r}$ in a trinomial is the number of ways to deal $n$ cards into three hands of those sizes. Vandermonde's identity $\\sum_{k} \\binom{m}{k}\\binom{n}{k-m} = \\binom{m+n}{n}$ then says that splitting a set in two ways gives the same total as splitting it in one."
+        },
+        {
+          "slug": "sum-of-binomials",
+          "name": "Sums of binomial coefficients",
+          "summaryLatex": "Substitute the value into the polynomial, and let the polynomial evaluate itself.",
+          "bodyLatex": "The sum of all the coefficients of a polynomial is its value at $x=1$, and more generally $\\sum_{k=0}^{n} \\binom{n}{k} x^{k} = (1+x)^{n}$, so $\\sum_{k=0}^{n} \\binom{n}{k} = 2^{n}$ and $\\sum_{k=0}^{n} \\binom{n}{k} 3^{k} = 4^{n}$. Alternating sums are the same trick at $x=-1$ and give $0$ when $n$ is positive."
+        },
+        {
+          "slug": "binomial-modular",
+          "name": "Trailing digits of a binomial coefficient",
+          "summaryLatex": "Count the factors of two and five separately, since only the smaller count produces a zero.",
+          "bodyLatex": "A trailing zero is a factor of $10$, so a number ends in as many zeros as the smaller of its counts of factors of $2$ and of $5$. For a binomial coefficient those counts come from Legendre's formula $v_{p}(n!) = \\sum_{j} \\left\\lfloor \\frac{n}{p^{j}} \\right\\rfloor$, and $v_{p}\\left(\\binom{n}{k}\\right) = v_{p}(n!) - v_{p}(k!) - v_{p}((n-k)!)$. A coefficient with no factor of $5$ at all ends in no zeros, however large it is."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "term-number-off-by-one",
+          "titleLatex": "Numbering a term by its exponent instead of by its position",
+          "wrongLatex": "the third term of $(a+b)^{5}$ is $\\binom{5}{3} a^{3} b^{3}$",
+          "whyLatex": "In the third term $b$ appears twice, not three times, and the powers of $a$ and $b$ must add to $5$. The correct term is $\\binom{5}{2}a^{3}b^{2}$, because the summation index counts from zero while the question counts terms from one.",
+          "fixLatex": "Write the powers of the two parts first and check that they add to the exponent; the binomial coefficient is then whatever produces those powers, with the index of $b$ one less than the term number."
+        },
+        {
+          "slug": "coefficient-sum-absolute-values",
+          "titleLatex": "Adding coefficient magnitudes instead of evaluating at one",
+          "wrongLatex": "the sum of the coefficients of $(2x-1)^{5}$ is $(2+1)^{5} = 243$",
+          "whyLatex": "The sum of the coefficients is the value of the polynomial at $x=1$, signs included, and at $x=1$ the term $-1$ contributes its sign. The value is $(2-1)^{5} = 1$, and the expansion $-1 + 10x - 40x^{2} + 80x^{3} - 80x^{4} + 32x^{5}$ confirms it: the coefficients do sum to $1$.",
+          "fixLatex": "Substitute $x=1$ into the polynomial and evaluate, rather than substituting $1$ and $-1$ for the magnitudes of the parts and adding."
+        },
+        {
+          "slug": "multinomial-missing-a-factorial",
+          "titleLatex": "Dropping a factorial from a multinomial coefficient",
+          "wrongLatex": "the coefficient of $a^{4}b^{2}$ in $(a+b+c)^{10}$ is $\\frac{10!}{4!2!}$",
+          "whyLatex": "The remaining four factors have to contribute $c^{4}$, and the positions of those $c$'s are chosen independently of the other two letters, so a third factorial belongs in the denominator. The coefficient is $\\frac{10!}{4!2!4!} = 3150$, and the wrong expression gives $75600$, which is off by the number of ways to place the four remaining letters.",
+          "fixLatex": "List every letter in the term and write one factorial in the denominator for each one, then confirm that the exponents in the term add to the power of the whole."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m4-l4-p1",
+        "m4-l4-p2",
+        "m4-l4-p3",
+        "m4-l4-p4",
+        "m4-l4-p5",
+        "m4-l4-p6",
+        "m4-l4-p7",
+        "m4-l4-p8",
+        "m4-l4-p9",
+        "m4-l4-p10",
+        "m4-l4-p11",
+        "m4-l4-p12",
+        "m4-l4-p13",
+        "m4-l4-p14",
+        "m4-l4-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m4-l4-p1",
+        "m4-l4-p2",
+        "m4-l4-p3",
+        "m4-l4-p4",
+        "m4-l4-p5",
+        "m4-l4-p6",
+        "m4-l4-p7",
+        "m4-l4-p8",
+        "m4-l4-p9",
+        "m4-l4-p10",
+        "m4-l4-p11",
+        "m4-l4-p12",
+        "m4-l4-p13",
+        "m4-l4-p14",
+        "m4-l4-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m4-l4-m1",
+        "m4-l4-m2",
+        "m4-l4-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "binomial-coefficients",
+    "multinomial-coefficients",
+    "combinations",
+    "series"
+  ]
+}

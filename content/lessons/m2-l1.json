@@ -1,0 +1,202 @@
+{
+  "id": "m2-l1",
+  "moduleId": "M2",
+  "order": 1,
+  "title": "Divisibility, Greatest Common Divisor, and Least Common Multiple",
+  "topicSlug": "divisibility-gcd-lcm",
+  "tiers": [
+    "10",
+    "12"
+  ],
+  "estimatedMinutes": 55,
+  "lockMode": "soft",
+  "prerequisites": [],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Decide whether one integer divides another, compute the greatest common divisor and the least common multiple of a pair or a family of integers, and count how many integers up to a given bound satisfy one or more divisibility conditions."
+    },
+    "prerequisites": {
+      "items": [],
+      "noteLatex": "No earlier lesson is required. Facility with prime factorization is assumed, since this lesson reads gcds and lcms off exponent structure; if that is not routine, review it first, because every method here depends on it."
+    },
+    "concept": {
+      "conceptLatex": "Divisibility is a relation between two integers, and almost every problem in this module is a question about where that relation is preserved. Writing $d \\mid n$ to mean that $d$ divides $n$ means that $n=dk$ for some integer $k$. Three properties carry the whole subject. The relation is transitive: if $a \\mid b$ and $b \\mid c$ then $a \\mid c$, because composing the two quotients multiplies them. A common divisor of two numbers is a divisor of any integer combination of them, since a common divisor that divides $ma+nb$ for every $m$ and $n$ forces it to divide the single number $\\gcd(a,b)$. And a divisor of a product need not divide either factor, which is exactly why $2 \\mid 6 9$ while $2$ divides neither factor. Almost every mistake in this module is a violation of that last sentence.\n\nThe greatest common divisor is the largest positive common divisor, and the Euclidean algorithm computes it by repeated division. The key identity is that $a \\equiv b \\pmod{\\gcd(a,b)}$ for every $a$ and $b$, which implies $\\gcd(a,b)=\\gcd(b,r)$ where $r$ is the remainder when $a$ is divided by $b$. Each step replaces the larger argument by a remainder strictly smaller than it, so the process terminates, and it terminates at a zero remainder, whose divisor is the gcd. The second step below is the whole algorithm in miniature, and the third shows the final collapse.\n\n$1071 \\div 462$ leaves remainder $147$, then $462 \\div 147$ leaves $21$, then $147 \\div 21$ leaves $0$, so $\\gcd(1071,462)=21$\n\nThe least common multiple is dual, and the duality is exact: $\\gcd(a,b) \\operatorname{lcm}(a,b) = ab$. So the lcm of two numbers is their product divided by their gcd, and once the gcd is in hand the lcm costs nothing further. For more than two numbers the identity becomes $\\operatorname{lcm}(a,b,c) = \\frac{abc\\,\\gcd(a,b,c)}{\\gcd(a,b)\\gcd(b,c)\\gcd(c,a)}$, which is true but almost never the fastest route; multiplying prime factorizations and keeping the largest exponent of each prime is faster and never errs.\n\nCounting is where the payoff appears. The multiples of $d$ up to $N$ number $\\left\\lfloor \\frac{N}{d} \\right\\rfloor$, and the multiples of both $a$ and $b$ number $\\left\\lfloor \\frac{N}{\\operatorname{lcm}(a,b)} \\right\\rfloor$, which is why the lcm is the right tool for intersections and the gcd is the wrong one. Counting a union means subtracting the overlap, and subtracting it once is enough for two sets and requires care for three.\n\n$\\#\\{n \\le N : 2 \\mid n \\} = 500$, $\\#\\{n \\le N : 3 \\mid n\\} = 333$, and the overlap $\\#\\{n \\le 1000 : 6 \\mid n\\} = 166$, so the union has $500+333-166=667$ members\n\nThe integers relatively prime to $n$ are counted by the totient function, and when the factorization of $n$ is known the count is a product rather than a search. If $n = p_1^{a_1} \\cdots p_k^{a_k}$ then any number sharing a factor with $n$ must be caught by at least one of the $k$ primes, so the count of integers from $1$ to $n$ avoiding all of them is the product of the per-prime survival fractions. For $n=100=2^2 5^2$ that is $100 \\left(\\frac{1}{2}\\right)\\left(\\frac{4}{5}\\right) = 40$, which agrees with a direct count.\n\n$\\varphi(n) = n \\prod_{p \\mid n} \\left(1 - \\frac{1}{p}\\right)$\n\nTwo habits close most of the remaining errors. First, factor before computing: $\\gcd$ and $\\operatorname{lcm}$ of factored inputs are read off exponent by exponent, with the minimum exponent for the gcd and the maximum for the lcm. Second, treat every divisibility claim as a statement about every factorization and check that the claim survives the rewrite, because a divisor of a product is the single most common false step in this module.",
+      "figures": [
+        {
+          "id": "m2-l1-fig-1",
+          "captionLatex": "The common multiples of $12$ and $18$ form an arithmetic progression beginning at $36$, which is their least common multiple; every common multiple is a multiple of $36$.",
+          "asymptoteSource": "// The lattice of common multiples of 12 and 18 on a number line.\n// Two-argument size() fixes the output box, so the declared 8/3 is exact.\nsize(320,120);\npair A=(-2,0), B=(74,0);\ndraw(A--B,Arrow);\nlabel(\"$0$\",(0,-0.75),S);\nfor (int k = 1; k <= 6; ++k) {\n  draw((12*k,-0.14)--(12*k,0.14),gray);\n}\nlabel(\"$12$\",(12,-0.75),S);\nlabel(\"$36$\",(36,-0.75),S);\nlabel(\"$60$\",(60,-0.75),S);\ndot((12,0),2+2.5pt);\ndot((24,0),2+2.5pt);\ndot((36,0),2+3.5pt);\ndot((48,0),2+2.5pt);\ndot((60,0),2+2.5pt);\nlabel(\"$\\\\operatorname{lcm}$\",(36,0.85),N);\nlabel(\"common multiples of $12$ and $18$\",(36,-1.5),N);",
+          "asymptoteAlt": "A horizontal number line runs from zero to just past seventy-four, with an arrowhead at the right end. Tick marks appear at twelve, thirty-six and sixty, each labelled below the line. A filled dot sits on the line at twelve, twenty-four, thirty-six, forty-eight and sixty; the dot at thirty-six is drawn larger than the others. Above the line, centred over that larger dot, is the label for the least common multiple, and beneath the line is a caption reading common multiples of twelve and eighteen.",
+          "asymptoteAspectRatio": 2.667
+        },
+        {
+          "id": "m2-l1-fig-2",
+          "captionLatex": "The three divisions in the Euclidean algorithm for $1071$ and $462$, drawn to scale: each bar is one dividend and the leftover sliver is the remainder passed to the next step, so the shortest bar is the gcd.",
+          "asymptoteSource": "// The Euclidean algorithm drawn as nested remainders.\n// Two-argument size() fixes the output box, so the declared 4/3 is exact.\nsize(320,240);\nlabel(\"$1071 = 2(462) + 147$\",(0,0),W);\nlabel(\"$462 = 3(147) + 21$\",(0,-1),W);\nlabel(\"$147 = 7(21) + 0$\",(0,-2),W);\ndraw((0,0.42)--(5.6,0.42));\ndraw((0,-0.58)--(2.42,-0.58));\ndraw((0,-1.58)--(0.77,-1.58));\ndraw((0,-2.58)--(0.44,-2.58));\nlabel(\"$1071$\",(5.75,0.42),W);\nlabel(\"$462$\",(2.57,-0.58),W);\nlabel(\"$147$\",(0.92,-1.58),W);\nlabel(\"$21$\",(0.59,-2.58),W);\ndot((5.6,0.42),2+3.5pt);\ndot((0.44,-2.58),2+3.5pt);\nlabel(\"last nonzero remainder is the gcd\",(2.8,1.1),N);",
+          "asymptoteAlt": "Three horizontal bars are stacked one above the other, each shorter than the one above it, and each preceded on the left by a line of algebra showing one integer divided into another. The longest top bar is labelled one thousand seventy-one at its right end, the middle bar four hundred sixty-two, and the shortest bottom bar twenty-one. A large filled dot sits at the right end of the top bar and another at the right end of the bottom bar. Above the top bar, centred, is a note reading last nonzero remainder is the gcd.",
+          "asymptoteAspectRatio": 1.333
+        }
+      ],
+      "examples": [
+        {
+          "id": "m2-l1-wex-1",
+          "titleLatex": "Worked example: the Euclidean algorithm on a large pair",
+          "bodyLatex": "Run the algorithm rather than factoring, because the inputs are awkward and the divisions are not.\n\n$1071 = 2(462) + 147$\n\n$462 = 3(147) + 21$\n\n$147 = 7(21) + 0$\n\nThe last nonzero remainder is $21$, so $\\gcd(1071,462)=21$. Both numbers are divisible by $21$ and the quotients $51$ and $22$ are coprime, which confirms the answer from the other direction.",
+          "answerLatex": "$\\gcd(1071,462)=21$"
+        },
+        {
+          "id": "m2-l1-wex-2",
+          "titleLatex": "Worked example: an lcm question that punishes using the product",
+          "bodyLatex": "The bells ring every $12$ minutes and every $18$ minutes, starting together.\n\n$\\operatorname{lcm}(12,18) = \\frac{12 18}{\\gcd(12,18)} = \\frac{216}{6} = 36$\n\nThe product $216$ is a common multiple but not the least one, and a bell schedule that uses it rings together nine times less often than intended.",
+          "answerLatex": "$36$ minutes"
+        },
+        {
+          "id": "m2-l1-wex-3",
+          "titleLatex": "Worked example: an intersection counted with the lcm",
+          "bodyLatex": "How many integers from $1$ to $100$ are divisible by both $4$ and $6$?\n\nBeing divisible by both means being divisible by $\\operatorname{lcm}(4,6) = 12$.\n\n$100 = 8(12) + 4$, so there are $8$ such integers.\n\nCounting them separately would have required intersecting two sets of sizes $25$ and $16$ and subtracting the overlap, which is more work for the same answer.",
+          "answerLatex": "$8$"
+        },
+        {
+          "id": "m2-l1-wex-4",
+          "titleLatex": "Worked example: a totient computed from the factorization",
+          "bodyLatex": "How many integers from $1$ to $100$ are relatively prime to $100$?\n\n$100 = 2^2 5^2$, so the only primes that can spoil coprimality are $2$ and $5$.\n\n$\\varphi(100) = 100 \\left(1-\\frac{1}{2}\\right)\\left(1-\\frac{1}{5}\\right) = 100 \\frac{1}{2} \\frac{4}{5} = 40$\n\nThe construction is a product over primes, not a sum, because excluding the multiples of $2$ and excluding the multiples of $5$ are independent conditions.",
+          "answerLatex": "$40$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "divisibility-tests",
+          "name": "Divisibility tests from place value",
+          "summaryLatex": "Reduce the number to a small residue by writing it in base ten and keeping only the terms that survive.",
+          "bodyLatex": "Because $10 \\equiv 1$ modulo $3$ and modulo $9$, a number has the same residue as its digit sum. Because $10^k \\equiv 1$ modulo $2$ and modulo $5$, divisibility by $2$ and by $5$ depends only on the units digit. Because $10 \\equiv -1$ modulo $11$, the alternating sum of the digits decides divisibility by $11$, with the sign of the rightmost digit positive."
+        },
+        {
+          "slug": "euclidean-algorithm",
+          "name": "Run the Euclidean algorithm",
+          "summaryLatex": "Replace the larger argument by the remainder and repeat until a zero remainder appears.",
+          "bodyLatex": "The identity $\\gcd(a,b)=\\gcd(b, a \\bmod b)$ makes each step a strict decrease in the size of the arguments, so the loop ends. The last nonzero remainder is the gcd. This beats factoring whenever the inputs are large or hard to factor, and it is the only method that works when no factorization is available."
+        },
+        {
+          "slug": "gcd-prime-exponents",
+          "name": "Read a gcd off the prime exponents",
+          "summaryLatex": "The exponent of each prime in the gcd is the minimum of the two exponents.",
+          "bodyLatex": "For $a=2^4 3^2 5$ and $b=2^2 3^3 7$ the gcd is $2^{\\min(4,2)} 3^{\\min(2,3)} 5^{\\min(1,0)} = 2^2 3^2 = 36$. The prime $5$ drops out entirely because it is absent from $b$, which is the exponent-by-exponent version of the fact that a common divisor may not share every prime factor."
+        },
+        {
+          "slug": "lcm-prime-exponents",
+          "name": "Read an lcm off the prime exponents",
+          "summaryLatex": "The exponent of each prime in the lcm is the maximum of the two exponents.",
+          "bodyLatex": "For $a=2^4 3^2 5$ and $b=2^2 3^3 7$ the lcm is $2^4 3^3 5 7$. This is the same computation as the gcd with the operator changed, and for three or more numbers it is the only version that does not require bookkeeping."
+        },
+        {
+          "slug": "lcm-from-gcd",
+          "name": "Convert an lcm to a gcd question",
+          "summaryLatex": "Use $\\operatorname{lcm}(a,b) = ab / \\gcd(a,b)$ to compute an lcm whenever the inputs are unfactored.",
+          "bodyLatex": "This is the identity $\\gcd(a,b)\\operatorname{lcm}(a,b)=ab$, which holds because the two numbers split the prime exponents into a minimum and a maximum that sum to the total. It is exact, so there is no rounding step and no need to factor at all."
+        },
+        {
+          "slug": "floor-counting",
+          "name": "Count multiples with the floor function",
+          "summaryLatex": "The number of multiples of $d$ from $1$ to $N$ is $\\left\\lfloor N/d \\right\\rfloor$.",
+          "bodyLatex": "Write $N = qd + r$ with $0 \\le r < d$. Then $qd \\le N < (q+1)d$, so the multiples $d, 2d, \\ldots, qd$ are exactly the ones at most $N$, and there are $q = \\left\\lfloor N/d \\right\\rfloor$ of them. The remainder $r$ tells you how much room is left over."
+        },
+        {
+          "slug": "inclusion-exclusion-multiples",
+          "name": "Count a union of divisibility conditions",
+          "summaryLatex": "Add the counts of the separate conditions and subtract the intersections, using the lcm for each intersection.",
+          "bodyLatex": "For three conditions subtract the three pairwise intersections and add back the triple intersection, because a number in all three was added three times, subtracted three times, and must appear once. Every intersection count is a floor of $N$ over an lcm, so nothing else is required."
+        },
+        {
+          "slug": "totient-by-primes",
+          "name": "Count coprime integers with the totient",
+          "summaryLatex": "For a known factorization, the count of integers coprime to $n$ is $\\varphi(n) = n \\prod_{p \\mid n} \\left(1-\\frac{1}{p}\\right)$.",
+          "bodyLatex": "Each factor $\\left(1-\\frac{1}{p}\\right)$ is the fraction of integers that avoid the prime $p$, and the product is justified because avoiding distinct primes is an independent condition. The count over $1 \\le k \\le n$ is the same as over $1 \\le k < n$, since $n$ itself is not coprime to $n$."
+        },
+        {
+          "slug": "work-backwards-from-lcm",
+          "name": "Work backward from a common multiple",
+          "summaryLatex": "If a number is known to be a common multiple, divide it by candidate divisors to find the least one.",
+          "bodyLatex": "The lcm of $12$ and $18$ divides any common multiple. Testing the prime powers $2^2$, $3^2$, and $2 3^2 = 18$ against $216$ shows that $2^2 3^2 = 36$ divides it while nothing smaller common multiple does. This is reliable when a large common multiple is given as data and the factorization is not."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "divides-the-product",
+          "titleLatex": "Assuming a divisor of a product divides one of the factors",
+          "wrongLatex": "$2 \\mid 6 9 \\implies 2 \\mid 6 \\text{ or } 2 \\mid 9$",
+          "whyLatex": "The implication is false. $2$ divides $18$ but divides neither $6$ nor $9$, because the factor of $2$ can be split across both. This is the single most common error in divisibility arguments, and it is the reason that counting requires the lcm of the conditions rather than their product.",
+          "fixLatex": "Track the exponents. A prime divides a product to at least the sum of the exponents it carries in the factors, so it divides one factor only when that sum is not split between them."
+        },
+        {
+          "slug": "lcm-as-product",
+          "titleLatex": "Using the product of two numbers as their least common multiple",
+          "wrongLatex": "$\\operatorname{lcm}(12,18)=216$",
+          "whyLatex": "The product is always a common multiple and is the least one only when the two numbers are coprime. Since $\\gcd(12,18)=6 \\ne 1$, the product $216$ is six times too large, and an answer built on it is wrong by that factor.",
+          "fixLatex": "Divide the product by the gcd: $\\operatorname{lcm}(a,b)=ab/\\gcd(a,b)$. If the inputs are factored, take the maximum exponent of each prime instead."
+        },
+        {
+          "slug": "union-without-subtraction",
+          "titleLatex": "Adding the counts of two divisibility conditions without subtracting the overlap",
+          "wrongLatex": "$500+333=833$",
+          "whyLatex": "A number divisible by both $2$ and $3$ is counted twice, so $833$ overcounts by the $166$ multiples of $6$. The overcount is not small, and it is largest exactly when the two conditions are most strongly correlated, which is when the lcm is smallest relative to the inputs.",
+          "fixLatex": "Subtract the intersection, which is a floor of $N$ over the lcm of the two conditions. For three conditions subtract all three pairwise intersections and add back the triple intersection."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m2-l1-p1",
+        "m2-l1-p2",
+        "m2-l1-p3",
+        "m2-l1-p4",
+        "m2-l1-p5",
+        "m2-l1-p6",
+        "m2-l1-p7",
+        "m2-l1-p8",
+        "m2-l1-p9",
+        "m2-l1-p10",
+        "m2-l1-p11",
+        "m2-l1-p12",
+        "m2-l1-p13",
+        "m2-l1-p14",
+        "m2-l1-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m2-l1-p1",
+        "m2-l1-p2",
+        "m2-l1-p3",
+        "m2-l1-p4",
+        "m2-l1-p5",
+        "m2-l1-p6",
+        "m2-l1-p7",
+        "m2-l1-p8",
+        "m2-l1-p9",
+        "m2-l1-p10",
+        "m2-l1-p11",
+        "m2-l1-p12",
+        "m2-l1-p13",
+        "m2-l1-p14",
+        "m2-l1-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m2-l1-m1",
+        "m2-l1-m2",
+        "m2-l1-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "divisibility",
+    "gcd-lcm",
+    "counting-integers"
+  ]
+}
