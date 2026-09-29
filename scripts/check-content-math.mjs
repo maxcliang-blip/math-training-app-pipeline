@@ -228,6 +228,25 @@ export const MUTATIONS = [
     },
   },
   {
+    // The mutation that actually pins S5.4a to exactness. 9.9 is caught by any threshold
+    // whatsoever, so it cannot tell a 2% rule apart from an exact one. This one lands inside
+    // the band the old 2% authoring tolerance accepted (1.31 is 1.75% off size(320,240)=1.3333)
+    // and outside the exact value, so it passes under a tolerance and fails under S5.4a. That
+    // is the whole defect: content could clear authoring review and then fail the figure build,
+    // which compares at the declared precision. If this mutation ever goes MISSED, the rule has
+    // silently degraded back into a tolerance and review-passing content can break CI again.
+    id: "figure-ratio-inside-old-tolerance-band",
+    rule: "S5.4-ratio-matches-size",
+    severity: "error",
+    apply(c) {
+      const fig = findLessonFigure(c.lessons);
+      const m = fig.asymptoteSource.match(/size\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)/);
+      const exact = Number(m[1]) / Number(m[2]);
+      const true_ = exact / 1.0175; // ~1.75% off, inside the retired 2% band, not the exact value
+      fig.asymptoteAspectRatio = Number(true_.toFixed(3));
+    },
+  },
+  {
     id: "figure-size-single-argument",
     rule: "S5.4-ratio-unverifiable",
     severity: "advisory",
@@ -255,8 +274,11 @@ export function selftest(contentRoot) {
   let baselineErrors = 0;
   let baselineFindings = new Set();
 
-  // preflight-content.mjs returns its live module-level findings array, so every
-  // report must be snapshotted at capture time or two runs share one array.
+  // preflight-content.mjs hands back a copy of its findings array, so every report is a
+  // snapshot and two runs never share state. The copy is what makes this invariant checkable;
+  // when run() returned its live module-level array instead, a report captured from one corpus
+  // was silently refilled by a run over another. Assert it, so the workaround below can be
+  // deleted the day someone "optimises" the copy away, and be caught if they do.
   const key = (f) => `${f.rule}|${f.path}`;
 
   try {
@@ -265,6 +287,47 @@ export function selftest(contentRoot) {
     baselineErrors = errors.length;
     baselineFindings = new Set([...report.findings].map(key));
     baselineClean = baselineErrors === 0;
+
+    // Harness invariant, not a content rule: a report must not change under a later run().
+    {
+      const dir = mkdtempSync(join(tmpdir(), "content-alias-"));
+      let caught = false;
+      let detail = "";
+      try {
+        cpSync(pristine, dir, { recursive: true });
+        const before = [...report.findings].map(key).sort().join("\n");
+        const beforeCount = report.findings.length;
+        const mutated = loadCorpus(dir);
+        const victim = mutated.lessons.find((l) => l.sections && l.sections.concept &&
+          l.sections.concept.conceptLatex !== undefined);
+        victim.sections.concept.conceptLatex = "$\\frac{1";
+        for (const [kind, items] of Object.entries(mutated)) {
+          writeFileSync(join(dir, kind, "aliased.json"), JSON.stringify(items, null, 2) + "\n");
+        }
+        const second = checkCorpus(dir);
+        const after = [...report.findings].map(key).sort().join("\n");
+        const stable = before === after && report.findings.length === beforeCount;
+        // The second run must actually have found something, or the test is vacuous.
+        const secondFound = second.errors.length > 0;
+        caught = stable && secondFound;
+        detail = caught
+          ? `report stayed at ${beforeCount} findings across a second run() that found ${second.errors.length} error(s)`
+          : !secondFound
+            ? "second run found no errors, so the aliasing check proved nothing"
+            : `report mutated under a second run(): ${beforeCount} -> ${report.findings.length} findings`;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      } finally {
+        rmSync(dir, { recursive: true, force: true });
+      }
+      rows.push({
+        id: "report-is-not-aliased-across-runs",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail,
+      });
+    }
 
     for (const mutation of MUTATIONS) {
       const dir = mkdtempSync(join(tmpdir(), "content-mutation-"));

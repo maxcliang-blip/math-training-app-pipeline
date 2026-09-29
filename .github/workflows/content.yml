@@ -57,19 +57,59 @@ jobs:
       # The install step and the build step are deliberately separate, and this one has no
       # `continue-on-error` and no `|| true`. If the package name is wrong, the image lacks
       # TeX Live, or asymptote is installed but cannot start, the failure has to be attributed
-      # to the toolchain rather than surfacing later as a mysterious figure error. A version
-      # banner here is also what the manifest records as asymptoteVersion.
+      # to the toolchain rather than surfacing later as a mysterious figure error.
+      #
+      # The binary is discovered the same way scripts/build-figures.mjs discovers it, by asking
+      # each candidate for a working --version, because the Debian and Ubuntu packages do not
+      # agree on the name (`asymptote` vs `asy`) and hard-coding one of them makes this step
+      # fail for a toolchain that is in fact fine. Ubuntu 24.04 installs the `asymptote` package
+      # and then has no `asymptote` on PATH, which is exactly how this was found.
       - name: Verify Asymptote toolchain
         run: |
           set -euo pipefail
-          command -v asymptote
-          asymptote --version
-          # A figure whose labels are typeset by TeX needs latex and dvipng present. Without
-          # them asymptote still starts and still passes --version, and then fails on the
-          # first label() instead, so their absence is caught here rather than as a corpus
-          # error an author would be asked to fix.
-          command -v latex
-          command -v dvipng
+          ASY=""
+          for candidate in "${ASYMPTOTE_BIN:-}" asymptote asy; do
+            [ -n "$candidate" ] || continue
+            if command -v "$candidate" >/dev/null 2>&1 && "$candidate" --version >/dev/null 2>&1; then
+              ASY="$candidate"
+              break
+            fi
+          done
+          if [ -z "$ASY" ]; then
+            echo "::error::no working Asymptote found (tried ASYMPTOTE_BIN, asymptote, asy)"
+            echo "candidates on PATH:"; ls /usr/bin | grep -iE 'asy|asymptote' || echo "  (none)"
+            exit 1
+          fi
+          echo "asymptote binary: $ASY"
+          "$ASY" --version
+          command -v latex   >/dev/null || { echo "::error::latex is missing; every label() in the corpus is typeset by TeX"; exit 1; }
+          command -v dvipng  >/dev/null || { echo "::error::dvipng is missing; Asymptote rasterizes TeX labels with it"; exit 1; }
+          echo "latex:  $(command -v latex)"
+          echo "dvipng: $(command -v dvipng)"
+      # Prove the compiler can actually do the one thing this pipeline needs of it: turn a
+      # size(W,H) source containing a TeX label into an SVG. A --version banner only proves the
+      # binary starts, and this corpus's figures are all label("$...$"), so a missing dvipng or
+      # a TeX Live without the amsmath fonts would otherwise surface as three corpus errors that
+      # look like authoring mistakes. One figure, no corpus, no tolerance.
+      - name: Toolchain smoke compile
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d)"
+          cat > "$work/smoke.asy" <<'ASY'
+          size(100,50);
+          draw((0,0)--(1,0),Arrow);
+          label("$x$",(1,0),SE);
+          ASY
+          ASY=""
+          for candidate in "${ASYMPTOTE_BIN:-}" asymptote asy; do
+            [ -n "$candidate" ] || continue
+            if command -v "$candidate" >/dev/null 2>&1; then ASY="$candidate"; break; fi
+          done
+          ( cd "$work" && "$ASY" -outdir=. -svg smoke.asy )
+          test -s "$work/smoke.svg"
+          grep -q "<svg" "$work/smoke.svg"
+          echo "smoke svg: $(wc -c < "$work/smoke.svg") bytes, box $(grep -oE 'width="[0-9.]+" height="[0-9.]+"' "$work/smoke.svg" | head -1)"
+          rm -rf "$work"
       - name: Figure build
         if: ${{ !inputs.record_aspect_ratios }}
         run: npm run content:figures

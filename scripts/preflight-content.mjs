@@ -55,9 +55,9 @@ const APPROVED = new Set(
   `frac dfrac tfrac sqrt binom dbinom tbinom left right middle mathbb mathcal mathfrak mathscr mathbf mathrm mathmathit mathsf operatorname text textbf textit emph overline underline widetilde widehat vec bar hat dot ddot
    matrix pmatrix bmatrix vmatrix cases array aligned gathered smallmatrix substack boxed overbrace underbrace displaystyle textstyle limits nolimits
    sum prod int oint lim max min gcd deg mod pmod
-   , ! ; : quad qquad dots cdots vdots ddots infty
-   equiv approx ne le ge propto angle triangle perp parallel sim to rightarrow mapsto implies iff`
-    .split(/\s+/)
+   , ! ; : quad qquad dots cdots vdots ddots infty ldots
+   equiv approx ne le ge propto angle triangle perp parallel sim to rightarrow mapsto implies iff
+   cdot`.split(/\s+/)
     .filter(Boolean),
 );
 
@@ -74,6 +74,8 @@ const CORE_SYMBOLS = new Set(
    in notin cup cap subset subseteq supset supseteq emptyset infty times div pm mp ast star circ prime ldots langle rangle
    lfloor rfloor lceil rceil vert parallel perp
    aleph hbar imath ell wp Re Im
+   mid nmid bmod vmod
+   varphi
    % $ & # _ { } | {`
     .split(/\s+/)
     .filter(Boolean),
@@ -111,12 +113,118 @@ const MIN_ASPECT = 0.5;
 const RATIO_DECIMALS = 3;
 
 const TIERS = new Set(["10", "12", "A", "A+"]);
-const TAGS = new Set([
+
+// Exercise tags are a CLOSED vocabulary so that a tag means the same thing on every exercise
+// and "show me everything tagged X" is a real query. Closed does not mean fixed: it means
+// every module contributes its own set, and the union is the vocabulary. A list that is not
+// module-complete rejects every exercise in every module it does not cover -- which is
+// exactly what happened to Module 9 (proof): 36 authored exercises, 115 S3.3-tag-vocabulary
+// errors, all one cause, and not one of them the author's mistake.
+//
+// Two roles, deliberately kept distinguishable:
+//   topic     -- what the exercise is about, so "all divisibility exercises" is answerable.
+//   technique -- how it is meant to be solved, so "all pigeonhole exercises" is answerable.
+// A tag belongs to exactly one role. Do not merge a technique into a topic just because a
+// given exercise is both.
+const TAG_TOPIC = [
+  // Module 1: algebra foundations, and the geometry the AMC-10 front half leans on.
   "linear-equations", "inequalities", "absolute-value", "fractions", "domain",
   "exponents", "quadratics", "factoring", "radicals", "word-problem", "counting-integers",
   "region-split", "intervals", "distributive-law", "angles", "circles", "chords",
   "pythagorean", "trig-conversion", "triangles",
-]);
+  // Module 2: number sense and computation.
+  "gcd-lcm", "congruences", "crt", "place-value", "digit-problems",
+  // Module 9: proof.
+  "quantifiers", "divisibility", "prime-factorization", "modular-arithmetic", "residues",
+  "symmetry", "floor-ceiling", "binomial-coefficients", "combinations",
+  // Module 6: analytic geometry, conics, and complex numbers.
+  "coordinates", "distance-formula", "midpoint", "reflections", "slopes", "parallel-lines",
+  "systems-of-equations", "conics", "parabolas", "ellipses", "hyperbolas",
+  "complex-numbers", "loci", "transformations",
+  // Module 4: sequences and series.
+  "sequences", "arithmetic-sequences", "geometric-sequences", "series", "sigma-notation",
+  "telescoping", "infinite-sums", "series-convergence", "recurrences", "multinomial-coefficients",
+  "partial-sums",
+  // Module 5: geometry. Topics are what the exercise is about; the techniques in the
+  // list below are how a geometry argument is actually built.
+  "perpendicular-lines", "transversals", "angle-bisectors", "polygons", "quadrilaterals",
+  "regular-polygons", "interior-angles", "arcs", "tangents", "central-angles",
+  "inscribed-angles", "congruence", "similarity", "area-of-triangles", "perimeter",
+  // Module 8: trigonometry.
+  "unit-circle", "radians", "special-angles", "exact-trig-values", "trig-identities",
+  "trig-equations", "trig-graphing", "inverse-trig", "law-of-sines", "law-of-cosines",
+  "triangle-area", "triangle-solving", "sss-triangles", "sas-triangles", "ssa-triangles",
+  "cyclic-quadrilaterals", "angle-chasing", "oblique-triangles", "trigonometric-area",
+  // Module 7: counting and probability.
+  "fundamental-counting", "permutations", "combinations", "inclusion-exclusion",
+  "stars-and-bars", "complementary-counting", "pigeonhole-principle", "probability",
+  "conditional-probability", "independence", "bayes-theorem", "expected-value",
+  "geometric-probability", "random-variables", "distributions", "binomial-distribution",
+  "hypergeometric-distribution",
+];
+
+const TAG_TECHNIQUE = [
+  // Module 1.
+  "chain-of-equivalences", "case-split", "structure-spotting", "counting-cases", "extremal",
+  // Module 2: how a number-theory argument is actually built.
+  "euclidean-algorithm", "valuation-counting", "unitary-decomposition", "periodicity",
+  // Module 9: the proof-writing techniques the AIME proofs are actually built from.
+  "proof", "direct-proof", "contradiction", "pigeonhole", "invariants", "wlog",
+  "counterexample", "biconditionals",
+  // Module 6: how an analytic-geometry or complex-number argument is actually built.
+  "point-slope-form", "distance-to-line-formula", "linear-elimination", "substitution",
+  "completing-the-square", "conic-standard-form", "focus-directrix", "complex-modulus",
+  "conjugate-arithmetic", "de-moivre", "roots-of-unity",
+  // Module 4: how a sequence, a sum, or a coefficient is actually extracted.
+  "common-difference-detection", "common-ratio-detection", "difference-table",
+  "nth-term-formula", "nth-term-from-two-terms", "explicit-from-recursive",
+  "threshold-crossing", "geometric-modeling", "fractional-ratio",
+  "arithmetic-sum-formula", "symmetric-pairing", "sigma-index-shift",
+  "telescoping-split", "subseries-split", "counting-by-sigma",
+  "finite-geometric-formula", "ratio-one-case", "negative-ratio-case",
+  "infinite-geometric-sum", "convergence-test", "geometric-mean",
+  "reindex-and-subtract", "growth-decay-modeling",
+  "pascal-triangle", "binomial-symmetry", "binomial-expansion", "specific-term",
+  "coefficient-extraction", "multinomial-coefficients", "combinatorial-counting", "sum-of-binomials",
+  // Module 5: how a plane-geometry argument is actually built.
+  "parallel-line-angle-transfer", "corresponding-angles", "alternate-interior-angles",
+  "co-interior-angles", "perpendicular-line-transfer", "angle-chase-setup",
+  "triangle-angle-sum", "isosceles-base-angles", "exterior-angle-theorem",
+  "angle-bisector-split", "sides-angles-sides-check",
+  "congruence-sss", "congruence-sas", "congruence-asa", "congruence-aas", "cpctc",
+  "right-triangle-altitude-similarity", "hypotenuse-leg",
+  "similarity-aa", "similarity-sas", "similarity-sss", "parallel-line-similarity",
+  "area-scaling-from-scale", "missing-length-in-similar-triangles",
+  "polygon-interior-angle-sum", "polygon-exterior-angle-count", "triangulate-a-polygon",
+  "apothem-perimeter", "polygon-rectangle-decomposition", "exterior-angle-runs-around",
+  "radius-perpendicular-to-chord", "equal-chords-equal-arcs", "tangent-radius-perpendicular",
+  "tangent-length-equal", "tangent-secant-power", "two-secants-power",
+  "inscribed-angle-is-half-the-central", "cyclic-quadrilateral-opposite-angles",
+  "chord-length-vs-central-angle", "arc-addition", "polygon-angles-in-a-circle",
+  // Module 8: how a trigonometric argument is actually built.
+  "degree-radian-conversion", "unit-circle-construction", "reference-angle",
+  "quadrant-sign-analysis", "special-triangle-drop", "cofunction-substitution",
+  "odd-angle-reduction", "pythagorean-recovery", "identity-selection",
+  "convert-to-sine-and-cosine", "one-side-one-angle", "two-sides-one-angle",
+  "three-sides", "radii-and-chords", "heron-area", "angle-sum-of-triangle",
+  "inscribed-angle-theorem", "ambiguous-case-analysis", "supplementary-angle-case",
+  "simplify-before-substituting", "factor-the-expression",
+  "radius-times-angle", "sector-area-formula", "double-angle-recovery",
+  "angle-addition-expansion", "identity-proof-strategy", "area-from-two-sides-angle",
+  "chord-angle-relation", "sine-law-inverse-solve", "angles-in-a-quadrilateral",
+  // Module 7: how a counting or probability argument is actually built.
+  "multiplication-principle", "factorial-counting", "complementary-count",
+  "inclusion-exclusion-principle", "stars-and-bars-method", "pigeonhole-application",
+  "probability-as-fraction", "conditional-probability-formula", "independence-check",
+  "bayes-reversal", "linearity-of-expectation", "indicator-variables",
+  "geometric-probability-setup", "distribution-identification", "binomial-model",
+  "hypergeometric-model", "symmetry-argument",
+];
+
+// Rule for the next module: add its topics and its techniques to the two lists above. Do not
+// widen a tag's meaning, and do not delete a tag that authored content already uses -- a
+// removed tag breaks every exercise carrying it, which is why the vocabulary is append-only.
+const TAGS = new Set([...TAG_TOPIC, ...TAG_TECHNIQUE]);
 
 // ---------------------------------------------------------------------------
 // Finding collector
