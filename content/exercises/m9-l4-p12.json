@@ -5,7 +5,6 @@
   "tier": "A",
   "difficulty": 3,
   "tags": [
-    "proof-strategy",
     "contradiction"
   ],
   "promptLatex": "A student attempts to prove 'if n^2 is even then n is even' by contradiction, assuming 'n is odd' and deriving 'n^2 is odd'. Identify the missing step.",

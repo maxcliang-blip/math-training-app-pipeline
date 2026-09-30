@@ -5,7 +5,6 @@
   "tier": "A+",
   "difficulty": 3,
   "tags": [
-    "proof-strategy",
     "case-split"
   ],
   "promptLatex": "The claim '|x|+|x-6| ≥ 6 for all real x' is to be proved. Which proof strategy is most appropriate?",

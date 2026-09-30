@@ -5,8 +5,7 @@
   "tier": "A+",
   "difficulty": 4,
   "tags": [
-    "counterexample",
-    "proof-strategy"
+    "counterexample"
   ],
   "promptLatex": "A student claims: \"The proposed proof is valid: 'To prove n^2 + n + 41 is always prime, check n = 1, 2, 3, …, 40, and since all 40 values are prime, the claim is proved.'\" Evaluate the claim.",
   "choices": [

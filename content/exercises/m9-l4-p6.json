@@ -5,7 +5,6 @@
   "tier": "A",
   "difficulty": 3,
   "tags": [
-    "proof-strategy",
     "induction"
   ],
   "promptLatex": "Which proof strategy is most appropriate for proving 'for every integer n ≥ 1, 2^n > n'?",

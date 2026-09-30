@@ -5,8 +5,7 @@
   "tier": "A",
   "difficulty": 2,
   "tags": [
-    "proof-strategy",
-    "biconditional"
+    "biconditionals"
   ],
   "promptLatex": "To prove 'a number is even if and only if it is divisible by 2', which proof strategy is most appropriate?",
   "choices": [

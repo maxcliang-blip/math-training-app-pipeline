@@ -5,8 +5,7 @@
   "tier": "A",
   "difficulty": 5,
   "tags": [
-    "pigeonhole-principle",
-    "generalized"
+    "pigeonhole-principle"
   ],
   "promptLatex": "If 100 objects are placed into 7 boxes, what is the minimum number of objects that must be in the most crowded box?",
   "choices": [

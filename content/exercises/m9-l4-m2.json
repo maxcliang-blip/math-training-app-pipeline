@@ -5,7 +5,6 @@
   "tier": "A+",
   "difficulty": 4,
   "tags": [
-    "proof-strategy",
     "induction"
   ],
   "promptLatex": "True or false: The claim '2^n > n^2 for all integers n ≥ 5' is true. If true, prove the base case and the inductive step. If false, provide a counterexample.",

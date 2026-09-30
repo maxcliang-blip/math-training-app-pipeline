@@ -5,7 +5,6 @@
   "tier": "A+",
   "difficulty": 3,
   "tags": [
-    "proof-strategy",
     "wlog"
   ],
   "promptLatex": "To prove 'x^2+y^2 ≥ 2xy for all real x, y', may we assume without loss of generality that x ≥ y?",

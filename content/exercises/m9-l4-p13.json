@@ -5,8 +5,7 @@
   "tier": "A+",
   "difficulty": 3,
   "tags": [
-    "counterexample",
-    "proof-strategy"
+    "counterexample"
   ],
   "promptLatex": "Which of the following proposed proofs is invalid? 'To prove n^3+n is always even, check n=1,2,3 and observe the pattern.'",
   "choices": [

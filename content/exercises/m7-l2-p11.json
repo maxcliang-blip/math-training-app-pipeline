@@ -6,7 +6,7 @@
   "difficulty": 4,
   "tags": [
     "inclusion-exclusion",
-    "upper-bounds"
+    "complementary-count"
   ],
   "promptLatex": "How many nonnegative integer solutions does x + y + z = 6 have if each variable is at most 3?",
   "choices": [

@@ -50,7 +50,7 @@
       "noteLatex": "The direct-proof and contradiction techniques from the first two lessons, plus the quantifier and WLOG discipline. Induction builds on these foundations to handle claims about all natural numbers."
     },
     "concept": {
-      "conceptLatex": "Induction is a proof technique for claims about the natural numbers. A claim of the form \"For every integer n \\ge 1, P(n) is true\" requires two components: the base case and the inductive step.\\n\\nThe base case verifies P(1) (or P(0)) directly, establishing the starting point of the chain. The inductive step has two forms. Mathematical induction assumes P(k) and proves P(k+1), creating a chain from the base case upward. Strong induction assumes P(1) through P(k) to prove P(k+1), which is necessary when the step depends on earlier cases beyond just P(k).\\n\\nBoth forms share the same structure: write the induction hypothesis, manipulate the expression for P(k+1) using the hypothesis, and complete the proof. A common error is using the induction hypothesis too weakly or assuming what needs to be proved.\\n\\nExample 1 (sum of first n integers): For every integer n \\ge 1, \\sum_{i=1}^n i = n(n+1)/2. Base case n=1 gives 1 = 1(2)/2. Inductive step: assume the formula for n=k, then \\sum_{i=1}^{k+1} i = (\\sum_{i=1}^k i) + (k+1) = k(k+1)/2 + (k+1) = (k+1)(k+2)/2, which completes the proof.\\n\\nExample 2 (inequality): For every integer n \\ge 1, 2^n > n. Base case n=1 gives 2 > 1. Inductive step: assume 2^k > k, then 2^{k+1} = 2\\cdot 2^k > 2k \\ge k+1 for k \\ge 1, establishing the claim.\\n\\nThe strongest form, strong induction, assumes the claim holds for all smaller values. This is essential when the proof of P(k+1) requires P(j) for some j < k, not just P(k).",
+      "conceptLatex": "Induction is a proof technique for claims about the natural numbers. A claim of the form 'for every integer $n \\ge 1$, $P(n)$ holds' needs two components: a base case and an inductive step. Neither alone is a proof.\n\nThe base case verifies $P(1)$ (or $P(0)$) directly and establishes where the chain starts. The inductive step has two forms. Mathematical induction assumes $P(k)$ and proves $P(k+1)$, building a chain upward from the base case. Strong induction assumes $P(1)$ through $P(k)$ in order to prove $P(k+1)$, and it is the form you need when the step depends on cases beyond $P(k)$ alone.\n\nBoth forms share the same skeleton: write the induction hypothesis explicitly, manipulate the expression for $P(k+1)$ using that hypothesis, and land on the statement you needed. The most common failure is using the hypothesis too weakly, or quietly assuming the very thing you are trying to prove.\n\nThe arithmetic underneath is usually routine. For the sum of the first $n$ positive integers, $\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$: assume it for $n = k$, then $\\sum_{i=1}^{k+1} i = \\frac{k(k+1)}{2} + (k+1) = \\frac{(k+1)(k+2)}{2}$. The step is bookkeeping, not insight; the insight was choosing induction at all.\n\nBefore writing the base case, read the quantifier. A claim over $n \\ge 0$ starts at $n = 0$, and a claim over $n \\ge 2$ often needs two base cases, $n = 2$ and $n = 3$, because the step from $k$ to $k+1$ cannot bootstrap itself. Choosing the base case from the quantifier rather than from habit is most of what makes an induction proof correct.\n\nA finished induction proof should name its base case, state its hypothesis in the form the claim actually uses, and end by naming the principle that carries the local result to every $n$ in range.",
       "figures": [
         {
           "id": "m9-l3-fig-1",
@@ -64,14 +64,20 @@
         {
           "id": "m9-l3-ex-1",
           "titleLatex": "Worked example: sum of first n odd numbers",
-          "bodyLatex": "Claim: For every integer n \\ge 1, the sum of the first n odd numbers equals n^2. That is, 1 + 3 + 5 + \\cdots + (2n-1) = n^2.\n\nBase case n = 1: the first odd number is 1, and 1 = 1^2, so the claim holds.\n\nInductive step: Assume the claim for n = k, i.e., 1 + 3 + 5 + \\cdots + (2k-1) = k^2. We must show it holds for n = k+1: 1 + 3 + 5 + \\cdots + (2k-1) + (2(k+1)-1) = (k+1)^2.\n\nStarting from the induction hypothesis: 1 + 3 + 5 + \\cdots + (2k-1) + (2k+1) = k^2 + (2k+1) = k^2 + 2k + 1 = (k+1)^2.\n\nThe inductive step is complete, so by mathematical induction the claim holds for all n \\ge 1.",
+          "bodyLatex": "Claim: for every integer $n \\ge 1$, the sum of the first $n$ odd numbers equals $n^2$. That is,\n$1 + 3 + 5 + \\cdots + (2n-1) = n^2$.\n\nBase case $n = 1$: the first odd number is $1$, and $1 = 1^2$, so the claim holds.\n\nInductive step: assume the claim for $n = k$, i.e. $1 + 3 + 5 + \\cdots + (2k-1) = k^2$. We must show it holds for $n = k+1$:\n$1 + 3 + 5 + \\cdots + (2k-1) + (2(k+1)-1) = (k+1)^2$.\n\nStarting from the induction hypothesis:\n$1 + 3 + 5 + \\cdots + (2k-1) + (2k+1) = k^2 + (2k+1) = k^2 + 2k + 1 = (k+1)^2$.\n\nThe inductive step is complete, so by mathematical induction the claim holds for all $n \\ge 1$.",
           "answerLatex": "n^2"
         },
         {
           "id": "m9-l3-ex-2",
           "titleLatex": "Worked example: strong induction for divisibility",
-          "bodyLatex": "Claim: Every integer n \\ge 2 can be factored into prime numbers. \\n\\nBase case n = 2: 2 is prime, so the claim holds.\\n\\nStrong inductive step: Assume that every integer k with 2 \\le k \\le n can be factored into primes. Consider n+1. If n+1 is prime, we are done. If n+1 is composite, then n+1 = ab where 2 \\le a, b \\le n. By the strong induction hypothesis, both a and b can be factored into primes, and therefore n+1 can also be factored into primes.\\n\\nThe strong induction hypothesis is essential, because the proof of P(k+1) requires P(j) for some j < k, not just P(k).",
+          "bodyLatex": "Claim: every integer $n \\ge 2$ can be factored into prime numbers.\n\nBase case $n = 2$: $2$ is prime, so the claim holds.\n\nStrong inductive step: assume that every integer $k$ with $2 \\le k \\le n$ can be factored into primes, and consider $n+1$. If $n+1$ is prime we are done. If $n+1$ is composite, then $n+1 = ab$ where $2 \\le a, b \\le n$, and by the strong induction hypothesis both $a$ and $b$ factor into primes, so $n+1$ does too.\n\nThe strong induction hypothesis is essential: proving $P(k+1)$ here needs $P(j)$ for some $j < k$, not just $P(k)$.",
           "answerLatex": "Every integer n \\ge 2 can be factored into primes"
+        },
+        {
+          "id": "m9-l3-ex-3",
+          "titleLatex": "Worked example: choosing the base case",
+          "bodyLatex": "Claim: for every integer $n \\ge 0$ the sum $2^0 + 2^1 + \\cdots + 2^n$ equals $2^{n+1} - 1$.\n\nBase case $n = 0$: the sum is $2^0 = 1$, and $2^{0+1} - 1 = 1$, so the claim holds.\n\nInductive step: assume the sum through $2^k$ is $2^{k+1} - 1$. Adding the next term gives $2^{k+1} - 1 + 2^{k+1} = 2^{k+2} - 1$, which is the closed form at $n = k+1$.\n\nBecause the claim quantifies over $n \\ge 0$ rather than $n \\ge 1$, the base case is $n = 0$ and no second base case is needed. Reading the quantifier before writing the base case is what keeps that step from being wrong.",
+          "answerLatex": "$2^{n+1} - 1$"
         }
       ]
     },
@@ -135,10 +141,7 @@
         "m9-l3-p9",
         "m9-l3-p10",
         "m9-l3-p11",
-        "m9-l3-p12",
-        "m9-l3-p13",
-        "m9-l3-p14",
-        "m9-l3-p15"
+        "m9-l3-p12"
       ]
     },
     "solutions": {
@@ -154,10 +157,7 @@
         "m9-l3-p9",
         "m9-l3-p10",
         "m9-l3-p11",
-        "m9-l3-p12",
-        "m9-l3-p13",
-        "m9-l3-p14",
-        "m9-l3-p15"
+        "m9-l3-p12"
       ]
     },
     "mastery": {

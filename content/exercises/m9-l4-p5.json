@@ -5,7 +5,6 @@
   "tier": "A",
   "difficulty": 2,
   "tags": [
-    "proof-strategy",
     "contradiction"
   ],
   "promptLatex": "Which proof strategy is most appropriate for proving 'there is no largest prime number'?",

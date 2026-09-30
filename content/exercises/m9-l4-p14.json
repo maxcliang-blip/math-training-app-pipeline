@@ -5,7 +5,6 @@
   "tier": "A",
   "difficulty": 2,
   "tags": [
-    "proof-strategy",
     "induction"
   ],
   "promptLatex": "A student claims: \"To prove 'n! > 2^n for all n ≥ 4' by induction, the inductive step from k to k+1 requires assuming k! > 2^k and showing (k+1)! > 2^{k+1}.\" What additional condition is needed for the step to work?",

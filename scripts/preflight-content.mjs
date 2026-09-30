@@ -170,7 +170,7 @@ const TAG_TECHNIQUE = [
   "euclidean-algorithm", "valuation-counting", "unitary-decomposition", "periodicity",
   // Module 9: the proof-writing techniques the AIME proofs are actually built from.
   "proof", "direct-proof", "contradiction", "pigeonhole", "invariants", "wlog",
-  "counterexample", "biconditionals",
+  "counterexample", "biconditionals", "induction", "strong-induction",
   // Module 6: how an analytic-geometry or complex-number argument is actually built.
   "point-slope-form", "distance-to-line-formula", "linear-elimination", "substitution",
   "completing-the-square", "conic-standard-form", "focus-directrix", "complex-modulus",

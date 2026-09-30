@@ -5,8 +5,7 @@
   "tier": "A+",
   "difficulty": 4,
   "tags": [
-    "counterexample",
-    "proof-strategy"
+    "counterexample"
   ],
   "promptLatex": "True or false: The claim 'every polynomial of even degree with real coefficients has a real root' is true. If false, provide a counterexample.",
   "choices": null,

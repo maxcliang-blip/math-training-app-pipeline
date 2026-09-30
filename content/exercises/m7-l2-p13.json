@@ -5,8 +5,7 @@
   "tier": "A",
   "difficulty": 5,
   "tags": [
-    "inclusion-exclusion",
-    "three-sets"
+    "inclusion-exclusion"
   ],
   "promptLatex": "In a survey of 80 people, 45 liked math, 35 liked physics, and 25 liked chemistry. 15 liked both math and physics, 10 liked both math and chemistry, and 8 liked both physics and chemistry. 5 liked all three subjects. How many people liked none of the three subjects?",
   "choices": [
