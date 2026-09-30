@@ -19,12 +19,11 @@
   "answerLatex": "25",
   "answerAlternatives": [],
   "hintLatex": [
-    "Use the pigeonhole principle. There are 12 months (boxes).",
-    "To guarantee at least 3 people share a birthday month, we need the smallest N such that \\lceil N/12 \\rceil ≥ 3.",
-    "This means N ≥ 2 × 12 + 1 = 25.",
-    "With 25 people and 12 months, by pigeonhole, some month has at least \\lceil 25/12 \\rceil = \\lceil 2.083 \\rceil = 3 people."
+    "Treat the twelve months as boxes and ask how many people can arrive without three in any month.",
+    "Two people in each of the twelve months is $24$ people with no month holding three.",
+    "The twenty-fifth person's birthday falls in a month that already holds two, so that month reaches three."
   ],
-  "solutionLatex": "By the pigeonhole principle, if N people are placed into 12 months, some month contains at least \\lceil N/12 \\rceil people.",
+  "solutionLatex": "The twelve months are the boxes and the people are the pigeons.\n\nTwo people in each month is $24$ people with no month holding $3$, so $24$ is not enough.\n\nThe twenty-fifth person's birthday falls into one of the twelve months, and that month already holds $2$, so it now holds $3$.\n\nEquivalently, the smallest $N$ with $\\lceil N/12 \\rceil \\ge 3$ satisfies $N \\ge 2 \\cdot 12 + 1 = 25$. The minimum is $25$.",
   "techniques": [
     "pigeonhole-application"
   ],

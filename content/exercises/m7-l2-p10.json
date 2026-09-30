@@ -15,15 +15,14 @@
     "17",
     "21"
   ],
-  "answerLatex": "17",
+  "answerLatex": "9",
   "answerAlternatives": [],
   "hintLatex": [
-    "Use the pigeonhole principle. There are 4 holes (suits).",
-    "If we draw 2 cards from each suit, that is 8 cards with no suit having 3.",
-    "The 9th card must go into one of the 4 suits, making it 3 in that suit.",
-    "With 9 cards and 4 suits, by pigeonhole, some suit has at least \\lceil 9/4 \\rceil = \\lceil 2.25 \\rceil = 3 cards."
+    "Treat the four suits as boxes and ask how many cards can be drawn without three in any one box.",
+    "Two cards from each of the four suits is $8$ cards with no suit holding three.",
+    "The ninth card belongs to a suit that already holds two, so that suit reaches three."
   ],
-  "solutionLatex": "By the pigeonhole principle, if N objects are placed into k boxes, some box contains at least \\lceil N/k \\rceil objects.",
+  "solutionLatex": "The four suits are the boxes and the cards are the pigeons.\n\nDrawing $2$ cards from each suit gives $8$ cards with no suit holding $3$, so $8$ is not enough.\n\nThe ninth card belongs to one of the four suits, and that suit already holds $2$, so it now holds $3$.\n\nEquivalently, $\\lceil 9/4 \\rceil = 3$ while $\\lceil 8/4 \\rceil = 2$. The minimum is $9$.",
   "techniques": [
     "pigeonhole-application"
   ],

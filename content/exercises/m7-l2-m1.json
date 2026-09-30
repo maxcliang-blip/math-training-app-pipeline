@@ -7,26 +7,22 @@
   "tags": [
     "inclusion-exclusion"
   ],
-  "promptLatex": "In a group of 60 students, 35 take math, 30 take physics, and 20 take chemistry. 12 take both math and physics, 8 take both math and chemistry, and 5 take both physics and chemistry. 3 take all three subjects. How many students take exactly one subject?",
+  "promptLatex": "In a group of 70 students, 35 take math, 30 take physics, and 20 take chemistry. 12 take both math and physics, 8 take both math and chemistry, and 5 take both physics and chemistry. 3 take all three subjects. How many students take exactly one subject?",
   "choices": [
     "41",
     "45",
     "39",
-    "49",
+    "44",
     "47"
   ],
-  "answerLatex": "45",
+  "answerLatex": "44",
   "answerAlternatives": [],
   "hintLatex": [
-    "First compute the number who take at least one subject using inclusion-exclusion.",
-    "Then subtract those who take exactly two and exactly three subjects.",
-    "Or compute directly: (only math) + (only physics) + (only chemistry).",
-    "Only math: 35 - 12 - 8 + 3 = 18 (subtract those in intersections, add back the triple).",
-    "Only physics: 30 - 12 - 5 + 3 = 16.",
-    "Only chemistry: 20 - 8 - 5 + 3 = 10.",
-    "Total exactly one: 18 + 16 + 10 = 44."
+    "Count the exclusive regions directly, rather than the total and subtracting.",
+    "For one subject, subtract the two pairwise intersections from its headcount and add the triple intersection back: only math is $35 - 12 - 8 + 3 = 18$.",
+    "Only physics is $30 - 12 - 5 + 3 = 16$ and only chemistry is $20 - 8 - 5 + 3 = 10$, so the three regions hold $18 + 16 + 10 = 44$ students."
   ],
-  "solutionLatex": "Using inclusion-exclusion, compute the number of students in each exclusive region.",
+  "solutionLatex": "Count each exclusive region separately, being careful not to double-count the students in more than one subject.\n\nOnly math: $35 - 12 - 8 + 3 = 18$. The $+3$ puts back the students that the two pairwise subtractions each removed.\n\nOnly physics: $30 - 12 - 5 + 3 = 16$.\n\nOnly chemistry: $20 - 8 - 5 + 3 = 10$.\n\nStudents taking exactly one subject: $18 + 16 + 10 = 44$.\n\nAs a check, exactly two is $(12-3) + (8-3) + (5-3) = 16$ and all three is $3$, so $44 + 16 + 3 = 63$ students take at least one subject and the remaining $70 - 63 = 7$ take none.",
   "techniques": [
     "inclusion-exclusion-principle"
   ],
