@@ -24,31 +24,51 @@
       "noteLatex": "Familiarity with basic angle notation and triangle interior angles from prior modules is assumed."
     },
     "concept": {
-      "conceptLatex": "When two parallel lines are cut by a transversal, eight angles are formed with predictable relationships. Vertical angles share a vertex and have no intervening segments; they are always congruent. A linear pair of adjacent angles sums to 180, making them supplementary. Complementary angles sum to 90. If parallel lines are cut by a transversal, corresponding angles are congruent, alternate interior angles are congruent, alternate exterior angles are congruent, and consecutive interior angles are supplementary. These rules are reversible: if a pair of angles is congruent (or supplementary) and the lines are cut by a transversal, the lines are parallel. The triangle angle sum theorem states that the interior angles of any triangle total 180. Generalizing to a convex n-gon, the interior angle sum is (n-2) * 180 and each exterior angle, one at each vertex, sums to 360.\n\nangle A and angle B are vertical, so angle A = angle B\n\nangle A and angle B form a linear pair, so angle A + angle B = 180\n\nIf two parallel lines are cut by a transversal, then corresponding angles are congruent.\n\nIf two parallel lines are cut by a transversal, then alternate interior angles are congruent.\n\nThe interior angle sum of a triangle is 180.\n\nThe interior angle sum of a convex n-gon is (n-2) * 180",
+      "conceptLatex": "When two lines intersect, four angles are formed, and they come in two pairs of vertical angles: each angle shares only its vertex with its vertical partner, with no ray lying between them. Vertical angles are congruent, and the two pairs together make a full turn, so the four measures add to $360^{\\circ}$. Know one angle at an intersection and every other angle at that intersection follows.\n\nTwo adjacent angles that together form a straight line are a linear pair, and a linear pair is supplementary: the two measures add to $180^{\\circ}$. Complementary pairs, which add to $90^{\\circ}$, appear wherever a right angle is split into two parts.\n\nWhen two parallel lines are cut by a transversal, eight angles appear and their relationships are fixed. Corresponding angles, in the same relative position at the two intersections, are congruent. Alternate interior angles, inside the parallel lines but on opposite sides of the transversal, are congruent, and so are alternate exterior angles. Consecutive interior angles, inside on the same side of the transversal, are supplementary. Each of these has a converse: a pair of congruent or supplementary angles cut by a transversal forces the lines to be parallel, which is how most converse proofs of parallel lines are built.\n\nThe triangle angle sum generalises the linear pair. For any triangle $\\triangle ABC$, $\\angle A + \\angle B + \\angle C = 180^{\\circ}$, because the exterior angle at one vertex equals the sum of the two remote interior angles. Cutting a convex $n$-gon into $n - 2$ triangles from a single vertex gives an interior angle sum of $(n - 2) \\times 180^{\\circ}$, and the $n$ exterior angles, one at each vertex, always add up to $360^{\\circ}$.\n\nChoosing which rule applies is mostly a matter of what the figure hands you. A single intersection means vertical angles and linear pairs. Two parallel lines and a transversal mean corresponding, alternate, and consecutive pairs. A triangle means the angle sum. An $n$-gon means the polygon formula, and in a regular polygon every interior angle is equal, so one angle and the vertex count determine all the rest.",
       "figures": [
         {
           "asymptoteSource": null,
-          "asymptoteAlt": "When two parallel lines are cut by a transversal, eight angles are formed with vertical angles, linear pairs, corresponding angles, alternate interior and exterior angles, and consecutive interior angles. All angle relationships are marked and labeled.",
-          "asymptoteAspectRatio": 1.6,
+          "asymptoteAlt": null,
+          "asymptoteAspectRatio": null,
           "captionLatex": "Angle relationships formed by parallel lines and a transversal."
         },
         {
           "asymptoteSource": null,
-          "asymptoteAlt": "A triangle with interior angles labeled A, B, C. The angle sum theorem states that A + B + C = 180.",
-          "asymptoteAspectRatio": 1.2,
+          "asymptoteAlt": null,
+          "asymptoteAspectRatio": null,
           "captionLatex": "Triangle angle sum theorem."
         },
         {
           "asymptoteSource": null,
-          "asymptoteAlt": "A convex pentagon with interior angles labeled. The interior angle sum is (5-2) * 180 = 3 * 180 = 540.",
-          "asymptoteAspectRatio": 1.4,
+          "asymptoteAlt": null,
+          "asymptoteAspectRatio": null,
           "captionLatex": "Polygon angle sum for a pentagon."
         },
         {
           "asymptoteSource": null,
-          "asymptoteAlt": "A convex hexagon with interior angles labeled. The interior angle sum is (6-2) * 180 = 4 * 180 = 720.",
-          "asymptoteAspectRatio": 1.5,
+          "asymptoteAlt": null,
+          "asymptoteAspectRatio": null,
           "captionLatex": "Polygon angle sum for a hexagon."
+        }
+      ],
+      "examples": [
+        {
+          "id": "m5-l1-ex-1",
+          "titleLatex": "Worked example: angles at a single intersection",
+          "bodyLatex": "Four angles meet at one point, named in order $\\alpha$, $\\beta$, $\\gamma$, $\\delta$.\n\nA full turn is $360^{\\circ}$, so $\\alpha + \\beta + \\gamma + \\delta = 360$.\n\nOpposite angles are vertical, so $\\alpha = \\gamma$ and $\\beta = \\delta$. If $\\alpha = 50$, then $\\gamma = 50$, and $2 \\cdot 50 + 2\\beta = 360$, which gives $\\beta = \\delta = 130$.\n\nThe same value falls out of the linear pair alone: $\\alpha + \\beta$ is a straight line, so $\\beta = 180 - 50 = 130$. Vertical angles are what tell you the fourth angle without a second subtraction.",
+          "answerLatex": "$\\beta = \\delta = 130$"
+        },
+        {
+          "id": "m5-l1-ex-2",
+          "titleLatex": "Worked example: a transversal through parallel lines",
+          "bodyLatex": "Two parallel lines are cut by a transversal, forming eight angles.\n\nFour of them are acute, and the other four are their supplements. Since the four acute angles are congruent, all four measure the same value, call it $t$, and each obtuse angle measures $180 - t$.\n\nConsecutive interior angles are supplementary, so one acute and one obtuse angle on the same side of the transversal add to $180$, which is exactly $t + (180 - t)$. That identity is what makes $t$ free to be anything.\n\nFor a transversal making an acute angle of $35$, the four acute angles are $35^{\\circ}$ and the four obtuse angles are $145^{\\circ}$.",
+          "answerLatex": "the four acute angles are $35^{\\circ}$ and the four obtuse angles are $145^{\\circ}$"
+        },
+        {
+          "id": "m5-l1-ex-3",
+          "titleLatex": "Worked example: interior angles of a regular polygon",
+          "bodyLatex": "Take a regular pentagon and draw the diagonals from one vertex.\n\nThat triangulates the pentagon into $5 - 2 = 3$ triangles. The diagonals lie inside, so they add no angle of the pentagon itself, and the three triangles account for the entire interior angle sum.\n\nEach triangle contributes $180^{\\circ}$, so the sum is $3 \\cdot 180 = 540^{\\circ}$.\n\nBecause the pentagon is regular, its five interior angles are equal, so each one is $540 / 5 = 108^{\\circ}$.",
+          "answerLatex": "each interior angle is $108^{\\circ}$"
         }
       ]
     },
@@ -133,38 +153,14 @@
       "exerciseIds": [
         "m5-l1-p1",
         "m5-l1-p2",
-        "m5-l1-p3",
-        "m5-l1-p4",
-        "m5-l1-p5",
-        "m5-l1-p6",
-        "m5-l1-p7",
-        "m5-l1-p8",
-        "m5-l1-p9",
-        "m5-l1-p10",
-        "m5-l1-p11",
-        "m5-l1-p12",
-        "m5-l1-p13",
-        "m5-l1-p14",
-        "m5-l1-p15"
+        "m5-l1-p3"
       ]
     },
     "solutions": {
       "exerciseIds": [
         "m5-l1-p1",
         "m5-l1-p2",
-        "m5-l1-p3",
-        "m5-l1-p4",
-        "m5-l1-p5",
-        "m5-l1-p6",
-        "m5-l1-p7",
-        "m5-l1-p8",
-        "m5-l1-p9",
-        "m5-l1-p10",
-        "m5-l1-p11",
-        "m5-l1-p12",
-        "m5-l1-p13",
-        "m5-l1-p14",
-        "m5-l1-p15"
+        "m5-l1-p3"
       ]
     },
     "mastery": {

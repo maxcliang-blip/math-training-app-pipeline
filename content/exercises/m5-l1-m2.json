@@ -1,0 +1,29 @@
+{
+  "id": "m5-l1-m2",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "angles",
+    "transversals",
+    "parallel-lines",
+    "co-interior-angles"
+  ],
+  "promptLatex": "Two parallel lines are cut by a transversal. One interior angle measures $110^{\\circ}$. What is the measure, in degrees, of the consecutive interior angle next to it?",
+  "choices": null,
+  "answerLatex": "70",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Consecutive interior angles sit on the same side of the transversal and between the parallel lines.",
+    "Consecutive interior angles formed by parallel lines are supplementary.",
+    "So the angle measures $180 - 110 = 70$."
+  ],
+  "solutionLatex": "Consecutive interior angles are the two interior angles on the same side of the transversal, so the angle in question is the supplement of the given one.\nBecause the lines are parallel they are supplementary, and their measures add to $180^{\\circ}$.\nSo the consecutive interior angle measures $m = 180 - 110 = 70$.",
+  "techniqueSlugs": [
+    "consecutive-interior-supplementary"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

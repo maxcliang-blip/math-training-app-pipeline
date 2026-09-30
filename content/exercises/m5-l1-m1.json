@@ -1,0 +1,28 @@
+{
+  "id": "m5-l1-m1",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "polygons",
+    "interior-angles",
+    "polygon-interior-angle-sum"
+  ],
+  "promptLatex": "What is the sum, in degrees, of the interior angles of a convex hexagon?",
+  "choices": null,
+  "answerLatex": "720",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A convex polygon can be cut into triangles by drawing diagonals from one vertex.",
+    "A hexagon needs $6 - 2 = 4$ of those triangles.",
+    "Each contributes $180^{\\circ}$, so the sum is $4 \\cdot 180 = 720$."
+  ],
+  "solutionLatex": "Draw diagonals from one vertex of the hexagon. That triangulates it into $6 - 2 = 4$ triangles, and the diagonals contribute no interior angle of the hexagon itself.\nEach of the $4$ triangles contributes $180^{\\circ}$.\nSo the interior angle sum is $4 \\cdot 180^{\\circ} = 720$.",
+  "techniqueSlugs": [
+    "polygon-angle-sum"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

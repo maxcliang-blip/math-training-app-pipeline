@@ -1,0 +1,26 @@
+{
+  "id": "m5-l1-p1",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "angles"
+  ],
+  "promptLatex": "Two lines intersect, forming four angles. One of them measures $30^{\\circ}$, and the angle adjacent to it measures $x$ degrees. What is $x$?",
+  "choices": null,
+  "answerLatex": "150",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Look at the two angles that together make a straight line.",
+    "Angles on a straight line have measures adding to $180^{\\circ}$.",
+    "So $x = 180 - 30 = 150$."
+  ],
+  "solutionLatex": "The given angle and the angle next to it together form a straight line, so they form a linear pair.\nA linear pair is supplementary, meaning the two measures add to $180^{\\circ}$.\nTherefore $x = 180 - 30 = 150$.",
+  "techniqueSlugs": [
+    "linear-pair-supplementary"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
