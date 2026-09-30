@@ -4,7 +4,10 @@
   "lessonId": "m7-l2",
   "tier": "12",
   "difficulty": 2,
-  "tags": ["stars-and-bars", "upper-bounds"],
+  "tags": [
+    "stars-and-bars",
+    "upper-bounds"
+  ],
   "promptLatex": "How many nonnegative integer solutions does x + y + z = 10 have if each variable is at most 5?",
   "choices": [
     "66",
@@ -23,7 +26,10 @@
     "Valid solutions: 66 - 45 = 21."
   ],
   "solutionLatex": "Total nonnegative solutions without upper bounds: (10+3-1) choose (3-1) = (12) choose 2 = 66.",
-  "techniques": ["stars-and-bars-method", "case-split-inclusion-exclusion"],
+  "techniques": [
+    "stars-and-bars-method",
+    "case-split-inclusion-exclusion"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

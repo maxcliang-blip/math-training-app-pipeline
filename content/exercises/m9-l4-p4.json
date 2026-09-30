@@ -4,9 +4,18 @@
   "lessonId": "m9-l4",
   "tier": "A",
   "difficulty": 2,
-  "tags": ["proof-strategy", "direct-proof"],
+  "tags": [
+    "proof-strategy",
+    "direct-proof"
+  ],
   "promptLatex": "Which proof strategy is most appropriate for proving 'if n is even, then n^2 is even'?",
-  "choices": ["proof by contradiction", "direct proof", "proof by induction", "proof by counterexample", "case split"],
+  "choices": [
+    "proof by contradiction",
+    "direct proof",
+    "proof by induction",
+    "proof by counterexample",
+    "case split"
+  ],
   "answerLatex": "direct proof",
   "answerAlternatives": [],
   "hintLatex": [
@@ -15,7 +24,9 @@
     "Proof by contradiction and induction are unnecessary for this claim."
   ],
   "solutionLatex": "Direct proof: Assume n is even, so n = 2k for some integer k. Then n^2 = (2k)^2 = 4k^2 = 2(2k^2). Since 2k^2 is an integer, n^2 is even by definition.",
-  "techniqueSlugs": ["direct-proof"],
+  "techniqueSlugs": [
+    "direct-proof"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

@@ -5,7 +5,10 @@
     "lessonId": "m1-l4",
     "tier": "10",
     "difficulty": 1,
-    "tags": ["distributive-law", "exponents"],
+    "tags": [
+      "distributive-law",
+      "exponents"
+    ],
     "promptLatex": "Expand $4x(3x^{2}-2x+5)$ and collect like terms.",
     "choices": [
       "12x^{3}-8x^{2}+20x",
@@ -22,7 +25,9 @@
       "The three products are $12x^{3}$, $-8x^{2}$, and $20x$, and no two of them are like terms."
     ],
     "solutionLatex": "Each of the three terms inside the parenthesis picks up the factor $4x$ exactly once.\n\n$4x(3x^{2}-2x+5) = 12x^{3} - 8x^{2} + 20x$\n\nThe three products carry distinct powers of $x$, so nothing combines further and the result is in standard form.",
-    "techniqueSlugs": ["distribute-every-term"],
+    "techniqueSlugs": [
+      "distribute-every-term"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -33,7 +38,10 @@
     "lessonId": "m1-l4",
     "tier": "10",
     "difficulty": 1,
-    "tags": ["distributive-law", "factoring"],
+    "tags": [
+      "distributive-law",
+      "factoring"
+    ],
     "promptLatex": "Expand $(3x-2)(2x+5)$ and collect like terms.",
     "choices": [
       "6x^{2}+11x-10",
@@ -50,7 +58,10 @@
       "Adding the middle pair gives $11x$, and the three terms are already in decreasing order of degree."
     ],
     "solutionLatex": "The product of two binomials is a quadratic whose middle coefficient is the sum of two cross-products.\n\n$(3x-2)(2x+5) = 6x^{2}+15x-4x-10 = 6x^{2}+11x-10$\n\nIn general $(ax+b)(cx+d) = acx^{2}+(ad+bc)x+bd$, and here $ad+bc = 15-4 = 11$.",
-    "techniqueSlugs": ["binomial-times-binomial", "distribute-every-term"],
+    "techniqueSlugs": [
+      "binomial-times-binomial",
+      "distribute-every-term"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -61,9 +72,18 @@
     "lessonId": "m1-l4",
     "tier": "10",
     "difficulty": 2,
-    "tags": ["exponents", "fractions"],
+    "tags": [
+      "exponents",
+      "fractions"
+    ],
     "promptLatex": "Simplify $\\frac{12x^{5}y^{2}}{4x^{2}y}$ to a single product of powers.",
-    "choices": ["3x^{3}y", "3x^{2}y", "3x^{3}y^{2}", "3x^{2}y^{2}", "3xy"],
+    "choices": [
+      "3x^{3}y",
+      "3x^{2}y",
+      "3x^{3}y^{2}",
+      "3x^{2}y^{2}",
+      "3xy"
+    ],
     "answerLatex": "3x^{3}y",
     "answerAlternatives": [],
     "hintLatex": [
@@ -72,7 +92,9 @@
       "The exponent of $x$ is $5-2$ and the exponent of $y$ is $2-1$."
     ],
     "solutionLatex": "Divide the coefficients and subtract the exponents of each base independently.\n\n$\\frac{12x^{5}y^{2}}{4x^{2}y} = 3x^{5-2}y^{2-1} = 3x^{3}y$\n\nThe two letters do not interact, so nothing further is possible without introducing a second base.",
-    "techniqueSlugs": ["multiply-powers-same-base"],
+    "techniqueSlugs": [
+      "multiply-powers-same-base"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -83,7 +105,10 @@
     "lessonId": "m1-l4",
     "tier": "10",
     "difficulty": 2,
-    "tags": ["exponents", "factoring"],
+    "tags": [
+      "exponents",
+      "factoring"
+    ],
     "promptLatex": "Expand $(5x-2)^{2}$ and collect like terms.",
     "choices": [
       "25x^{2}-20x+4",
@@ -100,7 +125,9 @@
       "The two terms inside are $5x$ and $-2$, so the middle term is $2(5x)(-2) = -20x$."
     ],
     "solutionLatex": "The middle term of a squared binomial carries the sign of the term standing between the two being squared.\n\n$(5x-2)^{2} = 25x^{2} + 2(5x)(-2) + 4 = 25x^{2}-20x+4$\n\nThe middle coefficient is negative because the product of the two terms inside is negative.",
-    "techniqueSlugs": ["square-binomial-pattern"],
+    "techniqueSlugs": [
+      "square-binomial-pattern"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -111,7 +138,9 @@
     "lessonId": "m1-l4",
     "tier": "10",
     "difficulty": 2,
-    "tags": ["factoring"],
+    "tags": [
+      "factoring"
+    ],
     "promptLatex": "Factor $x^{2}-81$ completely over the integers.",
     "choices": [
       "(x-9)(x+9)",
@@ -128,7 +157,9 @@
       "The square roots are $9$ and $1$, so the two factors are $(x-9)$ and $(x+9)$."
     ],
     "solutionLatex": "The two terms are $x^{2}$ and $9^{2}$, a difference of squares.\n\n$x^{2}-81 = x^{2}-9^{2} = (x-9)(x+9)$\n\nMultiplying the two factors back gives $x^{2}-81$, which confirms the pattern was applied correctly.",
-    "techniqueSlugs": ["difference-of-squares"],
+    "techniqueSlugs": [
+      "difference-of-squares"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -139,7 +170,10 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 2,
-    "tags": ["factoring", "quadratics"],
+    "tags": [
+      "factoring",
+      "quadratics"
+    ],
     "promptLatex": "Factor $x^{2}+7x+12$ completely over the integers.",
     "choices": [
       "(x+3)(x+4)",
@@ -156,7 +190,9 @@
       "Only the pair $3$ and $4$ adds to $7$, so the two factors are $(x+3)$ and $(x+4)$."
     ],
     "solutionLatex": "A trinomial factors only when a single pair satisfies both conditions at once.\n\n$x^{2}+7x+12 = (x+3)(x+4) = x^{2}+7x+12$\n\nThe pairs $1$ and $12$, and $2$ and $6$, multiply to $12$ but add to $13$ and $8$, so neither can be used.",
-    "techniqueSlugs": ["binomial-times-binomial"],
+    "techniqueSlugs": [
+      "binomial-times-binomial"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -167,7 +203,10 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["factoring", "quadratics"],
+    "tags": [
+      "factoring",
+      "quadratics"
+    ],
     "promptLatex": "Factor $2x^{3}-8x^{2}+8x$ completely over the integers.",
     "choices": [
       "2x(x-2)^{2}",
@@ -184,7 +223,10 @@
       "After removing that common part, the remaining quadratic is a perfect square."
     ],
     "solutionLatex": "Removing the content first is what exposes the structure hiding in what remains.\n\n$2x^{3}-8x^{2}+8x = 2x(x^{2}-4x+4) = 2x(x-2)^{2}$\n\nAll three conditions for a perfect square hold: the leading coefficient is $1$, the last term is $4$, and half the middle coefficient is $-2$, the product of the two terms being squared.",
-    "techniqueSlugs": ["greatest-common-factor-first", "square-binomial-pattern"],
+    "techniqueSlugs": [
+      "greatest-common-factor-first",
+      "square-binomial-pattern"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -195,7 +237,9 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["factoring"],
+    "tags": [
+      "factoring"
+    ],
     "promptLatex": "Factor $x^{3}+27$ completely over the integers.",
     "choices": [
       "(x+3)(x^{2}-3x+9)",
@@ -212,7 +256,9 @@
       "The two bases are $x$ and $3$, so the quadratic factor begins $x^{2}-3x+9$."
     ],
     "solutionLatex": "The sign rule for cubes is what separates the sum from the difference.\n\n$x^{3}+27 = (x+3)(x^{2}-3x+9) = x^{3}-3x^{2}+9x+3x^{2}-9x+27 = x^{3}+27$\n\nThe quadratic factor has discriminant $9-36 = -27$, so it does not factor further over the integers and the result is complete.",
-    "techniqueSlugs": ["sum-and-difference-of-cubes"],
+    "techniqueSlugs": [
+      "sum-and-difference-of-cubes"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -223,9 +269,18 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["factoring", "exponents"],
+    "tags": [
+      "factoring",
+      "exponents"
+    ],
     "promptLatex": "Simplify $(2x+5)^{2}-(2x-5)^{2}$ to a single monomial in $x$.",
-    "choices": ["40x", "20x", "80x", "40x^{2}", "0"],
+    "choices": [
+      "40x",
+      "20x",
+      "80x",
+      "40x^{2}",
+      "0"
+    ],
     "answerLatex": "40x",
     "answerAlternatives": [],
     "hintLatex": [
@@ -234,7 +289,10 @@
       "The difference of the two squared expressions is $10$, and their sum is $4x$."
     ],
     "solutionLatex": "Recognizing the pattern is worth much more than expanding both squares separately.\n\n$(2x+5)^{2}-(2x-5)^{2} = ((2x+5)-(2x-5))((2x+5)+(2x-5)) = 10 \\times 4x = 40x$\n\nExpanding instead gives two quadratics that differ only in the sign of their linear term, so their difference is $40x$ by the same arithmetic.",
-    "techniqueSlugs": ["difference-of-squares", "square-binomial-pattern"],
+    "techniqueSlugs": [
+      "difference-of-squares",
+      "square-binomial-pattern"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -245,9 +303,18 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["factoring", "word-problem"],
+    "tags": [
+      "factoring",
+      "word-problem"
+    ],
     "promptLatex": "Let $P(x) = (x-1)(x-2)(x-3)$. What is the value of $P(4)+P(5)$?",
-    "choices": ["30", "24", "20", "12", "60"],
+    "choices": [
+      "30",
+      "24",
+      "20",
+      "12",
+      "60"
+    ],
     "answerLatex": "30",
     "answerAlternatives": [],
     "hintLatex": [
@@ -256,7 +323,9 @@
       "The first product is $3 \\times 2 \\times 1$, and the second is $4 \\times 3 \\times 2$."
     ],
     "solutionLatex": "A polynomial written as a product is evaluated one factor at a time.\n\n$P(4) = (4-1)(4-2)(4-3) = 3 \\times 2 \\times 1 = 6$\n\n$P(5) = (5-1)(5-2)(5-3) = 4 \\times 3 \\times 2 = 24$\n\n$P(4)+P(5) = 6+24 = 30$",
-    "techniqueSlugs": ["factor-evaluate-shortcut"],
+    "techniqueSlugs": [
+      "factor-evaluate-shortcut"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -267,9 +336,19 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["word-problem", "quadratics", "factoring"],
+    "tags": [
+      "word-problem",
+      "quadratics",
+      "factoring"
+    ],
     "promptLatex": "A rectangle has area $96$ and its length is $4$ more than its width. What is its perimeter?",
-    "choices": ["40", "32", "20", "48", "24"],
+    "choices": [
+      "40",
+      "32",
+      "20",
+      "48",
+      "24"
+    ],
     "answerLatex": "40",
     "answerAlternatives": [],
     "hintLatex": [
@@ -278,7 +357,9 @@
       "The positive solution for the width is $8$, so the length is $12$."
     ],
     "solutionLatex": "Let the width be $w$, so the length is $w+4$.\n\n$w(w+4) = 96 \\implies w^{2}+4w-96 = 0 \\implies (w+12)(w-8) = 0$\n\nA width cannot be negative, so $w=8$ and the length is $12$.\n\nThe perimeter is $2(8+12) = 40$",
-    "techniqueSlugs": ["binomial-times-binomial"],
+    "techniqueSlugs": [
+      "binomial-times-binomial"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -289,9 +370,18 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 4,
-    "tags": ["exponents", "fractions"],
+    "tags": [
+      "exponents",
+      "fractions"
+    ],
     "promptLatex": "Simplify the quotient $\\frac{(2x^{3})^{2} \\times x}{4x^{5}}$ and write the result with a single positive exponent.",
-    "choices": ["x^{2}", "x^{7}", "x^{12}", "4x^{2}", "2x^{2}"],
+    "choices": [
+      "x^{2}",
+      "x^{7}",
+      "x^{12}",
+      "4x^{2}",
+      "2x^{2}"
+    ],
     "answerLatex": "x^{2}",
     "answerAlternatives": [],
     "hintLatex": [
@@ -300,7 +390,9 @@
       "Only after the numerator is fully formed do the division of coefficients and the subtraction of exponents happen."
     ],
     "solutionLatex": "A nested power is resolved before anything is cancelled or combined.\n\n$(2x^{3})^{2} = 2^{2}x^{6} = 4x^{6}$\n\n$\\frac{4x^{6} \\times x}{4x^{5}} = \\frac{4x^{7}}{4x^{5}} = x^{7-5} = x^{2}$\n\nThe original quotient is defined only for nonzero $x$, and the simplified form is understood on that same domain.",
-    "techniqueSlugs": ["multiply-powers-same-base"],
+    "techniqueSlugs": [
+      "multiply-powers-same-base"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -311,9 +403,18 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 4,
-    "tags": ["radicals", "quadratics"],
+    "tags": [
+      "radicals",
+      "quadratics"
+    ],
     "promptLatex": "If $x = 2+\\sqrt{3}$, what is the value of $x + \\frac{1}{x}$?",
-    "choices": ["4", "2", "2\\sqrt{3}", "1", "4\\sqrt{3}"],
+    "choices": [
+      "4",
+      "2",
+      "2\\sqrt{3}",
+      "1",
+      "4\\sqrt{3}"
+    ],
     "answerLatex": "4",
     "answerAlternatives": [],
     "hintLatex": [
@@ -322,7 +423,9 @@
       "The two expressions being added are conjugates of each other, so the radicals cancel completely."
     ],
     "solutionLatex": "The conjugate in the numerator produces a difference of squares in the denominator.\n\n$\\frac{1}{2+\\sqrt{3}} = \\frac{2-\\sqrt{3}}{(2+\\sqrt{3})(2-\\sqrt{3})} = \\frac{2-\\sqrt{3}}{4-3} = 2-\\sqrt{3}$\n\n$(2+\\sqrt{3}) + (2-\\sqrt{3}) = 4$\n\nThe radicals cancel exactly, which is a strong check that the rationalization was carried out correctly.",
-    "techniqueSlugs": ["difference-of-squares"],
+    "techniqueSlugs": [
+      "difference-of-squares"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -333,7 +436,10 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 4,
-    "tags": ["distributive-law", "factoring"],
+    "tags": [
+      "distributive-law",
+      "factoring"
+    ],
     "promptLatex": "Expand and collect like terms in $(2x-1)(3x+1)(x-2)$.",
     "choices": [
       "6x^{3}-13x^{2}+x+2",
@@ -350,7 +456,10 @@
       "The two linear terms in the result have opposite signs and combine to a single term of degree one."
     ],
     "solutionLatex": "Multiplying two of the three factors first keeps the number of live terms small.\n\n$(2x-1)(3x+1) = 6x^{2}-x-1$\n\n$(6x^{2}-x-1)(x-2) = 6x^{3}-12x^{2}-x^{2}+2x-x+2 = 6x^{3}-13x^{2}+x+2$\n\nThe two linear terms $2x$ and $-x$ combine to $x$, and no other pair of terms is like another.",
-    "techniqueSlugs": ["binomial-times-binomial", "distribute-every-term"],
+    "techniqueSlugs": [
+      "binomial-times-binomial",
+      "distribute-every-term"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -361,9 +470,18 @@
     "lessonId": "m1-l4",
     "tier": "A",
     "difficulty": 5,
-    "tags": ["word-problem", "quadratics"],
+    "tags": [
+      "word-problem",
+      "quadratics"
+    ],
     "promptLatex": "Suppose $a$ and $b$ are real numbers with $a^{2}+b^{2}=10$ and $ab=3$. What is the value of $a^{4}+b^{4}$?",
-    "choices": ["82", "100", "18", "91", "64"],
+    "choices": [
+      "82",
+      "100",
+      "18",
+      "91",
+      "64"
+    ],
     "answerLatex": "82",
     "answerAlternatives": [],
     "hintLatex": [
@@ -372,7 +490,10 @@
       "The product $a^{2}b^{2}$ is the square of the given product $3$."
     ],
     "solutionLatex": "Squaring the given sum produces exactly the expression asked for, plus a single known correction term.\n\n$(a^{2}+b^{2})^{2} = a^{4}+2a^{2}b^{2}+b^{4}$\n\n$100 = a^{4}+b^{4} + 2(9)$\n\n$a^{4}+b^{4} = 100-18 = 82$",
-    "techniqueSlugs": ["square-binomial-pattern", "difference-of-squares"],
+    "techniqueSlugs": [
+      "square-binomial-pattern",
+      "difference-of-squares"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -383,7 +504,10 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["factoring", "quadratics"],
+    "tags": [
+      "factoring",
+      "quadratics"
+    ],
     "promptLatex": "Factor $2x^{2}+10x+8$ completely over the integers.",
     "choices": [
       "2(x+1)(x+4)",
@@ -400,7 +524,10 @@
       "The pair $1$ and $4$ satisfies both conditions, so the remaining quadratic splits into two binomials."
     ],
     "solutionLatex": "Removing the content is what makes the remaining trinomial recognizable.\n\n$2x^{2}+10x+8 = 2(x^{2}+5x+4)$\n\n$x^{2}+5x+4 = (x+1)(x+4)$\n\nThe complete factorization is therefore $2(x+1)(x+4)$, and multiplying the factors back reproduces the original expression exactly.",
-    "techniqueSlugs": ["greatest-common-factor-first", "binomial-times-binomial"],
+    "techniqueSlugs": [
+      "greatest-common-factor-first",
+      "binomial-times-binomial"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -411,9 +538,18 @@
     "lessonId": "m1-l4",
     "tier": "A",
     "difficulty": 5,
-    "tags": ["quadratics", "word-problem"],
+    "tags": [
+      "quadratics",
+      "word-problem"
+    ],
     "promptLatex": "The numbers $a$, $b$, and $c$ form an increasing arithmetic progression whose sum is $15$, and $ab+bc+ca=63$. What is the common difference of the progression?",
-    "choices": ["2\\sqrt{3}", "\\sqrt{3}", "\\sqrt{12}", "2\\sqrt{2}", "\\sqrt{6}"],
+    "choices": [
+      "2\\sqrt{3}",
+      "\\sqrt{3}",
+      "\\sqrt{12}",
+      "2\\sqrt{2}",
+      "\\sqrt{6}"
+    ],
     "answerLatex": "2\\sqrt{3}",
     "answerAlternatives": [],
     "hintLatex": [
@@ -422,7 +558,9 @@
       "Writing the outer terms as the middle term plus and minus the common difference turns their product into a difference of squares."
     ],
     "solutionLatex": "The sum of the three terms is three times the middle term.\n\n$b = 15/3 = 5$, so $a+c = 10$\n\n$ab+bc+ca = 5(a+c)+ac = 50+ac = 63$, so $ac = 13$\n\nWith $a = 5-d$ and $c = 5+d$, the product is $25-d^{2} = 13$, so $d^{2} = 12$ and $d = 2\\sqrt{3}$, the positive root because the progression is increasing.",
-    "techniqueSlugs": ["difference-of-squares"],
+    "techniqueSlugs": [
+      "difference-of-squares"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -433,9 +571,19 @@
     "lessonId": "m1-l4",
     "tier": "12",
     "difficulty": 4,
-    "tags": ["word-problem", "quadratics", "radicals"],
+    "tags": [
+      "word-problem",
+      "quadratics",
+      "radicals"
+    ],
     "promptLatex": "Two positive real numbers differ by $4$, and the sum of their squares is $52$. What is the larger of the two numbers?",
-    "choices": ["2+\\sqrt{22}", "2\\sqrt{22}+2", "\\sqrt{26}", "2+\\sqrt{26}", "2+\\sqrt{18}"],
+    "choices": [
+      "2+\\sqrt{22}",
+      "2\\sqrt{22}+2",
+      "\\sqrt{26}",
+      "2+\\sqrt{26}",
+      "2+\\sqrt{18}"
+    ],
     "answerLatex": "2+\\sqrt{22}",
     "answerAlternatives": [],
     "hintLatex": [
@@ -444,7 +592,10 @@
       "The square of the sum is the sum of the squares plus twice the product, so the sum is a square root of a fixed number."
     ],
     "solutionLatex": "Two symmetric conditions in two numbers are best attacked through their sum and their difference.\n\n$(a-b)^{2} = a^{2}+b^{2}-2ab \\implies 16 = 52-2ab$, so $ab = 18$\n\n$(a+b)^{2} = 52+2(18) = 88$, so $a+b = 2\\sqrt{22}$\n\nThe larger number is $\\frac{(a+b)+(a-b)}{2} = \\frac{2\\sqrt{22}+4}{2} = 2+\\sqrt{22}$",
-    "techniqueSlugs": ["difference-of-squares", "square-binomial-pattern"],
+    "techniqueSlugs": [
+      "difference-of-squares",
+      "square-binomial-pattern"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null

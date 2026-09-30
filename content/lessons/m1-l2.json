@@ -4,16 +4,23 @@
   "order": 2,
   "title": "Exponents, Logarithms, and Scientific Notation",
   "topicSlug": "exponents-logarithms-scientific-notation",
-  "tiers": ["10", "12"],
+  "tiers": [
+    "10",
+    "12"
+  ],
   "estimatedMinutes": 65,
   "lockMode": "soft",
-  "prerequisites": ["m1-l1"],
+  "prerequisites": [
+    "m1-l1"
+  ],
   "sections": {
     "objective": {
       "objectiveLatex": "Combine powers of a common base, interpret negative and zero exponents, convert between powers and logarithms in both directions, and place a number in scientific notation so that its magnitude can be compared without expanding it."
     },
     "prerequisites": {
-      "items": ["m1-l1"],
+      "items": [
+        "m1-l1"
+      ],
       "noteLatex": "The only prerequisite beyond [m1-l1](/M1/lessons/m1-l1) is comfort with fractions and with reading a coefficient as a multiplier, since a negative exponent is nothing more than a reciprocal."
     },
     "concept": {
@@ -168,9 +175,18 @@
       ]
     },
     "mastery": {
-      "exerciseIds": ["m1-l2-m1", "m1-l2-m2", "m1-l2-m3"],
+      "exerciseIds": [
+        "m1-l2-m1",
+        "m1-l2-m2",
+        "m1-l2-m3"
+      ],
       "passThreshold": 2
     }
   },
-  "tags": ["exponents", "fractions", "place-value", "word-problem"]
+  "tags": [
+    "exponents",
+    "fractions",
+    "place-value",
+    "word-problem"
+  ]
 }

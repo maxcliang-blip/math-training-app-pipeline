@@ -4,9 +4,17 @@
   "lessonId": "m9-l4",
   "tier": "A+",
   "difficulty": 4,
-  "tags": ["counterexample", "proof-strategy"],
+  "tags": [
+    "counterexample",
+    "proof-strategy"
+  ],
   "promptLatex": "A student claims: \"The formula n^2 + n + 41 produces only prime numbers for all positive integers n.\" Which of the following is a valid counterexample?",
-  "choices": ["n = 1, giving 61", "n = 40, giving 41^2", "n = 41, giving 41^2+41+41", "n = 0, giving 41"],
+  "choices": [
+    "n = 1, giving 61",
+    "n = 40, giving 41^2",
+    "n = 41, giving 41^2+41+41",
+    "n = 0, giving 41"
+  ],
   "answerLatex": "n = 40, giving 41^2",
   "answerAlternatives": [],
   "hintLatex": [
@@ -15,7 +23,9 @@
     "Recognize that 1681 = 41^2, which is composite."
   ],
   "solutionLatex": "The claim is false. At n = 40, the formula gives 40^2+40+41 = 1600+40+41 = 1681. Since 1681 = 41 × 41 = 41^2, it is composite, not prime. This serves as a counterexample to the claim that the formula always produces primes.",
-  "techniqueSlugs": ["counterexample"],
+  "techniqueSlugs": [
+    "counterexample"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

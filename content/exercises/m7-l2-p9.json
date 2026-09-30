@@ -4,7 +4,10 @@
   "lessonId": "m7-l2",
   "tier": "12",
   "difficulty": 3,
-  "tags": ["stars-and-bars", "positive-variables"],
+  "tags": [
+    "stars-and-bars",
+    "positive-variables"
+  ],
   "promptLatex": "How many positive integer solutions does x + y + z + w = 12 have?",
   "choices": [
     "165",
@@ -20,7 +23,9 @@
     "\\binom{11}{3} = 11 \\times 10 \\times 9 / 6 = 165."
   ],
   "solutionLatex": "Give one unit to each of the 4 variables first, using 4 units. Then distribute the remaining 12 - 4 = 8 units freely among 4 variables (nonnegative solutions).\n\nNumber of ways: \\binom{8+4-1}{4-1} = \\binom{11}{3} = \\frac{11 \\times 10 \\times 9}{6} = 165.",
-  "techniqueSlugs": ["stars-and-bars-method"],
+  "techniqueSlugs": [
+    "stars-and-bars-method"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

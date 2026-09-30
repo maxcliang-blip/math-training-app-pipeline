@@ -4,7 +4,10 @@
   "lessonId": "m9-l4",
   "tier": "12",
   "difficulty": 2,
-  "tags": ["counterexample", "proof-strategy"],
+  "tags": [
+    "counterexample",
+    "proof-strategy"
+  ],
   "promptLatex": "A student proposes: \"To prove that n^2+n+41 is always prime, it suffices to check n=1,2,3,…,40.\" Evaluate this proposed proof.",
   "choices": null,
   "answerLatex": "The proposed proof is invalid; n = 40 is a counterexample.",
@@ -15,7 +18,9 @@
     "n = 40 gives 40^2+40+41 = 41^2, which is composite."
   ],
   "solutionLatex": "A valid proof must establish the claim for all n, not just finitely many. Checking examples only establishes consistency, not truth. The claim is false at n = 40, since 40^2+40+41 = 1681 = 41^2 is composite. Therefore the proposed proof is invalid.",
-  "techniqueSlugs": ["counterexample"],
+  "techniqueSlugs": [
+    "counterexample"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

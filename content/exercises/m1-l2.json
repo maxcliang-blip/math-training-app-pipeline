@@ -5,9 +5,17 @@
     "lessonId": "m1-l2",
     "tier": "10",
     "difficulty": 1,
-    "tags": ["exponents"],
+    "tags": [
+      "exponents"
+    ],
     "promptLatex": "Simplify the expression $\\left(2^{3}\\right)^{2}$ into a single value.",
-    "choices": ["64", "36", "8", "128", "12"],
+    "choices": [
+      "64",
+      "36",
+      "8",
+      "128",
+      "12"
+    ],
     "answerLatex": "64",
     "answerAlternatives": [],
     "hintLatex": [
@@ -16,7 +24,9 @@
       "The outer exponent multiplies into the inner one, collapsing the expression to a single power of $2$."
     ],
     "solutionLatex": "The outer exponent applies to everything inside the bracket, including the inner exponent of $2$.\n\n$\\left(2^{3}\\right)^{2} = 2^{3 \\times 2} = 2^{6}$\n\nEvaluating gives $64$, and the exponent $6$ comes from multiplying the two exponents rather than adding them.",
-    "techniqueSlugs": ["power-of-a-power-and-products"],
+    "techniqueSlugs": [
+      "power-of-a-power-and-products"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -27,9 +37,17 @@
     "lessonId": "m1-l2",
     "tier": "10",
     "difficulty": 1,
-    "tags": ["exponents"],
+    "tags": [
+      "exponents"
+    ],
     "promptLatex": "Simplify the product $2^{3} \\times 2^{5}$ to a single value.",
-    "choices": ["256", "32768", "64", "4", "8"],
+    "choices": [
+      "256",
+      "32768",
+      "64",
+      "4",
+      "8"
+    ],
     "answerLatex": "256",
     "answerAlternatives": [],
     "hintLatex": [
@@ -38,7 +56,9 @@
       "The combined exponent is $8$, and evaluating $2^{8}$ gives the value."
     ],
     "solutionLatex": "The bases are equal, so the exponents add when two powers of $2$ are combined.\n\n$2^{3} \\times 2^{5} = 2^{3+5} = 2^{8} = 256$\n\nThe value $32768$ is $2^{15}$, which is what results from combining the bases rather than the exponents.",
-    "techniqueSlugs": ["law-of-exponents-multiply"],
+    "techniqueSlugs": [
+      "law-of-exponents-multiply"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -49,7 +69,9 @@
     "lessonId": "m1-l2",
     "tier": "10",
     "difficulty": 2,
-    "tags": ["exponents"],
+    "tags": [
+      "exponents"
+    ],
     "promptLatex": "Evaluate the quotient $\\frac{3^{6}}{3^{2}}$ to a single value.",
     "choices": null,
     "answerLatex": "81",
@@ -60,7 +82,9 @@
       "The difference of the exponents is $4$, and the value of $3^{4}$ is $81$."
     ],
     "solutionLatex": "The two powers share the base $3$, so the exponents are subtracted.\n\n$\\frac{3^{6}}{3^{2}} = 3^{6-2} = 3^{4} = 81$\n\nThe check is multiplication: $81 \\times 9 = 729 = 3^{6}$, which is the original numerator.",
-    "techniqueSlugs": ["law-of-exponents-divide"],
+    "techniqueSlugs": [
+      "law-of-exponents-divide"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -71,9 +95,18 @@
     "lessonId": "m1-l2",
     "tier": "10",
     "difficulty": 2,
-    "tags": ["exponents", "fractions"],
+    "tags": [
+      "exponents",
+      "fractions"
+    ],
     "promptLatex": "Evaluate the power $4^{-2}$ and report its value.",
-    "choices": ["\\frac{1}{16}", "16", "-8", "8", "\\frac{1}{8}"],
+    "choices": [
+      "\\frac{1}{16}",
+      "16",
+      "-8",
+      "8",
+      "\\frac{1}{8}"
+    ],
     "answerLatex": "\\frac{1}{16}",
     "answerAlternatives": [],
     "hintLatex": [
@@ -82,7 +115,9 @@
       "Since $4^{2} = 16$, the reciprocal that appears is $\\frac{1}{16}$."
     ],
     "solutionLatex": "A negative exponent on $4$ inverts the value while leaving the size of the exponent alone.\n\n$4^{-2} = \\frac{1}{4^{2}} = \\frac{1}{16}$\n\nThe value is positive, because a power of a positive base can never be negative, which rules out the negative option.",
-    "techniqueSlugs": ["negative-and-zero-exponents"],
+    "techniqueSlugs": [
+      "negative-and-zero-exponents"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -93,9 +128,18 @@
     "lessonId": "m1-l2",
     "tier": "10",
     "difficulty": 2,
-    "tags": ["exponents", "fractions"],
+    "tags": [
+      "exponents",
+      "fractions"
+    ],
     "promptLatex": "Evaluate the power $\\left(\\frac{2}{3}\\right)^{-2}$ and report its value.",
-    "choices": ["\\frac{9}{4}", "\\frac{4}{9}", "-\\frac{9}{4}", "\\frac{3}{2}", "\\frac{2}{3}"],
+    "choices": [
+      "\\frac{9}{4}",
+      "\\frac{4}{9}",
+      "-\\frac{9}{4}",
+      "\\frac{3}{2}",
+      "\\frac{2}{3}"
+    ],
     "answerLatex": "\\frac{9}{4}",
     "answerAlternatives": [],
     "hintLatex": [
@@ -104,7 +148,9 @@
       "The inverted base is $\\frac{3}{2}$, and squaring that value gives $\\frac{9}{4}$."
     ],
     "solutionLatex": "Inverting the base of $\\frac{2}{3}$ moves the negative sign onto the fraction itself.\n\n$\\left(\\frac{2}{3}\\right)^{-2} = \\left(\\frac{3}{2}\\right)^{2} = \\frac{9}{4}$\n\nThe check is that $\\frac{9}{4}$ multiplied by $\\frac{4}{9}$ is $1$, which is the value of any nonzero quantity raised to the power $0$.",
-    "techniqueSlugs": ["negative-and-zero-exponents"],
+    "techniqueSlugs": [
+      "negative-and-zero-exponents"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -115,7 +161,9 @@
     "lessonId": "m1-l2",
     "tier": "10",
     "difficulty": 2,
-    "tags": ["exponents"],
+    "tags": [
+      "exponents"
+    ],
     "promptLatex": "Simplify the quotient $\\frac{2^{3} \\times 2^{4}}{2^{2}}$ to a single value.",
     "choices": null,
     "answerLatex": "32",
@@ -126,7 +174,10 @@
       "The numerator becomes $2^{7}$ and the denominator becomes $2^{2}$, leaving an exponent of $5$."
     ],
     "solutionLatex": "Both steps use the same base $2$, so the numerator and then the quotient each reduce to a single power.\n\n$\\frac{2^{3} \\times 2^{4}}{2^{2}} = \\frac{2^{7}}{2^{2}} = 2^{5} = 32$\n\nThe arithmetic check agrees: $8 \\times 16 = 128$, and $128 \\div 4 = 32$.",
-    "techniqueSlugs": ["law-of-exponents-multiply", "law-of-exponents-divide"],
+    "techniqueSlugs": [
+      "law-of-exponents-multiply",
+      "law-of-exponents-divide"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -137,9 +188,17 @@
     "lessonId": "m1-l2",
     "tier": "12",
     "difficulty": 2,
-    "tags": ["exponents"],
+    "tags": [
+      "exponents"
+    ],
     "promptLatex": "If $2^{x} = 32$, what is the value of the exponent $x$?",
-    "choices": ["4", "5", "6", "15", "10"],
+    "choices": [
+      "4",
+      "5",
+      "6",
+      "15",
+      "10"
+    ],
     "answerLatex": "5",
     "answerAlternatives": [],
     "hintLatex": [
@@ -148,7 +207,9 @@
       "The fifth power of $2$ is $32$, so the exponent is $5$."
     ],
     "solutionLatex": "Matching the bases $2$ turns the equation into a single equation in the exponent.\n\n$2^{x} = 32 = 2^{5} \\implies x = 5$\n\nThe check is direct, since $2^{5} = 32$ and the two sides agree. Equivalently $\\log_{2} 32 = 5$.",
-    "techniqueSlugs": ["log-as-inverse-exponent"],
+    "techniqueSlugs": [
+      "log-as-inverse-exponent"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -159,7 +220,9 @@
     "lessonId": "m1-l2",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["exponents"],
+    "tags": [
+      "exponents"
+    ],
     "promptLatex": "If $\\log_{2} x = 5$, what is the value of $x$?",
     "choices": null,
     "answerLatex": "32",
@@ -170,7 +233,9 @@
       "Since $2^{5} = 32$, the value of $x$ is $32$."
     ],
     "solutionLatex": "The definition of $\\log_{2}$ converts the equation back into a power equation.\n\n$\\log_{2} x = 5 \\implies 2^{5} = x \\implies x = 32$\n\nThe check runs the other way: $\\log_{2} 32 = 5$, because $2^{5} = 32$.",
-    "techniqueSlugs": ["log-as-inverse-exponent"],
+    "techniqueSlugs": [
+      "log-as-inverse-exponent"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -181,9 +246,17 @@
     "lessonId": "m1-l2",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["exponents"],
+    "tags": [
+      "exponents"
+    ],
     "promptLatex": "Compute the value of $\\log_{2} 8 + \\log_{5} 25$ exactly.",
-    "choices": ["5", "6", "10", "25", "8"],
+    "choices": [
+      "5",
+      "6",
+      "10",
+      "25",
+      "8"
+    ],
     "answerLatex": "5",
     "answerAlternatives": [],
     "hintLatex": [
@@ -192,7 +265,9 @@
       "The two values are $3$ and $2$, and their sum is $5$."
     ],
     "solutionLatex": "Each logarithm is an exponent, and the bases $2$ and $5$ differ, so the terms are evaluated separately.\n\n$\\log_{2} 8 + \\log_{5} 25 = \\log_{2} 2^{3} + \\log_{5} 5^{2} = 3 + 2 = 5$\n\nThe change-of-base form agrees, since it expresses both of the terms against a single shared base $10$.",
-    "techniqueSlugs": ["log-product-and-power-rules"],
+    "techniqueSlugs": [
+      "log-product-and-power-rules"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -203,7 +278,9 @@
     "lessonId": "m1-l2",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["exponents"],
+    "tags": [
+      "exponents"
+    ],
     "promptLatex": "Simplify the difference $\\log_{2} 48 - \\log_{2} 3$ to a single value.",
     "choices": null,
     "answerLatex": "4",
@@ -214,7 +291,9 @@
       "The quotient is $16$, and the exponent that produces $16$ from $2$ is $4$."
     ],
     "solutionLatex": "The two terms share the base $2$, so the difference law applies.\n\n$\\log_{2} 48 - \\log_{2} 3 = \\log_{2} \\frac{48}{3} = \\log_{2} 16 = 4$\n\nThe check is that $2^{4} = 16 = \\frac{48}{3}$, so the single logarithm has the claimed value.",
-    "techniqueSlugs": ["log-product-and-power-rules"],
+    "techniqueSlugs": [
+      "log-product-and-power-rules"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -225,9 +304,18 @@
     "lessonId": "m1-l2",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["exponents", "fractions"],
+    "tags": [
+      "exponents",
+      "fractions"
+    ],
     "promptLatex": "If $2^{a} = 3$ and $3^{b} = 2$, what is the value of $a \\times b$?",
-    "choices": ["1", "6", "2", "0", "-1"],
+    "choices": [
+      "1",
+      "6",
+      "2",
+      "0",
+      "-1"
+    ],
     "answerLatex": "1",
     "answerAlternatives": [],
     "hintLatex": [
@@ -236,7 +324,9 @@
       "A number and its reciprocal have product $1$, so the product of the two values is $1$."
     ],
     "solutionLatex": "Writing both conditions in power form identifies $a$ and $b$ as reciprocal logarithms.\n\n$\\log_{2} 3 = \\frac{\\log_{10} 3}{\\log_{10} 2} \\qquad \\log_{3} 2 = \\frac{\\log_{10} 2}{\\log_{10} 3}$\n\nTheir product is therefore $\\frac{\\log_{10} 3}{\\log_{10} 2} \\times \\frac{\\log_{10} 2}{\\log_{10} 3} = 1$.",
-    "techniqueSlugs": ["change-of-base"],
+    "techniqueSlugs": [
+      "change-of-base"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -247,9 +337,18 @@
     "lessonId": "m1-l2",
     "tier": "12",
     "difficulty": 2,
-    "tags": ["place-value", "exponents"],
+    "tags": [
+      "place-value",
+      "exponents"
+    ],
     "promptLatex": "The number $0.00045$ is written in scientific notation as $a \\times 10^{-4}$. What is the value of $a$?",
-    "choices": ["4.5", "0.45", "45", "0.0045", "450"],
+    "choices": [
+      "4.5",
+      "0.45",
+      "45",
+      "0.0045",
+      "450"
+    ],
     "answerLatex": "4.5",
     "answerAlternatives": [],
     "hintLatex": [
@@ -258,7 +357,9 @@
       "The remaining coefficient is $4.5$."
     ],
     "solutionLatex": "The decimal point of $0.00045$ moves four places to the right, so the exponent is the negative of that count.\n\n$0.00045 = 4.5 \\times 10^{-4}$\n\nThe check is that $4.5 \\times 10^{-4} = 0.00045$, and $4.5$ lies between $1$ and $10$ as required.",
-    "techniqueSlugs": ["normalize-scientific-notation"],
+    "techniqueSlugs": [
+      "normalize-scientific-notation"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -269,9 +370,18 @@
     "lessonId": "m1-l2",
     "tier": "12",
     "difficulty": 4,
-    "tags": ["exponents", "fractions"],
+    "tags": [
+      "exponents",
+      "fractions"
+    ],
     "promptLatex": "Express $\\log_{4} 32$ as a fraction $\\frac{p}{q}$ in lowest terms.",
-    "choices": ["\\frac{5}{2}", "\\frac{2}{5}", "\\frac{3}{2}", "\\frac{5}{3}", "\\frac{4}{5}"],
+    "choices": [
+      "\\frac{5}{2}",
+      "\\frac{2}{5}",
+      "\\frac{3}{2}",
+      "\\frac{5}{3}",
+      "\\frac{4}{5}"
+    ],
     "answerLatex": "\\frac{5}{2}",
     "answerAlternatives": [],
     "hintLatex": [
@@ -280,7 +390,9 @@
       "Since $4 = 2^{2}$ and $32 = 2^{5}$, the value is $\\frac{5}{2}$."
     ],
     "solutionLatex": "Changing the base to $2$ turns the logarithm into a quotient of two integer exponents.\n\n$\\log_{4} 32 = \\frac{\\log_{2} 32}{\\log_{2} 4} = \\frac{5}{2}$\n\nThe check is that $4$ raised to the power $\\frac{5}{2}$ gives $\\left(2^{2}\\right)^{5/2} = 2^{5} = 32$.",
-    "techniqueSlugs": ["change-of-base"],
+    "techniqueSlugs": [
+      "change-of-base"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -291,9 +403,18 @@
     "lessonId": "m1-l2",
     "tier": "12",
     "difficulty": 4,
-    "tags": ["exponents", "word-problem"],
+    "tags": [
+      "exponents",
+      "word-problem"
+    ],
     "promptLatex": "There are 3600 seconds in an hour. Which of the following is closest to the number of seconds in 40 hours?",
-    "choices": ["1.4 \\times 10^{5}", "1.4 \\times 10^{4}", "1.4 \\times 10^{6}", "4 \\times 10^{5}", "1.4 \\times 10^{3}"],
+    "choices": [
+      "1.4 \\times 10^{5}",
+      "1.4 \\times 10^{4}",
+      "1.4 \\times 10^{6}",
+      "4 \\times 10^{5}",
+      "1.4 \\times 10^{3}"
+    ],
     "answerLatex": "1.4 \\times 10^{5}",
     "answerAlternatives": [],
     "hintLatex": [
@@ -302,7 +423,10 @@
       "That makes the normalized form $1.44 \\times 10^{5}$, which rounds to $1.4 \\times 10^{5}$."
     ],
     "solutionLatex": "An estimate in scientific notation needs only the leading digit and the power of $10$ in use.\n\n$40 \\times 3600 = 144000 = 1.44 \\times 10^{5}$\n\nThe value lies between $10^{5} = 100000$ and $10^{6} = 1000000$, which fixes the exponent at $5$ and the leading digit at $1$.",
-    "techniqueSlugs": ["estimate-by-bounding-powers", "normalize-scientific-notation"],
+    "techniqueSlugs": [
+      "estimate-by-bounding-powers",
+      "normalize-scientific-notation"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -313,9 +437,19 @@
     "lessonId": "m1-l2",
     "tier": "A",
     "difficulty": 5,
-    "tags": ["exponents", "counting-integers", "word-problem"],
+    "tags": [
+      "exponents",
+      "counting-integers",
+      "word-problem"
+    ],
     "promptLatex": "How many positive integers $n$ satisfy $2^{n} < 10^{6} < 2^{n+1}$?",
-    "choices": ["19", "20", "6", "16", "24"],
+    "choices": [
+      "19",
+      "20",
+      "6",
+      "16",
+      "24"
+    ],
     "answerLatex": "19",
     "answerAlternatives": [],
     "hintLatex": [
@@ -324,7 +458,10 @@
       "The inequality places $10^{6}$ above $2^{n}$ and below $2^{n+1}$, so $n$ is the smaller exponent."
     ],
     "solutionLatex": "Two successive powers of $2$ are needed, and repeated doubling finds them without logarithms.\n\n$2^{19} = 524288 < 1000000 < 1048576 = 2^{20}$\n\nSo $n = 19$, and the check is that $2^{19} < 10^{6} < 2^{19+1}$ holds exactly.",
-    "techniqueSlugs": ["estimate-by-bounding-powers", "log-as-inverse-exponent"],
+    "techniqueSlugs": [
+      "estimate-by-bounding-powers",
+      "log-as-inverse-exponent"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -335,9 +472,18 @@
     "lessonId": "m1-l2",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["exponents", "linear-equations"],
+    "tags": [
+      "exponents",
+      "linear-equations"
+    ],
     "promptLatex": "Solve for the value of $x$ in the equation $5^{x-1} = 125$.",
-    "choices": ["4", "3", "5", "2", "6"],
+    "choices": [
+      "4",
+      "3",
+      "5",
+      "2",
+      "6"
+    ],
     "answerLatex": "4",
     "answerAlternatives": [],
     "hintLatex": [
@@ -346,7 +492,9 @@
       "That gives $x - 1 = 3$, so $x = 4$."
     ],
     "solutionLatex": "Both sides are powers of $5$, so the equation reduces to one in the exponent.\n\n$5^{x-1} = 5^{3} \\implies x - 1 = 3 \\implies x = 4$\n\nThe check is that $5^{3} = 125$ on both sides once the value is substituted back.",
-    "techniqueSlugs": ["log-as-inverse-exponent"],
+    "techniqueSlugs": [
+      "log-as-inverse-exponent"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -357,9 +505,19 @@
     "lessonId": "m1-l2",
     "tier": "A",
     "difficulty": 5,
-    "tags": ["word-problem", "exponents", "counting-integers"],
+    "tags": [
+      "word-problem",
+      "exponents",
+      "counting-integers"
+    ],
     "promptLatex": "A culture of bacteria doubles every 3 hours. Starting with 250 bacteria, what is the smallest number of whole hours $n$ for which the population exceeds 1000000?",
-    "choices": ["36", "33", "39", "12", "48"],
+    "choices": [
+      "36",
+      "33",
+      "39",
+      "12",
+      "48"
+    ],
     "answerLatex": "36",
     "answerAlternatives": [],
     "hintLatex": [
@@ -368,7 +526,10 @@
       "The powers of $2$ that straddle $4000$ are $2^{11} = 2048$ and $2^{12} = 4096$, so twelve doublings are needed."
     ],
     "solutionLatex": "Each completed doubling multiplies the population by $2$, and the schedule only doubles every three hours.\n\n$250 \\times 2^{k} > 1000000 \\implies 2^{k} > 4000$\n\nSince $2^{11} = 2048 < 4000 < 4096 = 2^{12}$, the twelfth doubling is the first to clear the target.\n\nThat doubling completes at $12 \\times 3 = 36$ hours, and the check is that $250 \\times 4096 = 1024000$ while eleven doublings give only $512000$.",
-    "techniqueSlugs": ["estimate-by-bounding-powers", "log-as-inverse-exponent"],
+    "techniqueSlugs": [
+      "estimate-by-bounding-powers",
+      "log-as-inverse-exponent"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -379,9 +540,18 @@
     "lessonId": "m1-l2",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["exponents", "fractions"],
+    "tags": [
+      "exponents",
+      "fractions"
+    ],
     "promptLatex": "Simplify the expression $\\left(\\frac{1}{2}\\right)^{-3} \\times 2^{-4} + 3^{2}$ to a single value.",
-    "choices": ["\\frac{19}{2}", "\\frac{17}{2}", "\\frac{1}{2}", "\\frac{35}{2}", "\\frac{19}{4}"],
+    "choices": [
+      "\\frac{19}{2}",
+      "\\frac{17}{2}",
+      "\\frac{1}{2}",
+      "\\frac{35}{2}",
+      "\\frac{19}{4}"
+    ],
     "answerLatex": "\\frac{19}{2}",
     "answerAlternatives": [],
     "hintLatex": [
@@ -390,7 +560,10 @@
       "The product is $\\frac{1}{2}$ and the added term is $9$, giving $\\frac{19}{2}$."
     ],
     "solutionLatex": "The two factors of the product share the base $2$ once the inverted base is rewritten.\n\n$\\left(\\frac{1}{2}\\right)^{-3} \\times 2^{-4} = 2^{3} \\times 2^{-4} = 2^{-1} = \\frac{1}{2}$\n\nAdding $3^{2} = 9$ gives $\\frac{1}{2} + 9 = \\frac{19}{2}$.\n\nThe check is direct arithmetic: $8 \\times \\frac{1}{16} = \\frac{1}{2}$, and then $\\frac{1}{2} + 9 = \\frac{19}{2}$.",
-    "techniqueSlugs": ["negative-and-zero-exponents", "law-of-exponents-multiply"],
+    "techniqueSlugs": [
+      "negative-and-zero-exponents",
+      "law-of-exponents-multiply"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null

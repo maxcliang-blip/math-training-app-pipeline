@@ -4,10 +4,16 @@
   "order": 2,
   "title": "Inclusion-Exclusion, Stars and Bars, and the Pigeonhole Principle",
   "topicSlug": "inclusion-exclusion-stars-and-bars-pigeonhole",
-  "tiers": ["10", "12", "A"],
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
   "estimatedMinutes": 60,
   "lockMode": "soft",
-  "prerequisites": ["m7-l1"],
+  "prerequisites": [
+    "m7-l1"
+  ],
   "sections": {
     "objective": {
       "objectiveLatex": "Apply the inclusion-exclusion principle to count unions of overlapping sets, use stars and bars to count integer solutions to equations, and apply the pigeonhole principle to prove existence statements."
@@ -127,22 +133,55 @@
     },
     "practice": {
       "exerciseIds": [
-        "m7-l2-p1", "m7-l2-p2", "m7-l2-p3", "m7-l2-p4", "m7-l2-p5",
-        "m7-l2-p6", "m7-l2-p7", "m7-l2-p8", "m7-l2-p9", "m7-l2-p10",
-        "m7-l2-p11", "m7-l2-p12", "m7-l2-p13", "m7-l2-p14", "m7-l2-p15"
+        "m7-l2-p1",
+        "m7-l2-p2",
+        "m7-l2-p3",
+        "m7-l2-p4",
+        "m7-l2-p5",
+        "m7-l2-p6",
+        "m7-l2-p7",
+        "m7-l2-p8",
+        "m7-l2-p9",
+        "m7-l2-p10",
+        "m7-l2-p11",
+        "m7-l2-p12",
+        "m7-l2-p13",
+        "m7-l2-p14",
+        "m7-l2-p15"
       ]
     },
     "solutions": {
       "exerciseIds": [
-        "m7-l2-p1", "m7-l2-p2", "m7-l2-p3", "m7-l2-p4", "m7-l2-p5",
-        "m7-l2-p6", "m7-l2-p7", "m7-l2-p8", "m7-l2-p9", "m7-l2-p10",
-        "m7-l2-p11", "m7-l2-p12", "m7-l2-p13", "m7-l2-p14", "m7-l2-p15"
+        "m7-l2-p1",
+        "m7-l2-p2",
+        "m7-l2-p3",
+        "m7-l2-p4",
+        "m7-l2-p5",
+        "m7-l2-p6",
+        "m7-l2-p7",
+        "m7-l2-p8",
+        "m7-l2-p9",
+        "m7-l2-p10",
+        "m7-l2-p11",
+        "m7-l2-p12",
+        "m7-l2-p13",
+        "m7-l2-p14",
+        "m7-l2-p15"
       ]
     },
     "mastery": {
-      "exerciseIds": ["m7-l2-m1", "m7-l2-m2", "m7-l2-m3"],
+      "exerciseIds": [
+        "m7-l2-m1",
+        "m7-l2-m2",
+        "m7-l2-m3"
+      ],
       "passThreshold": 2
     }
   },
-  "tags": ["inclusion-exclusion", "stars-and-bars", "pigeonhole-principle", "complementary-counting"]
+  "tags": [
+    "inclusion-exclusion",
+    "stars-and-bars",
+    "pigeonhole-principle",
+    "complementary-counting"
+  ]
 }

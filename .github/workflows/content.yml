@@ -58,7 +58,7 @@ jobs:
       - name: Install Asymptote
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends asymptote dvisvgm
+          sudo apt-get install -y --no-install-recommends asymptote dvisvgm texlive-latex-base
       # The install step and the build step are deliberately separate, and this one has no
       # `continue-on-error` and no `|| true`. If the package name is wrong, the image lacks
       # TeX Live, or asymptote is installed but cannot start, the failure has to be attributed
@@ -92,7 +92,12 @@ jobs:
           echo "asymptote binary: $ASY"
           "$ASY" --version
           command -v latex   >/dev/null || { echo "::error::latex is missing; every label() in the corpus is typeset by TeX"; exit 1; }
+          kpsewhich amsmath.sty >/dev/null 2>&1 || {
+            echo "::error::amsmath.sty not found; \\operatorname, \\arg, \\lceil and \\rceil in the corpus are amsmath, and without it TeX dies inside shipout() and every affected figure reports the same opaque 'shipout failed'"
+            exit 1
+          }
           echo "latex:   $(command -v latex)"
+          echo "amsmath: $(kpsewhich amsmath.sty)"
           echo "dvisvgm: $(command -v dvisvgm) ($(dvisvgm --version 2>&1 | head -1))"
       # Prove the compiler can actually do the one thing this pipeline needs of it: turn a
       # size(W,H) source containing a TeX label into an SVG. A --version banner only proves the

@@ -4,7 +4,10 @@
   "lessonId": "m7-l2",
   "tier": "A",
   "difficulty": 5,
-  "tags": ["inclusion-exclusion", "three-sets"],
+  "tags": [
+    "inclusion-exclusion",
+    "three-sets"
+  ],
   "promptLatex": "In a survey of 80 people, 45 liked math, 35 liked physics, and 25 liked chemistry. 15 liked both math and physics, 10 liked both math and chemistry, and 8 liked both physics and chemistry. 5 liked all three subjects. How many people liked none of the three subjects?",
   "choices": [
     "17",
@@ -20,7 +23,9 @@
     "|M ∪ P ∪ C| = 45 + 35 + 25 - 15 - 10 - 8 + 5 = 77.\nPeople who liked none: 80 - 77 = 17."
   ],
   "solutionLatex": "Use inclusion-exclusion for three sets M (math), P (physics), C (chemistry).\n\n|M ∪ P ∪ C| = |M| + |P| + |C| - |M ∩ P| - |M ∩ C| - |P ∩ C| + |M ∩ P ∩ C|.\n\n= 45 + 35 + 25 - 15 - 10 - 8 + 5 = 77.\n\nPeople who liked at least one subject: 77.\nPeople who liked none: 80 - 77 = 17.",
-  "techniqueSlugs": ["inclusion-exclusion-principle"],
+  "techniqueSlugs": [
+    "inclusion-exclusion-principle"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

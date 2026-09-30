@@ -4,9 +4,18 @@
   "lessonId": "m9-l4",
   "tier": "A+",
   "difficulty": 3,
-  "tags": ["proof-strategy", "case-split"],
+  "tags": [
+    "proof-strategy",
+    "case-split"
+  ],
   "promptLatex": "The claim '|x|+|x-6| ≥ 6 for all real x' is to be proved. Which proof strategy is most appropriate?",
-  "choices": ["direct proof", "proof by contradiction", "proof by induction", "counterexample", "case split"],
+  "choices": [
+    "direct proof",
+    "proof by contradiction",
+    "proof by induction",
+    "counterexample",
+    "case split"
+  ],
   "answerLatex": "case split",
   "answerAlternatives": [],
   "hintLatex": [
@@ -15,7 +24,9 @@
     "The middle region gives the constant value 6."
   ],
   "solutionLatex": "Case split on the breakpoints 0 and 6:\n\n- If x ≤ 0: |x| + |x-6| = -x + 6-x = 6-2x ≥ 6 (since x ≤ 0).\n- If 0 ≤ x ≤ 6: |x| + |x-6| = x + 6-x = 6.\n- If x ≥ 6: |x| + |x-6| = x + x-6 = 2x-6 ≥ 6 (since x ≥ 6).\n\nIn all cases, |x|+|x-6| ≥ 6, with equality exactly on [0,6].",
-  "techniqueSlugs": ["case-split"],
+  "techniqueSlugs": [
+    "case-split"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

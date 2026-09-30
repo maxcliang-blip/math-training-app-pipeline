@@ -579,7 +579,7 @@
       "If each box holds at most 2 coins, that accounts for at most 10 coins",
       "The fifteenth coin must go somewhere"
     ],
-    "solutionLatex": "Distribute the 15 coins as evenly as 5 boxes allow. Each box can hold at most 2 coins without exceeding the limit, which accounts for 5\\times2 = 10 coins. The remaining 5 coins must go into the 5 boxes, forcing at least one box to hold 3 coins. More formally, \u230815/5\u2309 = 3.",
+    "solutionLatex": "Distribute the 15 coins as evenly as 5 boxes allow. Each box can hold at most 2 coins without exceeding the limit, which accounts for 5\\times2 = 10 coins. The remaining 5 coins must go into the 5 boxes, forcing at least one box to hold 3 coins. More formally, ⌈15/5⌉ = 3.",
     "techniqueSlugs": [
       "generalized-pigeonhole"
     ],
@@ -641,7 +641,7 @@
       "There are 19 residue classes modulo 19",
       "By the pigeonhole principle, two of the 20 integers land in the same class"
     ],
-    "solutionLatex": "Reduce the 20 integers modulo 19. There are 19 residue classes (0, 1, \u2026, 18). By the pigeonhole principle, since there are 20 integers and only 19 classes, at least two of them must land in the same residue class. If two integers a and b have the same residue modulo 19, then a - b is divisible by 19, i.e., their difference is a multiple of 19.",
+    "solutionLatex": "Reduce the 20 integers modulo 19. There are 19 residue classes (0, 1, …, 18). By the pigeonhole principle, since there are 20 integers and only 19 classes, at least two of them must land in the same residue class. If two integers a and b have the same residue modulo 19, then a - b is divisible by 19, i.e., their difference is a multiple of 19.",
     "techniqueSlugs": [
       "residue-class-pigeonhole"
     ],

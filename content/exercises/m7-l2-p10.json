@@ -4,7 +4,9 @@
   "lessonId": "m7-l2",
   "tier": "A",
   "difficulty": 4,
-  "tags": ["pigeonhole-principle"],
+  "tags": [
+    "pigeonhole-principle"
+  ],
   "promptLatex": "What is the minimum number of cards that must be drawn from a standard 52-card deck to guarantee that at least 3 cards are from the same suit?",
   "choices": [
     "5",
@@ -22,7 +24,9 @@
     "With 9 cards and 4 suits, by pigeonhole, some suit has at least \\lceil 9/4 \\rceil = \\lceil 2.25 \\rceil = 3 cards."
   ],
   "solutionLatex": "By the pigeonhole principle, if N objects are placed into k boxes, some box contains at least \\lceil N/k \\rceil objects.",
-  "techniques": ["pigeonhole-application"],
+  "techniques": [
+    "pigeonhole-application"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

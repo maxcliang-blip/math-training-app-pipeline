@@ -4,7 +4,10 @@
   "lessonId": "m7-l2",
   "tier": "A",
   "difficulty": 4,
-  "tags": ["inclusion-exclusion", "upper-bounds"],
+  "tags": [
+    "inclusion-exclusion",
+    "upper-bounds"
+  ],
   "promptLatex": "How many nonnegative integer solutions does x + y + z = 6 have if each variable is at most 3?",
   "choices": [
     "19",
@@ -22,7 +25,10 @@
     "Valid solutions: 28 - 18 = 10."
   ],
   "solutionLatex": "Total nonnegative solutions without upper bounds: (6+3-1) choose (3-1) = (8) choose 2 = 28.",
-  "techniques": ["stars-and-bars-method", "case-split-inclusion-exclusion"],
+  "techniques": [
+    "stars-and-bars-method",
+    "case-split-inclusion-exclusion"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

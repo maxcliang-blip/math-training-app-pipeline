@@ -4,9 +4,18 @@
   "lessonId": "m9-l4",
   "tier": "A",
   "difficulty": 3,
-  "tags": ["proof-strategy", "contradiction"],
+  "tags": [
+    "proof-strategy",
+    "contradiction"
+  ],
   "promptLatex": "A student attempts to prove 'if n^2 is even then n is even' by contradiction, assuming 'n is odd' and deriving 'n^2 is odd'. Identify the missing step.",
-  "choices": ["the assumption that n is odd is not the negation of 'n^2 is even'", "the derivation must also use the fact that odd×odd = odd", "the proof must handle the case where n = 0 separately", "the contradiction must involve a statement about all integers", "the student should use induction instead"],
+  "choices": [
+    "the assumption that n is odd is not the negation of 'n^2 is even'",
+    "the derivation must also use the fact that odd×odd = odd",
+    "the proof must handle the case where n = 0 separately",
+    "the contradiction must involve a statement about all integers",
+    "the student should use induction instead"
+  ],
   "answerLatex": "the derivation must also use the fact that odd×odd = odd",
   "answerAlternatives": [],
   "hintLatex": [
@@ -15,7 +24,9 @@
     "The missing step is connecting the assumption 'n is odd' to the conclusion 'n^2 is odd'."
   ],
   "solutionLatex": "Proof by contradiction: Assume n^2 is even but n is odd. If n is odd, then n = 2k+1 for some integer k, and n^2 = (2k+1)^2 = 4k^2+4k+1 = 2(2k^2+2k)+1, which is odd. This contradicts the assumption that n^2 is even. Therefore, if n^2 is even, n cannot be odd, so n must be even.",
-  "techniqueSlugs": ["contradiction"],
+  "techniqueSlugs": [
+    "contradiction"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

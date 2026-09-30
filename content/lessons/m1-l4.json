@@ -4,16 +4,23 @@
   "order": 4,
   "title": "Polynomial Expansion and Factoring",
   "topicSlug": "polynomial-expansion-factoring",
-  "tiers": ["10", "12"],
+  "tiers": [
+    "10",
+    "12"
+  ],
   "estimatedMinutes": 60,
   "lockMode": "soft",
-  "prerequisites": ["m1-l1"],
+  "prerequisites": [
+    "m1-l1"
+  ],
   "sections": {
     "objective": {
       "objectiveLatex": "Expand products of polynomials correctly, factor polynomials over the integers completely, and use a factorization to evaluate an expression at a convenient value."
     },
     "prerequisites": {
-      "items": ["m1-l1"],
+      "items": [
+        "m1-l1"
+      ],
       "noteLatex": "Multiplying out a bracket is the distributive law, and the only prerequisite beyond [m1-l1](/M1/lessons/m1-l1) is comfort with negative numbers and with reading a coefficient as a multiplier rather than as a label."
     },
     "concept": {
@@ -162,9 +169,18 @@
       ]
     },
     "mastery": {
-      "exerciseIds": ["m1-l4-m1", "m1-l4-m2", "m1-l4-m3"],
+      "exerciseIds": [
+        "m1-l4-m1",
+        "m1-l4-m2",
+        "m1-l4-m3"
+      ],
       "passThreshold": 2
     }
   },
-  "tags": ["factoring", "distributive-law", "exponents", "quadratics"]
+  "tags": [
+    "factoring",
+    "distributive-law",
+    "exponents",
+    "quadratics"
+  ]
 }

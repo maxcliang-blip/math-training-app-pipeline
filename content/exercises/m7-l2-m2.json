@@ -4,7 +4,9 @@
   "lessonId": "m7-l2",
   "tier": "A",
   "difficulty": 4,
-  "tags": ["complementary-count"],
+  "tags": [
+    "complementary-count"
+  ],
   "promptLatex": "How many positive integer solutions does x + y + z + w = 15 have if each variable is at most 5?",
   "choices": [
     "10",
@@ -22,7 +24,10 @@
     "Any of the 4 variables could exceed 5, subtract 4 times the count for one variable."
   ],
   "solutionLatex": "Total positive integer solutions without upper bounds: x + y + z + w = 15, each >= 1, is (15-1) choose (4-1) = 14 choose 3 = 364.",
-  "techniques": ["stars-and-bars-method", "case-split-inclusion-exclusion"],
+  "techniques": [
+    "stars-and-bars-method",
+    "case-split-inclusion-exclusion"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

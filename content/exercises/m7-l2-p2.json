@@ -4,7 +4,9 @@
   "lessonId": "m7-l2",
   "tier": "10",
   "difficulty": 1,
-  "tags": ["inclusion-exclusion"],
+  "tags": [
+    "inclusion-exclusion"
+  ],
   "promptLatex": "How many integers from 1 to 50 are divisible by 4 or 5?",
   "choices": [
     "15",
@@ -21,7 +23,9 @@
     "12 + 10 - 2 = 20."
   ],
   "solutionLatex": "Use the inclusion-exclusion principle.\n\nMultiples of 4 from 1 to 50: \\lfloor 50/4 \\rfloor = 12.\nMultiples of 5 from 1 to 50: \\lfloor 50/5 \\rfloor = 10.\nMultiples of both 4 and 5 (i.e., multiples of 20) from 1 to 50: \\lfloor 50/20 \\rfloor = 2.\n\nBy inclusion-exclusion: 12 + 10 - 2 = 20.",
-  "techniqueSlugs": ["inclusion-exclusion-principle"],
+  "techniqueSlugs": [
+    "inclusion-exclusion-principle"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

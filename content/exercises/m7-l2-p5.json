@@ -4,7 +4,9 @@
   "lessonId": "m7-l2",
   "tier": "10",
   "difficulty": 2,
-  "tags": ["stars-and-bars"],
+  "tags": [
+    "stars-and-bars"
+  ],
   "promptLatex": "How many positive integer solutions does x + y + z = 8 have?",
   "choices": [
     "21",
@@ -20,7 +22,9 @@
     "\\binom{7}{2} = 7 \\times 6 / 2 = 21."
   ],
   "solutionLatex": "For positive integer solutions, give one unit to each variable first. This uses 3 units, leaving 8 - 3 = 5 stars to distribute freely among 3 variables.\n\nThe number of solutions is \\binom{5+3-1}{3-1} = \\binom{7}{2} = 21.",
-  "techniqueSlugs": ["stars-and-bars-method"],
+  "techniqueSlugs": [
+    "stars-and-bars-method"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

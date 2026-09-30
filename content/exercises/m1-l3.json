@@ -5,7 +5,10 @@
     "lessonId": "m1-l3",
     "tier": "10",
     "difficulty": 1,
-    "tags": ["domain", "linear-equations"],
+    "tags": [
+      "domain",
+      "linear-equations"
+    ],
     "promptLatex": "If $f(x) = 2x - 3$, what is the value of $f(5)$?",
     "choices": null,
     "answerLatex": "7",
@@ -16,7 +19,9 @@
       "The value of $2x$ at $x = 5$ is $10$, and subtracting $3$ gives $7$."
     ],
     "solutionLatex": "The notation $f(5)$ means the value of the rule at the input $5$.\n\n$f(5) = 2(5) - 3 = 10 - 3 = 7$\n\nThe check is the reverse: the rule gives $7$ when $2x - 3 = 7$, and solving that gives $x = 5$.",
-    "techniqueSlugs": ["function-notation-unpack"],
+    "techniqueSlugs": [
+      "function-notation-unpack"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -27,9 +32,18 @@
     "lessonId": "m1-l3",
     "tier": "10",
     "difficulty": 1,
-    "tags": ["quadratics", "domain"],
+    "tags": [
+      "quadratics",
+      "domain"
+    ],
     "promptLatex": "If $g(x) = x^{2} - 4$, what is the value of $g(-3)$?",
-    "choices": ["5", "-5", "13", "1", "-1"],
+    "choices": [
+      "5",
+      "-5",
+      "13",
+      "1",
+      "-1"
+    ],
     "answerLatex": "5",
     "answerAlternatives": [],
     "hintLatex": [
@@ -38,7 +52,9 @@
       "Since the square of $3$ is $9$, the value is $9 - 4 = 5$."
     ],
     "solutionLatex": "The input is substituted into the rule, and the square is taken before the subtraction.\n\n$g(-3) = (-3)^{2} - 4 = 9 - 4 = 5$\n\nThe check is that $(-3)^{2} = 3^{2} = 9$, so the sign of the input never reaches the final answer.",
-    "techniqueSlugs": ["function-notation-unpack"],
+    "techniqueSlugs": [
+      "function-notation-unpack"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -49,19 +65,27 @@
     "lessonId": "m1-l3",
     "tier": "10",
     "difficulty": 2,
-    "tags": ["domain", "radicals", "intervals"],
+    "tags": [
+      "domain",
+      "radicals",
+      "intervals"
+    ],
     "promptLatex": "State the domain of $f(x) = \\sqrt{x-4}$ in interval notation.",
     "choices": null,
     "answerLatex": "[4,\\infty)",
-    "answerAlternatives": ["x \\ge 4", "[4,+\\infty)"],
+    "answerAlternatives": [
+      "x \\ge 4",
+      "[4,+\\infty)"
+    ],
     "hintLatex": [
       "The only thing that can fail in this rule is the square root, and it needs a nonnegative input.",
       "The quantity under the root is $x - 4$, so the condition is on that quantity and not on $x$ directly.",
       "The condition $x - 4 \\ge 0$ is equivalent to $x \\ge 4$, and the boundary is included."
     ],
-    "solutionLatex": "A square root is real exactly when the quantity beneath it is nonnegative.\n\n$x - 4 \\ge 0 \\implies x \\ge 4$\n\nSo the domain is $[4, \\infty)$, and $4$ is included because $\\sqrt{0}$ is defined."
-    ,
-    "techniqueSlugs": ["domain-by-inspection"],
+    "solutionLatex": "A square root is real exactly when the quantity beneath it is nonnegative.\n\n$x - 4 \\ge 0 \\implies x \\ge 4$\n\nSo the domain is $[4, \\infty)$, and $4$ is included because $\\sqrt{0}$ is defined.",
+    "techniqueSlugs": [
+      "domain-by-inspection"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -72,9 +96,17 @@
     "lessonId": "m1-l3",
     "tier": "10",
     "difficulty": 1,
-    "tags": ["domain"],
+    "tags": [
+      "domain"
+    ],
     "promptLatex": "Which of the following is the domain of the polynomial $h(x) = x^{3} - 2x$?",
-    "choices": ["\\mathbb{R}", "x \\ge 0", "x \\ne 0", "x > 0", "x \\le 0"],
+    "choices": [
+      "\\mathbb{R}",
+      "x \\ge 0",
+      "x \\ne 0",
+      "x > 0",
+      "x \\le 0"
+    ],
     "answerLatex": "\\mathbb{R}",
     "answerAlternatives": [],
     "hintLatex": [
@@ -83,7 +115,9 @@
       "Since nothing can fail, every real number is accepted."
     ],
     "solutionLatex": "A polynomial has no root and no denominator, and those are the only constructs that restrict a domain.\n\nThe domain of $h(x) = x^{3} - 2x$ is therefore all real numbers, written as $\\mathbb{R}$\n\nThe check is that every real input produces a real output, since sums and integer powers of real numbers stay real.",
-    "techniqueSlugs": ["domain-by-inspection"],
+    "techniqueSlugs": [
+      "domain-by-inspection"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -94,7 +128,10 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 2,
-    "tags": ["domain", "linear-equations"],
+    "tags": [
+      "domain",
+      "linear-equations"
+    ],
     "promptLatex": "If $f(x) = 3x - 1$ and $g(x) = x + 4$, what is the value of the composition $f \\left( g(2) \\right)$?",
     "choices": null,
     "answerLatex": "17",
@@ -105,7 +142,9 @@
       "The inner rule gives $6$ at the input $2$, and the outer rule turns $6$ into $17$."
     ],
     "solutionLatex": "The inner rule is applied to the input first, and only then does the outer rule run.\n\n$g(2) = 2 + 4 = 6 \\quad \\text{and then} \\quad f(6) = 3(6) - 1 = 17$\n\nThe check is the other composition, $g(f(2)) = g(2) = 6$, which is a different function and does not match.",
-    "techniqueSlugs": ["composite-evaluate-inward"],
+    "techniqueSlugs": [
+      "composite-evaluate-inward"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -116,9 +155,18 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["quadratics", "domain"],
+    "tags": [
+      "quadratics",
+      "domain"
+    ],
     "promptLatex": "If $f(x) = x^{2}$ and $g(x) = 2x - 1$, what is the value of $f \\left( g(3) \\right)$?",
-    "choices": ["25", "11", "6", "36", "4"],
+    "choices": [
+      "25",
+      "11",
+      "6",
+      "36",
+      "4"
+    ],
     "answerLatex": "25",
     "answerAlternatives": [],
     "hintLatex": [
@@ -127,7 +175,9 @@
       "The inner value is $5$, and its square is $25$."
     ],
     "solutionLatex": "The inner rule is the linear one, and its output is the input to the squaring rule.\n\n$g(3) = 2(3) - 1 = 5 \\quad \\text{and then} \\quad f(5) = 5^{2} = 25$\n\nWorking in written order instead would give $f(3) = 9$ and then $g(9) = 17$, which is the other composition.",
-    "techniqueSlugs": ["composite-evaluate-inward"],
+    "techniqueSlugs": [
+      "composite-evaluate-inward"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -138,7 +188,10 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["domain", "fractions"],
+    "tags": [
+      "domain",
+      "fractions"
+    ],
     "promptLatex": "If $f(x) = \\frac{2x}{x-1}$, what is the value of $f \\left( f(2) \\right)$?",
     "choices": null,
     "answerLatex": "\\frac{8}{3}",
@@ -149,7 +202,10 @@
       "The first value is $4$, and applying the rule at $4$ gives $\\frac{8}{3}$."
     ],
     "solutionLatex": "The first application is followed by a second one at whatever value the first produced.\n\n$f(2) = \\frac{2(2)}{2-1} = \\frac{4}{1} = 4 \\quad \\text{and then} \\quad f(4) = \\frac{2(4)}{4-1} = \\frac{8}{3}$\n\nThe check is that $4 \\ne 1$, so the second application is defined, and the arithmetic $\\frac{8}{3}$ is already in lowest terms.",
-    "techniqueSlugs": ["composite-evaluate-inward", "domain-by-inspection"],
+    "techniqueSlugs": [
+      "composite-evaluate-inward",
+      "domain-by-inspection"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -160,18 +216,27 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["domain", "intervals", "fractions"],
+    "tags": [
+      "domain",
+      "intervals",
+      "fractions"
+    ],
     "promptLatex": "State the domain of $f(x) = \\frac{x+1}{x(x-3)}$ in interval notation.",
     "choices": null,
     "answerLatex": "(-\\infty,0)\\cup(0,3)\\cup(3,\\infty)",
-    "answerAlternatives": ["x \\ne 0 \\text{ and } x \\ne 3", "x \\ne 3 \\text{ and } x \\ne 0"],
+    "answerAlternatives": [
+      "x \\ne 0 \\text{ and } x \\ne 3",
+      "x \\ne 3 \\text{ and } x \\ne 0"
+    ],
     "hintLatex": [
       "Only the denominator of the fraction can fail, and a product vanishes when either of its factors does.",
       "The factors of the denominator are $x$ and $x - 3$, so the forbidden inputs are $0$ and $3$.",
       "Removing two points from the whole line leaves three separate intervals."
     ],
     "solutionLatex": "The denominator is a product, and it is zero when either factor is zero.\n\n$x(x-3) = 0 \\implies x = 0 \\text{ or } x = 3$\n\nRemoving both points from the real line gives $(-\\infty, 0) \\cup (0, 3) \\cup (3, \\infty)$, and the numerator adds no restriction of its own.",
-    "techniqueSlugs": ["domain-by-inspection"],
+    "techniqueSlugs": [
+      "domain-by-inspection"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -182,18 +247,27 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 2,
-    "tags": ["quadratics", "domain", "intervals"],
+    "tags": [
+      "quadratics",
+      "domain",
+      "intervals"
+    ],
     "promptLatex": "State the range of the function $f(x) = x^{2} + 1$ in interval notation.",
     "choices": null,
     "answerLatex": "[1,\\infty)",
-    "answerAlternatives": ["x \\ge 1", "[1,+\\infty)"],
+    "answerAlternatives": [
+      "x \\ge 1",
+      "[1,+\\infty)"
+    ],
     "hintLatex": [
       "The range concerns the outputs, so the question is which values the rule can produce.",
       "The square of a real number is never negative, and it takes the value $0$ at a single input.",
       "Adding $1$ to every possible square shifts the smallest output up to $1$."
     ],
     "solutionLatex": "The square $x^{2}$ has range $[0, \\infty)$ because it is never negative and reaches $0$.\n\n$0 \\le x^{2} < \\infty \\implies 1 \\le x^{2} + 1 < \\infty$\n\nThe lower endpoint is included because the value $1$ is attained at $x = 0$, so the range is $[1, \\infty)$.",
-    "techniqueSlugs": ["range-by-analysis"],
+    "techniqueSlugs": [
+      "range-by-analysis"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -204,7 +278,10 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 2,
-    "tags": ["domain", "quadratics"],
+    "tags": [
+      "domain",
+      "quadratics"
+    ],
     "promptLatex": "For the function below, find the value of $f(2)$.\n\n$f(x) = \\begin{cases} x + 1 & x \\le 2 \\\\ x^{2} & x > 2 \\end{cases}$",
     "choices": null,
     "answerLatex": "3",
@@ -215,7 +292,9 @@
       "The first rule owns the boundary and gives $2 + 1$ at that input."
     ],
     "solutionLatex": "The input is compared against the breakpoints, and the boundary belongs to the first branch.\n\n$f(2) = 2 + 1 = 3$\n\nThe check is that the second branch would have given $4$, so reading the boundary as belonging to it changes the answer.",
-    "techniqueSlugs": ["piecewise-case-split"],
+    "techniqueSlugs": [
+      "piecewise-case-split"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -226,18 +305,28 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["domain", "inequalities", "radicals"],
+    "tags": [
+      "domain",
+      "inequalities",
+      "radicals"
+    ],
     "promptLatex": "Let $f(x) = \\sqrt{x+1}$ and $g(x) = 2x - 7$. State the domain of the composite $f \\left( g(x) \\right)$ in interval notation.",
     "choices": null,
     "answerLatex": "[3,\\infty)",
-    "answerAlternatives": ["x \\ge 3", "[3,+\\infty)"],
+    "answerAlternatives": [
+      "x \\ge 3",
+      "[3,+\\infty)"
+    ],
     "hintLatex": [
       "Two conditions have to hold at once, and the inner rule here is defined everywhere.",
       "Substituting the inner rule into the outer one turns the question into a single inequality in the input.",
       "The inequality reduces to $2x \\ge 6$, which is the condition $x \\ge 3$."
     ],
     "solutionLatex": "The inner rule is linear, so it is defined for every real input and the outer rule is the only restriction.\n\n$f \\left( g(x) \\right) = \\sqrt{2x-7+1} = \\sqrt{2x-6}$\n\nThe composite is real when $2x - 6 \\ge 0$, which gives $x \\ge 3$ and the domain $[3, \\infty)$.",
-    "techniqueSlugs": ["domain-of-a-composite", "composite-evaluate-inward"],
+    "techniqueSlugs": [
+      "domain-of-a-composite",
+      "composite-evaluate-inward"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -248,18 +337,27 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["absolute-value", "domain", "intervals"],
+    "tags": [
+      "absolute-value",
+      "domain",
+      "intervals"
+    ],
     "promptLatex": "State the range of the function $f(x) = \\left| 2x - 3 \\right|$ in interval notation.",
     "choices": null,
     "answerLatex": "[0,\\infty)",
-    "answerAlternatives": ["x \\ge 0", "[0,+\\infty)"],
+    "answerAlternatives": [
+      "x \\ge 0",
+      "[0,+\\infty)"
+    ],
     "hintLatex": [
       "The absolute value of a real number is never negative, and that is the only fact needed.",
       "The quantity inside reaches the value $0$ at a single input, and it grows without limit in both directions.",
       "So the smallest possible output is $0$ and every larger value also occurs."
     ],
     "solutionLatex": "The absolute value discards the sign, so the output is never negative.\n\n$\\left| 2x - 3 \\right| \\ge 0$\n\nThe value $0$ is attained at $x = \\frac{3}{2}$, and outputs of every size are produced as the input moves away from it, so the range is $[0, \\infty)$.",
-    "techniqueSlugs": ["range-by-analysis"],
+    "techniqueSlugs": [
+      "range-by-analysis"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -270,9 +368,18 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["domain", "linear-equations"],
+    "tags": [
+      "domain",
+      "linear-equations"
+    ],
     "promptLatex": "A function satisfies $f(x+2) = f(x) + 6$ for every real $x$, and $f(1) = 9$. What is the value of $f(5)$?",
-    "choices": ["21", "15", "33", "12", "18"],
+    "choices": [
+      "21",
+      "15",
+      "33",
+      "12",
+      "18"
+    ],
     "answerLatex": "21",
     "answerAlternatives": [],
     "hintLatex": [
@@ -281,7 +388,9 @@
       "Starting from $f(1) = 9$, the value at $5$ is $9$ plus two steps of size $6$."
     ],
     "solutionLatex": "The identity can be applied repeatedly, each time advancing the input by $2$ and the output by $6$.\n\n$f(3) = f(1) + 6 = 15 \\quad \\text{and} \\quad f(5) = f(3) + 6 = 21$\n\nThe check is that $21 = 9 + 2(6)$, matching the number of steps taken from the input $1$ to the input $5$.",
-    "techniqueSlugs": ["function-notation-unpack"],
+    "techniqueSlugs": [
+      "function-notation-unpack"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -292,9 +401,18 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["domain", "linear-equations"],
+    "tags": [
+      "domain",
+      "linear-equations"
+    ],
     "promptLatex": "The function $f(x) = 3x - 7$ has an inverse. What is the value of $f^{-1}(5)$?",
-    "choices": ["4", "-4", "6", "2", "8"],
+    "choices": [
+      "4",
+      "-4",
+      "6",
+      "2",
+      "8"
+    ],
     "answerLatex": "4",
     "answerAlternatives": [],
     "hintLatex": [
@@ -303,7 +421,9 @@
       "Solving $3x - 7 = 5$ for the input gives $x = 4$."
     ],
     "solutionLatex": "The inverse undoes the original rule, so the answer is the input that produces $5$.\n\n$3x - 7 = 5 \\implies 3x = 12 \\implies x = 4$\n\nThe check is that applying the rule to $4$ returns $5$, and composing the two steps in the other order returns $4$.",
-    "techniqueSlugs": ["inverse-by-swapping-coordinates"],
+    "techniqueSlugs": [
+      "inverse-by-swapping-coordinates"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -314,18 +434,29 @@
     "lessonId": "m1-l3",
     "tier": "A",
     "difficulty": 5,
-    "tags": ["domain", "intervals", "fractions", "radicals"],
+    "tags": [
+      "domain",
+      "intervals",
+      "fractions",
+      "radicals"
+    ],
     "promptLatex": "Let $f(x) = \\sqrt{x-3}$ and $g(x) = \\frac{2}{x-1}$. State the domain of the composite $f \\left( g(x) \\right)$ in interval notation.",
     "choices": null,
     "answerLatex": "(1,\\frac{5}{3}]",
-    "answerAlternatives": ["1 < x \\le \\frac{5}{3}", "(1,1\\frac{2}{3}]"],
+    "answerAlternatives": [
+      "1 < x \\le \\frac{5}{3}",
+      "(1,1\\frac{2}{3}]"
+    ],
     "hintLatex": [
       "Both the inner rule and the outer rule impose a condition here, and the sign of the input decides how the two interact.",
       "For inputs below $1$ the inner rule produces a negative number, which the outer rule cannot accept at all.",
       "For inputs above $1$ the condition becomes an upper bound, and the two cases are compared to find the domain."
     ],
     "solutionLatex": "Substituting the inner rule into the outer one gives a composite that must be real and whose inner rule must be defined.\n\n$f \\left( g(x) \\right) = \\sqrt{ \\frac{2}{x-1} - 3}$ with $x \\ne 1$\n\nWhen $x < 1$ the quantity $\\frac{2}{x-1}$ is negative, so the radicand is negative and the composite is not real. When $x > 1$ the condition is $\\frac{2}{x-1} \\ge 3$, which multiplies through by the positive denominator to give $2 \\ge 3x - 3$ and then $x \\le \\frac{5}{3}$.\n\nCombining the two gives the domain $(1, \\frac{5}{3}]$, and the upper endpoint is included because the radicand is $0$ there.",
-    "techniqueSlugs": ["domain-of-a-composite", "piecewise-case-split"],
+    "techniqueSlugs": [
+      "domain-of-a-composite",
+      "piecewise-case-split"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -336,9 +467,18 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["domain", "fractions"],
+    "tags": [
+      "domain",
+      "fractions"
+    ],
     "promptLatex": "If $f(x) = \\frac{x-1}{x^{2}-4}$ and $g(x) = 2x$, what is the value of $f \\left( g(3) \\right)$?",
-    "choices": ["\\frac{5}{32}", "\\frac{6}{5}", "\\frac{32}{5}", "12", "6"],
+    "choices": [
+      "\\frac{5}{32}",
+      "\\frac{6}{5}",
+      "\\frac{32}{5}",
+      "12",
+      "6"
+    ],
     "answerLatex": "\\frac{5}{32}",
     "answerAlternatives": [],
     "hintLatex": [
@@ -347,7 +487,10 @@
       "The inner value is $6$, and evaluating the fraction at $6$ gives $\\frac{5}{32}$."
     ],
     "solutionLatex": "The inner rule produces a single number that the outer rule then receives.\n\n$g(3) = 2(3) = 6 \\quad \\text{and then} \\quad f(6) = \\frac{6-1}{6^{2}-4} = \\frac{5}{32}$\n\nThe check is that $6 \\ne 2$ and $6 \\ne -2$, so the denominator is nonzero at the value used.",
-    "techniqueSlugs": ["composite-evaluate-inward", "domain-by-inspection"],
+    "techniqueSlugs": [
+      "composite-evaluate-inward",
+      "domain-by-inspection"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -358,9 +501,19 @@
     "lessonId": "m1-l3",
     "tier": "A",
     "difficulty": 4,
-    "tags": ["quadratics", "counting-integers", "domain"],
+    "tags": [
+      "quadratics",
+      "counting-integers",
+      "domain"
+    ],
     "promptLatex": "The function $f$ is defined on the integers by $f(n) = n^{2} - 4n + 3$. How many integers $n$ satisfy $f \\left( f(n) \\right) = 0$?",
-    "choices": ["2", "0", "3", "4", "1"],
+    "choices": [
+      "2",
+      "0",
+      "3",
+      "4",
+      "1"
+    ],
     "answerLatex": "2",
     "answerAlternatives": [],
     "hintLatex": [
@@ -369,7 +522,10 @@
       "The value $1$ is never produced at an integer input, while the value $3$ is produced at exactly two."
     ],
     "solutionLatex": "The outer value is zero only at the two roots of the rule, so the inner value must be one of them.\n\n$f(m) = 0 \\implies m^{2} - 4m + 3 = 0 \\implies m = 1 \\text{ or } m = 3$\n\nThe case $f(n) = 1$ gives $n^{2} - 4n + 2 = 0$, whose roots are not integers. The case $f(n) = 3$ gives $n^{2} - 4n = 0$, so $n = 0$ or $n = 4$.\n\nThe check is direct: $f(0) = f(4) = 3$ and $f(3) = 0$, so $f \\left( f(0) \\right) = f \\left( f(4) \\right) = 0$ and the count is $2$.",
-    "techniqueSlugs": ["composite-evaluate-inward", "piecewise-case-split"],
+    "techniqueSlugs": [
+      "composite-evaluate-inward",
+      "piecewise-case-split"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
@@ -380,9 +536,18 @@
     "lessonId": "m1-l3",
     "tier": "12",
     "difficulty": 3,
-    "tags": ["quadratics", "domain"],
+    "tags": [
+      "quadratics",
+      "domain"
+    ],
     "promptLatex": "What is the $x$-coordinate of the vertex of the parabola $y = 3x^{2} - 12x + 7$?",
-    "choices": ["2", "-2", "6", "1", "4"],
+    "choices": [
+      "2",
+      "-2",
+      "6",
+      "1",
+      "4"
+    ],
     "answerLatex": "2",
     "answerAlternatives": [],
     "hintLatex": [
@@ -391,7 +556,9 @@
       "Completing that square gives $\\left( x - 2 \\right)^{2}$, whose root is the value wanted."
     ],
     "solutionLatex": "The vertex sits where the squared part vanishes, so completing the square locates it.\n\n$3x^{2} - 12x + 7 = 3 \\left( x^{2} - 4x \\right) + 7 = 3 \\left( x - 2 \\right)^{2} - 12 + 7 = 3 \\left( x - 2 \\right)^{2} - 5$\n\nThe square vanishes at $x = 2$, which is the horizontal coordinate of the vertex, and the smallest value of the rule there is $-5$.",
-    "techniqueSlugs": ["graph-transformations"],
+    "techniqueSlugs": [
+      "graph-transformations"
+    ],
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null

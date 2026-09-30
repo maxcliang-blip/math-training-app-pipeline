@@ -4,7 +4,10 @@
   "lessonId": "m7-l2",
   "tier": "A",
   "difficulty": 5,
-  "tags": ["pigeonhole-principle", "generalized"],
+  "tags": [
+    "pigeonhole-principle",
+    "generalized"
+  ],
   "promptLatex": "If 100 objects are placed into 7 boxes, what is the minimum number of objects that must be in the most crowded box?",
   "choices": [
     "15",
@@ -21,7 +24,9 @@
     "So at least one box must contain 15 or more objects."
   ],
   "solutionLatex": "By the generalized pigeonhole principle, if N objects are placed into k boxes, some box contains at least \\lceil N/k \\rceil objects.\n\nWith N = 100 objects and k = 7 boxes: \\lceil 100/7 \\rceil = \\lceil 14.2857... \\rceil = 15.\n\nTherefore, at least one box must contain at least 15 objects.\n\nThe answer is 15.",
-  "techniqueSlugs": ["pigeonhole-application"],
+  "techniqueSlugs": [
+    "pigeonhole-application"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

@@ -4,9 +4,18 @@
   "lessonId": "m9-l4",
   "tier": "A",
   "difficulty": 2,
-  "tags": ["proof-strategy", "contradiction"],
+  "tags": [
+    "proof-strategy",
+    "contradiction"
+  ],
   "promptLatex": "Which proof strategy is most appropriate for proving 'there is no largest prime number'?",
-  "choices": ["direct proof", "proof by contradiction", "proof by induction", "counterexample", "pigeonhole principle"],
+  "choices": [
+    "direct proof",
+    "proof by contradiction",
+    "proof by induction",
+    "counterexample",
+    "pigeonhole principle"
+  ],
   "answerLatex": "proof by contradiction",
   "answerAlternatives": [],
   "hintLatex": [
@@ -15,7 +24,9 @@
     "This leads to the classic Euclid argument."
   ],
   "solutionLatex": "Proof by contradiction: Assume there is a largest prime p. Consider the number N = (product of all primes up to p) + 1. N has a prime factor not in the original list, contradicting the assumption that p was the largest prime. Therefore no largest prime exists.",
-  "techniqueSlugs": ["contradiction"],
+  "techniqueSlugs": [
+    "contradiction"
+  ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null
