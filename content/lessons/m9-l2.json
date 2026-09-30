@@ -4,16 +4,26 @@
   "order": 2,
   "title": "Contradiction, the Pigeonhole Principle, and Invariants",
   "topicSlug": "contradiction-pigeonhole-invariants",
-  "tiers": ["12", "A", "A+"],
+  "tiers": [
+    "12",
+    "A",
+    "A+"
+  ],
   "estimatedMinutes": 60,
   "lockMode": "soft",
-  "prerequisites": ["m9-l1", "m2-l3"],
+  "prerequisites": [
+    "m9-l1",
+    "m2-l3"
+  ],
   "sections": {
     "objective": {
       "objectiveLatex": "Recognise the three argument forms in this lesson, and use each one to settle a claim: proof by contradiction, the pigeonhole principle in both its plain and its residue-class form, and the invariant argument. For each, state explicitly what must be written down before the argument starts, and show that a bound forced by pigeonhole is the best bound that can be forced."
     },
     "prerequisites": {
-      "items": ["m9-l1", "m2-l3"],
+      "items": [
+        "m9-l1",
+        "m2-l3"
+      ],
       "noteLatex": "The direct-proof discipline of the previous lesson, especially chain-of-equivalences and the handling of quantifiers, plus modular arithmetic from the second module. Nothing here is new computation. What is new is a second way of organising a proof so that the computation can be skipped or the search can be cut off before it starts."
     },
     "concept": {
@@ -24,14 +34,14 @@
           "captionLatex": "The general form of the pigeonhole principle, $m$ objects in $n$ boxes: some box receives at least $\\lceil m/n \\rceil$ of them. Seven objects in three boxes cannot spread out more evenly than this, so three is a floor and not merely a guess.",
           "asymptoteSource": "// The pigeonhole principle in its general form: m objects, n boxes,\n// some box gets at least ceil(m/n).\n// The two-argument size() fixes the output box at 320 x 160, so the\n// declared aspect ratio 2 is exact and the reserved space cannot drift.\nsize(320,160);\nlabel(\"7 objects, 3 boxes\",(0,2.4),N);\nfor (int i = 0; i < 3; ++i) {\n  draw((3.5*i-1.7,-1.1)--(3.5*i+1.7,-1.1)--(3.5*i+1.7,1.1)--(3.5*i-1.7,1.1)--cycle, gray);\n}\ndot((-0.9,0.3),2.5pt);\ndot((-0.3,0.3),2.5pt);\ndot((0.3,0.3),2.5pt);\ndot((2.6,0.3),2.5pt);\ndot((3.2,0.3),2.5pt);\ndot((3.8,0.3),2.5pt);\ndot((6.5,0.3),2.5pt);\nlabel(\"3 here\",(-0.3,-0.5),S);\nlabel(\"3 here\",(3.2,-0.5),S);\nlabel(\"1 here\",(6.5,-0.5),S);\nlabel(\"the middle count cannot go below \\\\[ceil 7/3 \\\\rceil$\",(0,-1.7),S);",
           "asymptoteAlt": "Three open boxes drawn side by side under a title reading seven objects and three boxes. The first box holds three filled dots, the second box also holds three filled dots, and the third box holds a single filled dot, with a one, two, and three count printed beneath the three boxes respectively. A caption below the row states that the middle count cannot go below the ceiling of seven thirds.",
-          "asymptoteAspectRatio": 2.0
+          "asymptoteAspectRatio": 2
         },
         {
           "id": "m9-l2-fig-2",
           "captionLatex": "The colouring invariant behind the domino argument. Every domino covers one light square and one dark square, so the difference between the two counts is unchanged by any placement. The two removed corners share a colour, which leaves the board unbalanced in a way no sequence of dominoes can repair.",
           "asymptoteSource": "// The colouring invariant: each domino covers one square of each\n// colour, so the difference of the two colour counts is invariant.\n// The two-argument size() makes the declared ratio 1 exact.\nsize(320,320);\nfor (int i = 0; i < 8; ++i) {\n  for (int j = 0; j < 8; ++j) {\n    if ((i+j) % 2 == 0) fill((i,j)--(i+1,j)--(i+1,j+1)--(i,j+1), gray);\n  }\n}\nfor (int i = 0; i <= 8; ++i) {\n  draw((i,0)--(i,8),black+0.4pt);\n  draw((0,i)--(8,i),black+0.4pt);\n}\ndraw((0,0)--(1,1)--(1,0)--cycle,red+1.6pt);\ndraw((7,7)--(8,8)--(7,8)--cycle,red+1.6pt);\nlabel(\"removed\",(0.5,-0.8),S);\nlabel(\"removed\",(7.5,8.8),N);\nlabel(\"the two removed corners carry the same colour\",(4,-1.6),S);",
           "asymptoteAlt": "A square chessboard of sixty-four cells with the cells shaded in an alternating light and dark pattern. Two cells in opposite corners, at the bottom left and at the top right, are outlined in red and left unshaded, and each is labelled as removed. A caption beneath the board states that the two removed corners carry the same colour.",
-          "asymptoteAspectRatio": 1.0
+          "asymptoteAspectRatio": 1
         }
       ],
       "examples": [
@@ -146,22 +156,65 @@
     },
     "practice": {
       "exerciseIds": [
-        "m9-l2-p1", "m9-l2-p2", "m9-l2-p3", "m9-l2-p4", "m9-l2-p5",
-        "m9-l2-p6", "m9-l2-p7", "m9-l2-p8", "m9-l2-p9", "m9-l2-p10",
-        "m9-l2-p11", "m9-l2-p12", "m9-l2-p13", "m9-l2-p14", "m9-l2-p15"
+        "m9-l2-p1",
+        "m9-l2-p2",
+        "m9-l2-p3",
+        "m9-l2-p4",
+        "m9-l2-p5",
+        "m9-l2-p6",
+        "m9-l2-p7",
+        "m9-l2-p8",
+        "m9-l2-p9",
+        "m9-l2-p10",
+        "m9-l2-p11",
+        "m9-l2-p12",
+        "m9-l2-p13",
+        "m9-l2-p14",
+        "m9-l2-p15",
+        "m9-l2-p16",
+        "m9-l2-p17",
+        "m9-l2-p18"
       ]
     },
     "solutions": {
       "exerciseIds": [
-        "m9-l2-p1", "m9-l2-p2", "m9-l2-p3", "m9-l2-p4", "m9-l2-p5",
-        "m9-l2-p6", "m9-l2-p7", "m9-l2-p8", "m9-l2-p9", "m9-l2-p10",
-        "m9-l2-p11", "m9-l2-p12", "m9-l2-p13", "m9-l2-p14", "m9-l2-p15"
+        "m9-l2-p1",
+        "m9-l2-p2",
+        "m9-l2-p3",
+        "m9-l2-p4",
+        "m9-l2-p5",
+        "m9-l2-p6",
+        "m9-l2-p7",
+        "m9-l2-p8",
+        "m9-l2-p9",
+        "m9-l2-p10",
+        "m9-l2-p11",
+        "m9-l2-p12",
+        "m9-l2-p13",
+        "m9-l2-p14",
+        "m9-l2-p15",
+        "m9-l2-p16",
+        "m9-l2-p17",
+        "m9-l2-p18"
       ]
     },
     "mastery": {
-      "exerciseIds": ["m9-l2-m1", "m9-l2-m2", "m9-l2-m3"],
+      "exerciseIds": [
+        "m9-l2-m1",
+        "m9-l2-m2",
+        "m9-l2-m3"
+      ],
       "passThreshold": 2
     }
   },
-  "tags": ["proof", "contradiction", "pigeonhole", "invariants", "quantifiers", "counterexample", "extremal", "structure-spotting"]
+  "tags": [
+    "proof",
+    "contradiction",
+    "pigeonhole",
+    "invariants",
+    "quantifiers",
+    "counterexample",
+    "extremal",
+    "structure-spotting"
+  ]
 }

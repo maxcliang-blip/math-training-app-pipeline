@@ -4,16 +4,25 @@
   "order": 1,
   "title": "Direct Proof, Quantifiers, and Without Loss of Generality",
   "topicSlug": "direct-proof-quantifiers-wlog",
-  "tiers": ["12", "A"],
+  "tiers": [
+    "12",
+    "A"
+  ],
   "estimatedMinutes": 60,
   "lockMode": "soft",
-  "prerequisites": ["m1-l1", "m2-l2"],
+  "prerequisites": [
+    "m1-l1",
+    "m2-l2"
+  ],
   "sections": {
     "objective": {
       "objectiveLatex": "Write a complete direct proof: state a claim with its quantifiers, unfold the definitions it uses, justify each step in a chain of equivalences, invoke without loss of generality only where a genuine symmetry exists, and separate the two directions of every biconditional."
     },
     "prerequisites": {
-      "items": ["m1-l1", "m2-l2"],
+      "items": [
+        "m1-l1",
+        "m2-l2"
+      ],
       "noteLatex": "The algebra of linear equations from the first lesson and the language of divisibility and prime factorization from the second. This lesson adds no new computation; it adds the discipline of writing the computation down so that someone else can check it."
     },
     "concept": {
@@ -133,22 +142,63 @@
     },
     "practice": {
       "exerciseIds": [
-        "m9-l1-p1", "m9-l1-p2", "m9-l1-p3", "m9-l1-p4", "m9-l1-p5",
-        "m9-l1-p6", "m9-l1-p7", "m9-l1-p8", "m9-l1-p9", "m9-l1-p10",
-        "m9-l1-p11", "m9-l1-p12", "m9-l1-p13", "m9-l1-p14", "m9-l1-p15"
+        "m9-l1-p1",
+        "m9-l1-p2",
+        "m9-l1-p3",
+        "m9-l1-p4",
+        "m9-l1-p5",
+        "m9-l1-p6",
+        "m9-l1-p7",
+        "m9-l1-p8",
+        "m9-l1-p9",
+        "m9-l1-p10",
+        "m9-l1-p11",
+        "m9-l1-p12",
+        "m9-l1-p13",
+        "m9-l1-p14",
+        "m9-l1-p15",
+        "m9-l1-p16",
+        "m9-l1-p17",
+        "m9-l1-p18"
       ]
     },
     "solutions": {
       "exerciseIds": [
-        "m9-l1-p1", "m9-l1-p2", "m9-l1-p3", "m9-l1-p4", "m9-l1-p5",
-        "m9-l1-p6", "m9-l1-p7", "m9-l1-p8", "m9-l1-p9", "m9-l1-p10",
-        "m9-l1-p11", "m9-l1-p12", "m9-l1-p13", "m9-l1-p14", "m9-l1-p15"
+        "m9-l1-p1",
+        "m9-l1-p2",
+        "m9-l1-p3",
+        "m9-l1-p4",
+        "m9-l1-p5",
+        "m9-l1-p6",
+        "m9-l1-p7",
+        "m9-l1-p8",
+        "m9-l1-p9",
+        "m9-l1-p10",
+        "m9-l1-p11",
+        "m9-l1-p12",
+        "m9-l1-p13",
+        "m9-l1-p14",
+        "m9-l1-p15",
+        "m9-l1-p16",
+        "m9-l1-p17",
+        "m9-l1-p18"
       ]
     },
     "mastery": {
-      "exerciseIds": ["m9-l1-m1", "m9-l1-m2", "m9-l1-m3"],
+      "exerciseIds": [
+        "m9-l1-m1",
+        "m9-l1-m2",
+        "m9-l1-m3"
+      ],
       "passThreshold": 2
     }
   },
-  "tags": ["proof", "direct-proof", "quantifiers", "wlog", "chain-of-equivalences", "case-split"]
+  "tags": [
+    "proof",
+    "direct-proof",
+    "quantifiers",
+    "wlog",
+    "chain-of-equivalences",
+    "case-split"
+  ]
 }
