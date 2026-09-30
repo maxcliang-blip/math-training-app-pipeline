@@ -29,7 +29,7 @@
         {
           "id": "m2-l2-fig-1",
           "captionLatex": "The twenty-four divisors of $360 = 2^{3} \\cdot 3^{2} \\cdot 5$ are built by choosing independently an exponent of $2$, an exponent of $3$, and an exponent of $5$; the three row lengths multiply to $4 \\cdot 3 \\cdot 2$.",
-          "asymptoteSource": "// The divisors of 360 = 2^3 * 3^2 * 5, one independent choice per row.\n// Two-argument size() fixes the output box, so the declared 8/5 is exact.\nsize(320,200);\nfor (int i = 0; i < 4; ++i) dot((60+32*i,0),3pt);\nfor (int i = 0; i < 3; ++i) dot((60+32*i,60),3pt);\nfor (int i = 0; i < 2; ++i) dot((60+32*i,120),3pt);\nlabel(\"$2$\",(30,0),E);\nlabel(\"$3$\",(30,60),E);\nlabel(\"$5$\",(30,120),E);\nlabel(\"$4 \\\\cdot 3 \\\\cdot 2 = 24$\",(110,180),N);",
+          "asymptoteSource": "// The divisors of 360 = 2^3 * 3^2 * 5, one independent choice per row.\n// Two-argument size() fixes the output box, so the declared 8/5 is exact.\nsize(320,200);\nfor (int i = 0; i < 4; ++i) dot((60+32*i,0), black+3pt);\nfor (int i = 0; i < 3; ++i) dot((60+32*i,60), black+3pt);\nfor (int i = 0; i < 2; ++i) dot((60+32*i,120), black+3pt);\nlabel(\"$2$\",(30,0),E);\nlabel(\"$3$\",(30,60),E);\nlabel(\"$5$\",(30,120),E);\nlabel(\"$4 \\\\cdot 3 \\\\cdot 2 = 24$\",(110,180),N);",
           "asymptoteAlt": "Three horizontal rows of filled dots are stacked one above the other, and a label to the left of each row names one prime. The top row has four dots, the middle row has three dots, and the bottom row has two dots, each row starting at the same left position. Above the top row, centred, is a label reading four times three times two equals twenty-four.",
           "asymptoteAspectRatio": 1.6
         },

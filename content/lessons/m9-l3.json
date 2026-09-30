@@ -4,10 +4,17 @@
   "order": 3,
   "title": "Induction: Mathematical and Strong",
   "topicSlug": "induction-mathematical-and-strong",
-  "tiers": ["12", "A", "A+"],
+  "tiers": [
+    "12",
+    "A",
+    "A+"
+  ],
   "estimatedMinutes": 60,
   "lockMode": "soft",
-  "prerequisites": ["m9-l1", "m9-l2"],
+  "prerequisites": [
+    "m9-l1",
+    "m9-l2"
+  ],
   "sections": {
     "objective": {
       "objectiveLatex": "State a proposition P(n) for integer n, prove the base case P(0) or P(1), prove the inductive step P(k) implies P(k+1) for mathematical induction, and prove that P(k) for all k < n implies P(n) for strong induction, verifying that the chosen induction hypothesis is strong enough to establish the step.",
@@ -15,7 +22,7 @@
         {
           "id": "m9-l3-fig-1",
           "captionLatex": "The inductive step: if P(k) holds then P(k+1) follows, building a chain from the base case.",
-          "asymptoteSource": "// Inductive step visualization\n// Two-argument size fixes the output box at 320 x 200\nsize(320,200);\nint k = 3;\npair points[] = { (1,1), (2,4), (3,9), (4,16) };\nfor (int i = 0; i <= k; ++i) {\n  dot(points[i], 3pt);\n  if (i < k) draw(points[i]--points[i+1], blue);\n}\nlabel(\"P(1)\", (1,1), SW);\nlabel(\"P(2)\", (2,4), SE);\nlabel(\"\\\\ldots\", (3,9), N);\nlabel(\"P(k)\", (k, k*k), NE);\nlabel(\"P(k+1)\", (k+1, (k+1)*(k+1)), N);",
+          "asymptoteSource": "// Inductive step visualization\n// Two-argument size fixes the output box at 320 x 200\nsize(320,200);\nint k = 3;\npair points[] = { (1,1), (2,4), (3,9), (4,16) };\nfor (int i = 0; i <= k; ++i) {\n  dot(points[i], black+3pt);\n  if (i < k) draw(points[i]--points[i+1], blue);\n}\nlabel(\"P(1)\", (1,1), SW);\nlabel(\"P(2)\", (2,4), SE);\nlabel(\"\\\\ldots\", (3,9), N);\nlabel(\"P(k)\", (k, k*k), NE);\nlabel(\"P(k+1)\", (k+1, (k+1)*(k+1)), N);",
           "asymptoteAlt": "A plot of points (1,1), (2,4), (3,9), (4,16) with arrows connecting consecutive points, labeled P(1) through P(k+1), showing the inductive step chain.",
           "asymptoteAspectRatio": 1.6
         }
@@ -36,7 +43,10 @@
       ]
     },
     "prerequisites": {
-      "items": ["m9-l1", "m9-l2"],
+      "items": [
+        "m9-l1",
+        "m9-l2"
+      ],
       "noteLatex": "The direct-proof and contradiction techniques from the first two lessons, plus the quantifier and WLOG discipline. Induction builds on these foundations to handle claims about all natural numbers."
     },
     "concept": {
@@ -45,7 +55,7 @@
         {
           "id": "m9-l3-fig-1",
           "captionLatex": "The inductive step: if P(k) holds then P(k+1) follows, building a chain from the base case.",
-          "asymptoteSource": "// Inductive step visualization\n// Two-argument size fixes the output box at 320 x 200\nsize(320,200);\nint k = 3;\npair points[] = { (1,1), (2,4), (3,9), (4,16) };\nfor (int i = 0; i <= k; ++i) {\n  dot(points[i], 3pt);\n  if (i < k) draw(points[i]--points[i+1], blue);\n}\nlabel(\"P(1)\", (1,1), SW);\nlabel(\"P(2)\", (2,4), SE);\nlabel(\"\\\\ldots\", (3,9), N);\nlabel(\"P(k)\", (k, k*k), NE);\nlabel(\"P(k+1)\", (k+1, (k+1)*(k+1)), N);",
+          "asymptoteSource": "// Inductive step visualization\n// Two-argument size fixes the output box at 320 x 200\nsize(320,200);\nint k = 3;\npair points[] = { (1,1), (2,4), (3,9), (4,16) };\nfor (int i = 0; i <= k; ++i) {\n  dot(points[i], black+3pt);\n  if (i < k) draw(points[i]--points[i+1], blue);\n}\nlabel(\"P(1)\", (1,1), SW);\nlabel(\"P(2)\", (2,4), SE);\nlabel(\"\\\\ldots\", (3,9), N);\nlabel(\"P(k)\", (k, k*k), NE);\nlabel(\"P(k+1)\", (k+1, (k+1)*(k+1)), N);",
           "asymptoteAlt": "A plot of points (1,1), (2,4), (3,9), (4,16) with arrows connecting consecutive points, labeled P(1) through P(k+1), showing the inductive step chain.",
           "asymptoteAspectRatio": 1.6
         }
@@ -113,15 +123,58 @@
       ]
     },
     "practice": {
-      "exerciseIds": ["m9-l3-p1", "m9-l3-p2", "m9-l3-p3", "m9-l3-p4", "m9-l3-p5", "m9-l3-p6", "m9-l3-p7", "m9-l3-p8", "m9-l3-p9", "m9-l3-p10", "m9-l3-p11", "m9-l3-p12", "m9-l3-p13", "m9-l3-p14", "m9-l3-p15"]
+      "exerciseIds": [
+        "m9-l3-p1",
+        "m9-l3-p2",
+        "m9-l3-p3",
+        "m9-l3-p4",
+        "m9-l3-p5",
+        "m9-l3-p6",
+        "m9-l3-p7",
+        "m9-l3-p8",
+        "m9-l3-p9",
+        "m9-l3-p10",
+        "m9-l3-p11",
+        "m9-l3-p12",
+        "m9-l3-p13",
+        "m9-l3-p14",
+        "m9-l3-p15"
+      ]
     },
     "solutions": {
-      "exerciseIds": ["m9-l3-p1", "m9-l3-p2", "m9-l3-p3", "m9-l3-p4", "m9-l3-p5", "m9-l3-p6", "m9-l3-p7", "m9-l3-p8", "m9-l3-p9", "m9-l3-p10", "m9-l3-p11", "m9-l3-p12", "m9-l3-p13", "m9-l3-p14", "m9-l3-p15"]
+      "exerciseIds": [
+        "m9-l3-p1",
+        "m9-l3-p2",
+        "m9-l3-p3",
+        "m9-l3-p4",
+        "m9-l3-p5",
+        "m9-l3-p6",
+        "m9-l3-p7",
+        "m9-l3-p8",
+        "m9-l3-p9",
+        "m9-l3-p10",
+        "m9-l3-p11",
+        "m9-l3-p12",
+        "m9-l3-p13",
+        "m9-l3-p14",
+        "m9-l3-p15"
+      ]
     },
     "mastery": {
-      "exerciseIds": ["m9-l3-m1", "m9-l3-m2", "m9-l3-m3"],
+      "exerciseIds": [
+        "m9-l3-m1",
+        "m9-l3-m2",
+        "m9-l3-m3"
+      ],
       "passThreshold": 2
     }
   },
-  "tags": ["proof", "induction", "mathematical-induction", "strong-induction", "divisibility", "inequalities"]
+  "tags": [
+    "proof",
+    "induction",
+    "mathematical-induction",
+    "strong-induction",
+    "divisibility",
+    "inequalities"
+  ]
 }

@@ -365,7 +365,7 @@
       "de-moivre-powers",
       "complex-modulus-argument"
     ],
-    "asymptoteSource": "// The two conjugate factors 1+i and 1-i with their moduli.\n// Two-argument size call fixes the output box, so the declared 1 is exact.\nsize(300,300);\ndraw((-1.6,0)--(3.6,0),Arrow);\ndraw((0,-3.6)--(0,3.6),Arrow);\nlabel(\"$\\operatorname{Re}$\",(3.7,0),E);\nlabel(\"$\\operatorname{Im}$\",(0,3.7),N);\nlabel(\"$1$\",(1,0),S);\nlabel(\"$1$\",(0,1),E);\ndraw(O--(1,1));\ndraw(O--(1,-1));\ndot((1,1),2+2.5pt);\ndot((1,-1),2+2.5pt);\nlabel(\"$1+i$\",(1.2,1.2),NW);\nlabel(\"$1-i$\",(1.2,-1.2),SW);\nlabel(\"equal moduli, conjugate positions\",(2.6,2.8),N);",
+    "asymptoteSource": "// The two conjugate factors 1+i and 1-i with their moduli.\n// Two-argument size call fixes the output box, so the declared 1 is exact.\nsize(300,300);\npair O=(0,0);\ndraw((-1.6,0)--(3.6,0),Arrow);\ndraw((0,-3.6)--(0,3.6),Arrow);\nlabel(\"$\\operatorname{Re}$\",(3.7,0),E);\nlabel(\"$\\operatorname{Im}$\",(0,3.7),N);\nlabel(\"$1$\",(1,0),S);\nlabel(\"$1$\",(0,1),E);\ndraw(O--(1,1));\ndraw(O--(1,-1));\ndot((1,1), black+2.5pt);\ndot((1,-1), black+2.5pt);\nlabel(\"$1+i$\",(1.2,1.2),NW);\nlabel(\"$1-i$\",(1.2,-1.2),SW);\nlabel(\"equal moduli, conjugate positions\",(2.6,2.8),N);",
     "asymptoteAlt": "Perpendicular axes with arrowheads are labelled as the real and imaginary axes, with the unit points marked on each. Two solid segments run from the origin, one up and to the right and one down and to the right, each ending in a filled dot labelled with a sum of one and a signed imaginary unit. A note near the top right states that the two points have equal moduli and conjugate positions.",
     "asymptoteAspectRatio": 1
   },
@@ -424,7 +424,7 @@
       "locus-as-modulus-equation",
       "write-locus-equation"
     ],
-    "asymptoteSource": "// The ellipse |z-1| + |z+1| = 6 with its foci marked on the real axis.\n// Two-argument size call fixes the output box, so the declared 1.067 is exact.\nsize(320,300);\ndraw(ellipse((0,0),3,2*sqrt(2)));\ndraw((-3.6,0)--(3.6,0),Arrow);\nlabel(\"$\\operatorname{Re}$\",(3.7,0),E);\ndot((1,0),2+2.5pt);\ndot((-1,0),2+2.5pt);\nlabel(\"focus $(1,0)$\",(1,0.35),N);\nlabel(\"focus $(-1,0)$\",(-1,0.35),N);\nlabel(\"sum of distances fixed at $6$\",(0,-3.4),S);",
+    "asymptoteSource": "// The ellipse |z-1| + |z+1| = 6 with its foci marked on the real axis.\n// Two-argument size call fixes the output box, so the declared 1.067 is exact.\nimport graph;\nsize(320,300);\ndraw(ellipse((0,0),3,2*sqrt(2)));\ndraw((-3.6,0)--(3.6,0),Arrow);\nlabel(\"$\\operatorname{Re}$\",(3.7,0),E);\ndot((1,0), black+2.5pt);\ndot((-1,0), black+2.5pt);\nlabel(\"focus $(1,0)$\",(1,0.35),N);\nlabel(\"focus $(-1,0)$\",(-1,0.35),N);\nlabel(\"sum of distances fixed at $6$\",(0,-3.4),S);",
     "asymptoteAlt": "A closed oval curve is centred on the origin and only slightly wider than it is tall. A horizontal axis with an arrowhead runs through it, and two filled dots on that axis, close to the centre, are labelled as the two foci. A note beneath the figure states that the sum of the distances from a point of the curve to the two foci is fixed at a constant value.",
     "asymptoteAspectRatio": 1.067
   },

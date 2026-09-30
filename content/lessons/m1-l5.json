@@ -4,16 +4,24 @@
   "order": 5,
   "title": "Quadratic Equations and the Discriminant",
   "topicSlug": "quadratic-equations-discriminant",
-  "tiers": ["10", "12", "A"],
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
   "estimatedMinutes": 65,
   "lockMode": "soft",
-  "prerequisites": ["m1-l4"],
+  "prerequisites": [
+    "m1-l4"
+  ],
   "sections": {
     "objective": {
       "objectiveLatex": "Solve quadratic equations by factoring, by completing the square, and by the quadratic formula, decide how many real solutions exist from the discriminant, and use the sum and product of the roots to read a quadratic without solving it."
     },
     "prerequisites": {
-      "items": ["m1-l4"],
+      "items": [
+        "m1-l4"
+      ],
       "noteLatex": "Everything here is a consequence of two earlier lessons: rearranging an equation without changing its solutions, and factoring a trinomial. A quadratic that will not factor over the integers is exactly the case the quadratic formula exists to handle."
     },
     "concept": {
@@ -22,7 +30,7 @@
         {
           "id": "m1-l5-fig-1",
           "captionLatex": "The graph of $y=x^{2}-5x+6$ meets the axis at the two marked intercepts, and the vertex sits above the axis between them; the factorization $(x-2)(x-3)$ records the two intercepts directly.",
-          "asymptoteSource": "// The parabola y = x^2 - 5x + 6, with both x-intercepts marked.\n// Two-argument size fixes the output box at 320 x 240, so the declared\n// aspect ratio 4/3 is exact and the reserved space cannot drift.\nsize(320,240);\nreal f(real x){return x*x-5*x+6;}\npair A=(-0.6,0), B=(6.6,0);\ndraw(A--B,Arrow);\nlabel(\"$x$\",B,SE);\ndraw((0,0)--(0,9.5),Arrow);\nlabel(\"$y$\",(0,9.5),N);\ndraw(plot(f,-0.6,6.6,400),blue);\ndot((2,0),2+2.5pt);\ndot((3,0),2+2.5pt);\nlabel(\"$2$\",(2,-1.1),S);\nlabel(\"$3$\",(3,-1.1),S);\ndot((0,0),2+2.5pt);\nlabel(\"$O$\",(0,0),SW);\nlabel(\"$y=x^{2}-5x+6$\",(5.9,8.6),N);",
+          "asymptoteSource": "// The parabola y = x^2 - 5x + 6, with both x-intercepts marked.\n// Two-argument size fixes the output box at 320 x 240, so the declared\n// aspect ratio 4/3 is exact and the reserved space cannot drift.\nimport graph;\nsize(320,240);\npair O=(0,0);\nreal f(real x){return x*x-5*x+6;}\npair A=(-0.6,0), B=(6.6,0);\ndraw(A--B,Arrow);\nlabel(\"$x$\",B,SE);\ndraw((0,0)--(0,9.5),Arrow);\nlabel(\"$y$\",(0,9.5),N);\ndraw(graph(f,-0.6,6.6,400),blue);\ndot((2,0), black+2.5pt);\ndot((3,0), black+2.5pt);\nlabel(\"$2$\",(2,-1.1),S);\nlabel(\"$3$\",(3,-1.1),S);\ndot((0,0), black+2.5pt);\nlabel(\"$O$\",(0,0),SW);\nlabel(\"$y=x^{2}-5x+6$\",(5.9,8.6),N);",
           "asymptoteAlt": "A Cartesian plane with arrowheaded axes. An upward-opening parabola crosses the horizontal axis at two points marked with solid dots, which sit close together beneath the vertex. The vertex is above the axis, and the curve is labelled with the expression it graphs.",
           "asymptoteAspectRatio": 1.333
         }
@@ -170,9 +178,18 @@
       ]
     },
     "mastery": {
-      "exerciseIds": ["m1-l5-m1", "m1-l5-m2", "m1-l5-m3"],
+      "exerciseIds": [
+        "m1-l5-m1",
+        "m1-l5-m2",
+        "m1-l5-m3"
+      ],
       "passThreshold": 2
     }
   },
-  "tags": ["quadratics", "factoring", "radicals", "fractions"]
+  "tags": [
+    "quadratics",
+    "factoring",
+    "radicals",
+    "fractions"
+  ]
 }
