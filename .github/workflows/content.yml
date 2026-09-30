@@ -50,10 +50,15 @@ jobs:
       # without shipping a compiler. Do not make this step skippable: a figure build that
       # validates and compiles nothing is not a pass, and the script exits 3 when the
       # toolchain is absent rather than reporting success.
+      #
+      # dvisvgm is not optional decoration. apt's asymptote on ubuntu-latest is 2.87, which
+      # accepts `-svg`, exits 0, and writes an .eps instead — `-svg` is not an output format on
+      # that version. The SVG the manifest hashes is the dvisvgm conversion of that eps, so
+      # without dvisvgm the build has no SVG to produce and no honest way to report success.
       - name: Install Asymptote
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends asymptote
+          sudo apt-get install -y --no-install-recommends asymptote dvisvgm
       # The install step and the build step are deliberately separate, and this one has no
       # `continue-on-error` and no `|| true`. If the package name is wrong, the image lacks
       # TeX Live, or asymptote is installed but cannot start, the failure has to be attributed
@@ -80,17 +85,25 @@ jobs:
             echo "candidates on PATH:"; ls /usr/bin | grep -iE 'asy|asymptote' || echo "  (none)"
             exit 1
           fi
+          command -v dvisvgm >/dev/null 2>&1 || {
+            echo "::error::dvisvgm is missing; asymptote 2.87 writes EPS, not SVG, and dvisvgm is what turns it into the SVG this pipeline hashes"
+            exit 1
+          }
           echo "asymptote binary: $ASY"
           "$ASY" --version
           command -v latex   >/dev/null || { echo "::error::latex is missing; every label() in the corpus is typeset by TeX"; exit 1; }
-          command -v dvipng  >/dev/null || { echo "::error::dvipng is missing; Asymptote rasterizes TeX labels with it"; exit 1; }
-          echo "latex:  $(command -v latex)"
-          echo "dvipng: $(command -v dvipng)"
+          echo "latex:   $(command -v latex)"
+          echo "dvisvgm: $(command -v dvisvgm) ($(dvisvgm --version 2>&1 | head -1))"
       # Prove the compiler can actually do the one thing this pipeline needs of it: turn a
       # size(W,H) source containing a TeX label into an SVG. A --version banner only proves the
       # binary starts, and this corpus's figures are all label("$...$"), so a missing dvipng or
       # a TeX Live without the amsmath fonts would otherwise surface as three corpus errors that
       # look like authoring mistakes. One figure, no corpus, no tolerance.
+      #
+      # This runs the exact sequence scripts/build-figures.mjs runs, including the two traps:
+      # no `-outdir` (2.87 swallows the source filename as a module) and an explicit eps->svg
+      # conversion (2.87 ignores `-svg`). Asserting on the svg is the point; asserting on the
+      # compiler's exit code is what let the original step stay green while producing nothing.
       - name: Toolchain smoke compile
         run: |
           set -euo pipefail
@@ -105,10 +118,17 @@ jobs:
             [ -n "$candidate" ] || continue
             if command -v "$candidate" >/dev/null 2>&1; then ASY="$candidate"; break; fi
           done
-          ( cd "$work" && "$ASY" -outdir=. -svg smoke.asy )
-          test -s "$work/smoke.svg"
+          ( cd "$work" && "$ASY" -svg smoke.asy )
+          if [ ! -s "$work/smoke.svg" ] && [ -s "$work/smoke.eps" ]; then
+            echo "note: compiler wrote eps, converting with dvisvgm (Asymptote $( "$ASY" --version 2>&1 | head -1 | grep -oE '[0-9]+\.[0-9]+' | head -1 ) ignores -svg)"
+            dvisvgm --eps --no-fonts -o "$work/smoke.svg" "$work/smoke.eps"
+          fi
+          if [ ! -s "$work/smoke.svg" ]; then
+            echo "::error::smoke compile produced no svg; work dir held: $(ls "$work" | tr '\n' ' ')"
+            exit 1
+          fi
           grep -q "<svg" "$work/smoke.svg"
-          echo "smoke svg: $(wc -c < "$work/smoke.svg") bytes, box $(grep -oE 'width="[0-9.]+" height="[0-9.]+"' "$work/smoke.svg" | head -1)"
+          echo "smoke svg: $(wc -c < "$work/smoke.svg") bytes, box $(grep -oE 'width=.[0-9.]+. height=.[0-9.]+' "$work/smoke.svg" | head -1)"
           rm -rf "$work"
       - name: Figure build
         if: ${{ !inputs.record_aspect_ratios }}

@@ -200,14 +200,36 @@ export function validateFigure(figure) {
 // ---------------------------------------------------------------------------
 
 export function findToolchain() {
+  let asy = null;
   for (const candidate of [process.env.ASYMPTOTE_BIN, "asymptote", "asy"]) {
     if (!candidate) continue;
     const probe = spawnSync(candidate, ["--version"], { encoding: "utf8" });
     if (!probe.error && probe.status === 0) {
-      return { bin: candidate, version: (probe.stdout || probe.stderr || "").split("\n")[0].trim() };
+      asy = { bin: candidate, version: (probe.stdout || probe.stderr || "").split("\n")[0].trim() };
+      break;
     }
   }
-  return null;
+  if (!asy) return null;
+
+  // asy 2.87 — what apt gives you on ubuntu-latest — accepts `-svg` and then writes EPS anyway,
+  // and its `-outdir=DIR` swallows the following file argument as a module name. Neither failure
+  // is loud: the compiler exits 0 and leaves an .eps behind. So SVG is produced by running the
+  // compiler with no -outdir from inside the work directory, then converting with dvisvgm.
+  // A toolchain without dvisvgm cannot make an SVG at all, and that has to be fatal rather than
+  // a skip: a figure build that compiles nothing must not pass.
+  let dvisvgm = null;
+  for (const candidate of [process.env.DVISVGM_BIN, "dvisvgm"]) {
+    if (!candidate) continue;
+    const probe = spawnSync(candidate, ["--version"], { encoding: "utf8" });
+    if (!probe.error && probe.status === 0) {
+      dvisvgm = { bin: candidate, version: (probe.stdout || probe.stderr || "").split("\n")[0].trim() };
+      break;
+    }
+  }
+  if (!dvisvgm) {
+    return { ...asy, bin: null, missing: "dvisvgm" };
+  }
+  return { ...asy, dvisvgm: dvisvgm.bin, dvisvgmVersion: dvisvgm.version };
 }
 
 export function sanitizeSvg(svg) {
@@ -237,17 +259,33 @@ function compileFigure(toolchain, figure, outDir) {
   const work = mkdtempSync(join(tmpdir(), "figure-build-"));
   try {
     const stem = figure.key.replace(/[^a-zA-Z0-9._-]+/g, "_");
-    writeFileSync(join(work, `${stem}.asy`), figure.source);
-    execFileSync(toolchain.bin, ["-outdir=" + work, "-svg", `${stem}.asy`], {
+    const asyFile = `${stem}.asy`;
+    writeFileSync(join(work, asyFile), figure.source);
+    // No -outdir: asy 2.87 mis-parses it and eats the source filename. cwd is already the work
+    // directory, so the compiler writes its output next to the source.
+    execFileSync(toolchain.bin, ["-svg", asyFile], {
       cwd: work,
       stdio: ["ignore", "pipe", "pipe"],
       timeout: 60_000,
     });
-    const produced = readdirSync(work).filter((f) => f.endsWith(".svg"));
-    if (produced.length !== 1) {
-      return { error: `expected one svg out of ${figure.key}, got ${produced.length}` };
+    const svgPath = join(work, `${stem}.svg`);
+    if (!existsSync(svgPath)) {
+      // asy 2.87 lands EPS here. Convert it; anything else means the compiler produced nothing.
+      const epsPath = join(work, `${stem}.eps`);
+      if (!existsSync(epsPath)) {
+        const leftover = readdirSync(work).filter((f) => !f.endsWith(".asy"));
+        return {
+          error: `compiler produced no svg or eps for ${figure.key} (saw: ${leftover.join(", ") || "nothing"})`,
+        };
+      }
+      execFileSync(toolchain.dvisvgm, ["--eps", "--no-fonts", "-o", `${stem}.svg`, `${stem}.eps`], {
+        cwd: work,
+        stdio: ["ignore", "pipe", "pipe"],
+        timeout: 60_000,
+      });
     }
-    const raw = readFileSync(join(work, produced[0]), "utf8");
+    if (!existsSync(svgPath)) return { error: `dvisvgm produced no svg for ${figure.key}` };
+    const raw = readFileSync(svgPath, "utf8");
     const svg = sanitizeSvg(raw);
     mkdirSync(join(outDir, "svg"), { recursive: true });
     const file = `${stem}.svg`;
@@ -267,6 +305,15 @@ function compileFigure(toolchain, figure, outDir) {
 export function buildFigures(contentRoot, outDir, { requireToolchain = true } = {}) {
   const { figures, warnings } = collectFigures(contentRoot);
   const toolchain = findToolchain();
+  // asy without dvisvgm cannot emit SVG. Skipping every figure would report "no toolchain" for a
+  // box that is half-present, and --allow-missing-toolchain would wave it through as authoring.
+  if (toolchain && !toolchain.bin) {
+    throw new Error(
+      `asymptote ${toolchain.version} is installed but ${toolchain.missing} is not, and ${toolchain.missing} ` +
+        `is what turns the compiler's output into SVG on this Asymptote version. ` +
+        `Install ${toolchain.missing} (CI: apt-get install -y --no-install-recommends asymptote ${toolchain.missing}).`,
+    );
+  }
   const violations = [];
   const compiled = [];
   const skipped = [];
@@ -437,7 +484,13 @@ if (isMain) {
     process.exit(2);
   }
 
-  const result = buildFigures(contentRoot, outDir, { requireToolchain: !allowMissing });
+  let result;
+  try {
+    result = buildFigures(contentRoot, outDir, { requireToolchain: !allowMissing });
+  } catch (err) {
+    console.error(`build-figures: CONFIG: ${err.message}`);
+    process.exit(2);
+  }
 
   if (record) {
     const recorded = recordAspectRatios(result);
