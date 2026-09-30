@@ -7,12 +7,13 @@
   "tags": [
     "counterexample"
   ],
-  "promptLatex": "A student claims: \"The proposed proof is valid: 'To prove n^2 + n + 41 is always prime, check n = 1, 2, 3, …, 40, and since all 40 values are prime, the claim is proved.'\" Evaluate the claim.",
+  "promptLatex": "A student claims: 'The proposed proof is valid: to prove $n^2 + n + 41$ is always prime, check $n = 1, 2, 3, \\ldots, 40$, and since all $40$ values are prime, the claim is proved.' Evaluate the claim.",
   "choices": [
     "the proof is valid; 40 checked values establish the claim",
     "the proof is invalid; the claim is about all natural numbers, not just 40 values",
     "the proof is invalid; n = 41 is a counterexample",
-    "the proof is valid because 41 is prime and the formula preserves primality"
+    "the proof is valid because 41 is prime and the formula preserves primality",
+    "the proof is valid; the checked values are enough because the pattern repeats every 40 values"
   ],
   "answerLatex": "the proof is invalid; the claim is about all natural numbers, not just 40 values",
   "answerAlternatives": [],
@@ -21,7 +22,7 @@
     "Checking 40 examples establishes consistency but does not prove truth for all n.",
     "In fact, the claim fails at n = 40, since 40^2+40+41 = 41^2 is composite."
   ],
-  "solutionLatex": "The proposed proof is invalid. A valid proof must establish the claim for all positive integers n, not just verify it for n = 1 through n = 40. Verifying finitely many cases, no matter how many, never proves a universal claim. In fact, the claim is false at n = 40, since 40^2+40+41 = 1681 = 41^2 is composite. The error is in mistaking verified examples for a proof.",
+  "solutionLatex": "The proposed proof is invalid. A valid proof has to establish the claim for every positive integer $n$, not just for $n = 1$ through $n = 40$, and verifying finitely many cases never proves a universal claim however many are checked.\n\nWorse, the claim is false inside the range that was checked: at $n = 40$ the formula gives $40^2 + 40 + 41 = 1681 = 41^2$, which is composite. The error is mistaking verified examples for a proof, and the refutation was sitting in the sample all along.",
   "techniqueSlugs": [
     "counterexample"
   ],

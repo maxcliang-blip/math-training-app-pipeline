@@ -7,7 +7,7 @@
   "tags": [
     "case-split"
   ],
-  "promptLatex": "The claim '|x|+|x-6| ≥ 6 for all real x' is to be proved. Which proof strategy is most appropriate?",
+  "promptLatex": "The claim '$|x| + |x - 6| \\ge 6$ for all real $x$' is to be proved. Which proof strategy is most appropriate?",
   "choices": [
     "direct proof",
     "proof by contradiction",
@@ -22,7 +22,7 @@
     "Split the real line into three regions and evaluate the sum in each.",
     "The middle region gives the constant value 6."
   ],
-  "solutionLatex": "Case split on the breakpoints 0 and 6:\n\n- If x ≤ 0: |x| + |x-6| = -x + 6-x = 6-2x ≥ 6 (since x ≤ 0).\n- If 0 ≤ x ≤ 6: |x| + |x-6| = x + 6-x = 6.\n- If x ≥ 6: |x| + |x-6| = x + x-6 = 2x-6 ≥ 6 (since x ≥ 6).\n\nIn all cases, |x|+|x-6| ≥ 6, with equality exactly on [0,6].",
+  "solutionLatex": "Split on the breakpoints $x = 0$ and $x = 6$.\n\n- If $x \\le 0$: $|x| + |x - 6| = -x + 6 - x = 6 - 2x \\ge 6$, since $x \\le 0$.\n- If $0 \\le x \\le 6$: $|x| + |x - 6| = x + 6 - x = 6$.\n- If $x \\ge 6$: $|x| + |x - 6| = x + x - 6 = 2x - 6 \\ge 6$, since $x \\ge 6$.\n\nEvery case gives at least $6$, with equality exactly on $[0, 6]$, so the claim holds for all real $x$.",
   "techniqueSlugs": [
     "case-split"
   ],

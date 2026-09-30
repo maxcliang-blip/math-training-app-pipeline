@@ -7,16 +7,18 @@
   "tags": [
     "induction"
   ],
-  "promptLatex": "True or false: The claim '2^n > n^2 for all integers n ≥ 5' is true. If true, prove the base case and the inductive step. If false, provide a counterexample.",
+  "promptLatex": "True or false: the claim '$2^n > n^2$ for all integers $n \\ge 5$' is true. If true, prove the base case and the inductive step. If false, provide a counterexample.",
   "choices": null,
-  "answerLatex": "True. Base case n = 5: 2^5 = 32 > 25 = 5^2. Inductive step: assume 2^k > k^2 for k ≥ 5, then 2^{k+1} = 2·2^k > 2·k^2 ≥ (k+1)^2 for k ≥ 5, since 2k^2 ≥ k^2+2k+1 = (k+1)^2 when k ≥ 5. Therefore the claim holds for all n ≥ 5 by induction.",
-  "answerAlternatives": [],
-  "hintLatex": [
-    "The inequality 2^n > n^2 holds for n = 5, 6, 7, ... but fails for small n.",
-    "The inductive step from k to k+1 requires k to be sufficiently large.",
-    "Verify that 2k^2 ≥ (k+1)^2 expands to k^2 ≥ 2k+1, which holds for k ≥ 5."
+  "answerLatex": "True",
+  "answerAlternatives": [
+    "true"
   ],
-  "solutionLatex": "Proof by induction: Base case n = 5 gives 2^5 = 32 > 25 = 5^2, so the claim holds. Inductive step: assume 2^k > k^2 for some k ≥ 5. Then 2^{k+1} = 2 · 2^k > 2 · k^2. Since k ≥ 5, we have k^2 ≥ 5k ≥ k+1 + 4k ≥ (k+1) + 4k, but more directly, 2k^2 - (k+1)^2 = 2k^2 - (k^2+2k+1) = k^2 - 2k - 1 = (k-1)^2 - 2, which is ≥ 0 for k ≥ 3 (and certainly for k ≥ 5). Thus 2 · k^2 ≥ (k+1)^2, and consequently 2^{k+1} > (k+1)^2. This completes the inductive step. By induction, 2^n > n^2 for all integers n ≥ 5.",
+  "hintLatex": [
+    "The inequality $2^n > n^2$ holds for $n = 5, 6, 7, \\ldots$ but fails for small $n$.",
+    "The inductive step from $k$ to $k+1$ only goes through once $k$ is large enough.",
+    "Verify that $2k^2 \\ge (k+1)^2$ expands to $k^2 \\ge 2k + 1$, which holds for $k \\ge 5$."
+  ],
+  "solutionLatex": "Proof by induction. Base case $n = 5$: $2^5 = 32 > 25 = 5^2$, so the claim holds. Inductive step: assume $2^k > k^2$ for some $k \\ge 5$. Then $2^{k+1} = 2 \\cdot 2^k > 2 \\cdot k^2$, and $2k^2 - (k+1)^2 = k^2 - 2k - 1 = (k-1)^2 - 2 \\ge 0$ because $k \\ge 5$. Hence $2k^2 \\ge (k+1)^2$, so $2^{k+1} > (k+1)^2$. By induction the claim holds for every $n \\ge 5$.",
   "techniqueSlugs": [
     "induction"
   ],

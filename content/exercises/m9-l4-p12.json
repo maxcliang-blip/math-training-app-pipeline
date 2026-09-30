@@ -10,19 +10,19 @@
   "promptLatex": "A student attempts to prove 'if n^2 is even then n is even' by contradiction, assuming 'n is odd' and deriving 'n^2 is odd'. Identify the missing step.",
   "choices": [
     "the assumption that n is odd is not the negation of 'n^2 is even'",
-    "the derivation must also use the fact that odd×odd = odd",
+    "the derivation must also use the fact that odd \\times odd = odd",
     "the proof must handle the case where n = 0 separately",
     "the contradiction must involve a statement about all integers",
     "the student should use induction instead"
   ],
-  "answerLatex": "the derivation must also use the fact that odd×odd = odd",
+  "answerLatex": "the derivation must also use the fact that odd \\times odd = odd",
   "answerAlternatives": [],
   "hintLatex": [
-    "The negation of 'n^2 is even' is 'n^2 is odd'.",
-    "If n is odd, write n = 2k+1, then n^2 = (2k+1)^2 = 4k^2+4k+1 = 2(2k^2+2k)+1, which is odd.",
-    "The missing step is connecting the assumption 'n is odd' to the conclusion 'n^2 is odd'."
+    "The negation of '$n^2$ is even' is '$n^2$ is odd'.",
+    "If $n$ is odd then $n = 2k+1$, so $n^2 = (2k+1)^2 = 4k^2 + 4k + 1 = 2(2k^2 + 2k) + 1$, which is odd.",
+    "The missing step is the one that carries the assumption '$n$ is odd' to the conclusion '$n^2$ is odd'."
   ],
-  "solutionLatex": "Proof by contradiction: Assume n^2 is even but n is odd. If n is odd, then n = 2k+1 for some integer k, and n^2 = (2k+1)^2 = 4k^2+4k+1 = 2(2k^2+2k)+1, which is odd. This contradicts the assumption that n^2 is even. Therefore, if n^2 is even, n cannot be odd, so n must be even.",
+  "solutionLatex": "The assumption and the goal are correctly paired: the negation of '$n^2$ is even' is indeed '$n^2$ is odd', so contradiction is a legitimate strategy. The gap is that no step connects the assumption to the goal.\n\nThat step is the parity identity. If $n$ is odd then $n = 2k+1$ for some integer $k$, and $n^2 = (2k+1)^2 = 4k^2 + 4k + 1 = 2(2k^2 + 2k) + 1$, which is odd. Writing that explicitly contradicts '$n^2$ is even' and closes the proof.",
   "techniqueSlugs": [
     "contradiction"
   ],

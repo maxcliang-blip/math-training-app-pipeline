@@ -19,14 +19,15 @@
   "answerLatex": "4",
   "answerAlternatives": [],
   "hintLatex": [
-    "Test the formula for n = 1, 2, 3 in order.",
-    "For n = 1: 1^2+1+1 = 3, which is prime.",
-    "For n = 2: 2^2+2+1 = 7, which is prime.",
-    "For n = 3: 3^2+3+1 = 13, which is prime.",
-    "Continue testing until a composite value is found."
+    "Test the formula for $n = 1, 2, 3$ in order.",
+    "For $n = 1, 2, 3$ the values are $3$, $7$, and $13$, all prime, so keep going.",
+    "At $n = 4$ the formula gives $16 + 4 + 1 = 21 = 3 \\times 7$, which is composite."
   ],
-  "solutionLatex": "Testing successive values:\n\nn = 1: 1+1+1 = 3 (prime)\nn = 2: 4+2+1 = 7 (prime)\nn = 3: 9+3+1 = 13 (prime)\nn = 4: 16+4+1 = 21 = 3 × 7 (composite)\n\nThe smallest positive integer n for which the claim fails is n = 4.",
+  "solutionLatex": "Testing successive values:\n\n$n = 1$: $1 + 1 + 1 = 3$, prime.\n\n$n = 2$: $4 + 2 + 1 = 7$, prime.\n\n$n = 3$: $9 + 3 + 1 = 13$, prime.\n\n$n = 4$: $16 + 4 + 1 = 21 = 3 \\times 7$, composite.\n\nThe smallest positive integer for which the claim fails is $n = 4$.",
   "techniqueSlugs": [
     "counterexample"
-  ]
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
 }

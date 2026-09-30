@@ -8,22 +8,22 @@
     "counterexample",
     "induction"
   ],
-  "promptLatex": "A student claims: \"The formula 2^n > n^2 for all integers n ≥ 5 is true, so by induction it holds for all n.\" Identify the flaw: the induction step from k to k+1 requires which additional condition?",
+  "promptLatex": "A student claims: 'The formula $2^n > n^2$ for all integers $n \\ge 5$ is true, so by induction it holds for all $n$.' Identify the flaw: the induction step from $k$ to $k+1$ requires which additional condition?",
   "choices": [
     "the base case must be n = 1",
     "the induction hypothesis must assume 2^k > k^2 and show 2^{k+1} > (k+1)^2",
-    "the induction hypothesis must also assume k ≥ 5",
+    "the induction hypothesis must also assume k \\ge 5",
     "the claim is actually false for all n",
     "no additional condition is needed"
   ],
-  "answerLatex": "the induction hypothesis must also assume k ≥ 5",
+  "answerLatex": "the induction hypothesis must also assume k \\ge 5",
   "answerAlternatives": [],
   "hintLatex": [
     "The inequality 2^n > n^2 holds for n = 5, 6, 7, ... but fails for small n.",
     "The inductive step 2^{k+1} > (k+1)^2 from 2^k > k^2 only works when k is sufficiently large.",
     "One must verify the step manually for the transition from k=4 to k=5 (or start the induction at n=5)."
   ],
-  "solutionLatex": "The claim 2^n > n^2 is not true for all integers n ≥ 1; it fails for n = 1, 2, 3, 4. The claim holds for n ≥ 5, but the inductive step from k to k+1 requires that k ≥ 4 (or equivalently, the base case must be n = 5). Without the condition k ≥ 5, the inductive step may fail for small values. The correct approach is to establish the base case n = 5 and prove the inductive step under the assumption k ≥ 5.",
+  "solutionLatex": "The claim $2^n > n^2$ is false for small $n$, failing at $n = 1, 2, 3, 4$, and it does hold for $n \\ge 5$. But the inductive step from $k$ to $k+1$ only works once $k$ is large enough, so the hypothesis has to carry the same lower bound as the base case.\n\nStarting the induction at $n = 5$ and assuming $k \\ge 5$ makes the step legitimate. Without that bound in the hypothesis, the step can fail at small values, which is exactly the gap in the student's reasoning.",
   "techniqueSlugs": [
     "induction"
   ],

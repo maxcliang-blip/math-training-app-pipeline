@@ -12,7 +12,8 @@
     "n = 1, giving 61",
     "n = 40, giving 41^2",
     "n = 41, giving 41^2+41+41",
-    "n = 0, giving 41"
+    "n = 0, giving 41",
+    "n = 2, giving 47"
   ],
   "answerLatex": "n = 40, giving 41^2",
   "answerAlternatives": [],
@@ -21,7 +22,7 @@
     "n = 40 gives 40^2+40+41 = 1600+40+41 = 1681.",
     "Recognize that 1681 = 41^2, which is composite."
   ],
-  "solutionLatex": "The claim is false. At n = 40, the formula gives 40^2+40+41 = 1600+40+41 = 1681. Since 1681 = 41 × 41 = 41^2, it is composite, not prime. This serves as a counterexample to the claim that the formula always produces primes.",
+  "solutionLatex": "The claim is false. At $n = 40$ the formula gives $40^2 + 40 + 41 = 1600 + 40 + 41 = 1681$, and $1681 = 41 \\times 41 = 41^2$, so it is composite rather than prime. One instance is enough to refute a universal claim, and this is that instance.",
   "techniqueSlugs": [
     "counterexample"
   ],
