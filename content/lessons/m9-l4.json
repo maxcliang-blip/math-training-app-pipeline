@@ -92,22 +92,37 @@
           "bodyLatex": "For a claim 'for every n, P(n)', a counterexample is a specific value n = k such that P(k) is false. Search starting from small values and verify directly."
         },
         {
-          "slug": "proof-strategy-direct",
+          "slug": "direct-proof",
           "name": "Use direct proof when the claim follows straightforwardly from known facts",
           "summaryLatex": "Unfold definitions, use chains of equivalences, and justify each step.",
           "bodyLatex": "Direct proof is appropriate when the claim's structure aligns with the given hypotheses and no contradiction or induction seems indicated."
         },
         {
-          "slug": "proof-strategy-induction",
+          "slug": "induction",
           "name": "Use induction when the claim quantifies over natural numbers",
           "summaryLatex": "Prove the base case and the inductive step, using either mathematical or strong induction as needed.",
           "bodyLatex": "Induction is the natural choice for claims of the form 'for every integer n \\ge 1, P(n)'."
         },
         {
-          "slug": "proof-strategy-contradiction",
+          "slug": "contradiction",
           "name": "Use proof by contradiction when assuming the negation leads to an impossibility",
           "summaryLatex": "Assume the negation and derive a statement about the objects that cannot hold.",
           "bodyLatex": "Contradiction is useful when direct reasoning is blocked and the negation has a clear opposite that leads to an impossibility."
+        },
+        {
+          "slug": "case-split",
+          "summaryLatex": "List the regions that cover the whole domain with no gap, evaluate the claim in each, and note that adjacent cases agree on the shared boundary.",
+          "bodyLatex": "Case analysis is the right strategy when an expression changes form inside the claim's domain, because the split points are the places where the formula itself changes.\n\nA useful case split has three properties: the cases cover the entire domain, the cases are disjoint or their overlap is harmless, and the boundaries are the actual breakpoints of the expression rather than convenient round numbers.\n\nProve $x^2 + y^2 \\ge 2xy$ for all real $x, y$ by splitting on nothing at all, since the identity $x^2 + y^2 - 2xy = (x - y)^2$ needs no sign analysis. That is the point: a strategy is only worth choosing when the expression actually resists the simpler argument. Split on $x \\le 0$, $0 \\le x \\le 6$, and $x \\ge 6$ to prove $|x| + |x - 6| \\ge 6$, where the absolute values force the split."
+        },
+        {
+          "slug": "wlog",
+          "summaryLatex": "Impose an ordering only when swapping the two names leaves the claim unchanged, and say explicitly which case the swap discards.",
+          "bodyLatex": "An assumption without loss of generality is a claim that the discarded half of the domain is a relabelling of the kept half. That is sound exactly when the claim is symmetric in the two names.\n\nSo before writing $x \\ge y$, check what happens when $x$ and $y$ are exchanged. If the claim comes back identical, the ordering is free; if it does not, the assumption has quietly shrunk the problem and the proof is no longer a proof of the original statement.\n\nFor $x^2 + y^2 \\ge 2xy$ the swap returns $y^2 + x^2 \\ge 2yx$, the same inequality, so $x \\ge y$ is free. Note that the assumption is also unnecessary: $(x - y)^2 \\ge 0$ proves the claim directly."
+        },
+        {
+          "slug": "both-directions-of-biconditional",
+          "summaryLatex": "Prove the two directions of an 'if and only if' separately, because one direction is often a chain of equivalences and the other is not the same argument reversed.",
+          "bodyLatex": "'$A$ if and only if $B$' is the conjunction of $A \\Rightarrow B$ and $B \\Rightarrow A$, and each direction is its own obligation. Treating them as one argument by reversing the steps of the first is the most common way to lose a point here.\n\nProving 'a number is even if and only if it is divisible by $2$' makes the asymmetry plain. The forward direction is one line: an even number is $2k$ for some integer $k$, so it is divisible by $2$. The reverse direction is a different sentence: a number divisible by $2$ equals $2k$, so by definition it is even.\n\nNeither direction implies the other, so a proof that only writes one of them has established a one-way implication at best."
         }
       ]
     },

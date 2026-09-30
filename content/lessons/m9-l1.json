@@ -112,6 +112,11 @@
           "name": "Respect the order of the quantifiers",
           "summaryLatex": "In a claim of the form 'for every $n$ there is a $k$', the object produced must depend on $n$; a single $k$ that works for all $n$ proves a different and usually false claim.",
           "bodyLatex": "Reading the two orders aloud settles most quantifier errors. 'Every $n$ has some $k$' and 'some single $k$ works for every $n$' differ on almost every concrete example, so a proof that silently switches orders has not proved the claim."
+        },
+        {
+          "slug": "negate-the-claim",
+          "summaryLatex": "Negate the quantifier and the predicate before hunting for an object: a universal claim becomes existential, and an existential claim becomes universal.",
+          "bodyLatex": "The first step in any refutation is writing the negation, because the negation is what the object you produce has to satisfy. Getting it wrong sends the search after the wrong object.\n\nNegating 'for all even integers $a$ and $b$, $a^2 + b^2$ is a multiple of $4$' gives 'there exist even integers $a$ and $b$ such that $a^2 + b^2$ is not a multiple of $4$'. Note both changes at once: $\\forall$ becomes $\\exists$, and the predicate is negated rather than restated.\n\nA claim built on 'there exists' negates to a universal, which is why a universal refutation cannot be answered by exhibiting a second example. Either way, the object the search produces is an instance of the negation, not of the original claim."
         }
       ]
     },
