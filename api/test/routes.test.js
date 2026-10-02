@@ -16,10 +16,15 @@ import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure
 let server;
 let base;
 let dataDir;
+let content;
 
 before(async () => {
   dataDir = mkdtempSync(join(tmpdir(), "math-api-test-"));
-  server = createApp({ dataDir }).listen(0);
+  // The store is injected so the health assertions below can read the counts off the very object
+  // the routes answer from. Reloading the directory inside the test would assert against a second
+  // corpus, not this app's.
+  content = loadContentStore();
+  server = createApp({ dataDir, content }).listen(0);
   await new Promise((resolve) => server.once("listening", resolve));
   base = `http://127.0.0.1:${server.address().port}`;
 });
@@ -77,7 +82,12 @@ test("health reports the corpus it actually loaded", async () => {
   const { status, body } = await get("/api/health");
   assert.equal(status, 200);
   assert.equal(body.ok, true);
-  assert.equal(body.content.exercises, 759);
+// Against the store the routes answer from, not a literal: this test is about the route's
+  // honesty about its own corpus. The pinned corpus counts are asserted once, in content.test.js,
+  // from lib/corpus-pins.mjs.
+  const loaded = content.stats();
+  assert.equal(body.content.exercises, loaded.exercises);
+  assert.equal(body.content.lessons, loaded.lessons);
   assert.equal(typeof body.figures.usable, "boolean");
 });
 

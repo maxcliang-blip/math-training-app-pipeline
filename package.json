@@ -9,6 +9,7 @@
     "test": "npm test --workspaces --if-present",
     "content:check": "node scripts/check-content-math.mjs",
     "content:selftest": "node scripts/check-content-math.mjs --selftest",
+    "content:delivered": "node scripts/verify-delivery.mjs",
     "content:figures": "node scripts/build-figures.mjs",
     "content:figures:container": "ASYMPTOTE_BIN=scripts/asy-docker DVISVGM_BIN=scripts/dvisvgm-docker node scripts/build-figures.mjs",
     "content:figures:authoring": "node scripts/build-figures.mjs --allow-missing-toolchain",
