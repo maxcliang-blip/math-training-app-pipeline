@@ -143,13 +143,29 @@ test("no figure payload field appears anywhere on a content route", async () => 
 });
 
 test("GET /api/figures is a hard 503 when the build did not produce a usable manifest", async () => {
-  // The shipped manifest in this repository is status toolchain-missing with zero figures,
-  // because no local Asymptote run has happened. The contract is explicit that this must be a
-  // 503 and never an empty list, so that is what is asserted here.
-  const { status, body } = await get("/api/figures");
-  assert.equal(status, 503);
-  assert.ok(body.error.startsWith("figure-pipeline-"));
-  assert.match(body.message, /content:figures/);
+  // Two states both mean "no usable figures": a manifest that exists and did not pass, and no
+  // manifest at all (a fresh clone, where artifacts/ is not committed). Both must be 503 and
+  // never an empty list. Asserting the shipped manifest's exact status would make this test
+  // depend on whether someone ran Asymptote locally, which is not what it is testing.
+  for (const store of [
+    new FigureStore({ pipelineVersion: "asymptote-svg-sanitized@2", status: "toolchain-missing", toolchain: null, figures: [] }),
+    null,
+  ]) {
+    const app = createApp({ dataDir, figureStore: store });
+    const s = app.listen(0);
+    await new Promise((resolve) => s.once("listening", resolve));
+    try {
+      const res = await fetch(`http://127.0.0.1:${s.address().port}/api/figures`);
+      assert.equal(res.status, 503);
+      const body = await res.json();
+      assert.match(body.error, /^figure-(pipeline|manifest)/);
+      // The message names the remedy, because a 503 with no next step is the same dead end as
+      // a 404.
+      assert.match(body.message, /content:figures/);
+    } finally {
+      await new Promise((resolve) => s.close(resolve));
+    }
+  }
 });
 
 test("a figure key lookup against an unusable manifest is a 503, not a 404", async () => {
@@ -158,7 +174,6 @@ test("a figure key lookup against an unusable manifest is a 503, not a 404", asy
   const { status } = await get("/api/figures/m6-l3-p6");
   assert.equal(status, 503);
 });
-
 test("with a passing manifest, the figure route serves exactly the contract payload", async () => {
   const passing = createApp({
     dataDir,
@@ -423,6 +438,10 @@ test("an unknown API path answers with the same JSON error shape as everything e
 test("the corpus warnings are reachable, so a dangling reference is not only a startup log line", async () => {
   const { status, body } = await get("/api/content/warnings");
   assert.equal(status, 200);
+  // The endpoint contract is asserted, not the corpus's current health: content fixes land
+  // independently of this branch, and a test that fails because a content bug got fixed is a
+  // test that has to be deleted before the fix can merge.
   assert.ok(Array.isArray(body.warnings));
-  assert.ok(body.warnings.length > 0, "the shipped corpus does have gaps and they should be visible");
+  assert.equal(typeof body.stats.exercises, "number");
+  for (const warning of body.warnings) assert.equal(typeof warning, "string");
 });

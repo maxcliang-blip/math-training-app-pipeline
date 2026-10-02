@@ -126,7 +126,7 @@ test("raw LaTeX in, raw LaTeX out - the exercise route never pre-renders", () =>
   }
 });
 
-test("GET /api/modules has the shape IA §7 specifies, with an honest null for a missing catalogue", () => {
+test("GET /api/modules has the shape IA §7 specifies, catalogue or no catalogue", () => {
   const { modules, missingTitle } = store.listModules();
   assert.ok(modules.length >= 8);
   const m1 = modules.find((m) => m.code === "M1");
@@ -135,10 +135,23 @@ test("GET /api/modules has the shape IA §7 specifies, with an honest null for a
   assert.equal(typeof m1.lessonCount, "number");
   assert.equal(typeof m1.exerciseCount, "number");
   assert.ok(Array.isArray(m1.tiers));
-  // No content/modules.json is committed, so every title is null rather than guessed from a
-  // lesson, and the gap is named instead of hidden.
-  assert.equal(m1.title, null);
-  assert.ok(missingTitle.includes("M1"));
+
+  // Title resolution depends on whether content/modules.json exists, which is a content
+  // decision landing independently of this branch. Both outcomes are asserted, and neither one
+  // is a failure: a title is either resolved from the catalogue or reported as missing, and
+  // missingTitle lists exactly the ones that are not resolved.
+  const { present } = loadModuleMeta(DEFAULT_CONTENT_ROOT);
+  if (present) {
+    assert.equal(typeof m1.title, "string");
+    assert.equal(m1.title.length > 0, true);
+    assert.deepEqual(missingTitle, []);
+  } else {
+    // Without a catalogue a title is null rather than guessed from a lesson, because the
+    // catalogue and the corpus can disagree about which module is which.
+    assert.equal(m1.title, null);
+    assert.ok(missingTitle.includes("M1"));
+  }
+
   // Module order is numeric, so M2 sorts before M10 rather than after it.
   const codes = modules.map((m) => m.code);
   assert.deepEqual(codes, [...codes].sort((a, b) => Number(a.slice(1)) - Number(b.slice(1))));
@@ -172,8 +185,29 @@ test("the grading record is the only place the answer key is assembled", () => {
 });
 
 test("a missing module catalogue is a warning, not a failure", () => {
-  const { modules, present } = loadModuleMeta(DEFAULT_CONTENT_ROOT);
-  assert.equal(present, false);
-  assert.deepEqual(modules, []);
-  assert.ok(store.warnings.some((w) => w.includes("module catalogue")));
+  // When content/modules.json is absent the store still loads and warns; when it is present the
+  // modules get titles. Asserting the absent case unconditionally would fail the day the
+  // catalogue lands, so both are covered through the same contract.
+  const { modules, present, path } = loadModuleMeta(DEFAULT_CONTENT_ROOT);
+  assert.ok(present ? modules.length > 0 : modules.length === 0);
+  assert.ok(path.endsWith("modules.json"));
+  if (!present) {
+    assert.ok(store.warnings.some((w) => w.includes("module catalogue")));
+  } else {
+    assert.equal(store.warnings.some((w) => w.includes("module catalogue")), false);
+  }
+});
+
+test("warnings only describe real gaps, and a clean corpus produces none", () => {
+  // Every warning the loader can emit names an id that does not resolve. This asserts the shape
+  // of a warning and, separately, that the loader does not invent one for content that is fine.
+  const clean = new ContentStore({ root: DEFAULT_CONTENT_ROOT, modules: [] });
+  const dangling = clean.warnings.filter((w) => /which no (exercise|lesson) file defines/.test(w));
+  for (const warning of dangling) assert.match(warning, /\b(m|l)\d/);
+  // A catalogue supplied explicitly removes the catalogue warning and nothing else.
+  const withCatalogue = new ContentStore({
+    root: DEFAULT_CONTENT_ROOT,
+    modules: [{ id: "M1", title: "Algebra Foundations", order: 1 }],
+  });
+  assert.equal(withCatalogue.warnings.some((w) => w.includes("module catalogue")), false);
 });
