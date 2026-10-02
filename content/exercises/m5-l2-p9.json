@@ -1,0 +1,34 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p9",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "similarity",
+    "area-of-triangles"
+  ],
+  "promptLatex": "Triangle $ABC$ has $AB = 4$, $AC = 6$, and $m\\angle A = 50^{\\circ}$. Triangle $DEF$ has $DE = 10$, $DF = 15$, and $m\\angle D = 50^{\\circ}$. The ratio $\\frac{DE}{AB} = \\frac{DF}{AC} = \\frac{5}{2}$ together with the equal included angle shows the two triangles are similar. What is the ratio of the area of $\\triangle DEF$ to the area of $\\triangle ABC$?",
+  "choices": [
+    "\\frac{25}{4}",
+    "\\frac{5}{2}",
+    "5",
+    "\\frac{2}{5}",
+    "10"
+  ],
+  "answerLatex": "\\frac{25}{4}",
+  "hintLatex": [
+    "Areas are not scaled by the same number that scales lengths, and the difference between them is the point of the problem.",
+    "Every length in one direction scales by the factor, and every length in the other direction scales by it as well.",
+    "Squaring the factor gives $\\left(\\frac{5}{2}\\right)^{2} = \\frac{25}{4}$."
+  ],
+  "solutionLatex": "Two sides and the angle between them are in proportion, so SAS similarity gives $\\triangle DEF \\sim \\triangle ABC$ with scale factor $\\frac{5}{2}$ from the small triangle to the large one.\n\nAreas are quadratic quantities: scaling every length by $\\frac{5}{2}$ scales the area by $\\left(\\frac{5}{2}\\right)^{2}$.\n\nSo the ratio is $\\frac{25}{4}$, not $\\frac{5}{2}$.",
+  "techniqueSlugs": [
+    "similarity-sas",
+    "area-scaling-from-scale"
+  ]
+}

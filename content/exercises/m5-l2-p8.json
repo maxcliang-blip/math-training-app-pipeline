@@ -1,0 +1,34 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p8",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "similarity",
+    "triangles"
+  ],
+  "promptLatex": "Triangle $ABC$ is similar to triangle $DEF$, with $A$ corresponding to $D$, $B$ to $E$, and $C$ to $F$. Given $AB = 6$, $DE = 9$, and $BC = 8$, what is the length of $EF$?",
+  "choices": [
+    "12",
+    "6",
+    "4.5",
+    "13.5",
+    "10.5"
+  ],
+  "answerLatex": "12",
+  "hintLatex": [
+    "Similar triangles stand to each other by one common multiplier, and a single pair of corresponding sides is enough to pin it down.",
+    "Divide the larger known side by the smaller known side to get the factor, then note which direction it multiplies in.",
+    "The factor is $9/6 = 3/2$, so $EF = 8 \\cdot \\frac{3}{2} = 12$."
+  ],
+  "solutionLatex": "One pair of corresponding sides, $AB = 6$ and $DE = 9$, fixes the scale factor of the large triangle over the small one as $\\frac{9}{6} = \\frac{3}{2}$.\n\nThe side $BC$ corresponds to $EF$, so $EF$ is $\\frac{3}{2}$ times $8$.\n\nThat gives $EF = 8 \\cdot \\frac{3}{2} = 12$.",
+  "techniqueSlugs": [
+    "similarity-aa",
+    "missing-length-in-similar-triangles"
+  ]
+}

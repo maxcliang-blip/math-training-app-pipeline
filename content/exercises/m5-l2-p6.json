@@ -1,0 +1,34 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p6",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "congruence",
+    "triangles",
+    "sides-angles-sides-check"
+  ],
+  "promptLatex": "Which of the following pairs of conditions does not determine that two triangles are congruent?",
+  "choices": [
+    "SSS",
+    "SAS",
+    "ASA",
+    "AAS",
+    "SSA"
+  ],
+  "answerLatex": "SSA",
+  "hintLatex": [
+    "Four of the listed configurations pin a triangle down completely; one of them leaves it free to grow or shrink.",
+    "The odd one out names two sides and an angle that is not wedged between them.",
+    "Two sides and a non-included angle leave the triangle free, so SSA proves nothing."
+  ],
+  "solutionLatex": "SSS pins a triangle down by all three sides. SAS pins it by two sides and the angle between them. ASA pins it by two angles and the included side, and AAS pins it by two angles and a side that is not included.\n\nSSA names two sides and an angle that is not between them. Holding those three values fixed, the side opposite the given angle can pivot to two different positions, and each gives a triangle with the same three measurements.\n\nSo SSA is not a congruence test, and it is the only entry on the list that fails.",
+  "techniqueSlugs": [
+    "sides-angles-sides-check"
+  ]
+}

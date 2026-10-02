@@ -1,0 +1,35 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-m3",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "quadrilaterals",
+    "pythagorean",
+    "isosceles-base-angles"
+  ],
+  "promptLatex": "Isosceles trapezoid $ABCD$ has $\\overline{AB} \\parallel \\overline{CD}$ with $AB = 8$ and $CD = 18$, and its legs measure $AD = BC = 13$. What is the height of the trapezoid?",
+  "choices": [
+    "12",
+    "5",
+    "10",
+    "13",
+    "15"
+  ],
+  "answerLatex": "12",
+  "hintLatex": [
+    "Equal legs make the trapezoid symmetric, so each end overhangs the short base by the same amount.",
+    "Drop a perpendicular from each end of the short base to the long base and read off the resulting right triangles.",
+    "Each overhang is $\\frac{18 - 8}{2} = 5$, so the height is $\\sqrt{13^{2} - 5^{2}} = \\sqrt{144} = 12$."
+  ],
+  "solutionLatex": "Because $AD = BC$, the trapezoid is symmetric about the perpendicular bisector of its bases, so the short base is centred over the long one.\n\nDrop perpendiculars from $A$ and $B$ to $\\overline{CD}$ at $P$ and $Q$. Each overhang is $PC = QD = \\frac{CD - AB}{2} = \\frac{18 - 8}{2} = 5$, and $\\triangle APD$ is right with hypotenuse $AD = 13$ and leg $PD = 5$.\n\nSo $AP = \\sqrt{13^{2} - 5^{2}} = \\sqrt{169 - 25} = \\sqrt{144} = 12$, and $AP$ is the height of the trapezoid.",
+  "techniqueSlugs": [
+    "perpendicular-line-transfer",
+    "isosceles-base-angles"
+  ]
+}

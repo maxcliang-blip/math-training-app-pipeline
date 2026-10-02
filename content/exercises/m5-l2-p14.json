@@ -1,0 +1,35 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p14",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "similarity",
+    "triangles",
+    "parallel-lines"
+  ],
+  "promptLatex": "In triangle $ABC$, $AB = 15$, $BC = 20$, and $CA = 25$. A point $D$ lies on $\\overline{BC}$ with $BD = 8$, and the line through $D$ parallel to $\\overline{AC}$ meets $\\overline{AB}$ at $E$. What is the length of $BE$?",
+  "choices": [
+    "6",
+    "7",
+    "12",
+    "9",
+    "10"
+  ],
+  "answerLatex": "6",
+  "hintLatex": [
+    "The parallel line makes a smaller triangle whose shape matches the whole one.",
+    "Match the side cut off near vertex $B$ with the whole side $BA$, and the cut-off part of $BC$ with the whole of $BC$.",
+    "$\\frac{BE}{BA} = \\frac{BD}{BC} = \\frac{8}{20}$, so $BE = 15 \\cdot \\frac{8}{20} = 6$."
+  ],
+  "solutionLatex": "Let $E$ be the point on $\\overline{AB}$ where the parallel through $D$ meets it. Then $DE \\parallel AC$, so $\\triangle BDE \\sim \\triangle BAC$ by AA similarity.\n\nThe shared vertex is $B$, which fixes the correspondence: $BE$ goes with $BA$, $BD$ goes with $BC$, and $DE$ goes with $AC$.\n\nSo $\\frac{BE}{BA} = \\frac{BD}{BC} = \\frac{8}{20} = \\frac{2}{5}$, and $BE = 15 \\cdot \\frac{2}{5} = 6$.",
+  "techniqueSlugs": [
+    "parallel-line-similarity",
+    "missing-length-in-similar-triangles"
+  ]
+}

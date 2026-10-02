@@ -1,0 +1,33 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p7",
+  "tier": "12",
+  "difficulty": 2,
+  "tags": [
+    "congruence",
+    "perimeter"
+  ],
+  "promptLatex": "Triangles $ABC$ and $DEF$ are congruent, with $A$ corresponding to $D$, $B$ to $E$, and $C$ to $F$. The sides of $\\triangle ABC$ have lengths $AB = 5$, $BC = 9$, and $CA = 7$. What is the perimeter of $\\triangle DEF$?",
+  "choices": [
+    "21",
+    "20",
+    "23",
+    "42",
+    "19"
+  ],
+  "answerLatex": "21",
+  "hintLatex": [
+    "Congruence means every corresponding part of the two triangles is equal, and sides are among those parts.",
+    "Read the three lengths of the second triangle off the first one using the correspondence.",
+    "$DE = 5$, $EF = 9$, and $FD = 7$, so the perimeter is $5 + 9 + 7 = 21$."
+  ],
+  "solutionLatex": "Congruent triangles have equal corresponding sides, which is the congruence property most often called CPCTC applied to lengths.\n\nUnder the given correspondence $DE = AB = 5$, $EF = BC = 9$, and $FD = CA = 7$.\n\nThe perimeter of $\\triangle DEF$ is therefore $5 + 9 + 7 = 21$.",
+  "techniqueSlugs": [
+    "cpctc"
+  ]
+}

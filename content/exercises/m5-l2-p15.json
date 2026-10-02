@@ -1,0 +1,35 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p15",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "triangles",
+    "angle-bisectors",
+    "similarity"
+  ],
+  "promptLatex": "In triangle $ABC$, $AB = 21$, $AC = 14$, and $BC = 25$. The bisector of $\\angle A$ meets $\\overline{BC}$ at $D$. What is the length of $AD$?",
+  "choices": [
+    "12",
+    "15",
+    "10",
+    "13",
+    "9"
+  ],
+  "answerLatex": "12",
+  "hintLatex": [
+    "The bisector cuts the opposite side into two pieces whose lengths stand to each other in the ratio of the two adjacent sides.",
+    "That ratio splits $BC$ into $BD$ and $DC$, and once those are known the bisector length has a closed form.",
+    "The ratio is $21 : 14 = 3 : 2$, so $BD = 15$ and $DC = 10$, giving $AD^{2} = 21 \\cdot 14 - 15 \\cdot 10 = 144$."
+  ],
+  "solutionLatex": "The angle bisector theorem gives $\\frac{BD}{DC} = \\frac{AB}{AC} = \\frac{21}{14} = \\frac{3}{2}$. Since $BC = 25$, the two pieces are $BD = 15$ and $DC = 10$.\n\nStewart's theorem for the cevian $AD$ reads $AB^{2} \\cdot DC + AC^{2} \\cdot BD = BC \\cdot (AD^{2} + BD \\cdot DC)$. Substituting gives $441 \\cdot 10 + 196 \\cdot 15 = 25 \\cdot (AD^{2} + 150)$, that is $7350 = 25 \\cdot AD^{2} + 3750$.\n\nTherefore $AD^{2} = \\frac{3600}{25} = 144$, so $AD = 12$. Equivalently $AD^{2} = AB \\cdot AC - BD \\cdot DC = 294 - 150 = 144$.",
+  "techniqueSlugs": [
+    "angle-bisector-split",
+    "similarity-aa"
+  ]
+}

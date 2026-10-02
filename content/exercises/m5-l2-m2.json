@@ -1,0 +1,34 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-m2",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "pythagorean",
+    "similarity",
+    "triangles"
+  ],
+  "promptLatex": "In triangle $ABC$, $AB = 13$, $BC = 14$, and $CA = 15$. A point $D$ on segment $\\overline{BC}$ satisfies $BD = 5$. What is the length of $AD$?",
+  "choices": [
+    "12",
+    "9",
+    "10",
+    "11",
+    "13"
+  ],
+  "answerLatex": "12",
+  "hintLatex": [
+    "Dropping the altitude turns the obtuse-looking triangle into two right triangles that share the altitude.",
+    "Each half of $\\triangle ABC$ is similar to the whole, so the piece $BD$ pins down the altitude.",
+    "The projection gives $BD^{2} + AD^{2} = AB^{2}$, so $AD^{2} = 169 - 25 = 144$ and $AD = 12$."
+  ],
+  "solutionLatex": "Check that $D$ really is the foot of the altitude: with $BD = 5$ one has $DC = 14 - 5 = 9$, and $5^{2} + 9^{2} = 25 + 81 = 106$, while $13^{2} = 169$ and $15^{2} = 225$.\n\nLet the altitude from $A$ meet $\\overline{BC}$ at $H$. The two right triangles $ABH$ and $ACH$ are each similar to $\\triangle ABC$, which gives $BH = \\frac{AB^{2} + BC^{2} - AC^{2}}{2 \\cdot BC} = \\frac{169 + 196 - 225}{28} = \\frac{140}{28} = 5$.\n\nSo $H$ coincides with $D$, and $AD = \\sqrt{AB^{2} - BD^{2}} = \\sqrt{169 - 25} = \\sqrt{144} = 12$.",
+  "techniqueSlugs": [
+    "right-triangle-altitude-similarity"
+  ]
+}

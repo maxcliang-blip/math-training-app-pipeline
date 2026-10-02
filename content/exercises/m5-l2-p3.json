@@ -1,0 +1,33 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "triangles",
+    "angles"
+  ],
+  "promptLatex": "Two sides of triangle $ABC$ form an angle of $65^{\\circ}$ at $A$ and an angle of $47^{\\circ}$ at $B$. What is the measure, in degrees, of $m\\angle C$?",
+  "choices": [
+    "63",
+    "68",
+    "65",
+    "72",
+    "58"
+  ],
+  "answerLatex": "68",
+  "hintLatex": [
+    "All three interior angles of a triangle are fixed once two of them are known.",
+    "Add the two known measures and remove the sum from a straight angle.",
+    "$180^{\\circ} - 65^{\\circ} - 47^{\\circ} = 68^{\\circ}$."
+  ],
+  "solutionLatex": "The interior angles of any triangle sum to $180^{\\circ}$, whatever shape the triangle has.\n\nThe two known angles already account for $65^{\\circ} + 47^{\\circ} = 112^{\\circ}$.\n\nWhat remains is $m\\angle C = 180^{\\circ} - 112^{\\circ} = 68^{\\circ}$.",
+  "techniqueSlugs": [
+    "triangle-angle-sum"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [
+    "AB/DE=AC/DF"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p13",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "similarity",
+    "congruence"
+  ],
+  "promptLatex": "Triangles $ABC$ and $DEF$ satisfy $m\\angle A = m\\angle D$. Which additional condition is sufficient to prove $\\triangle ABC \\sim \\triangle DEF$?",
+  "choices": [
+    "AB = DE",
+    "AB = DE \\text{ and } AC = DF",
+    "\\frac{AB}{DE} = \\frac{AC}{DF}",
+    "AB = DF \\text{ and } AC = DE",
+    "BC = EF"
+  ],
+  "answerLatex": "\\frac{AB}{DE} = \\frac{AC}{DF}",
+  "hintLatex": [
+    "One angle congruence leaves two unknowns, and similarity needs exactly enough to close that gap.",
+    "Similarity needs the two sides flanking the known angle to be in proportion; congruence of those same two sides would prove the triangles congruent instead.",
+    "$\\frac{AB}{DE} = \\frac{AC}{DF}$ gives proportional sides about the included angle, which is SAS similarity."
+  ],
+  "solutionLatex": "With only $m\\angle A = m\\angle D$ known, neither the shape nor the size of the triangles is pinned down, so more information is required.\n\nCongruence of the two flanking sides would force a scale factor of $1$, which proves the triangles congruent and so also similar, but it is stronger than the problem needs. The crossed pairing $AB = DF$ and $AC = DE$ pairs the wrong sides and gives nothing.\n\nProportional flanking sides about the included angle is exactly SAS similarity, so $\\frac{AB}{DE} = \\frac{AC}{DF}$ is sufficient.",
+  "techniqueSlugs": [
+    "similarity-sas",
+    "sides-angles-sides-check"
+  ]
+}
