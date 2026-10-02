@@ -1,0 +1,27 @@
+{
+  "id": "m3-l4-m2",
+  "moduleId": "M3",
+  "lessonId": "m3-l4",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "fundamental-counting",
+    "combinations"
+  ],
+  "promptLatex": "In how many ways can $7$ distinct labeled towns be connected by roads so that every town can be reached from every other one and towns $1$ and $2$ are joined by a road?",
+  "choices": null,
+  "answerLatex": "4802",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The networks are trees on seven labeled vertices, and Cayley's formula counts all of them.",
+    "Average the degree of town $1$ over all the trees, using the Prüfer code to read off degrees.",
+    "Divide that total by the six possible neighbors of town $1$."
+  ],
+  "solutionLatex": "The networks are trees on $7$ labeled vertices, so Cayley's formula gives $7^{7-2} = 16807$ of them in total.\n\nA Prüfer code for such a tree has length $5$, and each label appears equally often on average, so town $1$ appears $\\frac{5}{7}$ of a code on average. Since a vertex appears once fewer than its degree, town $1$ has average degree $1 + \\frac{5}{7} = \\frac{12}{7}$, and its degrees sum to $16807 \\cdot \\frac{12}{7} = 28812$ across all the trees.\n\nThose incidences are shared equally among the $6$ other towns by symmetry, so towns $1$ and $2$ are joined in\n\n$\\frac{28812}{6} = 4802$ trees,\n\nwhich matches the closed form $2n^{n-3} = 2 \\cdot 7^4 = 4802$.",
+  "techniqueSlugs": [
+    "prufer-codes"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

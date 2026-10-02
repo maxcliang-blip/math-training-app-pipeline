@@ -1,0 +1,251 @@
+{
+  "id": "m3-l4",
+  "moduleId": "M3",
+  "order": 4,
+  "title": "Graph and Lattice Counting: Paths, Trees, and Trails",
+  "topicSlug": "graph-and-lattice-counting",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m3-l1",
+    "m3-l2",
+    "m3-l3"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Count monotone paths on a lattice with and without obstacles by reflection, count paths that stay on one side of a line with Catalan and ballot numbers, apply Cayley's formula and the Prufer-code bijection to labeled trees, and count paths, walks, spanning trees, Euler circuits, and Hamiltonian cycles in the small graphs that appear on the AMC and the AIME."
+    },
+    "prerequisites": {
+      "items": [],
+      "noteLatex": "Assumes binomial coefficients, the multiplication principle, and the idea of a recurrence from the three earlier lessons in this module. Graph vocabulary is limited to what is used here: a vertex is a dot, an edge is a segment, a tree is a connected graph with one path between any two of its vertices, and $K_n$ is the complete graph on $n$ vertices."
+    },
+    "concept": {
+      "conceptLatex": "A lattice path from $(0,0)$ to $(a,b)$ that moves only one unit right or one unit up is determined by which $b$ of its $a+b$ steps are the upward ones, so there are $\\binom{a+b}{b}$ such paths. That single sentence turns a geometric problem into an arithmetic one, and it is the whole reason lattice paths belong in a counting module.\n\nObstacles are handled by subtraction, and the interesting case is a forbidden diagonal. Count all paths and subtract the bad ones. The bad ones cannot be counted directly, but they can be bijected: take the first step at which a path rises above the line $y = x$, and swap the roles of right steps and up steps up to that point. The image is a path with a different endpoint, and every such path is the image of exactly one bad path. So the number of paths from $(0,0)$ to $(a,b)$ with $a > b$ that never rise above $y = x$ is\n\n$\\binom{a+b}{b} - \\binom{a+b}{b-1}$.\n\nWhen $a = b$ this collapses to the Catalan number $\\frac{1}{n+1}\\binom{2n}{n}$, which counts triangulations of a convex polygon, parenthesizations, and stack-sortable permutations. The ballot problem is the same subtraction with signs instead of steps: sequences of $p$ plus signs and $m$ minus signs with every partial sum nonnegative number $\\binom{p+m}{m} - \\binom{p+m}{m-1}$ when $p \\ge m$.\n\nThe second half of the lesson is graphs. A tree on $n$ labeled vertices is counted by Cayley's formula, $n^{n-2}$: the count does not depend on the shape, only on the labels. The reason is a bijection with sequences of length $n-2$ over the vertex set, the Prufer code. Read a tree by repeatedly deleting the smallest leaf and recording its neighbor; the resulting sequence determines the tree uniquely, and any sequence is realized by exactly one tree. Everything followable from the code follows immediately: a vertex is a leaf exactly when its label is absent from the code, so the number of trees on $n$ labeled vertices in which vertex $1$ is a leaf is $(n-1)^{n-2}$, and the number in which vertices $1$ and $2$ are adjacent is $2n^{n-3}$.\n\nSpanning trees of structured graphs are counted directly. A cycle on $n$ vertices has exactly $n$ spanning trees, one for each edge left out. The complete bipartite graph $K_{m,n}$ has $m^{n-1}n^{m-1}$, and the wheel with $n$ rim vertices has more than the pattern suggests, which is why it is worth computing case by case rather than guessing.\n\nWalks and paths in complete graphs are pure multiplication, with one distinction that matters: a walk may repeat a vertex or edge, a path may not. A walk of length $k$ in $K_n$ has $n(n-1)^{k-1}$ possibilities because only the current vertex forbids the next step, while a path of $k$ edges has $n(n-1)\\cdots(n-k+1)$ because every used vertex forbids the next step.\n\nThe last two graph notions are Euler and Hamiltonian. An Euler circuit uses every edge exactly once and exists in a connected graph exactly when every vertex has even degree; counting the circuits of a small graph is a careful case analysis, best done by fixing the first edge. A Hamiltonian cycle visits every vertex exactly once, and in $K_n$ there are $\\frac{(n-1)!}{2}$ of them, because a cycle is a circular order read in either direction.",
+      "figures": [
+        {
+          "id": "m3-l4-fig-1",
+          "captionLatex": "Monotone paths on a small grid, with the line $y = x$ drawn in. Reflecting a path at its first step above the line turns every rejected path into an ordinary path with a shifted endpoint, which is what makes the bad paths countable.",
+          "asymptoteSource": "// A 4 by 4 grid of lattice points with the diagonal y = x drawn dashed, one path\n// that stays below it and one that crosses it.\nsize(400,400);\npen grid = gray(0.75) + 0.6;\npen diag = black + 1.2;\npen good = rgb(0.10,0.35,0.20) + 2;\npen bad = rgb(0.75,0.15,0.15) + 2;\nreal s = 70;\nfor (int i = 0; i <= 4; ++i) draw((i*s,0)--(i*s,4*s), grid);\nfor (int j = 0; j <= 4; ++j) draw((0,j*s)--(4*s,j*s), grid);\ndraw((0,0)--(4*s,4*s), diag);\ndraw((0,0)--(s,0)--(2*s,0)--(2*s,s)--(3*s,s)--(4*s,s), good);\ndraw((0,0)--(0,s)--(s,s)--(2*s,2*s)--(3*s,2*s)--(4*s,3*s), bad);\nlabel(\"$y = x$\", (4*s,4*s), NE);\nlabel(\"stays below\", (2*s,0), S);\nlabel(\"crosses\", (3*s,2*s), NW);",
+          "asymptoteAlt": "A square grid of five vertical and five horizontal light grey lines with the diagonal from the bottom-left corner to the top-right corner drawn in solid black. A dark green staircase path made of right and up steps stays on or below the diagonal and ends on the right edge partway up. A dark red staircase path leaves the origin by going up, then crosses above the diagonal and continues toward the upper right corner. The diagonal is labeled with the equation y equals x, and the two paths are labeled as staying below and as crossing.",
+          "asymptoteAspectRatio": 1.0
+        },
+        {
+          "id": "m3-l4-fig-2",
+          "captionLatex": "A tree on five labeled vertices. Reading the tree by repeatedly deleting the smallest leaf and recording its neighbor produces a Prufer code of length $n-2$, and that code is in bijection with the tree, which is the proof of Cayley's formula.",
+          "asymptoteSource": "// A path tree on five labeled vertices, the smallest picture that shows what a\n// Prufer code reads off.\nsize(480,180);\npen edge = black + 1.4;\nreal y0 = 60, s = 100;\ndraw((0,y0)--(s,y0), edge);\ndraw((s,y0)--(2*s,y0), edge);\ndraw((2*s,y0)--(3*s,y0), edge);\ndraw((3*s,y0)--(4*s,y0), edge);\ndot((0,y0), black+3pt);\ndot((s,y0), black+3pt);\ndot((2*s,y0), black+3pt);\ndot((3*s,y0), black+3pt);\ndot((4*s,y0), black+3pt);\nlabel(\"$1$\", (0,y0), S);\nlabel(\"$2$\", (s,y0), S);\nlabel(\"$3$\", (2*s,y0), S);\nlabel(\"$4$\", (3*s,y0), S);\nlabel(\"$5$\", (4*s,y0), S);\nlabel(\"smallest leaf $1$ is deleted, neighbor $2$ is recorded\", (2*s,y0+30), N);",
+          "asymptoteAlt": "Five small filled circles in a horizontal row connected by four straight segments, forming a path graph. Each circle is labeled beneath with the numbers one through five from left to right. A note above the middle of the row states that the smallest leaf is deleted and its neighbor is recorded.",
+          "asymptoteAspectRatio": 2.667
+        }
+      ],
+      "examples": [
+        {
+          "id": "m3-l4-ex-1",
+          "titleLatex": "Worked example: subtracting the paths that cross a line",
+          "bodyLatex": "How many monotone lattice paths go from $(0,0)$ to $(6,4)$ without ever rising above the line $y = x$?\n\nAll paths number $\\binom{10}{4} = 210$. For the bad paths, reflect each one at its first step above $y = x$, which swaps the roles of the steps up to that point. The image is a path from $(0,0)$ to $(7,3)$: one extra right step, one fewer up step. Conversely every path to $(7,3)$ crosses $y = x$ and reflects back, so the bad paths number $\\binom{10}{3} = 120$.\n\nThe answer is $210 - 120 = 90$.",
+          "answerLatex": "90"
+        },
+        {
+          "id": "m3-l4-ex-2",
+          "titleLatex": "Worked example: Cayley's formula in Prüfer form",
+          "bodyLatex": "How many trees on five labeled vertices have vertex $1$ as a leaf?\n\nEncode each tree by its Prufer code: repeatedly delete the smallest leaf and record its neighbor, stopping after $n-2$ deletions. A vertex is a leaf exactly when its label never appears in the code, and a leaf of a five-vertex tree is one of the three deleted in the last step.\n\nSo the condition is that $1$ is absent from a code of length $3$ over the other four labels. Each position has $4$ choices, giving $4^3 = 64$ codes and therefore $64$ trees.",
+          "answerLatex": "64"
+        },
+        {
+          "id": "m3-l4-ex-3",
+          "titleLatex": "Worked example: a walk is not a path",
+          "bodyLatex": "How many walks of length $3$ are there in the complete graph $K_5$, and how many paths of three edges?\n\nA walk may repeat, so after the first step there are always $4$ choices: the walk can return to any vertex except the one it just left. The count is $5 \\cdot 4^3 = 320$.\n\nA path may not repeat a vertex, so the choices shrink at each step: $5 \\cdot 4 \\cdot 3 \\cdot 2 = 120$.",
+          "answerLatex": "320"
+        },
+        {
+          "id": "m3-l4-ex-4",
+          "titleLatex": "Worked example: spanning trees of a wheel, by case analysis",
+          "bodyLatex": "Let $W$ be the graph consisting of a cycle on five rim vertices together with a hub joined to all five rim vertices. How many spanning trees does $W$ have?\n\nA spanning tree of a graph with six vertices has five edges, so let $k$ be the number of spokes it uses; then it uses $5-k$ rim edges, which break the rim cycle into $k$ components, and the tree is finished by choosing one vertex in each component to attach a spoke to.\n\nFor $k = 1$: one rim edge is omitted in $5$ ways, the rim is one path on five vertices, and the spoke can attach to any of $5$ vertices, giving $25$.\nFor $k = 2$: two rim edges are omitted in $\\binom{5}{2} = 10$ ways. Adjacent omissions ($5$ of them) leave a path on four vertices and an isolated vertex, giving $4$ spoke choices; non-adjacent omissions ($5$) leave paths on two and three vertices, giving $6$ choices. This contributes $5 \\cdot 4 + 5 \\cdot 6 = 50$.\nFor $k = 3$: two rim edges are kept in $\\binom{5}{2} = 10$ ways. Adjacent kept edges ($5$ ways) give components of sizes $3, 1, 1$, so $3$ choices; non-adjacent kept edges ($5$ ways) give sizes $2, 2, 1$, so $4$ choices. This contributes $5 \\cdot 3 + 5 \\cdot 4 = 35$.\nFor $k = 4$: one rim edge is kept in $5$ ways and gives components of sizes $2, 1, 1, 1$, so $2$ choices each, contributing $10$. For $k = 5$ there is the single star at the hub.\n\nThe total is $25 + 50 + 35 + 10 + 1 = 121$.",
+          "answerLatex": "121"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "monotone-lattice-paths",
+          "name": "Count monotone paths with a binomial coefficient",
+          "summaryLatex": "Paths from $(0,0)$ to $(a,b)$ using only right and up steps number $\\binom{a+b}{b}$.",
+          "bodyLatex": "Every path is a sequence of $a+b$ steps in which exactly $b$ are up, so choosing the positions of the up steps counts the paths. Use $\\binom{a+b}{b}$ rather than $\\binom{a+b}{a}$; they are equal, and the smaller of $a$, $b$ is usually the better index for hand arithmetic. The count is unchanged if the paths are required to stay inside any rectangle that contains both endpoints, since a monotone path between two points never leaves that rectangle."
+        },
+        {
+          "slug": "path-subtraction",
+          "name": "Subtract the paths that hit a forbidden point",
+          "summaryLatex": "Paths through a point $P$ split into a path to $P$ times a path from $P$, so subtract that product.",
+          "bodyLatex": "For one forbidden lattice point, multiply: the paths through it number $\\binom{x+y}{x}\\binom{(a-x)+(b-y)}{a-x}$ when the point is $(x,y)$. For several forbidden points one needs inclusion-exclusion, and the products are indexed by which points the path visits first. Check every obstacle is treated once, since a path through two obstacles appears in two terms."
+        },
+        {
+          "slug": "reflection-principle",
+          "name": "Reflect the bad paths at their first violation",
+          "summaryLatex": "Paths that cross $y = x$ at $(0,0)$ are in bijection with paths to a shifted endpoint, which is what makes them countable.",
+          "bodyLatex": "Take a path that rises above $y = x$, find the first step where it does, and interchange right steps with up steps along the portion up to and including that step. The endpoint shifts from $(a,b)$ to $(a+1,b-1)$, and the operation is reversible, so the bad paths number $\\binom{a+b}{b-1}$. The essential bookkeeping is that the endpoint moves: reflecting to $(a,b)$ itself counts nothing new."
+        },
+        {
+          "slug": "catalan-count",
+          "name": "Recognize the Catalan count",
+          "summaryLatex": "Paths from $(0,0)$ to $(n,n)$ staying on one side of $y = x$ number $\\frac{1}{n+1}\\binom{2n}{n}$.",
+          "bodyLatex": "Set $a = b = n$ in the reflection formula: $\\binom{2n}{n} - \\binom{2n}{n-1} = \\frac{1}{n+1}\\binom{2n}{n}$. Catalan numbers also count triangulations of a convex $(n+2)$-gon, full binary trees with $n$ internal nodes, and parenthesizations of a product of $n+1$ factors, so one formula answers several-looking problems. Be careful about weak versus strict: staying on or below the diagonal is the Catalan count, while touching the diagonal only at the two endpoints gives $\\binom{2n-2}{n-1}$."
+        },
+        {
+          "slug": "ballot-counting",
+          "name": "Apply the ballot formula to sign sequences",
+          "summaryLatex": "Sequences of $p$ plus signs and $m$ minus signs with every partial sum nonnegative number $\\binom{p+m}{m} - \\binom{p+m}{m-1}$ when $p \\ge m$.",
+          "bodyLatex": "Read the sequence as a path with up steps for plus signs, and the reflection argument is word for word the one from the lattice case. When $m > p$ no such sequence exists, and the formula would return a negative number, which is the signal that the hypothesis was violated. Equivalent forms worth recognizing: $\\frac{p-m+1}{p+1}\\binom{p+m}{m}$ and the probability form $\\frac{p-m+1}{p+1}$ for uniformly random arrangements with $p$ wins and $m$ losses."
+        },
+        {
+          "slug": "cayley-formula",
+          "name": "Use Cayley's formula for labeled trees",
+          "summaryLatex": "A tree on $n$ distinct labeled vertices is one of $n^{n-2}$; the labels matter and the shape does not.",
+          "bodyLatex": "The count is independent of which edges appear, only of how many there are, which is surprising until the Prufer bijection supplies the explanation. Cayley's formula does not count unlabeled trees: up to isomorphism there are only $3$ trees on $5$ vertices, against $5^{3} = 125$ labeled ones. It also does not apply to spanning trees of a general graph; that count depends on the graph."
+        },
+        {
+          "slug": "prufer-codes",
+          "name": "Encode a tree by its Prüfer code",
+          "summaryLatex": "Repeatedly delete the smallest leaf and record its neighbor; the resulting sequence of length $n-2$ determines the tree.",
+          "bodyLatex": "The correspondence is a bijection, so counting trees with a condition means counting sequences with the matching condition. A vertex of degree $d$ appears exactly $d-1$ times in the code, so being a leaf means appearing zero times, and being adjacent to a specified vertex means the code has the right shape. The number of trees in which vertex $1$ is a leaf is therefore $(n-1)^{n-2}$, and by a short argument the number in which $1$ and $2$ are adjacent is $2n^{n-3}$."
+        },
+        {
+          "slug": "spanning-tree-count",
+          "name": "Count spanning trees of structured graphs",
+          "summaryLatex": "A cycle on $n$ vertices has $n$ spanning trees, and $K_{m,n}$ has $m^{n-1}n^{m-1}$.",
+          "bodyLatex": "For a cycle, a spanning tree is the cycle with one edge deleted, so there are exactly $n$. For the complete bipartite graph the count is $m^{n-1}n^{m-1}$, which gives $81$ for $K_{3,3}$ and $32$ for $K_{2,4}$. Wheels have no comparably short formula, so count them by splitting on the number of spokes the tree uses, and verify small cases by hand before trusting a pattern."
+        },
+        {
+          "slug": "path-and-walk-counting",
+          "name": "Distinguish paths from walks in a complete graph",
+          "summaryLatex": "A walk of length $k$ in $K_n$ has $n(n-1)^{k-1}$ choices; a path of $k$ edges has $n(n-1)\\cdots(n-k+1)$.",
+          "bodyLatex": "The only difference is whether used vertices may be revisited, so the factor shrinks per step for a path and stays constant for a walk. Say in the problem statement which is meant; most contest problems that say path mean no repeated vertex. The same distinction separates cycles of length $k$ in $K_n$, which number $\\frac{(n-1)!}{(n-k)!(k-1)!}$ up to rotation and reversal when $k \\le n$."
+        },
+        {
+          "slug": "euler-circuit-casework",
+          "name": "Count Euler circuits by fixing the first edge",
+          "summaryLatex": "A connected graph has an Euler circuit exactly when every vertex has even degree; count the circuits by hand, not by formula.",
+          "bodyLatex": "Fix the starting vertex and then the first edge, since a symmetric count over all choices overcounts by the length of every circuit. Branch on the second edge and keep going, deleting edges as they are used; the case tree is small for the two- or three-triangle graphs that appear in contests. If the degree of any vertex is odd there is no Euler circuit at all, which is worth checking before counting."
+        },
+        {
+          "slug": "hamiltonian-count",
+          "name": "Count Hamiltonian cycles as circular orders",
+          "summaryLatex": "In $K_n$ there are $\\frac{(n-1)!}{2}$ Hamiltonian cycles and $\\frac{n!}{2}$ Hamiltonian paths.",
+          "bodyLatex": "Fix one vertex to remove the rotational freedom, then divide by two for the two directions of traversal. For specific graphs, enumerate the circular orders and discard the ones that repeat a vertex or miss an edge; for six or fewer vertices this is a page of careful work rather than a formula, and a check against $K_n$ is a good sanity test. Do not confuse a Hamiltonian cycle, which visits every vertex once, with an Euler circuit, which uses every edge once."
+        },
+        {
+          "slug": "double-count-a-family",
+          "name": "Count the same family two ways",
+          "summaryLatex": "When a direct count is awkward, count a weighted version of the family by a second route.",
+          "bodyLatex": "For instance, the total of the sizes of all subsets of $\\{1, \\ldots, n\\}$ containing a fixed element is $2^{n-1} + (n-1)2^{n-2}$: count each subset once for its mandatory element and once more for each further element it contains. The technique generalizes to expected values without probability, and it is often the shortest route to an identity that looks like it needs a generating function."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "reflect-to-the-wrong-endpoint",
+          "titleLatex": "Reflecting to the original endpoint",
+          "wrongLatex": "$\\binom{10}{4} - \\binom{10}{4} = 0$",
+          "whyLatex": "Reflecting a bad path at the step where it first rises above $y = x$ turns the endpoint $(6,4)$ into $(7,3)$: one step up becomes a step right, so there is one more right step and one fewer up step. If the reflection keeps the endpoint at $(6,4)$, the image is still a bad path and the count is circular, giving zero.",
+          "fixLatex": "Write the reflected endpoint down before counting. Bad paths from $(0,0)$ to $(a,b)$ correspond to paths from $(0,0)$ to $(a+1, b-1)$, so the subtracted term is $\\binom{a+b}{b-1}$, not $\\binom{a+b}{b}$."
+        },
+        {
+          "slug": "weak-versus-strict-diagonal",
+          "titleLatex": "Confusing paths that may touch the diagonal with paths that may not",
+          "wrongLatex": "$\\binom{4}{2} - 2\\binom{4}{1}$ for paths from $(0,0)$ to $(2,2)$ that touch the diagonal only at the endpoints",
+          "whyLatex": "Paths from $(0,0)$ to $(2,2)$ that never rise above $y = x$ are the two paths that go right twice before going up, or right, up, right, up: two of them, which is the Catalan number $\\frac{1}{3}\\binom{4}{2} = 2$. Of those, only one touches the diagonal at an interior point, so the strict count is $1$. Subtracting twice the bad count removes the good paths that legitimately lie on the line.",
+          "fixLatex": "Decide whether touching the line is allowed before choosing a formula. Staying on or below the line is $\\binom{2n}{n} - \\binom{2n}{n-1}$; touching the line only at the endpoints is $\\binom{2n-2}{n-1}$ and counts both sides."
+        },
+        {
+          "slug": "cayley-needs-labels",
+          "titleLatex": "Applying Cayley's formula to unlabeled trees",
+          "wrongLatex": "$5^{5-2} = 125$ distinct trees on five vertices",
+          "whyLatex": "Cayley's formula counts trees whose vertices carry distinct labels, and it counts each labeled tree once. Up to isomorphism there are only three trees on five vertices: the path, the star, and the shape with degrees $3, 2, 1, 1, 1$. The same rule applies to Cayley's formula for a forest or for a complete bipartite graph: labels are assumed throughout.",
+          "fixLatex": "Read the problem for the words labeled, distinct, or numbered. If the vertices are $n$ distinct people or $n$ numbered cities, use $n^{n-2}$. If the problem asks for shapes up to symmetry, the count is small and must be found by classifying degree sequences."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m3-l4-p1",
+        "m3-l4-p2",
+        "m3-l4-p3",
+        "m3-l4-p4",
+        "m3-l4-p5",
+        "m3-l4-p6",
+        "m3-l4-p7",
+        "m3-l4-p8",
+        "m3-l4-p9",
+        "m3-l4-p10",
+        "m3-l4-p11",
+        "m3-l4-p12",
+        "m3-l4-p13",
+        "m3-l4-p14",
+        "m3-l4-p15",
+        "m3-l4-p16",
+        "m3-l4-p17",
+        "m3-l4-p18",
+        "m3-l4-p19",
+        "m3-l4-p20",
+        "m3-l4-p21",
+        "m3-l4-p22",
+        "m3-l4-p23",
+        "m3-l4-p24",
+        "m3-l4-p25",
+        "m3-l4-p26"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m3-l4-p1",
+        "m3-l4-p2",
+        "m3-l4-p3",
+        "m3-l4-p4",
+        "m3-l4-p5",
+        "m3-l4-p6",
+        "m3-l4-p7",
+        "m3-l4-p8",
+        "m3-l4-p9",
+        "m3-l4-p10",
+        "m3-l4-p11",
+        "m3-l4-p12",
+        "m3-l4-p13",
+        "m3-l4-p14",
+        "m3-l4-p15",
+        "m3-l4-p16",
+        "m3-l4-p17",
+        "m3-l4-p18",
+        "m3-l4-p19",
+        "m3-l4-p20",
+        "m3-l4-p21",
+        "m3-l4-p22",
+        "m3-l4-p23",
+        "m3-l4-p24",
+        "m3-l4-p25",
+        "m3-l4-p26"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m3-l4-m1",
+        "m3-l4-m2",
+        "m3-l4-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "combinations",
+    "fundamental-counting",
+    "inclusion-exclusion",
+    "lattice-paths",
+    "trees",
+    "spanning-trees",
+    "graph-trails"
+  ]
+}

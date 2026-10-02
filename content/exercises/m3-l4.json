@@ -1,0 +1,768 @@
+[
+  {
+    "id": "m3-l4-p1",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "combinations",
+      "lattice-paths"
+    ],
+    "promptLatex": "How many lattice paths go from $(0,0)$ to $(4,3)$ if each step moves one unit right or one unit up?",
+    "choices": [
+      "35",
+      "42",
+      "210",
+      "120",
+      "7"
+    ],
+    "answerLatex": "35",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Every path uses the same number of steps.",
+      "A path is determined by which of its steps go up.",
+      "There are seven steps in total."
+    ],
+    "solutionLatex": "Every path from $(0,0)$ to $(4,3)$ takes exactly four right steps and three up steps, so it is a sequence of seven steps in which three are up. Choosing which three of the seven positions are the up steps determines the path, so the number of paths is\n\n$\\binom{7}{3} = 35$.",
+    "techniqueSlugs": [
+      "monotone-lattice-paths"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p2",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "10",
+    "difficulty": 1,
+    "tags": [
+      "combinations",
+      "lattice-paths"
+    ],
+    "promptLatex": "How many lattice paths go from $(0,0)$ to $(5,5)$ if each step moves one unit right or one unit up?",
+    "choices": null,
+    "answerLatex": "252",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number of steps is fixed, and only the positions of the up steps vary.",
+      "Choose the up steps among the ten positions.",
+      "Recall that $\\binom{10}{5} = \\binom{10}{5} = 252$."
+    ],
+    "solutionLatex": "Each path is a sequence of five right steps and five up steps, so it is a sequence of ten steps with five up steps. The up steps can occupy any five of the ten positions, giving\n\n$\\binom{10}{5} = \\frac{10 \\cdot 9 \\cdot 8 \\cdot 7 \\cdot 6}{5 \\cdot 4 \\cdot 3 \\cdot 2 \\cdot 1} = 252$ paths.",
+    "techniqueSlugs": [
+      "monotone-lattice-paths"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p3",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "combinations",
+      "inclusion-exclusion",
+      "lattice-paths",
+      "reflection-argument"
+    ],
+    "promptLatex": "How many lattice paths go from $(0,0)$ to $(6,4)$, using only steps one unit right or one unit up, and never rising above the line $y = x$?",
+    "choices": null,
+    "answerLatex": "90",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Count all paths to $(6,4)$ and then subtract the ones that cross the line.",
+      "A path that crosses $y = x$ can be reflected at its first crossing, and the reflected path ends at a different lattice point.",
+      "Find the endpoint of the reflected path before counting it."
+    ],
+    "solutionLatex": "All paths from $(0,0)$ to $(6,4)$ number $\\binom{10}{4} = 210$.\n\nTo count the ones that rise above $y = x$, take such a path, find its first step above the line, and interchange right steps with up steps up to and including that step. Along that portion the path has one more up step than right step, so after the swap the whole path ends at $(7,3)$ instead of $(6,4)$. The operation is reversible, because every path to $(7,3)$ must cross $y = x$, so the bad paths are in bijection with paths from $(0,0)$ to $(7,3)$, of which there are $\\binom{10}{3} = 120$.\n\nThe paths that never rise above $y = x$ therefore number\n\n$210 - 120 = 90$.",
+    "techniqueSlugs": [
+      "monotone-lattice-paths",
+      "reflection-principle"
+    ],
+    "asymptoteSource": "// Two paths from (0,0) to (4,3): one never rises above y = x, the other does.\n// The reflection of a bad path at its first crossing is what counts the bad ones.\nsize(420,340);\npen grid = gray(0.75) + 0.6;\npen diag = black + 1.2;\npen good = rgb(0.10,0.35,0.20) + 2;\npen bad = rgb(0.75,0.15,0.15) + 2;\nreal s = 52;\nfor (int i = 0; i <= 4; ++i) draw((i*s,0)--(i*s,3*s), grid);\nfor (int j = 0; j <= 3; ++j) draw((0,j*s)--(4*s,j*s), grid);\ndraw((0,0)--(3*s,3*s), diag);\ndraw((0,0)--(s,0)--(2*s,0)--(3*s,0)--(4*s,0)--(4*s,s), good);\ndraw((0,0)--(0,s)--(s,s)--(2*s,s)--(3*s,2*s)--(4*s,3*s), bad);\ndot((0,0), black+2.5pt);\ndot((4*s,3*s), black+2.5pt);\nlabel(\"$(0,0)$\", (0,0), SW);\nlabel(\"$(4,3)$\", (4*s,3*s), NE);\nlabel(\"$y = x$\", (3*s,3*s), NE);",
+    "asymptoteAlt": "A rectangular grid four units wide and three units tall drawn in light grey, with a black line along the diagonal from the bottom-left corner up to the top of the third column. A dark green staircase path goes all the way right along the bottom row and then up the right side, staying on or below the diagonal. A dark red staircase path goes up the left side, right along the second row, and then climbs steeply to the top-right corner, crossing above the diagonal. Filled dots mark the bottom-left origin and the top-right endpoint, each labeled with its coordinates, and the diagonal is labeled with the equation y equals x.",
+    "asymptoteAspectRatio": 1.235
+  },
+  {
+    "id": "m3-l4-p4",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "10",
+    "difficulty": 2,
+    "tags": [
+      "combinations",
+      "inclusion-exclusion",
+      "lattice-paths"
+    ],
+    "promptLatex": "How many lattice paths go from $(0,0)$ to $(3,2)$, using only steps one unit right or one unit up, if the path is not allowed to pass through the point $(1,1)$?",
+    "choices": null,
+    "answerLatex": "4",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Count all paths to $(3,2)$, then remove the ones that go through the forbidden point.",
+      "A path through $(1,1)$ splits into an independent path to $(1,1)$ and an independent path from $(1,1)$ to $(3,2)$.",
+      "Multiply those two counts and subtract."
+    ],
+    "solutionLatex": "All paths from $(0,0)$ to $(3,2)$ number $\\binom{5}{2} = 10$.\n\nA path that passes through $(1,1)$ splits at that point: there are $\\binom{2}{1} = 2$ ways to reach $(1,1)$ and $\\binom{3}{1} = 3$ ways to go from $(1,1)$ to $(3,2)$, for $2 \\cdot 3 = 6$ such paths. Every path through $(1,1)$ is counted exactly once, since it visits the point only once.\n\nThe paths that avoid it number\n\n$10 - 6 = 4$.",
+    "techniqueSlugs": [
+      "monotone-lattice-paths",
+      "path-subtraction"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p5",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "combinations",
+      "lattice-paths",
+      "reflection-argument",
+      "catalan-count"
+    ],
+    "promptLatex": "How many lattice paths go from $(0,0)$ to $(5,5)$, using only steps one unit right or one unit up, if the path must stay on or below the line $y = x$?",
+    "choices": null,
+    "answerLatex": "42",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "This is the case where the endpoint lies on the line, so the Catalan formula applies.",
+      "Subtract the paths that rise above the line, and find the reflected endpoint.",
+      "Compute $\\binom{10}{5} - \\binom{10}{4}$ and simplify."
+    ],
+    "solutionLatex": "All paths to $(5,5)$ number $\\binom{10}{5} = 252$. Reflecting a bad path at its first step above $y = x$ sends the endpoint to $(6,4)$, and the map is a bijection, so the bad paths number $\\binom{10}{4} = 210$.\n\nThe paths that stay on or below the line number\n\n$252 - 210 = 42 = \\frac{1}{6}\\binom{10}{5}$, which is the fifth Catalan number.",
+    "techniqueSlugs": [
+      "monotone-lattice-paths",
+      "catalan-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p6",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "combinations",
+      "lattice-paths",
+      "reflection-argument",
+      "catalan-count"
+    ],
+    "promptLatex": "How many lattice paths go from $(0,0)$ to $(6,6)$, using only steps one unit right or one unit up, if the path must stay on or below the line $y = x$?",
+    "choices": null,
+    "answerLatex": "132",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The endpoint is on the line, so the count is a Catalan number.",
+      "Use $\\binom{12}{6} - \\binom{12}{5}$ or the closed form $\\frac{1}{n+1}\\binom{2n}{n}$.",
+      "With $n = 6$ the denominator is $7$."
+    ],
+    "solutionLatex": "Subtracting the paths that rise above the line, the count is\n\n$\\binom{12}{6} - \\binom{12}{5} = 924 - 792 = 132$.\n\nEquivalently, with $n = 6$ the Catalan formula gives $\\frac{1}{7}\\binom{12}{6} = \\frac{924}{7} = 132$.",
+    "techniqueSlugs": [
+      "monotone-lattice-paths",
+      "catalan-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p7",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "combinations",
+      "catalan-count",
+      "ballot-count",
+      "reflection-argument"
+    ],
+    "promptLatex": "In how many ways can a sequence of $8$ symbols be formed from five plus signs and three minus signs if every initial segment of the sequence must contain at least as many plus signs as minus signs?",
+    "choices": null,
+    "answerLatex": "28",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Read the sequence as a lattice path, with a plus sign as an up step.",
+      "Count all arrangements and subtract those whose running total ever goes negative.",
+      "Reflection at the first negative step maps the bad sequences to sequences with a shifted composition."
+    ],
+    "solutionLatex": "There are $\\binom{8}{3} = 56$ sequences of five plus signs and three minus signs.\n\nCall a sequence bad if some initial segment has more minus signs than plus signs. Take a bad sequence, find the first segment where that happens, and swap every sign in it: the segment had one more minus than plus, so after the swap it has one more plus than minus. The image is a sequence with six plus signs and two minus signs, and the operation is reversible, because such a sequence has a first segment with more plus signs and swapping it back produces a bad sequence. So the bad sequences are in bijection with the sequences having six plus signs and two minus signs, of which there are $\\binom{8}{2} = 28$.\n\nThe admissible sequences number $56 - 28 = 28$.",
+    "techniqueSlugs": [
+      "ballot-counting",
+      "reflection-principle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p8",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "combinations",
+      "lattice-paths",
+      "catalan-count"
+    ],
+    "promptLatex": "Into how many regions can a convex polygon with $10$ sides be divided by drawing non-crossing diagonals from one of its vertices?",
+    "choices": null,
+    "answerLatex": "1430",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Each such triangulation is in bijection with a lattice path that stays on one side of a diagonal.",
+      "The number of triangulations of a convex $(n+2)$-gon is a Catalan number.",
+      "Use $\\frac{1}{9}\\binom{16}{8}$ with $n = 8$."
+    ],
+    "solutionLatex": "Fix one vertex of the decagon. Each diagonal from it splits the polygon, and a triangulation is determined by the positions of the seven diagonals, equivalently by the sequence of left and right steps that encode which side of the fixed vertex each of the remaining vertices falls on. This is the standard bijection between triangulations of a convex $(n+2)$-gon and lattice paths from $(0,0)$ to $(n,n)$ that stay on one side of the diagonal, so the count is the Catalan number\n\n$\\frac{1}{n+1}\\binom{2n}{n}$ with $n = 8$, namely $\\frac{1}{9}\\binom{16}{8} = \\frac{12870}{9} = 1430$.",
+    "techniqueSlugs": [
+      "catalan-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p9",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "fundamental-counting",
+      "combinations",
+      "trees",
+      "cayley-formula"
+    ],
+    "promptLatex": "In how many ways can $6$ distinct labeled towns be connected by roads so that every town can be reached from every other town and no two towns are connected by more than one direct road?",
+    "choices": [
+      "1296",
+      "1560",
+      "625",
+      "216",
+      "4096"
+    ],
+    "answerLatex": "1296",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The road network being described is a tree.",
+      "A tree on $n$ labeled vertices can be counted without knowing its shape.",
+      "Use the formula $n^{n-2}$ with $n = 6$."
+    ],
+    "solutionLatex": "The requirement that every town be reachable from every other one, together with the absence of duplicate roads, means the network has no cycle: a cycle would let a town be reached two ways without adding reachability. So the network is a tree on $6$ labeled vertices.\n\nBy Cayley's formula the number of trees on $n$ labeled vertices is $n^{n-2}$, independent of the shape, so the answer is\n\n$6^{6-2} = 6^4 = 1296$.",
+    "techniqueSlugs": [
+      "cayley-formula"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p10",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "fundamental-counting",
+      "permutations",
+      "trees",
+      "prufer-code",
+      "cayley-formula"
+    ],
+    "promptLatex": "In how many ways can $5$ distinct labeled towns be connected by roads so that every town can be reached from every other one and town $1$ is connected by a road to exactly one other town?",
+    "choices": null,
+    "answerLatex": "64",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Encode each network by its Prüfer code, a sequence of length $n-2$ built by repeatedly deleting the smallest leaf and recording its neighbor.",
+      "A town is a leaf exactly when its label never appears in the code.",
+      "So the condition is that one label is absent from a code of length three over the remaining labels."
+    ],
+    "solutionLatex": "The networks described are trees on $5$ labeled vertices, and each tree corresponds to exactly one Prüfer code: repeatedly delete the smallest leaf and record its neighbor, stopping after $n-2 = 3$ deletions.\n\nA vertex of a tree is a leaf exactly when its label is absent from the code, so town $1$ is connected to exactly one road precisely when $1$ never appears in the code. Each of the three positions may then hold any of the other four labels, giving $4^3 = 64$ codes and therefore $64$ trees.\n\nFor comparison, the unrestricted count is Cayley's $5^{5-2} = 125$, and requiring $1$ to be a leaf picks out $64$ of them.",
+    "techniqueSlugs": [
+      "prufer-codes"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p11",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "fundamental-counting",
+      "trees",
+      "spanning-trees"
+    ],
+    "promptLatex": "Two groups of three vertices each are joined so that every vertex of the first group is joined to every vertex of the second group, and there are no other edges. How many spanning trees does the resulting graph have?",
+    "choices": null,
+    "answerLatex": "81",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The graph is the complete bipartite graph $K_{3,3}$.",
+      "Complete bipartite graphs have a closed-form spanning tree count.",
+      "Use $m^{n-1}n^{m-1}$ with $m = n = 3$."
+    ],
+    "solutionLatex": "The graph is $K_{3,3}$, the complete bipartite graph on parts of size $3$ and $3$. The number of spanning trees of $K_{m,n}$ is $m^{n-1}n^{m-1}$, which for $m = n = 3$ gives\n\n$3^{3-1} \\cdot 3^{3-1} = 3^2 \\cdot 3^2 = 9 \\cdot 9 = 81$.\n\nA spanning tree on six vertices has five edges, so this counts the ways to choose five of the nine edges so that all six vertices stay connected without a cycle.",
+    "techniqueSlugs": [
+      "spanning-tree-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p12",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "fundamental-counting",
+      "trees",
+      "spanning-trees"
+    ],
+    "promptLatex": "A graph has a cycle on eight vertices, with an edge between consecutive vertices of the cycle and no other edges. How many spanning trees does this graph have?",
+    "choices": null,
+    "answerLatex": "8",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Every spanning tree of a cycle is obtained by removing exactly one edge.",
+      "Compare the number of edges and vertices to see how many edges must be deleted.",
+      "Count the choices of the deleted edge."
+    ],
+    "solutionLatex": "A spanning tree on eight vertices has seven edges, and the cycle has eight edges, so exactly one edge must be deleted. Deleting any single edge of the cycle leaves a path that connects all eight vertices and contains no cycle, so every deletion works.\n\nThere are eight edges to delete, so the graph has $8$ spanning trees.",
+    "techniqueSlugs": [
+      "spanning-tree-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p13",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "fundamental-counting",
+      "trees",
+      "spanning-trees"
+    ],
+    "promptLatex": "A graph has a cycle on seven vertices, with an edge between consecutive vertices of the cycle and no other edges. How many spanning trees does this graph have?",
+    "choices": null,
+    "answerLatex": "7",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A spanning tree on $n$ vertices has $n-1$ edges.",
+      "Compare that with the number of edges in the cycle.",
+      "Any single edge removed leaves a connected path."
+    ],
+    "solutionLatex": "A spanning tree on seven vertices has six edges, while the cycle has seven, so a spanning tree is obtained by deleting exactly one edge.\n\nRemoving any one of the seven edges turns the cycle into a path through all seven vertices. That path is connected and contains no cycle, so it is a spanning tree, and no spanning tree arises twice because the deleted edge is recoverable from the path.\n\nThere are seven edges to delete, so the graph has $7$ spanning trees.",
+    "techniqueSlugs": [
+      "spanning-tree-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p14",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "fundamental-counting",
+      "permutations",
+      "graph-trails"
+    ],
+    "promptLatex": "Every pair of the five members of a club is friends. In how many ways can a person choose a sequence of four club members $x_1, x_2, x_3, x_4$ such that $x_{i+1}$ is a friend of $x_i$ for $i = 1, 2, 3$, with repetitions allowed?",
+    "choices": null,
+    "answerLatex": "320",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Repetitions are allowed, so the only forbidden step is staying at the current member.",
+      "There are five choices for the first member and then four choices at each later step.",
+      "Multiply."
+    ],
+    "solutionLatex": "The first member can be chosen in $5$ ways. At every later step the next member may be any of the other four members, since a member is always a friend of anyone except themselves, and repetitions are allowed so an earlier choice does not narrow the options. There are three such steps, so the number of sequences is\n\n$5 \\cdot 4 \\cdot 4 \\cdot 4 = 5 \\cdot 64 = 320$.",
+    "techniqueSlugs": [
+      "path-and-walk-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p15",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "fundamental-counting",
+      "permutations",
+      "graph-trails"
+    ],
+    "promptLatex": "Every pair of the five members of a club is friends. In how many ways can a person choose a sequence of four club members $x_1, x_2, x_3, x_4$ such that $x_{i+1}$ is a friend of $x_i$ for $i = 1, 2, 3$ and no member is chosen twice?",
+    "choices": null,
+    "answerLatex": "120",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Now the options shrink at each step, because used members cannot be chosen again.",
+      "Count the choices at each of the four positions.",
+      "Multiply them."
+    ],
+    "solutionLatex": "The first member can be chosen in $5$ ways, the second in $4$, the third in $3$, and the fourth in $2$, because at each step the next member must be a friend of the current one and must not already have been used. The number of sequences is\n\n$5 \\cdot 4 \\cdot 3 \\cdot 2 = 120$.",
+    "techniqueSlugs": [
+      "path-and-walk-counting"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p16",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "fundamental-counting",
+      "combinations",
+      "trees",
+      "prufer-code",
+      "cayley-formula"
+    ],
+    "promptLatex": "In how many ways can $7$ distinct labeled towns be connected by roads so that every town can be reached from every other one and exactly three towns are connected to exactly one road?",
+    "choices": null,
+    "answerLatex": "8400",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Use Prüfer codes: a town is connected to exactly one road exactly when its label is absent from the code.",
+      "A code for seven vertices has length five, so exactly four distinct labels must appear in it.",
+      "Choose those four labels and then count the sequences of length five that use all four."
+    ],
+    "solutionLatex": "Encode each tree by its Prüfer code, a sequence of length $7-2 = 5$. A town is a leaf, that is, is connected to exactly one road, precisely when its label is absent from the code, so exactly three leaves means exactly four distinct labels appear in the code.\n\nChoose those four labels in $\\binom{7}{4} = 35$ ways. For a fixed choice, the number of sequences of length five over those four labels in which each appears at least once is $4^5$ minus the sequences that miss at least one label: by inclusion-exclusion,\n\n$4^5 - 4 \\cdot 3^5 + 6 \\cdot 2^5 - 4 \\cdot 1^5 = 1024 - 972 + 192 - 4 = 240$.\n\nSo the number of trees is $35 \\cdot 240 = 8400$.",
+    "techniqueSlugs": [
+      "prufer-codes"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p17",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "fundamental-counting",
+      "trees",
+      "spanning-trees"
+    ],
+    "promptLatex": "A graph consists of a cycle on five vertices together with a sixth vertex joined by an edge to each of the five cycle vertices. How many spanning trees does this graph have?",
+    "choices": null,
+    "answerLatex": "121",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A spanning tree here has five edges; let $k$ be the number of the new vertex's edges that it uses.",
+      "The rim edges it uses then break the cycle into $k$ pieces, and the tree is completed by choosing one vertex in each piece.",
+      "Handle $k = 1, 2, 3, 4, 5$ in turn, separating adjacent from non-adjacent rim edges when they are not all the same."
+    ],
+    "solutionLatex": "Let $k$ be the number of spokes to the hub that the spanning tree uses. A tree on six vertices has five edges, so the tree uses $5-k$ rim edges; the omitted $k$ rim edges break the cycle into $k$ components, and the tree is completed by choosing one vertex in each component to carry a spoke.\n\nWith $k = 1$: one rim edge omitted in $5$ ways, leaving one component of size $5$, so $5 \\cdot 5 = 25$.\n\nWith $k = 2$: two rim edges omitted. Adjacent omissions ($5$ ways) leave components of sizes $4$ and $1$, so $4$ spoke choices; non-adjacent omissions ($5$ ways) leave sizes $3$ and $2$, so $6$ choices. This gives $5 \\cdot 4 + 5 \\cdot 6 = 50$.\n\nWith $k = 3$: two rim edges kept. Adjacent kept edges ($5$ ways) give components of sizes $3, 1, 1$, so $3$ choices; non-adjacent kept edges ($5$ ways) give sizes $2, 2, 1$, so $4$ choices. This gives $5 \\cdot 3 + 5 \\cdot 4 = 35$.\n\nWith $k = 4$: one rim edge kept in $5$ ways, giving components of sizes $2, 1, 1, 1$ and hence $2$ choices each, for $10$.\n\nWith $k = 5$ there is the single star at the hub.\n\nThe total is $25 + 50 + 35 + 10 + 1 = 121$.",
+    "techniqueSlugs": [
+      "spanning-tree-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p18",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "fundamental-counting",
+      "graph-trails",
+      "euler-circuit-count"
+    ],
+    "promptLatex": "The graph shown consists of two triangles that share a single vertex, which is labeled $1$; the other vertices are labeled $2, 3, 4, 5$. In how many ways can someone start at vertex $1$ and traverse every edge of the graph exactly once, returning to vertex $1$?",
+    "choices": null,
+    "answerLatex": "8",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Check the degrees first: every vertex must have even degree for such a route to exist.",
+      "Fix the first edge out of vertex $1$ and count completions, then account for symmetry between the two triangles.",
+      "There are four edges to choose from at the start and each choice leaves the same number of completions by symmetry."
+    ],
+    "solutionLatex": "Every vertex has even degree: vertex $1$ has degree $4$, and the other four vertices have degree $2$. The graph is connected, so an Euler circuit exists.\n\nCount the circuits starting and ending at vertex $1$. Fix the first edge. If it is $1\\to 2$, the circuit must then take $2 \\to 3$, since vertex $3$ has only the edges to $2$ and $1$ and returning to $1$ immediately would close the route with edges still unused. From $3$ the only unused option is $3 \\to 1$, and from $1$ the remaining three edges of the second triangle can be traversed in either direction, giving $2$ completions. Each of the four starting edges gives $2$ completions by the symmetry of the two triangles.\n\nThe total is $4 \\cdot 2 = 8$.",
+    "techniqueSlugs": [
+      "euler-circuit-casework"
+    ],
+    "asymptoteSource": "// Two triangles sharing vertex 1: the graph whose Euler circuits are counted.\nsize(400,300);\npen edge = black + 1.4;\nreal x1 = -60, x2 = 80, y1 = 130, y2 = 60, y3 = -10;\ndraw((0,y1)--(x1,y2)--(x1,y3)--cycle, edge);\ndraw((0,y1)--(x2,y2)--(x2,y3)--cycle, edge);\ndot((0,y1), black+3pt);\ndot((x1,y2), black+3pt);\ndot((x1,y3), black+3pt);\ndot((x2,y2), black+3pt);\ndot((x2,y3), black+3pt);\nlabel(\"$1$\", (0,y1), NE);\nlabel(\"$2$\", (x1,y2), NW);\nlabel(\"$3$\", (x1,y3), SW);\nlabel(\"$4$\", (x2,y2), NE);\nlabel(\"$5$\", (x2,y3), SE);\nlabel(\"two triangles meeting at $1$\", (10,-70), S);",
+    "asymptoteAlt": "Two triangles drawn side by side that meet at a single shared vertex near the top center. The shared vertex is a filled dot labeled with the number one. The left triangle has two additional filled dots at its upper left and lower left, labeled two and three, and the right triangle has two filled dots at its upper right and lower right, labeled four and five. A caption below the drawing notes that the two triangles meet at the shared vertex.",
+    "asymptoteAspectRatio": 1.333
+  },
+  {
+    "id": "m3-l4-p19",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "combinations",
+      "permutations",
+      "graph-trails",
+      "hamiltonian-count"
+    ],
+    "promptLatex": "Every pair of the six members of a club is friends. In how many ways can the members be seated around a round table so that every two neighbors of the table are friends?",
+    "choices": [
+      "60",
+      "120",
+      "360",
+      "30",
+      "720"
+    ],
+    "answerLatex": "60",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Because every pair is friends, every seating qualifies, so this is a count of circular orders.",
+      "Fix one member to remove rotational freedom, then divide by two because the two directions of the same seating count once.",
+      "Compute $\\frac{5!}{2}$."
+    ],
+    "solutionLatex": "Since every pair of members are friends, every arrangement around the table satisfies the condition. Fix one member in a seat to remove rotational freedom; the remaining five members can then be placed in the other five seats in $5! = 120$ ways.\n\nEach circular seating is counted twice, once in each direction of reading around the table, so the number of seatings is\n\n$\\frac{5!}{2} = \\frac{120}{2} = 60$.",
+    "techniqueSlugs": [
+      "hamiltonian-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p20",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "combinations",
+      "permutations",
+      "graph-trails",
+      "hamiltonian-count"
+    ],
+    "promptLatex": "Every pair of the six members of a club is friends. In how many ways can the members line up in a row so that each person except the two at the ends has a friend on both sides?",
+    "choices": null,
+    "answerLatex": "360",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Again every pair is friends, so this is a count of linear arrangements of six distinct people.",
+      "Arrange the six people and then identify arrangements that read the same forwards and backwards.",
+      "Compute $\\frac{6!}{2}$."
+    ],
+    "solutionLatex": "Every pair of members are friends, so every arrangement of the six members in a row satisfies the condition, giving $6! = 720$ arrangements.\n\nEach arrangement is paired with the one read in the opposite direction, and a row of six distinct people is never equal to its own reverse, so each pair of arrangements is counted twice. The number of rows is\n\n$\\frac{6!}{2} = \\frac{720}{2} = 360$.",
+    "techniqueSlugs": [
+      "hamiltonian-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p21",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "combinations",
+      "graph-trails",
+      "hamiltonian-count"
+    ],
+    "promptLatex": "Every pair of the six members of a club is friends. A round of four friends is a set of four members together with a cyclic order in which each person sits next to two of the others. How many such rounds are there, where two rounds with the same four members and the same circular order count as one round?",
+    "choices": null,
+    "answerLatex": "45",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Choose the four members first.",
+      "On a chosen set of four people, a circular order is counted by fixing one person and dividing by two for direction.",
+      "Compute $\\binom{6}{4} \\cdot \\frac{3!}{2}$."
+    ],
+    "solutionLatex": "Choose the four members in $\\binom{6}{4} = 15$ ways. For a fixed set of four people, a circular order is obtained by fixing one of them in place and arranging the other three, giving $3! = 6$ circular orders, and then dividing by two because reading the same circle in the opposite direction is the same round. So each set of four members supports $\\frac{3!}{2} = 3$ rounds.\n\nThe total is\n\n$15 \\cdot 3 = 45$.",
+    "techniqueSlugs": [
+      "hamiltonian-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p22",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "combinations",
+      "inclusion-exclusion",
+      "lattice-paths",
+      "reflection-argument",
+      "ballot-count"
+    ],
+    "promptLatex": "How many lattice paths go from $(0,0)$ to $(8,5)$, using only steps one unit right or one unit up, and never rising above the line $y = x$?",
+    "choices": null,
+    "answerLatex": "572",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Count all paths and subtract the ones that cross the line.",
+      "Reflect a bad path at its first step above the line and write down the resulting endpoint before counting.",
+      "Compute $\\binom{13}{5} - \\binom{13}{4}$."
+    ],
+    "solutionLatex": "All paths from $(0,0)$ to $(8,5)$ number $\\binom{13}{5} = 1287$.\n\nFor the bad paths, reflect at the first step above $y = x$: up to that step the path has one more up step than right step, so after the swap the path ends at $(9,4)$. Every path to $(9,4)$ crosses the line and reflects back, so the bad paths are in bijection with paths from $(0,0)$ to $(9,4)$, of which there are $\\binom{13}{4} = 715$.\n\nThe paths that never rise above the line number\n\n$1287 - 715 = 572$.",
+    "techniqueSlugs": [
+      "monotone-lattice-paths",
+      "reflection-principle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p23",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "combinations",
+      "ballot-count",
+      "reflection-argument"
+    ],
+    "promptLatex": "A fair coin is flipped $11$ times, giving $8$ heads and $3$ tails. In how many of the possible flip sequences is the number of heads in every initial segment at least as large as the number of tails in that segment?",
+    "choices": null,
+    "answerLatex": "110",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Read heads as an up step and tails as a right step, and the condition becomes a path condition.",
+      "Subtract the arrangements that at some point have more tails than heads, swapping signs in the first segment where that fails.",
+      "Compute $\\binom{11}{3} - \\binom{11}{2}$."
+    ],
+    "solutionLatex": "There are $\\binom{11}{3} = 165$ sequences with $8$ heads and $3$ tails.\n\nCall a sequence bad if some initial segment has more tails than heads. Swap every symbol in the first segment where that happens; that segment had one more tail than head, so after the swap the whole sequence has $9$ heads and $2$ tails. Every sequence with $9$ heads and $2$ tails has a first segment with more heads than tails and swaps back to a bad sequence, so the bad sequences are counted by $\\binom{11}{2} = 55$.\n\nThe sequences satisfying the condition number $165 - 55 = 110$.",
+    "techniqueSlugs": [
+      "ballot-counting",
+      "reflection-principle"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p24",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "fundamental-counting",
+      "combinations",
+      "trees",
+      "prufer-code",
+      "cayley-formula"
+    ],
+    "promptLatex": "In how many ways can $8$ distinct labeled towns be connected by roads so that every town can be reached from every other one and exactly two towns are connected to exactly one road?",
+    "choices": null,
+    "answerLatex": "20160",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Use Prüfer codes of length six and ask how many distinct labels they must contain.",
+      "Exactly two leaves means exactly six distinct labels appear, so choose those six and count the sequences using all six.",
+      "Apply inclusion-exclusion to the count of sequences of length six over six labels that use every label."
+    ],
+    "solutionLatex": "A code for a tree on $8$ labeled vertices has length $8-2 = 6$. A town is a leaf exactly when its label is absent from the code, so exactly two leaves means exactly six distinct labels appear.\n\nChoose those six labels in $\\binom{8}{6} = 28$ ways. For a fixed choice, the number of sequences of length six over six labels in which every label appears is\n\n$6^6 - 6 \\cdot 5^6 + 15 \\cdot 4^6 - 20 \\cdot 3^6 + 15 \\cdot 2^6 - 6 \\cdot 1^6 = 46656 - 93750 + 61440 - 14580 + 960 - 6 = 720$.\n\nSo the number of trees is $28 \\cdot 720 = 20160$.",
+    "techniqueSlugs": [
+      "prufer-codes"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p25",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "combinations"
+    ],
+    "promptLatex": "Consider all subsets $S$ of the set $\\{1, 2, \\ldots, 8\\}$ that contain the element $1$. What is the sum of the sizes of all such subsets?",
+    "choices": null,
+    "answerLatex": "576",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Count each subset once for the element it is guaranteed to contain, and once more for each additional element.",
+      "There are $128$ subsets containing a given element, and each of the other seven elements appears in exactly $64$ of them.",
+      "Add the two contributions."
+    ],
+    "solutionLatex": "Count a pair consisting of a subset $S$ containing $1$ and a distinguished element of $S$ in two ways.\n\nFixing $S$: each of the $2^7 = 128$ subsets containing $1$ contributes $|S|$ pairs, so the answer is the sum of the sizes. Fixing the distinguished element instead: the element $1$ is in all $128$ subsets, and each of the other seven elements lies in exactly $2^6 = 64$ of them, since the remaining six elements are free. The number of pairs is therefore\n\n$128 + 7 \\cdot 64 = 128 + 448 = 576$.",
+    "techniqueSlugs": [
+      "double-count-a-family"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m3-l4-p26",
+    "moduleId": "M3",
+    "lessonId": "m3-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "fundamental-counting",
+      "combinations",
+      "trees",
+      "cayley-formula",
+      "prufer-code"
+    ],
+    "promptLatex": "In how many ways can $6$ distinct labeled towns be connected by roads so that every town can be reached from every other one and towns $1$ and $2$ are joined by a road?",
+    "choices": null,
+    "answerLatex": "432",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The networks are trees on six labeled vertices, so Cayley's formula gives the total.",
+      "By symmetry, the chance that a specified pair of towns is joined is the average degree of a town divided by the number of other towns.",
+      "Combine that with $6^{6-2} = 1296$."
+    ],
+    "solutionLatex": "The networks described are trees on $6$ labeled vertices, and Cayley's formula counts $6^{6-2} = 1296$ of them.\n\nIn a Prufer code of length $4$, each of the six labels appears equally often on average, so town $1$ appears $\\frac{4}{6}$ of a code on average, and a vertex with $d-1$ appearances has degree $d$. Town $1$ therefore has average degree $1 + \\frac{4}{6} = \\frac{5}{3}$, and across all $1296$ trees its degrees sum to $1296 \\cdot \\frac{5}{3} = 2160$.\n\nThose $2160$ incidences are shared equally among the $5$ other towns by symmetry, so towns $1$ and $2$ are joined in $\\frac{2160}{5} = 432$ trees. Equivalently the closed form is $2n^{n-3} = 2 \\cdot 6^3 = 432$.",
+    "techniqueSlugs": [
+      "prufer-codes"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]
