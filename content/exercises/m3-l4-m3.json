@@ -1,0 +1,26 @@
+{
+  "id": "m3-l4-m3",
+  "moduleId": "M3",
+  "lessonId": "m3-l4",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "fundamental-counting"
+  ],
+  "promptLatex": "In how many ways can $9$ distinct labeled towns be connected by roads so that every town can be reached from every other one and town $1$ is joined by a road to exactly one other town?",
+  "choices": null,
+  "answerLatex": "2097152",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Encode each network by its Prüfer code, a sequence of length $n-2$ built by repeatedly deleting the smallest leaf and recording its neighbor.",
+    "A town joined to exactly one road is a leaf, which is equivalent to its label never appearing in the code.",
+    "So the code has length seven over the other eight labels, giving $8^7$ possibilities."
+  ],
+  "solutionLatex": "The networks described are trees on $9$ labeled vertices. Each corresponds to exactly one Prüfer code of length $9-2 = 7$: repeatedly delete the smallest leaf and record its neighbor, stopping after seven deletions.\n\nA town is joined to exactly one road precisely when it is a leaf, and a vertex is a leaf exactly when its label is absent from the code. So the condition on town $1$ is that $1$ never appears in a code of length $7$ over the remaining eight labels. Each of the seven positions has $8$ choices, giving $8^7$ codes, and since the correspondence is a bijection the count of networks is the same:\n\n$8^7 = 2097152$.\n\nSanity check: Cayley's formula gives $9^{7} = 4782969$ trees in total, and a tree on nine vertices has at least two leaves, so $2097152$ being a bit under half of that is what one should expect.",
+  "techniqueSlugs": [
+    "prufer-codes"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
