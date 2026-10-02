@@ -1,5 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 import { ContentStore, loadContentStore, loadModuleMeta, toExerciseResponse, toLessonResponse, DEFAULT_CONTENT_ROOT } from "../src/content.js";
 import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure-contract.mjs";
@@ -210,4 +213,56 @@ test("warnings only describe real gaps, and a clean corpus produces none", () =>
     modules: [{ id: "M1", title: "Algebra Foundations", order: 1 }],
   });
   assert.equal(withCatalogue.warnings.some((w) => w.includes("module catalogue")), false);
+});
+
+test("the shipped corpus has no dangling references", () => {
+  // The tests above keep the route contract state-agnostic, which is right, but it means nothing
+  // on its own holds the corpus still. This does: a lesson that lists an exercise nobody authored,
+  // an exercise that claims a lesson that does not exist, or a prerequisite pointing nowhere has
+  // to fail here instead of shipping. It reached zero when the counting lessons moved to M3 and
+  // m4-l4's prerequisite m3-l2 resolved; it should stay there.
+  assert.deepEqual(store.warnings, []);
+});
+
+test("every lesson and every exercise claims a module the catalogue declares", () => {
+  // The regression guard for this change. The counting lessons were filed under M7, which the
+  // catalogue gives to Probability, and nothing complained: the codes looked plausible and the
+  // store only compared ids, never the two files against each other. M3 and M7 mean different
+  // topics, so a lesson under the wrong one is invisible to every other check.
+  const catalogue = new Map(
+    JSON.parse(readFileSync(join(DEFAULT_CONTENT_ROOT, "modules.json"), "utf8")).modules.map((m) => [m.id, m.title]),
+  );
+  for (const lesson of store.lessons.values()) {
+    assert.ok(catalogue.has(lesson.moduleId), `lesson ${lesson.id} claims module ${lesson.moduleId}, which the catalogue does not declare`);
+  }
+  for (const ex of store.exercises.values()) {
+    assert.ok(catalogue.has(ex.moduleId), `exercise ${ex.id} claims module ${ex.moduleId}, which the catalogue does not declare`);
+  }
+  // And the two codes this branch moved between really do name different topics.
+  assert.equal(catalogue.get("M3"), "Counting & Combinatorics");
+  assert.equal(catalogue.get("M7"), "Probability");
+  assert.ok(store.getLesson("m3-l1"), "the counting lessons are m3-l1/m3-l2");
+  assert.equal(store.getLesson("m7-l1"), null, "nothing is filed under the probability code any more");
+});
+
+test("a dangling reference is still reported, so zero warnings means clean rather than unchecked", () => {
+  // The other half of the zero above. Detection must survive the corpus being clean, or a green
+  // run would only mean the check had been switched off.
+  const root = mkdtempSync(join(tmpdir(), "math-dangling-"));
+  try {
+    mkdirSync(join(root, "lessons"), { recursive: true });
+    mkdirSync(join(root, "exercises"), { recursive: true });
+    writeFileSync(join(root, "lessons", "l1.json"), JSON.stringify({
+      id: "l1", moduleId: "M1", order: 1, title: "T",
+      prerequisites: ["l0"],
+      sections: { practice: { exerciseIds: ["e-missing"] } },
+    }));
+    writeFileSync(join(root, "exercises", "e1.json"), JSON.stringify({ id: "e1", lessonId: "l0", moduleId: "M1" }));
+    const warnings = new ContentStore({ root }).warnings;
+    assert.ok(warnings.some((w) => w.includes("prerequisite l0")), `expected the missing prerequisite to be reported, got ${warnings}`);
+    assert.ok(warnings.some((w) => w.includes("e-missing")), `expected the missing practice id to be reported, got ${warnings}`);
+    assert.ok(warnings.some((w) => w.includes("claims lesson l0")), `expected the orphaned exercise to be reported, got ${warnings}`);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
