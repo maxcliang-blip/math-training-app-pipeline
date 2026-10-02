@@ -170,6 +170,62 @@ test("measureBox reports no box rather than guessing one", async () => {
   assert.equal(measureBox('<svg><rect width="500" height="400"/></svg>'), null);
 });
 
+test("the drift gate fires on a source edit that was never restated, and is not dead code", async () => {
+  const { classifyDrift } = await import("../../scripts/build-figures.mjs");
+
+  // The steady state, and the reason this check looks dead: the record pass writes declared =
+  // measured, so a clean corpus drifts 0. That is the design. The declaration is a committed
+  // assertion about what the compiler will produce, and restating it is a separate deliberate
+  // act. Editing a figure's source moves the rendered box and leaves the assertion behind --
+  // which is what this catches, and it is exactly what MAX-31's corpus did 51 times out of 55
+  // while every figure passed authoring.
+  assert.deepEqual(classifyDrift(2, 2), { drift: 0, level: "pass" });
+
+  // The un-restated edit. A figure declared 1.333 that compiles 321x240 does not quietly render
+  // wrong; it is rejected.
+  const drifted = classifyDrift(1.333, 1);
+  assert.equal(drifted.level, "reject");
+  assert.ok(drifted.drift > 0.05, `expected a real drift, got ${drifted.drift}`);
+
+  // Symmetric: a figure that got *taller* drifts the same way.
+  assert.equal(classifyDrift(1.333, 4).level, "reject");
+
+  // The two tiers, on S5.4 item 4's numbers, and they are not loosened to fit this corpus.
+  assert.equal(classifyDrift(1, 1.015).level, "pass");
+  assert.equal(classifyDrift(1, 1.03).level, "warn");
+  assert.equal(classifyDrift(1, 1.06).level, "reject");
+});
+
+test("the record pass refuses to bless a figure that compiles outside the S9 #8 band", async () => {
+  const { recordAspectRatios } = await import("../../scripts/build-figures.mjs");
+  const dir = mkdtempSync(join(tmpdir(), "record-band-"));
+  const file = join(dir, "m2-l1.json");
+  const source = "// a number line\nsize(320,240);\ndraw((0,0)--(320,0));";
+  writeFileSync(
+    file,
+    JSON.stringify({ sections: [{ figures: [{ asymptoteSource: source, asymptoteAlt: "a horizontal number line", asymptoteAspectRatio: 1.333 }] }] }, null, 2) + "\n",
+  );
+
+  // 321x37 is what the corpus's number line really compiles to, and it renders as a sliver in
+  // the box it reserves. Recording 8.676 would turn a figure that has to be redrawn into a
+  // declaration that looks authoritative, so the pass stops instead.
+  const out = recordAspectRatios({
+    measurements: [
+      { key: "m2-l1.sections.concept.figures[0]", file, source, declaredSize: "size(320,240)", declaredRatio: 1.333, measuredWidth: 321, measuredHeight: 37, measuredRatio: 8.676 },
+    ],
+  });
+
+  assert.equal(out.ok, false);
+  assert.match(out.error, /outside the \[0.5, 3\] band/);
+  assert.match(out.error, /Redraw the figure/);
+  // The corpus must be left exactly as it was found: a refused pass writes nothing.
+  const after = JSON.parse(readFileSync(file, "utf8"));
+  assert.equal(after.sections[0].figures[0].asymptoteAspectRatio, 1.333);
+  assert.ok(after.sections[0].figures[0].asymptoteSource.includes("size(320,240)"));
+
+  rmSync(dir, { recursive: true, force: true });
+});
+
 test("recording a ratio edits the figure whose source was located, not the first in the file", async () => {
   const { recordAspectRatios } = await import("../../scripts/build-figures.mjs");
   const dir = mkdtempSync(join(tmpdir(), "record-box-"));

@@ -107,10 +107,6 @@ const MAX_FIGURES_PER_LESSON = 8;
 const MAX_CORPUS_FIGURES = 185;
 const MAX_ASPECT = 3;
 const MIN_ASPECT = 0.5;
-// Content declares aspect ratios to 3 decimals, so every ratio comparison in the pipeline
-// rounds to the same precision. Both sides are rounded, so the declaration's own quantization
-// cannot masquerade as drift in either direction. Shared with scripts/build-figures.mjs.
-const RATIO_DECIMALS = 3;
 
 const TIERS = new Set(["10", "12", "A", "A+"]);
 
@@ -471,25 +467,22 @@ function checkAsymptote(source, alt, ratio, path) {
   const code = lines.join("\n");
   check("error", "S5.2-size-required", path, /\bsize\s*\(/.test(code),
     "figure source must call size(...) so the pipeline knows its dimensions (S5.2)");
+  // There is deliberately no authoring-time check here that the declared ratio equals
+  // size(W,H)/size(W,H). One used to live here, as S5.4-ratio-matches-size, and it was the
+  // source of the drift this gate now exists to catch: Asymptote's two-argument size() is a
+  // *ceiling* on the output box under the default keepAspect, not the box itself, so requiring
+  // declared == size() forced every figure to declare a shape it does not render at. 60 of the
+  // 65 figures in the corpus cleared that rule while rendering at a ratio more than 5% away
+  // from it, and the compiled box that MAX-4 serves and MAX-5 renders was recorded as null.
+  //
+  // Rendering Conventions S5.4 item 4 states the rule that does hold, and it compares the
+  // declaration to the rendered SVG: within 2% warns, over 5% rejects. That is S5.5, it runs
+  // where a compiler exists (scripts/build-figures.mjs), and it is the only ratio check.
   const sizeCall = code.match(/size\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)/);
-  if (sizeCall && typeof ratio === "number") {
-    // S5.4 authoring rule: exact at the declared precision, not a percentage tolerance.
-    // Both sides come from integers written in the same record, so this is a transcription
-    // check with no physical uncertainty to absorb. A tolerance here only hides mistakes,
-    // and worse, it disagrees with the figure build, which compares at the same precision:
-    // content inside the old 2% band would pass authoring and then fail CI. Rule S5.4a
-    // (declared vs size()) is exact; the compiled-box drift is S5.5 and carries the 2%/5% tiers.
-    const declared = Number(sizeCall[1]) / Number(sizeCall[2]);
-    const atPrecision = Number(declared.toFixed(RATIO_DECIMALS));
-    check("error", "S5.4-ratio-matches-size", path, ratio === atPrecision,
-      `asymptoteAspectRatio ${ratio} is not size(${sizeCall[1]},${sizeCall[2]}) = ${atPrecision} ` +
-      `(${declared.toFixed(4)} rounded to ${RATIO_DECIMALS} decimals); S5.4a is exact at the declared precision`);
-    check("advisory", "S5.2-size-arity", path, true,
-      "a two-argument size call is what lets S5.4a tie the declaration to the source; neither form fixes the " +
-      "output box, and size(300) alone leaves the real ratio to the compiler (S5.5)");
-  } else if (!sizeCall) {
+  if (!sizeCall) {
     fail("advisory", "S5.4-ratio-unverifiable", path,
-      "single-argument size(): the real aspect ratio is not knowable until compile, so S5.4a cannot be checked at authoring time and only S5.5 applies");
+      "single-argument size() bounds the output but declares no box, so asymptoteAspectRatio cannot be derived " +
+      "from the source at authoring time and only S5.5 (declared vs the compiled box) checks it");
   }
   check("error", "S5.2-no-file-io", path, !/\b(input|include|write|open)\s*\(/.test(code),
     "figure source must not do file IO (S5.2)");
