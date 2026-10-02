@@ -5,15 +5,15 @@
   "tier": "A+",
   "difficulty": 3,
   "tags": [
-    "counterexample",
-    "proof-strategy"
+    "counterexample"
   ],
   "promptLatex": "Which of the following proposed proofs is invalid? 'To prove n^3+n is always even, check n=1,2,3 and observe the pattern.'",
   "choices": [
     "Checking finitely many cases never proves a claim about all natural numbers",
     "A single counterexample refutes the claim",
     "n=1 gives 2 (even), n=2 gives 10 (even), n=3 gives 30 (even)",
-    "The claim is actually true and the checking is sufficient"
+    "The claim is actually true and the checking is sufficient",
+    "A proof by induction would also be invalid for this claim"
   ],
   "answerLatex": "Checking finitely many cases never proves a claim about all natural numbers",
   "answerAlternatives": [],
@@ -22,7 +22,7 @@
     "Checking examples only establishes consistency, not truth.",
     "No matter how many examples are checked, a single counterexample refutes the claim."
   ],
-  "solutionLatex": "Checking n=1, n=2, n=3 establishes that the claim holds for those three values, but it does not prove the claim for all natural numbers. A proof must provide a general argument (direct proof, induction, contradiction, etc.) that works for every n. Without such an argument, the claim remains unproven, and indeed it could be false despite holding for the checked cases.",
+  "solutionLatex": "Checking $n = 1, 2, 3$ shows the claim holds for those three values, which is not a proof about all natural numbers. A proof has to give a general argument, for instance the direct computation $n^3 + n = n(n^2 + 1)$, that works for every $n$. The student's checking is therefore insufficient even though the claim it aims at happens to be true.",
   "techniqueSlugs": [
     "counterexample"
   ],

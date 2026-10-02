@@ -5,10 +5,9 @@
   "tier": "A",
   "difficulty": 3,
   "tags": [
-    "proof-strategy",
     "induction"
   ],
-  "promptLatex": "Which proof strategy is most appropriate for proving 'for every integer n ≥ 1, 2^n > n'?",
+  "promptLatex": "Which proof strategy is most appropriate for proving 'for every integer $n \\ge 1$, $2^n > n$'?",
   "choices": [
     "direct proof",
     "proof by contradiction",
@@ -19,11 +18,11 @@
   "answerLatex": "proof by induction",
   "answerAlternatives": [],
   "hintLatex": [
-    "Induction is the natural strategy for claims quantifying over all natural numbers.",
-    "Base case n=1: 2^1 = 2 > 1 holds.",
-    "Inductive step: assume 2^k > k, then 2^{k+1} = 2·2^k > 2·k ≥ k+1 for k ≥ 1."
+    "A claim quantifying over all natural numbers invites induction.",
+    "Base case $n = 1$: $2^1 = 2 > 1$ holds.",
+    "Inductive step: assume $2^k > k$, then $2^{k+1} = 2 \\cdot 2^k > 2k \\ge k + 1$ for $k \\ge 1$."
   ],
-  "solutionLatex": "Proof by induction: Base case n=1 gives 2^1 = 2 > 1, which holds. Inductive step: assume 2^k > k for some k ≥ 1. Then 2^{k+1} = 2 · 2^k > 2 · k ≥ k + 1 (since k ≥ 1). Thus 2^{k+1} > k+1, completing the inductive step. Therefore the claim holds for all n ≥ 1 by induction.",
+  "solutionLatex": "Proof by induction. Base case $n = 1$: $2^1 = 2 > 1$. Inductive step: assume $2^k > k$ for some $k \\ge 1$. Then $2^{k+1} = 2 \\cdot 2^k > 2k$, and $2k \\ge k + 1$ because $k \\ge 1$. Hence $2^{k+1} > k + 1$. By induction the claim holds for every $n \\ge 1$.",
   "techniqueSlugs": [
     "induction"
   ],

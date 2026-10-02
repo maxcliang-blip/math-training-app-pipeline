@@ -16,16 +16,14 @@
     "17",
     "31"
   ],
-  "answerLatex": "17",
+  "answerLatex": "16",
   "answerAlternatives": [],
   "hintLatex": [
-    "Use the pigeonhole principle.",
-    "Pair the numbers into 15 pairs that sum to 31: (1,30), (2,29), (3,28), ..., (15,16).",
-    "These are the 15 pigeonholes.",
-    "If we select 16 numbers (pigeons), by pigeonhole, at least one pair is fully selected, giving a sum of 31.",
-    "If we select 15 numbers, we could select exactly one from each pair, avoiding any sum of 31."
+    "Group the numbers into pairs that sum to $31$ and treat those pairs as boxes.",
+    "The pairs $(1,30), (2,29), \\ldots, (15,16)$ are $15$ boxes, and taking one number from each box avoids any pair summing to $31$.",
+    "So $15$ numbers can still avoid a sum of $31$, while any $16$ numbers fill one box completely by the pigeonhole principle."
   ],
-  "solutionLatex": "Pair the numbers 1 through 30 into 15 pairs that each sum to 31: (1,30), (2,29), (3,28), ..., (15,16). These 15 pairs are the pigeonholes.",
+  "solutionLatex": "Pair $1$ through $30$ into the $15$ pairs that sum to $31$: $(1,30), (2,29), \\ldots, (15,16)$. Those $15$ pairs are the pigeonholes.\n\nSelecting $15$ numbers, one from each pair, produces no pair summing to $31$, so $15$ is not enough.\n\nSelecting $16$ numbers puts $16$ pigeons in $15$ holes, so one pair is selected in full, and a full pair sums to $31$.\n\nThe minimum is therefore $16$.",
   "techniques": [
     "pigeonhole-application"
   ],

@@ -1,0 +1,29 @@
+{
+  "id": "m5-l1-p2",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "angles",
+    "transversals",
+    "parallel-lines",
+    "alternate-interior-angles"
+  ],
+  "promptLatex": "Two parallel lines are cut by a transversal. One interior angle measures $70^{\\circ}$. What is the measure, in degrees, of its alternate interior angle?",
+  "choices": null,
+  "answerLatex": "70",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Find the interior angle on the other side of the transversal from the given one.",
+    "Alternate interior angles formed by parallel lines are congruent, not supplementary.",
+    "So the angle also measures $70$."
+  ],
+  "solutionLatex": "Alternate interior angles are the two interior angles on opposite sides of the transversal, so the angle in question is the congruent partner of the given one.\nThe lines are parallel, which is the hypothesis the theorem needs, so the two angles are congruent.\nThe alternate interior angle therefore also measures $70$.",
+  "techniqueSlugs": [
+    "alternate-interior-angles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

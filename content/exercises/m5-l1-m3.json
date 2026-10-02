@@ -1,0 +1,30 @@
+{
+  "id": "m5-l1-m3",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "angles",
+    "transversals",
+    "parallel-lines",
+    "angle-chase-setup"
+  ],
+  "promptLatex": "Two parallel lines are cut by a transversal. The acute angle at the upper intersection measures $35^{\\circ}$. An obtuse interior angle at the lower intersection, in degrees, is $m$. What is $m$?",
+  "choices": null,
+  "answerLatex": "145",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The angle you want is the supplement of an angle you can already name.",
+    "The angle at the lower intersection corresponding to the given one also measures $35^{\\circ}$.",
+    "That angle and the required one form a linear pair, so $m = 180 - 35 = 145$."
+  ],
+  "solutionLatex": "At the upper intersection the acute angle is $35^{\\circ}$, and its vertical angle is also $35^{\\circ}$.\nCorresponding angles are congruent, so the angle at the lower intersection in the same relative position also measures $35^{\\circ}$. That angle and the required interior angle lie on one side of the transversal and together make a straight line, so they are supplementary.\nTherefore $m = 180 - 35 = 145$.",
+  "techniqueSlugs": [
+    "corresponding-angles",
+    "linear-pair-supplementary"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

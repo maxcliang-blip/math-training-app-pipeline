@@ -32,13 +32,13 @@
         {
           "id": "m9-l4-ex-1",
           "titleLatex": "Worked example: counterexample to a universal claim",
-          "bodyLatex": "Claim: 'Every odd number greater than 1 is prime.' \\nCounterexample: n = 9. Nine is odd (not divisible by 2), and nine is greater than 1, but 9 = 3 × 3 is not prime. Therefore the claim is false.\\n\\nTo verify: check that 9 > 1, that 9 is not divisible by 2, and that 9 factors as 3 × 3 with both factors greater than 1, so 9 is composite.",
+          "bodyLatex": "Claim: 'Every odd number greater than 1 is prime.' \nCounterexample: n = 9. Nine is odd (not divisible by 2), and nine is greater than 1, but 9 = 3 \\times 3 is not prime. Therefore the claim is false.\n\nTo verify: check that 9 > 1, that 9 is not divisible by 2, and that 9 factors as 3 \\times 3 with both factors greater than 1, so 9 is composite.",
           "answerLatex": "9"
         },
         {
           "id": "m9-l4-ex-2",
           "titleLatex": "Worked example: evaluating a proposed proof",
-          "bodyLatex": "Claim: 'For every positive integer n, n^2 + n + 41 is prime.' \\nProposed proof: 'The expression gives prime values for n = 1, 2, 3, ..., 40, so it must always be prime.' \\nEvaluation: This is not a valid proof. Checking examples establishes consistency but does not prove the claim for all n. In fact, the claim is false at n = 40, since 40^2 + 40 + 41 = 1681 = 41^2 is composite. A valid proof would require either a general argument or a counterexample.",
+          "bodyLatex": "Claim: 'For every positive integer n, n^2 + n + 41 is prime.' \nProposed proof: 'The expression gives prime values for n = 1, 2, 3, ..., 40, so it must always be prime.' \nEvaluation: This is not a valid proof. Checking examples establishes consistency but does not prove the claim for all n. In fact, the claim is false at n = 40, since 40^2 + 40 + 41 = 1681 = 41^2 is composite. A valid proof would require either a general argument or a counterexample.",
           "answerLatex": "The proposed proof is invalid; n = 40 is a counterexample."
         }
       ]
@@ -52,7 +52,7 @@
       "noteLatex": "All prior lessons provide the foundational techniques: direct proof from L1, contradiction and pigeonhole from L2, and induction from L3. This lesson synthesizes those tools into a strategy for assessing claims."
     },
     "concept": {
-      "conceptLatex": "Not every claim that looks mathematical is true. A counterexample is a specific instance that refutes a universal claim, and finding one is often the most efficient way to settle a question. A universal claim of the form 'for every n, P(n)' is false if and only if there exists some n for which P(n) fails.\\n\\nWhen evaluating a proposed proof, check that it does not silently assume what needs to be proved, that quantifiers are handled correctly, and that each step follows logically from the previous one. A proof that works for a few examples but has a logical gap is not a valid proof.\\n\\nProof strategy selection depends on the claim's structure. Claims with nested quantifiers often respond well to direct proof or proof by contradiction. Claims about all natural numbers often invite induction. Claims involving integers, parity, or divisibility frequently succumb to case analysis or invariants. The key is to identify the core difficulty and match it to the appropriate technique.\\n\\nExample 1 (false claim): The claim 'every odd number greater than 1 is prime' is false; 9 is a counterexample since 9 = 3 × 9 is not prime.\\n\\nExample 2 (true claim with induction): The claim '2^n > n for all n \\ge 1' is true and best proved by induction, as shown in the previous lesson.",
+      "conceptLatex": "Not every claim that looks mathematical is true. A counterexample is a specific instance that refutes a universal claim, and finding one is often the most efficient way to settle a question. A universal claim of the form 'for every $n$, $P(n)$' is false if and only if there exists some $n$ for which $P(n)$ fails.\n\nWhen evaluating a proposed proof, check that it does not silently assume what needs to be proved, that quantifiers are handled correctly, and that each step follows logically from the previous one. A proof that works for a few examples but has a logical gap is not a valid proof.\n\nProof strategy selection depends on the claim's structure. Claims with nested quantifiers often respond well to direct proof or proof by contradiction. Claims about all natural numbers often invite induction. Claims involving integers, parity, or divisibility frequently succumb to case analysis or invariants. The key is to identify the core difficulty and match it to the appropriate technique.\n\nExample 1 (false claim): the claim 'every odd number greater than 1 is prime' is false, because $9$ is a counterexample. It is odd, it is greater than 1, and $9 = 3 \\times 3$, so it is not prime.\n\nExample 2 (true claim with induction): the claim '$2^n > n$ for all $n \\ge 1$' is true and is best settled by induction, as shown in the previous lesson. Checking $n = 1, 2, 3, 4$ alone would not settle it, because a finite check never covers every $n$.",
       "figures": [
         {
           "id": "m9-l4-fig-1",
@@ -66,14 +66,20 @@
         {
           "id": "m9-l4-ex-1",
           "titleLatex": "Worked example: counterexample to a universal claim",
-          "bodyLatex": "Claim: 'Every odd number greater than 1 is prime.' \\nCounterexample: n = 9. Nine is odd (not divisible by 2), and nine is greater than 1, but 9 = 3 × 3 is not prime. Therefore the claim is false.\\n\\nTo verify: check that 9 > 1, that 9 is not divisible by 2, and that 9 factors as 3 × 3 with both factors greater than 1, so 9 is composite.",
+          "bodyLatex": "Claim: 'Every odd number greater than 1 is prime.'\n\nCounterexample: $n = 9$. Nine is odd, since it is not divisible by $2$, and nine is greater than $1$, but $9 = 3 \\times 3$, so $9$ is not prime. Therefore the claim is false.\n\nTo verify: check that $9 > 1$, that $9$ is not divisible by $2$, and that $9$ factors as $3 \\times 3$ with both factors greater than $1$, so $9$ is composite. A counterexample only has to break the universal claim once, so a single well-chosen instance beats a long argument.",
           "answerLatex": "9"
         },
         {
           "id": "m9-l4-ex-2",
           "titleLatex": "Worked example: evaluating a proposed proof",
-          "bodyLatex": "Claim: 'For every positive integer n, n^2 + n + 41 is prime.' \\nProposed proof: 'The expression gives prime values for n = 1, 2, 3, ..., 40, so it must always be prime.' \\nEvaluation: This is not a valid proof. Checking examples establishes consistency but does not prove the claim for all n. In fact, the claim is false at n = 40, since 40^2 + 40 + 41 = 1681 = 41^2 is composite. A valid proof would require either a general argument or a counterexample.",
+          "bodyLatex": "Claim: 'For every positive integer $n$, $n^2 + n + 41$ is prime.'\n\nProposed proof: 'The expression gives prime values for $n = 1, 2, 3, \\ldots, 40$, so it must always be prime.'\n\nEvaluation: this is not a valid proof. Checking many examples establishes consistency but does not prove the claim for all $n$. Worse, the claim is false at $n = 40$, since $40^2 + 40 + 41 = 1681 = 41^2$ is composite. The right move here is neither to repair the proof nor to widen the sample, but to notice that the example range already contains the refutation, and to present $n = 40$ as a counterexample.",
           "answerLatex": "The proposed proof is invalid; n = 40 is a counterexample."
+        },
+        {
+          "id": "m9-l4-ex-3",
+          "titleLatex": "Worked example: choosing a proof strategy",
+          "bodyLatex": "Claim: '$|x| + |x - 6| \\ge 6$ for all real $x$.'\n\nStrategy selection: the absolute values change sign at $x = 0$ and $x = 6$, so a proof by case analysis is the natural choice. A direct proof with no cases would still have to explain why each absolute value keeps its sign, which is exactly the bookkeeping the case split does for free.\n\nThe three cases: if $x \\le 0$ then $|x| + |x-6| = -x + 6 - x = 6 - 2x \\ge 6$; if $0 \\le x \\le 6$ then $|x| + |x-6| = x + 6 - x = 6$; if $x \\ge 6$ then $|x| + |x-6| = x + x - 6 = 2x - 6 \\ge 6$.\n\nEvery case gives at least $6$, so the claim holds, with equality exactly on $[0, 6]$. The case split was chosen from the breakpoints of the expression, not guessed.",
+          "answerLatex": "the claim holds on all three cases, with equality exactly for $x \\in [0, 6]$"
         }
       ]
     },
@@ -86,22 +92,37 @@
           "bodyLatex": "For a claim 'for every n, P(n)', a counterexample is a specific value n = k such that P(k) is false. Search starting from small values and verify directly."
         },
         {
-          "slug": "proof-strategy-direct",
+          "slug": "direct-proof",
           "name": "Use direct proof when the claim follows straightforwardly from known facts",
           "summaryLatex": "Unfold definitions, use chains of equivalences, and justify each step.",
           "bodyLatex": "Direct proof is appropriate when the claim's structure aligns with the given hypotheses and no contradiction or induction seems indicated."
         },
         {
-          "slug": "proof-strategy-induction",
+          "slug": "induction",
           "name": "Use induction when the claim quantifies over natural numbers",
           "summaryLatex": "Prove the base case and the inductive step, using either mathematical or strong induction as needed.",
           "bodyLatex": "Induction is the natural choice for claims of the form 'for every integer n \\ge 1, P(n)'."
         },
         {
-          "slug": "proof-strategy-contradiction",
+          "slug": "contradiction",
           "name": "Use proof by contradiction when assuming the negation leads to an impossibility",
           "summaryLatex": "Assume the negation and derive a statement about the objects that cannot hold.",
           "bodyLatex": "Contradiction is useful when direct reasoning is blocked and the negation has a clear opposite that leads to an impossibility."
+        },
+        {
+          "slug": "case-split",
+          "summaryLatex": "List the regions that cover the whole domain with no gap, evaluate the claim in each, and note that adjacent cases agree on the shared boundary.",
+          "bodyLatex": "Case analysis is the right strategy when an expression changes form inside the claim's domain, because the split points are the places where the formula itself changes.\n\nA useful case split has three properties: the cases cover the entire domain, the cases are disjoint or their overlap is harmless, and the boundaries are the actual breakpoints of the expression rather than convenient round numbers.\n\nProve $x^2 + y^2 \\ge 2xy$ for all real $x, y$ by splitting on nothing at all, since the identity $x^2 + y^2 - 2xy = (x - y)^2$ needs no sign analysis. That is the point: a strategy is only worth choosing when the expression actually resists the simpler argument. Split on $x \\le 0$, $0 \\le x \\le 6$, and $x \\ge 6$ to prove $|x| + |x - 6| \\ge 6$, where the absolute values force the split."
+        },
+        {
+          "slug": "wlog",
+          "summaryLatex": "Impose an ordering only when swapping the two names leaves the claim unchanged, and say explicitly which case the swap discards.",
+          "bodyLatex": "An assumption without loss of generality is a claim that the discarded half of the domain is a relabelling of the kept half. That is sound exactly when the claim is symmetric in the two names.\n\nSo before writing $x \\ge y$, check what happens when $x$ and $y$ are exchanged. If the claim comes back identical, the ordering is free; if it does not, the assumption has quietly shrunk the problem and the proof is no longer a proof of the original statement.\n\nFor $x^2 + y^2 \\ge 2xy$ the swap returns $y^2 + x^2 \\ge 2yx$, the same inequality, so $x \\ge y$ is free. Note that the assumption is also unnecessary: $(x - y)^2 \\ge 0$ proves the claim directly."
+        },
+        {
+          "slug": "both-directions-of-biconditional",
+          "summaryLatex": "Prove the two directions of an 'if and only if' separately, because one direction is often a chain of equivalences and the other is not the same argument reversed.",
+          "bodyLatex": "'$A$ if and only if $B$' is the conjunction of $A \\Rightarrow B$ and $B \\Rightarrow A$, and each direction is its own obligation. Treating them as one argument by reversing the steps of the first is the most common way to lose a point here.\n\nProving 'a number is even if and only if it is divisible by $2$' makes the asymmetry plain. The forward direction is one line: an even number is $2k$ for some integer $k$, so it is divisible by $2$. The reverse direction is a different sentence: a number divisible by $2$ equals $2k$, so by definition it is even.\n\nNeither direction implies the other, so a proof that only writes one of them has established a one-way implication at best."
         }
       ]
     },

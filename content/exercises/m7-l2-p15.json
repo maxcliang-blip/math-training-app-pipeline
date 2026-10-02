@@ -5,8 +5,7 @@
   "tier": "A",
   "difficulty": 5,
   "tags": [
-    "inclusion-exercise",
-    "comprehensive"
+    "inclusion-exclusion"
   ],
   "promptLatex": "A class has 30 students. 18 like algebra, 15 like geometry, and 10 like both algebra and geometry. How many students like neither algebra nor geometry?",
   "choices": [

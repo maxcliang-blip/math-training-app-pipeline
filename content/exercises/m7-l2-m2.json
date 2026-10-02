@@ -9,21 +9,20 @@
   ],
   "promptLatex": "How many positive integer solutions does x + y + z + w = 15 have if each variable is at most 5?",
   "choices": [
-    "10",
+    "52",
     "15",
     "18",
     "21",
     "25"
   ],
-  "answerLatex": "10",
+  "answerLatex": "52",
   "answerAlternatives": [],
   "hintLatex": [
-    "Use inclusion-exclusion on the upper bounds.",
-    "Total positive solutions without restrictions: (15-1) choose (4-1) = 14 choose 3 = 364.",
-    "Let A_i be the set where variable i exceeds 5. If x exceeds 5, substitute x' = x - 5, then count positive solutions for the reduced equation.",
-    "Any of the 4 variables could exceed 5, subtract 4 times the count for one variable."
+    "Count every positive solution first, then remove the ones where a variable runs past its bound.",
+    "Positive solutions to $x+y+z+w=15$ number $\\binom{14}{3} = 364$, and with $x \\ge 6$ substituted away there are $\\binom{9}{3} = 84$ of them.",
+    "Two variables past their bounds is rare, since $x, y \\ge 6$ leaves only $\\binom{4}{3} = 4$ solutions, and three such variables cannot happen at all."
   ],
-  "solutionLatex": "Total positive integer solutions without upper bounds: x + y + z + w = 15, each >= 1, is (15-1) choose (4-1) = 14 choose 3 = 364.",
+  "solutionLatex": "Count the unrestricted total first, then remove the solutions that break the upper bounds.\n\nPositive solutions of $x+y+z+w=15$, with every variable at least $1$, number $\\binom{15-1}{4-1} = \\binom{14}{3} = 364$.\n\nLet $A_x$ be the set where $x \\ge 6$. Substituting $x' = x - 5$ turns that into $x' \\ge 1$, so $|A_x| = \\binom{10-1}{3} = 84$, and the four variables are symmetric.\n\nFor two variables at once, $x, y \\ge 6$ leaves $x' + y' + z + w = 5$ with all four parts positive, so $|A_x \\cap A_y| = \\binom{4}{3} = 4$.\n\nThree variables at least $6$ would need a sum of at least $6 + 6 + 6 + 1 = 19$, so every triple intersection is empty.\n\nBy inclusion-exclusion the count is $364 - 4 \\cdot 84 + \\binom{4}{2} \\cdot 4 = 364 - 336 + 24 = 52$.",
   "techniques": [
     "stars-and-bars-method",
     "case-split-inclusion-exclusion"

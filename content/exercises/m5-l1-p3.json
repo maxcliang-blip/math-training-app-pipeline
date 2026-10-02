@@ -1,0 +1,28 @@
+{
+  "id": "m5-l1-p3",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "angles",
+    "triangles",
+    "triangle-angle-sum"
+  ],
+  "promptLatex": "Two angles of a triangle measure $50^{\\circ}$ and $65^{\\circ}$. The third angle, in degrees, is $m$. What is $m$?",
+  "choices": null,
+  "answerLatex": "65",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The three interior angles of a triangle have a fixed total.",
+    "That total is $180^{\\circ}$.",
+    "So $m = 180 - 50 - 65 = 65$."
+  ],
+  "solutionLatex": "The interior angles of a triangle sum to $180^{\\circ}$, regardless of the shape of the triangle.\nThe two given angles account for $50 + 65 = 115$ of that total.\nSo the third angle is $m = 180 - 115 = 65$.",
+  "techniqueSlugs": [
+    "triangle-angle-sum"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

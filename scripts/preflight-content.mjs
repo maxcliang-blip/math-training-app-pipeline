@@ -170,7 +170,7 @@ const TAG_TECHNIQUE = [
   "euclidean-algorithm", "valuation-counting", "unitary-decomposition", "periodicity",
   // Module 9: the proof-writing techniques the AIME proofs are actually built from.
   "proof", "direct-proof", "contradiction", "pigeonhole", "invariants", "wlog",
-  "counterexample", "biconditionals",
+  "counterexample", "biconditionals", "induction", "strong-induction",
   // Module 6: how an analytic-geometry or complex-number argument is actually built.
   "point-slope-form", "distance-to-line-formula", "linear-elimination", "substitution",
   "completing-the-square", "conic-standard-form", "focus-directrix", "complex-modulus",
@@ -224,6 +224,11 @@ const TAG_TECHNIQUE = [
 // Rule for the next module: add its topics and its techniques to the two lists above. Do not
 // widen a tag's meaning, and do not delete a tag that authored content already uses -- a
 // removed tag breaks every exercise carrying it, which is why the vocabulary is append-only.
+//
+// Module 9's technique block is now complete: "induction" and "strong-induction" were the
+// two omissions (MAX-29). If this comment ever describes an unfinished module again, the fix
+// is to finish that module's block here, not to retag the exercises -- an exercise retagged
+// to fit the vocabulary stops answering the query it was written for.
 const TAGS = new Set([...TAG_TOPIC, ...TAG_TECHNIQUE]);
 
 // ---------------------------------------------------------------------------

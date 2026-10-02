@@ -6,25 +6,24 @@
   "difficulty": 4,
   "tags": [
     "inclusion-exclusion",
-    "upper-bounds"
+    "complementary-count"
   ],
   "promptLatex": "How many nonnegative integer solutions does x + y + z = 6 have if each variable is at most 3?",
   "choices": [
-    "19",
+    "10",
     "25",
     "28",
     "30",
     "22"
   ],
-  "answerLatex": "19",
+  "answerLatex": "10",
   "answerAlternatives": [],
   "hintLatex": [
-    "Total solutions without restrictions: (6+3-1) choose (3-1) = (8) choose 2 = 28.",
-    "Let A_i be the set where variable i exceeds 3. If x exceeds 3, substitute x' = x - 4, then x' + y + z = 2, which has (2+3-1) choose 2 = (4) choose 2 = 6 solutions.",
-    "Since 6 - 8 = -2 < 0, at most one variable can exceed 3, so subtract 3 × 6 = 18.",
-    "Valid solutions: 28 - 18 = 10."
+    "Count the nonnegative solutions without the upper bounds, then remove the ones that break them.",
+    "Without bounds, $x + y + z = 6$ has $\\binom{8}{2} = 28$ nonnegative solutions, and with $x \\ge 4$ substituted away it has $\\binom{4}{2} = 6$.",
+    "Two variables cannot both be at least $4$, since that already needs $8$, so subtract $3 \\cdot 6$ and nothing else."
   ],
-  "solutionLatex": "Total nonnegative solutions without upper bounds: (6+3-1) choose (3-1) = (8) choose 2 = 28.",
+  "solutionLatex": "Count the unrestricted total: $x + y + z = 6$ has $\\binom{6+2}{2} = \\binom{8}{2} = 28$ nonnegative solutions.\n\nLet $A_x$ be the set where $x \\ge 4$. Substituting $x' = x - 4$ gives $x' + y + z = 2$, which has $\\binom{2+2}{2} = \\binom{4}{2} = 6$ nonnegative solutions, and the three variables are symmetric.\n\nNo two of these sets intersect: $x \\ge 4$ and $y \\ge 4$ would force $x + y \\ge 8 > 6$, leaving nothing for $z$.\n\nSo the number of solutions with every variable at most $3$ is $28 - 3 \\cdot 6 = 10$.",
   "techniques": [
     "stars-and-bars-method",
     "case-split-inclusion-exclusion"

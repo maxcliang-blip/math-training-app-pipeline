@@ -13,11 +13,11 @@
   "answerLatex": "9",
   "answerAlternatives": [],
   "hintLatex": [
-    "Test small odd composite numbers starting from the smallest.",
-    "9 is 3 × 3, so it is composite and odd.",
-    "The next odd number after 1 is 3, which is prime, then 5, which is prime, then 7, which is prime, then 9, which is not prime."
+    "Test the odd integers in increasing order, starting from the smallest.",
+    "$9 = 3 \\times 3$, so $9$ is composite and odd.",
+    "After $1$ come $3$, $5$, and $7$, which are all prime, and then $9$, which is not."
   ],
-  "solutionLatex": "The claim states that every odd integer greater than 1 is prime. To find a counterexample, test small odd integers:\n\n- 3 is prime ✓\n- 5 is prime ✓\n- 7 is prime ✓\n- 9 = 3 × 3 is composite ✗\n\nSince 9 is odd, greater than 1, and not prime, it is a counterexample. The smallest odd composite number is 9.",
+  "solutionLatex": "The claim says that every odd integer greater than $1$ is prime, so test the odd integers in order. $3$ is prime, $5$ is prime, and $7$ is prime, but $9 = 3 \\times 3$ is composite.\n\n$9$ is odd, greater than $1$, and not prime, which is exactly what a counterexample has to be. The smallest odd composite number is $9$.",
   "techniqueSlugs": [
     "counterexample"
   ],

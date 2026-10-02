@@ -5,8 +5,7 @@
   "tier": "12",
   "difficulty": 3,
   "tags": [
-    "stars-and-bars",
-    "positive-variables"
+    "stars-and-bars"
   ],
   "promptLatex": "How many positive integer solutions does x + y + z + w = 12 have?",
   "choices": [

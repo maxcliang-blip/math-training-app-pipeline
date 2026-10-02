@@ -5,24 +5,24 @@
   "tier": "A",
   "difficulty": 2,
   "tags": [
-    "proof-strategy",
     "induction"
   ],
-  "promptLatex": "A student claims: \"To prove 'n! > 2^n for all n ≥ 4' by induction, the inductive step from k to k+1 requires assuming k! > 2^k and showing (k+1)! > 2^{k+1}.\" What additional condition is needed for the step to work?",
+  "promptLatex": "A student claims: 'To prove $n! > 2^n$ for all $n \\ge 4$ by induction, the inductive step from $k$ to $k+1$ requires assuming $k! > 2^k$ and showing $(k+1)! > 2^{k+1}$.' What additional condition is needed for the step to work?",
   "choices": [
     "the base case must be n = 1",
-    "the induction hypothesis must also assume k ≥ 4",
+    "the induction hypothesis must also assume k \\ge 4",
     "no additional condition is needed",
-    "the claim is false and cannot be proved by induction"
+    "the claim is false and cannot be proved by induction",
+    "the base case must be checked for every n from 1 to 4 at once"
   ],
-  "answerLatex": "the induction hypothesis must also assume k ≥ 4",
+  "answerLatex": "the induction hypothesis must also assume k \\ge 4",
   "answerAlternatives": [],
   "hintLatex": [
-    "The inequality n! > 2^n first holds at n = 4 (4! = 24 > 16 = 2^4).",
-    "The inductive step (k+1)! > 2^{k+1} from k! > 2^k requires k+1 > 2, i.e., k ≥ 2, but the base case anchors at k = 4.",
-    "Ensuring k ≥ 4 guarantees the inductive step has enough room to operate."
+    "The inequality $n! > 2^n$ first holds at $n = 4$, since $4! = 24 > 16 = 2^4$.",
+    "The step from $k! > 2^k$ to $(k+1)! > 2^{k+1}$ needs $(k+1) > 2$, which is $k \\ge 2$, but the base case anchors at $k = 4$.",
+    "Making the hypothesis read $k \\ge 4$ gives the step enough room to operate."
   ],
-  "solutionLatex": "The claim n! > 2^n is first true at n = 4 (4! = 24 > 16 = 2^4). For the inductive step, assume k! > 2^k for some k ≥ 4. Then (k+1)! = (k+1)k! > (k+1)2^k. Since k ≥ 4, k+1 ≥ 5 > 2, so (k+1)2^k > 2 · 2^k = 2^{k+1}. Thus (k+1)! > 2^{k+1}, completing the inductive step. The additional condition needed is that the induction hypothesis applies only when k ≥ 4, matching the base case.",
+  "solutionLatex": "The claim $n! > 2^n$ is first true at $n = 4$, since $4! = 24 > 16 = 2^4$. Assume $k! > 2^k$ for some $k \\ge 4$. Then $(k+1)! = (k+1)k! > (k+1)2^k$, and because $k \\ge 4$ we have $k + 1 \\ge 5 > 2$, so $(k+1)2^k > 2 \\cdot 2^k = 2^{k+1}$. Hence $(k+1)! > 2^{k+1}$.\n\nThe extra condition is that the induction hypothesis must assume $k \\ge 4$, so that the hypothesis and the base case agree on where the induction starts.",
   "techniqueSlugs": [
     "induction"
   ],
