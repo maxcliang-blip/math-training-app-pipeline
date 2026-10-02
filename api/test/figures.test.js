@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, writeFileSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -168,4 +168,54 @@ test("measureBox reports no box rather than guessing one", async () => {
   // Only the root element counts. A child's width attribute must never be mistaken for the
   // figure's box, which is what an unanchored document-wide match used to risk.
   assert.equal(measureBox('<svg><rect width="500" height="400"/></svg>'), null);
+});
+
+test("recording a ratio edits the figure whose source was located, not the first in the file", async () => {
+  const { recordAspectRatios } = await import("../../scripts/build-figures.mjs");
+  const dir = mkdtempSync(join(tmpdir(), "record-box-"));
+  const file = join(dir, "m2-l3.json");
+
+  // The shape that broke the bootstrap: two figures in one file declaring the same box, so a
+  // file-wide search for `"asymptoteAspectRatio": 1.333` has two matches and either refuses to
+  // run or rewrites the wrong figure. The second figure is the one whose box really moved.
+  writeFileSync(
+    file,
+    JSON.stringify(
+      {
+        sections: [
+          {
+            figures: [
+              { asymptoteSource: "size(320,240);\ndraw((0,0)--(1,1));", asymptoteAlt: "a diagonal line in a square frame", asymptoteAspectRatio: 1.333 },
+              { asymptoteSource: "size(320,240);\ndraw((0,0)--(2,1));", asymptoteAlt: "a shallow line in a wide frame", asymptoteAspectRatio: 1.333 },
+            ],
+          },
+        ],
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+
+  const sourceA = "size(320,240);\ndraw((0,0)--(1,1));";
+  const sourceB = "size(320,240);\ndraw((0,0)--(2,1));";
+  const result = {
+    measurements: [
+      { key: "m2-l3.sections.concept.figures[0]", file, source: sourceA, declaredSize: "size(320,240)", declaredRatio: 1.333, measuredWidth: 300, measuredHeight: 240, measuredRatio: 1.25 },
+      { key: "m2-l3.sections.concept.figures[1]", file, source: sourceB, declaredSize: "size(320,240)", declaredRatio: 1.333, measuredWidth: 480, measuredHeight: 240, measuredRatio: 2 },
+    ],
+  };
+
+  const recorded = recordAspectRatios(result);
+  assert.equal(recorded.ok, true, JSON.stringify(recorded));
+  assert.equal(recorded.changes.length, 2);
+
+  const after = JSON.parse(readFileSync(file, "utf8"));
+  const [a, b] = after.sections[0].figures;
+  // Each figure keeps its own source and gains its own measured box.
+  assert.equal(a.asymptoteSource, "size(300,240);\ndraw((0,0)--(1,1));");
+  assert.equal(a.asymptoteAspectRatio, 1.25);
+  assert.equal(b.asymptoteSource, "size(480,240);\ndraw((0,0)--(2,1));");
+  assert.equal(b.asymptoteAspectRatio, 2);
+
+  rmSync(dir, { recursive: true, force: true });
 });

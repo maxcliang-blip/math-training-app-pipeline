@@ -481,6 +481,43 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
 // The edits are made on the raw text rather than through a JSON round trip because the corpus is
 // prettier-formatted: a round trip expands every inline array and turns a two-number change into
 // a whole-file rewrite that buries the two numbers that actually moved.
+// Rewrite the one asymptoteAspectRatio that belongs to the figure whose asymptoteSource we just
+// located, rather than the first one in the file.
+//
+// A file-wide search for the ratio is ambiguous whenever two figures declare the same box, which
+// is common: a lesson with three size(320,240) figures has three `1.333` ratios. Refusing to run
+// there is safe but useless, and picking the first match is neither. The source token is unique,
+// and JSON.stringify escapes newlines, so the figure's fields all sit on their own lines within
+// one object. So: walk out from the source line, take the first ratio line reached, and stop at
+// the line that closes the object. An object boundary before the ratio means the two really are in
+// different objects, which is reported rather than guessed at.
+function replaceRatioInFigureObject(text, sourceToken, ratioToken, newRatio) {
+  const sourceIndex = text.indexOf(sourceToken);
+  if (sourceIndex === -1) return { ok: false, error: "the source token vanished from the file" };
+
+  const lineStarts = [0];
+  for (let i = 0; i < text.length; i++) if (text[i] === "\n") lineStarts.push(i + 1);
+
+  let sourceLine = 0;
+  while (sourceLine + 1 < lineStarts.length && lineStarts[sourceLine + 1] <= sourceIndex) sourceLine++;
+
+  const endsObject = (line) => /^\s*\}/.test(line);
+
+  for (const step of [1, -1]) {
+    for (let i = sourceLine + step; i >= 0 && i < lineStarts.length; i += step) {
+      const start = lineStarts[i];
+      const line = text.slice(start, lineStarts[i + 1] ?? text.length);
+      if (line.includes(ratioToken)) {
+        const replaced =
+          text.slice(0, start) + line.replace(ratioToken, `"asymptoteAspectRatio": ${newRatio}`) + text.slice(start + line.length);
+        return { ok: true, text: replaced };
+      }
+      if (endsObject(line)) break;
+    }
+  }
+  return { ok: false, error: `the figure object closes before ${ratioToken} appears` };
+}
+
 export function recordAspectRatios(result) {
   const changes = [];
 
@@ -501,14 +538,14 @@ export function recordAspectRatios(result) {
     if (newSource === m.source) {
       return { ok: false, error: `no size(W,H) call found in the source of ${m.key}; refusing to guess` };
     }
-    text = text.replace(sourceToken, JSON.stringify(newSource).slice(1, -1));
-
+    // Both edits are anchored on the file as it was read. Replacing the source first would
+    // invalidate the source token the ratio edit is scoped by.
     const ratioToken = `"asymptoteAspectRatio": ${m.declaredRatio}`;
-    const ratioCount = text.split(ratioToken).length - 1;
-    if (ratioCount !== 1) {
-      return { ok: false, error: `cannot locate asymptoteAspectRatio ${m.declaredRatio} uniquely in ${m.file} (${ratioCount} matches); refusing to guess` };
+    const scoped = replaceRatioInFigureObject(text, sourceToken, ratioToken, m.measuredRatio);
+    if (!scoped.ok) {
+      return { ok: false, error: `cannot locate ${ratioToken} for ${m.key} in ${m.file}: ${scoped.error}` };
     }
-    text = text.replace(ratioToken, `"asymptoteAspectRatio": ${m.measuredRatio}`);
+    text = scoped.text.replace(sourceToken, JSON.stringify(newSource).slice(1, -1));
 
     writeFileSync(m.file, text);
     changes.push({
