@@ -342,7 +342,19 @@ function compileFigure(toolchain, figure, outDir) {
     writeFileSync(join(outDir, "svg", file), svg);
     return { svg, file, box: measureBox(svg) };
   } catch (err) {
-    return { error: `compile failed: ${(err.stderr || err.message || "").toString().trim().split("\n").slice(-2).join(" ")}` };
+    // The compiler's last two lines are the symptom; the six before them are the cause.
+    // asy reports "shipout failed" from plain_shipout.asy, which says nothing about the
+    // figure — the line that names the offending TeX macro is further up. Keeping two lines
+    // turns every one of these into the same unreadable message, which is how a single
+    // figure that compiles in one run and dies in the next gets looked at twice.
+    const detail = (err.stderr || err.message || "")
+      .toString()
+      .trim()
+      .split("\n")
+      .filter((l) => l.trim())
+      .slice(-8)
+      .join(" | ");
+    return { error: `compile failed: ${detail}` };
   } finally {
     rmSync(work, { recursive: true, force: true });
   }
