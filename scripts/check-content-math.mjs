@@ -10,6 +10,10 @@
 //   2. Fail-closed corpus. An absent or empty content root fails. "Nothing to check" is not a pass.
 //   3. A non-vacuous gate. --selftest injects one defect per rule family and requires the engine
 //      to catch every one of them; a rule with no enforcement makes the selftest fail.
+//   4. A live corpus pin. lib/corpus-pins.mjs records the lesson and exercise counts the rest of
+//      the repo asserts; this gate compares them against the corpus it just loaded, so growing the
+//      corpus without moving the pin is a local failure rather than a red main. MAX-64, merging
+//      MAX-58. See lib/corpus-pins.mjs - and note that it counts records, not files.
 //
 // The figure build is a separate gate: scripts/build-figures.mjs.
 //
@@ -28,6 +32,7 @@ import { run, KATEX_PINNED } from "./preflight-content.mjs";
 import { collectFigures } from "./build-figures.mjs";
 import { selftest as selftestRequirePathArg } from "./lib/require-path-arg.mjs";
 import { doubledBackslashInTexLabels, isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
+import { CORPUS_PINS, checkCorpusPins } from "../lib/corpus-pins.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -927,6 +932,29 @@ export function selftest(contentRoot) {
       });
     }
 
+    // The corpus pin is a gate like any other here, so it is proved able to fail like any other
+    // here. Both halves are needed: a mutation the checker ignores proves nothing, and a checker
+    // that also fires on the pristine corpus would make every future mutation inconclusive.
+    {
+      const pinnedClean = checkCorpusPins(report.corpus);
+      const shifted = checkCorpusPins({
+        lessons: CORPUS_PINS.lessons + 1,
+        exercises: CORPUS_PINS.exercises + 18,
+      });
+      const detail = !pinnedClean.length
+        ? `the pinned corpus was itself reported stale: ${pinnedClean[0]}`
+        : shifted.length
+          ? shifted[0]
+          : "a corpus one lesson and eighteen exercises larger was not reported stale";
+      rows.push({
+        id: "corpus-grew-without-the-pin-moving",
+        rule: "corpus-pins",
+        severity: "error",
+        caught: pinnedClean.length === 0 && shifted.length > 0,
+        detail,
+      });
+    }
+
     // Harness invariant, not a content rule: a report must not change under a later run().
     {
       const dir = mkdtempSync(join(tmpdir(), "content-alias-"));
@@ -1082,6 +1110,11 @@ if (isMain) {
   }
 
   let { report, errors } = checkCorpus(contentRoot);
+
+  // The pin check runs against the repository's own corpus root only, never a selftest's throwaway
+  // copy: a mutation copy is stale against the pin by construction, so asserting it there would
+  // make every mutation inconclusive.
+  const stalePins = checkCorpusPins(report.corpus);
   mkdirSync(dirname(outPath), { recursive: true });
   report.gate = {
     script: "scripts/check-content-math.mjs",
@@ -1090,6 +1123,8 @@ if (isMain) {
     // Name the rule the figure ratio is actually policed by, so a reader who came here looking
     // for it is sent to the check that exists instead of concluding the gate is missing.
     figureRatioRule: "S5.5 (declared vs compiled box), scripts/build-figures.mjs",
+    corpusPins: CORPUS_PINS,
+    corpusPinsOk: stalePins.length === 0,
   };
   writeFileSync(outPath, JSON.stringify(report, null, 2) + "\n");
 
@@ -1097,10 +1132,14 @@ if (isMain) {
   for (const line of printFindings(report) || []) console.log(line);
   console.log(`  report: ${outPath}`);
 
-  let failed = errors.length > 0;
+  let failed = errors.length > 0 || stalePins.length > 0;
   if (errors.length) {
     console.log("");
     console.log(`  ${errors.length} error(s); content does not pass the gate.`);
+  }
+  if (stalePins.length) {
+    console.log("");
+    for (const p of stalePins) console.error(`check-content-math: PINS: ${p}`);
   }
 
   if (wantSelftest) {

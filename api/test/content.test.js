@@ -6,6 +6,7 @@ import { join } from "node:path";
 
 import { ContentStore, loadContentStore, loadModuleMeta, toExerciseResponse, toLessonResponse, DEFAULT_CONTENT_ROOT } from "../src/content.js";
 import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure-contract.mjs";
+import { CORPUS_PINS, checkCorpusPins } from "../../lib/corpus-pins.mjs";
 
 // The store is what every route answers from, so these tests are about the corpus as it will be
 // served: the shape a client sees, and the two things that are load-bearing about it - that the
@@ -14,18 +15,22 @@ import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure
 const store = loadContentStore();
 
 test("every lesson and every exercise in the repository is loaded", () => {
-  // Both file shapes exist in the corpus - 42 single-record files and 24 arrays. A loader that
-  // assumes one of them silently serves about a third of the exercises, and the only symptom is
-  // a 404 on an exercise the board can see listed. Pin the count so the drop cannot come back.
+  // Both file shapes exist in the corpus, and a loader that assumes one of them silently serves
+  // about a third of the exercises, with a 404 on an exercise the board can see listed as the only
+  // symptom. That is why the count is pinned - and this is the only place it is pinned.
   //
-  // Raising a pinned count is part of adding exercises. 669 is the count cc48b1a left behind:
-  // it topped m1-l1, m5-l1 and m9-l3 up to 15 practice exercises each and the pin still said 648,
-  // so main went red on three tests that have nothing to do with content authoring. The pin is
-  // worth keeping -- a loader that drops exercises is invisible otherwise -- but it is only worth
-  // something if the person who grows the corpus moves it in the same commit.
+  // The pin lives in lib/corpus-pins.mjs, not in this file, because it used to be a literal here
+  // and in two more test files, and it had been left stale three times (648, 669, and the
+  // cdf6986 baseline in MAX-47). Every one of those was found by a person reading a diff. Raising
+  // the pin is part of adding exercises, so it is a one-line edit in one file next to this test,
+  // and the message below names the corpus so a stale pin is legible from CI output.
   const stats = store.stats();
-  assert.equal(stats.lessons, 38);
-  assert.equal(stats.exercises, 759);
+const stale = checkCorpusPins(stats);
+  assert.deepEqual(
+    stale,
+    [],
+    `${stale.join("\n")}\nPinned at ${CORPUS_PINS.baseline}; the content here is what the store loaded.`,
+  );
   assert.ok(stats.modules >= 8, `expected at least the eight authored modules, got ${stats.modules}`);
 });
 

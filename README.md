@@ -10,7 +10,10 @@ Approved plan (MAX-1): React frontend + Node.js/Express backend, KaTeX for math 
 - `api/` — Node.js/Express backend (lesson CRUD, exercise handling, rendering support)
 - `content/` — the authored corpus: `lessons/`, `exercises/`, `fixtures/`. This is the import
   source of truth, so it lives in the repository and not beside it.
-- `scripts/` — the content and figure build gates, plus the agent git tooling below
+- `lib/` — contracts shared between the api and the gates
+- `scripts/` — the content and figure build gates, the content close-out delivery check, and the
+  agent git tooling below
+- `docs/` — the content issue close-out procedure and its template
 - `.githooks/` — the hooks git runs on every push. `scripts/install-git-hooks.sh` installs them
 - `.github/workflows/ci.yml` — CI: install, build, test, and the delivery-integrity gate
 - `.github/workflows/content.yml` — CI: content math gate and figure build
@@ -24,11 +27,38 @@ Content is not allowed to reach import unverified. Two gates, both in `scripts/`
 npm run content:check      # lint every field against Rendering Conventions S2-S9
 npm run content:selftest   # the same, plus proof that each rule family can fail
 npm run content:figures    # pre-render Asymptote to sanitized SVG, write the figure manifest
+npm run content:delivered -- m5-l2   # is the lesson id on origin/main? for a close-out
 ```
 
 `content:selftest` is the one CI runs. It injects one defect per rule family into a throwaway
 copy of the corpus and requires the engine to catch every one, so a pass means something. A
 rule that stops being enforced fails the build instead of passing quietly.
+
+`content:delivered` closes the loop from the other end. A content issue can be closed `done` with
+its lesson on a branch, or never written at all, and neither is visible to a gate that only looks
+at the corpus in front of it — MAX-20 and MAX-23 were both. So a content issue names the lesson
+ids it delivered and this command is run against `origin/main` before the issue closes. See
+[`docs/CONTENT_ISSUE_CLOSEOUT.md`](docs/CONTENT_ISSUE_CLOSEOUT.md).
+
+### The corpus pins
+
+`lib/corpus-pins.mjs` holds the lesson and exercise counts the repo asserts, in one place. Both
+`npm test` and `npm run content:check` compare them against the corpus they loaded, so growing the
+corpus without moving the pin is a local failure rather than a red `main`:
+
+```
+corpus pins are stale: tests assert 36 lessons / 723 exercises,
+content/ holds 37 lessons / 741 exercises
+```
+
+These were three literals in three test files and had been left stale three times, each caught by
+a person reading a diff. Only `api/test/content.test.js` asserts against the pin;
+`api/test/health.test.js` and `api/test/routes.test.js` compare the route's numbers against the
+store it loaded, because what they are testing is the route's honesty, not the corpus size.
+
+Count records, not files, anywhere you count the corpus: a file in `content/exercises/` is either
+one record or an array of them, so 228 files hold 723 records. `api/src/content.js` says so at the
+loader.
 
 `content:figures` needs an Asymptote toolchain (`ASYMPTOTE_BIN`, or `asymptote` on PATH). With
 no toolchain it exits 3 rather than reporting success: figures validated but not compiled is
