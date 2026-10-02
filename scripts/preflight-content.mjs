@@ -161,6 +161,11 @@ const TAG_TOPIC = [
   "conditional-probability", "independence", "bayes-theorem", "expected-value",
   "geometric-probability", "random-variables", "distributions", "binomial-distribution",
   "hypergeometric-distribution",
+  // Module 3, second half: what the graph and lattice half of counting (m3-l4) is about.
+  // Appended in MAX-53. Without these four, the only way to file a Cayley exercise was as a
+  // combination, so the two obvious queries -- every lattice-path exercise, every
+  // spanning-tree exercise -- had no answer at all.
+  "lattice-paths", "trees", "spanning-trees", "graph-trails",
 ];
 
 const TAG_TECHNIQUE = [
@@ -219,6 +224,13 @@ const TAG_TECHNIQUE = [
   "bayes-reversal", "linearity-of-expectation", "indicator-variables",
   "geometric-probability-setup", "distribution-identification", "binomial-model",
   "hypergeometric-model", "symmetry-argument",
+  // Module 3, second half: how a graph or lattice counting argument is actually built.
+  // Appended in MAX-53. The reflection move is what every barrier problem -- a path above a
+  // line, a sign sequence, a coin prefix -- is really one of. Cayley and the code that
+  // bijects trees with sequences stay two tags rather than one, because naming the count of
+  // labeled trees and naming the encoding are different techniques.
+  "reflection-argument", "catalan-count", "ballot-count", "cayley-formula", "prufer-code",
+  "euler-circuit-count", "hamiltonian-count", "characteristic-roots", "recurrence-from-splitting",
 ];
 
 // Rule for the next module: add its topics and its techniques to the two lists above. Do not
@@ -229,6 +241,13 @@ const TAG_TECHNIQUE = [
 // two omissions (MAX-29). If this comment ever describes an unfinished module again, the fix
 // is to finish that module's block here, not to retag the exercises -- an exercise retagged
 // to fit the vocabulary stops answering the query it was written for.
+//
+// Module 3's block is now complete in both roles as well (MAX-53): the graph and lattice half
+// of m3-l4 had no words at all until then, so its exercises were filed under "combinations".
+// "trees" and "spanning-trees" are deliberately separate -- an exercise is about trees as
+// objects, or about counting a specific graph's spanning trees, and those are different
+// queries -- and "cayley-formula"/"prufer-code" likewise, because naming the count of labeled
+// trees and naming the code that bijects them with sequences are different techniques.
 const TAGS = new Set([...TAG_TOPIC, ...TAG_TECHNIQUE]);
 
 // ---------------------------------------------------------------------------
