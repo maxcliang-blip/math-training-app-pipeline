@@ -32,7 +32,7 @@
           "captionLatex": "The complex number $z=a+bi$ as a point in the plane: the modulus is the distance from the origin and the argument is the angle the segment makes with the positive real axis, measured counterclockwise.",
           "asymptoteSource": "// A complex number as a point, with its modulus and its argument.\n//\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nsize(301,296);\nusepackage(\"amsmath\");\npair O=(0,0);\npair z=(3,4);\ndraw((-4.4,0)--(4.4,0),Arrow);\ndraw((0,-4.4)--(0,4.4),Arrow);\nlabel(\"$\\operatorname{Re}$\",(4.5,0),E);\nlabel(\"$\\operatorname{Im}$\",(0,4.5),N);\nlabel(\"$1$\",(1,0),S);\nlabel(\"$i$\",(0,1),E);\ndraw(O--z);\nlabel(\"$|z|$\",(1.5,2.0),NW);\nlabel(\"$\\theta=\\arg z$\",(2.1,0.6),E);\ndot(z, black+3pt);\nlabel(\"$z$\",z,NE);\ndot((3,0), black+2.5pt);\nlabel(\"$\\operatorname{Re} z$\",(3,-0.35),S);",
           "asymptoteAlt": "A pair of perpendicular axes with arrowheads is labelled as the real and imaginary axes, with unit points marked on each. A solid segment runs from the origin up and to the right to a filled dot labelled as the complex number, and a second filled dot marks its projection onto the real axis. The segment carries a label giving the modulus, an arc at the origin between the real axis and the segment is labelled as the argument, and the axes have unit tick labels at one.",
-          "asymptoteAspectRatio": 1.017
+          "asymptoteAspectRatio": 1.02
         },
         {
           "id": "m6-l4-fig-2",

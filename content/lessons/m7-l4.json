@@ -34,14 +34,14 @@
           "captionLatex": "A discrete distribution with its mean drawn as a vertical rule: the mean is pulled toward whichever value carries the most probability, and it is not the middle of the range whenever the mass is lopsided.",
           "asymptoteSource": "// Distribution of a small random variable with its mean marked by a vertical rule.\n// Two-argument size() fixes the output box, so the declared ratio is exact.\nsize(420,350);\npen ax = gray(0.35) + 1;\npen bar = gray(0.2) + 1.2;\npen m = red + 1.4;\nreal h[] = {0.1, 0.4, 0.2, 0.2, 0.1};\nfor (int i = 0; i < 5; ++i) {\n  filldraw((i*1.6-0.6,0)--(i*1.6+0.6,0)--(i*1.6+0.6,h[i]*2.2)--(i*1.6-0.6,h[i]*2.2)--cycle, bar, bar);\n}\ndraw((-1.1,0)--(7.1,0), ax);\ndraw((3.4,0)--(3.4,2.9), m);\nlabel(\"mean\", (3.4,2.9), N);\nlabel(\"value\", (3.0,-0.4), S);\nlabel(\"probability\", (7.1,0.4), E);\n",
           "asymptoteAlt": "A bar chart of a five-valued random variable. The second bar is the tallest at about four tenths of the height, the first and last bars are the shortest, and the two middle bars are equal and half the height of the tallest. A vertical rule labelled mean stands to the right of centre, at about three and a third of the way across.",
-          "asymptoteAspectRatio": 1.2
+          "asymptoteAspectRatio": 2.491
         },
         {
           "id": "m7-l4-fig-2",
           "captionLatex": "Two variables feed into a single sum, and only their means are needed: the arrows are ordinary and the caption is the whole content of linearity of expectation.",
           "asymptoteSource": "// Linearity diagram: two dependent variables whose means simply add.\n// Two-argument size() fixes the output box, so the declared ratio is exact.\nsize(400,320);\npen t = gray(0.55) + 1;\npen ax = gray(0.35) + 1;\nlabel(\"$X$\", (0.2,2.4), W);\nlabel(\"$Y$\", (0.2,0.2), W);\nlabel(\"$X+Y$\", (4.9,1.3), E);\ndraw((0.6,2.2)--(2.3,1.3), t);\ndraw((0.6,0.4)--(2.3,1.3), t);\ndraw((2.3,1.3)--(4.5,1.3), t);\ndraw((5.4,0.5)--(7.8,0.5), ax);\nlabel(\"means add even when the variables are dependent\", (3.6,2.5), N);\n",
           "asymptoteAlt": "A diagram with two boxes on the left, one above the other, each joined by an arrow to a single box in the middle, which is in turn joined by a horizontal arrow to a short segment on the right labelled X plus Y. A caption above the diagram states that the means add even when the two variables are dependent.",
-          "asymptoteAspectRatio": 1.25
+          "asymptoteAspectRatio": 2.885
         }
       ],
       "examples": [

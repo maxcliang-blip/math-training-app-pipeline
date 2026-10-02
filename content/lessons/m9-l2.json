@@ -41,7 +41,7 @@
           "captionLatex": "The colouring invariant behind the domino argument. Every domino covers one light square and one dark square, so the difference between the two counts is unchanged by any placement. The two removed corners share a colour, which leaves the board unbalanced in a way no sequence of dominoes can repair.",
           "asymptoteSource": "// The colouring invariant: each domino covers one square of each\n// colour, so the difference of the two colour counts is invariant.\n// The t\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nsize(245,322);\nfor (int i = 0; i < 8; ++i) {\n  for (int j = 0; j < 8; ++j) {\n    if ((i+j) % 2 == 0) fill((i,j)--(i+1,j)--(i+1,j+1)--(i,j+1)--cycle, gray);\n  }\n}\nfor (int i = 0; i <= 8; ++i) {\n  draw((i,0)--(i,8),black+0.4pt);\n  draw((0,i)--(8,i),black+0.4pt);\n}\ndraw((0,0)--(1,1)--(1,0)--cycle,red+1.6pt);\ndraw((7,7)--(8,8)--(7,8)--cycle,red+1.6pt);\nlabel(\"removed\",(0.5,-0.8),S);\nlabel(\"removed\",(7.5,8.8),N);\nlabel(\"the two removed corners carry the same colour\",(4,-1.6),S);",
           "asymptoteAlt": "A square chessboard of sixty-four cells with the cells shaded in an alternating light and dark pattern. Two cells in opposite corners, at the bottom left and at the top right, are outlined in red and left unshaded, and each is labelled as removed. A caption beneath the board states that the two removed corners carry the same colour.",
-          "asymptoteAspectRatio": 0.761
+          "asymptoteAspectRatio": 0.759
         }
       ],
       "examples": [

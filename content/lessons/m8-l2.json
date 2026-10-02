@@ -75,7 +75,7 @@
           "answerLatex": "$\\sin x$",
           "asymptoteSource": "// The angle-addition identity as a chord-length statement. With the three\n// radii at 0, x, and x+y drawn, the chord lengths from the point at x+y down\n// to each of the other two are sin(x+y), sin y, and sin x in turn.\nsize(244,241);\npair O = (0,0);\npair A = dir(0);\npair B = dir(40);\npair C = dir(100);\ndraw(unitcircle, gray(0.7));\ndraw(O--A);\ndraw(O--B);\ndraw(O--C);\ndraw(C--A, black);\ndraw(C--B, black);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, SE);\nlabel(\"$B$\", B, E);\nlabel(\"$C$\", C, NW);\nlabel(\"$\\sin(x+y)$\", (C+A)/2+(0,-0.2), S);\nlabel(\"$\\sin y$\", (C+B)/2+(0.14,0), NE);\nlabel(\"$\\sin x$\", (B+A)/2+(0,-0.18), S);\nlabel(\"$x$\", B*0.5, S);\nlabel(\"$y$\", (B+C)/2*0.6, NE);",
           "asymptoteAlt": "A circle with three radii drawn from the centre to three marked points: one at the right end of the horizontal axis, one in the first quadrant, and one in the second quadrant. Two chords are drawn boldly, one from the second quadrant point down to the point on the right and one from the second quadrant point to the first quadrant point. Each chord carries a label saying it is the sine of a sum of angles, the sine of the second angle, and the sine of the first angle, and the two arcs at the centre are labelled with the two angles being added.",
-          "asymptoteAspectRatio": 1.012
+          "asymptoteAspectRatio": 1.017
         }
       ]
     },

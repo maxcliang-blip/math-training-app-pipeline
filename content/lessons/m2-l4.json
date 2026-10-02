@@ -41,7 +41,7 @@
           "captionLatex": "Casting out nines in practice: the difference of two numbers is a multiple of nine exactly when their digit sums agree modulo nine, and $1782 - 2451 = -669$ is $-74$ groups of nine.",
           "asymptoteSource": "// Casting out nines: the digit sums of two numbers that agree modulo 9.\n//\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nsize(322,137);\nlabel(\"$1782$\",(0,0),W);\nlabel(\"$2451$\",(0,-1),W);\nlabel(\"digit sum $18$\",(3.2,0),W);\nlabel(\"digit sum $12$\",(3.2,-1),W);\ndraw((0,0.4)--(5.6,0.4));\ndraw((0,-0.6)--(4.0,-0.6));\nlabel(\"$1782 - 2451 = -669 = -74 \\\\cdot 9$\",(2.8,1.2),N);",
           "asymptoteAlt": "Two lines of algebra are stacked one above the other, the upper naming one four-digit number and the lower naming another, each followed on the right by its digit sum. The upper digit sum reads eighteen and the lower reads twelve. A horizontal rule runs beneath each line, the upper one longer than the lower. Above both lines, centred, is a note giving the difference of the two numbers as a whole number of nines.",
-          "asymptoteAspectRatio": 2.35
+          "asymptoteAspectRatio": 2.358
         },
         {
           "id": "m2-l4-fig-3",
