@@ -115,6 +115,79 @@ test("GET /api/lessons/:id returns ids for practice and mastery, and the ids res
   assert.equal(batch.body.length, body.sections.practiceIds.length);
 });
 
+test("GET /api/exercises honours the filters it accepts, not only lessonId", async () => {
+  // The route builds moduleId / tier / tag / difficultyMin / difficultyMax into a filter object;
+  // all of them used to be discarded on the way into the store, so every one of these calls
+  // answered with the whole corpus sorted by id. That is a plausible-looking body, which is why
+  // it survived: nothing errored and nothing was empty.
+  const all = (await get("/api/exercises")).body;
+  const m1 = (await get("/api/exercises?moduleId=M1")).body;
+  assert.ok(m1.length > 0 && m1.length < all.length, `?moduleId=M1 returned ${m1.length} of ${all.length}`);
+  assert.equal(m1.every((e) => e.moduleId === "M1"), true);
+
+  const tier = (await get("/api/exercises?moduleId=M1&tier=10")).body;
+  assert.ok(tier.length > 0 && tier.length < m1.length);
+  assert.equal(tier.every((e) => e.moduleId === "M1" && String(e.tier) === "10"), true);
+
+  assert.deepEqual((await get("/api/exercises?tag=no-such-tag")).body, []);
+  assert.deepEqual((await get("/api/exercises?moduleId=M99")).body, []);
+
+  const ranged = (await get("/api/exercises?difficultyMin=1&difficultyMax=2")).body;
+  assert.ok(ranged.length > 0 && ranged.length < all.length);
+  assert.equal(ranged.every((e) => Number(e.difficulty) >= 1 && Number(e.difficulty) <= 2), true);
+
+  // lessonId alone still answers in the lesson's authored order, so a lesson page is unaffected.
+  const byLesson = (await get("/api/exercises?lessonId=m1-l2")).body;
+  const practice = (await get("/api/lessons/m1-l2")).body.sections.practiceIds;
+  assert.ok(byLesson.some((e) => e.id === practice[0]));
+  assert.equal(byLesson.every((e) => e.lessonId === "m1-l2"), true);
+
+  // ?limit still applies after filtering, not before.
+  const limited = (await get("/api/exercises?moduleId=M1&limit=3")).body;
+  assert.equal(limited.length, 3);
+});
+
+test("a lesson route lists solutions the client can actually render", async () => {
+  // Lesson spec S3.6 renders solutions as their own list. It used to come back empty on every
+  // lesson: "solutionIds" stripped to the section name "solution", the corpus section is
+  // "solutions", and the empty result sat next to two correct lists.
+  const { status, body } = await get("/api/lessons/m1-l2");
+  assert.equal(status, 200);
+  assert.ok(body.sections.solutionIds.length > 0, "lesson route reported no solutions");
+  const resolved = await get(`/api/exercises?ids=${body.sections.solutionIds.join(",")}`);
+  assert.equal(resolved.body.length, body.sections.solutionIds.length);
+  assert.equal(resolved.body.every((e) => e.lessonId === "m1-l2"), true);
+
+  // Every lesson, not just the one that was looked at: the bug was in the field mapping, so it
+  // applied to the whole corpus.
+  for (const lesson of (await get("/api/lessons")).body) {
+    assert.ok(lesson.sections.solutionIds.length > 0, `${lesson.id} reported no solutions`);
+  }
+});
+
+test("a module with no lessons yet still declares its tiers", async () => {
+  const { body } = await get("/api/modules");
+  const unauthored = body.filter((m) => m.lessonCount === 0);
+  assert.ok(unauthored.length > 0, "expected the catalogue to be wider than the corpus");
+  for (const m of unauthored) {
+    assert.ok(m.tiers.length > 0, `${m.code} has no lessons and reports no tiers`);
+    assert.deepEqual(m.tiers, m.declaredTiers);
+  }
+  // A module with lessons reports the union of the tiers its lessons actually carry. That union is
+  // not required to equal the catalogue: M1's lessons claim A and the catalogue does not, M4 and
+  // M8's claim 10 and A+ and the catalogue does not. Both numbers are reported so a client can
+  // see the disagreement instead of inheriting one side of it.
+  const authored = body.filter((m) => m.lessonCount > 0);
+  assert.ok(authored.length > 0);
+  for (const m of authored) {
+    const { body: lessons } = await get(`/api/modules/${m.code}`);
+    const fromLessons = [...new Set(lessons.lessons.flatMap((l) => l.tiers || []))];
+    assert.deepEqual(m.tiers, fromLessons.sort(), `${m.code} tiers disagree with its lessons`);
+    assert.deepEqual(m.tiers, [...m.tiers].sort());
+    assert.deepEqual(m.declaredTiers, [...m.declaredTiers].sort());
+  }
+});
+
 test("a batched exercise fetch refuses more than 60 ids and reports the ones it missed", async () => {
   const tooMany = await get(`/api/exercises?ids=${Array.from({ length: 61 }, (_, i) => `x${i}`).join(",")}`);
   assert.equal(tooMany.status, 400);

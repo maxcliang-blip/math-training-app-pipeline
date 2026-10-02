@@ -30,7 +30,14 @@ test("a lesson route reports ids for practice, mastery and solutions, and the pr
   assert.ok(Array.isArray(lesson.sections.practiceIds));
   assert.ok(lesson.sections.practiceIds.length > 0);
   assert.ok(Array.isArray(lesson.sections.masteryIds));
-  assert.ok(Array.isArray(lesson.sections.solutionIds));
+  // Length, not just Array.isArray: "solutions" does not strip to "solution", so a derived
+  // section name made this list empty on every lesson while the two beside it stayed healthy.
+  assert.ok(lesson.sections.solutionIds.length > 0, "lesson route reports no solutions");
+  for (const id of lesson.sections.solutionIds) {
+    const ex = store.exercises.get(id);
+    assert.ok(ex, `solution ${id} does not resolve`);
+    assert.equal(ex.lessonId, lesson.id, `solution ${id} belongs to ${ex.lessonId}`);
+  }
   // The pass threshold drives "Mastery check passed" in lesson spec S4, so it must not be lost
   // by flattening the section into an id list.
   assert.equal(typeof lesson.sections.mastery.passThreshold, "number");
@@ -199,6 +206,16 @@ test("GET /api/modules has the shape IA §7 specifies, catalogue or no catalogue
   // Module order is numeric, so M2 sorts before M10 rather than after it.
   const codes = modules.map((m) => m.code);
   assert.deepEqual(codes, [...codes].sort((a, b) => Number(a.slice(1)) - Number(b.slice(1))));
+
+  // A module with no lessons yet still declares its tiers, and a tier badge that renders as
+  // nothing is not something a test suite notices by itself. Every catalogue module reports the
+  // tiers it declares, and `tiers` agrees with `declaredTiers` whenever the corpus is empty.
+  for (const m of modules) {
+    if (m.declaredTiers.length) {
+      assert.ok(m.tiers.length > 0, `${m.code} reports no tiers at all`);
+      if (m.lessonCount === 0) assert.deepEqual(m.tiers, m.declaredTiers, `${m.code} has no lessons, so its tiers are the declared ones`);
+    }
+  }
 });
 
 test("a batched exercise fetch is one call, capped, and reports ids it could not resolve", () => {
@@ -207,6 +224,36 @@ test("a batched exercise fetch is one call, capped, and reports ids it could not
   const byLesson = store.queryExercises({ lessonId: "m1-l2" });
   assert.ok(byLesson.length >= 15);
   assert.ok(byLesson.every((e) => e.lessonId === "m1-l2"));
+});
+
+test("every filter a query carries narrows the batch, not just lessonId and ids", () => {
+  // These filters used to be built by the route and then dropped on the floor, so
+  // `?moduleId=M3` answered with the whole corpus sorted by id - which looks like a result.
+  const total = store.queryExercises({}).length;
+  const byModule = store.queryExercises({ moduleId: "M1" });
+  assert.ok(byModule.length > 0 && byModule.length < total, `moduleId returned ${byModule.length} of ${total}`);
+  assert.equal(byModule.every((e) => e.moduleId === "M1"), true);
+
+  const byTier = store.queryExercises({ moduleId: "M1", tiers: ["10"] });
+  assert.ok(byTier.length < byModule.length);
+  assert.equal(byTier.every((e) => e.moduleId === "M1" && String(e.tier) === "10"), true);
+
+  const byTag = store.queryExercises({ tags: ["no-such-tag"] });
+  assert.deepEqual(byTag, [], "a tag that matches nothing must answer empty, not everything");
+  assert.deepEqual(store.queryExercises({ moduleId: "M99" }), []);
+
+  // Filters compose with lessonId, and the lesson's own authored order is kept when it is the
+  // only filter: a lesson page lists what the lesson said, in the order it said it.
+  const lessonOnly = store.queryExercises({ lessonId: "m1-l2" });
+  assert.deepEqual(lessonOnly, store.queryExercises({ ids: lessonOnly.map((e) => e.id) }));
+  const lessonFiltered = store.queryExercises({ lessonId: "m1-l2", tiers: ["10"] });
+  assert.equal(lessonFiltered.every((e) => e.lessonId === "m1-l2" && String(e.tier) === "10"), true);
+  assert.ok(lessonFiltered.length > 0 && lessonFiltered.length <= lessonOnly.length);
+
+  // Difficulty is a range, and it is the one filter that is order-sensitive.
+  const easy = store.queryExercises({ difficultyMin: 1, difficultyMax: 2 });
+  assert.equal(easy.every((e) => Number(e.difficulty) >= 1 && Number(e.difficulty) <= 2), true);
+  assert.ok(easy.length < total);
 });
 
 test("practice filtering returns a stable order for the same filters", () => {

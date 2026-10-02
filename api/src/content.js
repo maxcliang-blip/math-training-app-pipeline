@@ -70,14 +70,19 @@ function readRecords(dir) {
   return out;
 }
 
-// The section a lesson's practice list lives in. The spec asks for practiceIds / masteryIds on
+// The section a lesson's exercise lists live in. The spec asks for practiceIds / masteryIds on
 // the lesson route, which is the same information under a name that says what the client does
 // with it; solutions get the same treatment because lesson spec S3.6 renders them as their own
 // list and the client cannot build that from an unnamed field.
+//
+// The corpus section name is carried explicitly rather than derived by stripping the Ids
+// suffix. Deriving it is a one-line guess that is wrong exactly where the naming is irregular:
+// "solutionIds" strips to "solution", the corpus section is "solutions", and the lookup misses
+// so every lesson reports zero solutions while the two lists beside it look healthy.
 const SECTION_ID_FIELDS = [
-  ["practice", "practiceIds"],
-  ["mastery", "masteryIds"],
-  ["solutions", "solutionIds"],
+  { section: "practice", field: "practiceIds" },
+  { section: "mastery", field: "masteryIds" },
+  { section: "solutions", field: "solutionIds" },
 ];
 
 export class ContentStore {
@@ -105,8 +110,8 @@ export class ContentStore {
     for (const lesson of this.lessons.values()) {
       const ordered = [];
       const seen = new Set();
-      for (const [, field] of SECTION_ID_FIELDS) {
-        for (const id of lessonExerciseIds(lesson, field)) {
+      for (const { section } of SECTION_ID_FIELDS) {
+        for (const id of lessonExerciseIds(lesson, section)) {
           if (!seen.has(id)) {
             seen.add(id);
             ordered.push(id);
@@ -127,8 +132,8 @@ export class ContentStore {
   // for; removing it would hide the bug behind a plausible-looking shorter list.
   checkReferences() {
     for (const lesson of this.lessons.values()) {
-      for (const [, field] of SECTION_ID_FIELDS) {
-        for (const id of lessonExerciseIds(lesson, field)) {
+      for (const { section, field } of SECTION_ID_FIELDS) {
+        for (const id of lessonExerciseIds(lesson, section)) {
           if (!this.exercises.has(id)) this.warnings.push(`lesson ${lesson.id} lists ${id} in ${field}, which no exercise file defines`);
         }
       }
@@ -156,7 +161,13 @@ export class ContentStore {
       .sort((a, b) => a.order - b.order || String(a.id).localeCompare(String(b.id)));
     const meta = this.moduleMeta.get(moduleId) || null;
     const exerciseCount = lessons.reduce((n, l) => n + this.exerciseIdsByLesson.get(l.id).length, 0);
-    const tiers = sortTiers(lessons.flatMap((l) => l.tiers || []));
+    const corpusTiers = sortTiers(lessons.flatMap((l) => l.tiers || []));
+    // tiers answers "which tiers does this module cover", and the catalogue is where a module
+    // declares its own coverage. Deriving it from lessons alone reported [] for a module whose
+    // lessons have not been authored yet (M7), which is a tier badge that renders as nothing -
+    // not an error, so nothing downstream noticed. Both numbers are reported so a client can
+    // still tell "declared" from "authored".
+    const tiers = corpusTiers.length ? corpusTiers : sortTiers(meta?.tiers || []);
 
     const module = {
       id: moduleId,
@@ -172,6 +183,7 @@ export class ContentStore {
       order: meta?.order ?? moduleOrder(moduleId),
       targetExerciseCount: meta?.targetExerciseCount ?? null,
       tiers,
+      declaredTiers: sortTiers(meta?.tiers || []),
       topicCount: lessons.length,
       lessonCount: lessons.length,
       exerciseCount,
@@ -198,16 +210,24 @@ export class ContentStore {
 
   // Batched fetch (IA S7: one call, ids or lessonId). Ids win when both are given, because a
   // client that knows exactly what it wants should not have it widened by a second filter.
-  queryExercises({ ids, lessonId } = {}) {
+  //
+  // Every other filter the route accepts is honoured here too, by handing the request to
+  // searchExercises. A filter this method silently ignored was worse than a missing one: the
+  // result was the whole corpus, sorted by id, which reads like a plausible answer to
+  // `?moduleId=M3` instead of like the bug it is.
+  queryExercises(filters = {}) {
+    const { ids, lessonId, ...rest } = filters;
+    const hasOtherFilter = Object.values(rest).some((v) => v !== undefined && v !== null && v !== "");
     let out;
     if (Array.isArray(ids) && ids.length > 0) {
       out = ids.map((id) => this.exercises.get(id)).filter(Boolean);
-    } else if (lessonId) {
+    } else if (lessonId && !hasOtherFilter) {
+      // The lesson's own order, which is the order a learner is meant to meet the exercises in.
       out = (this.exerciseIdsByLesson.get(lessonId) || [])
         .map((id) => this.exercises.get(id))
         .filter(Boolean);
     } else {
-      out = [...this.exercises.values()];
+      out = this.searchExercises(filters);
     }
     // A deterministic order is what makes a batched fetch cacheable and diffable; the client
     // does its own queue ordering on top of this.
@@ -267,8 +287,8 @@ function moduleCompare(a, b) {
   return moduleOrder(a) - moduleOrder(b) || String(a).localeCompare(String(b));
 }
 
-function lessonExerciseIds(lesson, field) {
-  const section = lesson?.sections?.[field.replace(/Ids$/, "")];
+function lessonExerciseIds(lesson, sectionName) {
+  const section = lesson?.sections?.[sectionName];
   return Array.isArray(section?.exerciseIds) ? section.exerciseIds : [];
 }
 
@@ -297,7 +317,7 @@ export function toLessonResponse(store, lesson) {
     }
     sections[name] = copy;
   }
-  for (const [name, field] of SECTION_ID_FIELDS) sections[field] = lessonExerciseIds(lesson, field).slice();
+  for (const { section, field } of SECTION_ID_FIELDS) sections[field] = lessonExerciseIds(lesson, section).slice();
 
   return {
     id: lesson.id,
