@@ -9,6 +9,8 @@
     "test": "npm test --workspaces --if-present",
     "content:check": "node scripts/check-content-math.mjs",
     "content:selftest": "node scripts/check-content-math.mjs --selftest",
+    "content:answers": "python3 scripts/verify-answers-vs-solutions.py",
+    "content:answers:selftest": "python3 scripts/verify-answers-vs-solutions.py --selftest",
     "content:figures": "node scripts/build-figures.mjs",
     "content:figures:authoring": "node scripts/build-figures.mjs --allow-missing-toolchain",
     "content:figures:record": "node scripts/build-figures.mjs --record-aspect-ratios",

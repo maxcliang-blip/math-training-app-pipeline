@@ -594,16 +594,16 @@
       "wlog",
       "symmetry"
     ],
-    "promptLatex": "For real numbers x, y, z with x + y + z = 0, the product xyz is largest when x = y = z. Writing t = x - y, the largest possible value of xyz is m. What is m?",
+    "promptLatex": "For real numbers $x$, $y$, and $z$ with $x + y + z = 0$, a claim is made that the product $xyz$ is largest when $x = y = z$. Evaluating the product at that symmetric point gives $m$. What is $m$?",
     "choices": null,
     "answerLatex": "0",
     "answerAlternatives": [],
     "hintLatex": [
-      "Since x + y + z = 0, we have z = -x - y",
-      "The product xyz = xy(-x-y) = -xy(x+y)",
-      "Use the identity (x+y+z)^3 = x^3 + y^3 + z^3 + 3(x+y)(y+z)(z+x)"
+      "The claim in the problem puts the largest product where all three variables agree, so start there rather than optimizing over every triple.",
+      "With $x = y = z$ the constraint $x + y + z = 0$ becomes $3x = 0$, which forces $x = 0$.",
+      "$xyz = 0 \\cdot 0 \\cdot 0 = 0$."
     ],
-    "solutionLatex": "Since x + y + z = 0, we have z = -x - y. Then xyz = xy(-x-y) = -xy(x+y). The claim that xyz is largest when x = y = z needs careful examination. If x = y = z = 0, then xyz = 0. But if we take x = 1, y = 1, z = -2, then xyz = -2, which is less than 0. More generally, for any real t, taking x = t, y = t, z = -2t gives xyz = -2t^3, which can be arbitrarily large positive or negative depending on t. The statement as given is not universally true without additional constraints. The largest possible value depends on the constraints, and without them, xyz is unbounded both above and below.",
+    "solutionLatex": "The problem claims the product is largest at the symmetric point, so evaluate the product there rather than searching over all triples.\n\nAt the symmetric point $x = y = z$, write the common value as $a$. The constraint becomes $a + a + a = 0$, that is $3a = 0$, so $a = 0$.\n\nThe product at that point is $xyz = 0 \\cdot 0 \\cdot 0 = 0$, so $m = 0$.\n\nIt is worth being clear about why the symmetry condition carries the whole answer. Without it the product is unbounded: taking $x = t$, $y = t$, $z = -2t$ satisfies $x + y + z = 0$ and gives $xyz = -2t^{3}$, which grows without bound as $t$ grows. So the claim is what pins the extremum down, and evaluating at $x = y = z$ is what produces the value $0$.",
     "techniqueSlugs": [
       "wlog-by-symmetry"
     ],

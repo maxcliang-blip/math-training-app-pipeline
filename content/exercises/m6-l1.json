@@ -339,7 +339,8 @@
       "Two of the three sides run from the origin to points whose coordinates are related, and the third joins the two remaining vertices directly.",
       "$|OA| = 5$, $|OB| = 5$, and $AB$ is a vertical segment of length $8$"
     ],
-    "solutionLatex": "Compute the three side lengths.\n\n$|OA| = \\sqrt{3^{2}+4^{2}} = 5$ and $|OB| = \\sqrt{3^{2}+(-4)^{2}} = 5$.\n\n$|AB|$ is vertical at $x=3$, so $|AB| = 4-(-4) = 8$.\n\nThe perimeter is $5+5+8 = 18$\n\nAs a check, the side of length $8$ is the hypotenuse of a right triangle with legs $5$ and $5$, and indeed $\\sqrt{50+50}=\\sqrt{100}=8$.",
+    "solutionLatex": "Compute the three side lengths.\n\n$|OA| = \\sqrt{3^{2}+4^{2}} = 5$ and $|OB| = \\sqrt{3^{2}+(-4)^{2}} = 5$.\n\n$|AB|$ is vertical at $x=3$, so $|AB| = 4-(-4) = 8$.\n\nThe perimeter is $5+5+8 = 18$\n\nAs a check, the two hypotenuses are equal because the points $(3,4)$ and $(3,-4)$ are reflections of each other across the $x$-axis, and the base $4-(-4) = 8$ satisfies $5 + 5 = 10 > 8$, so the lengths $5, 5, 8$ are consistent with a non-degenerate triangle."
+,
     "techniqueSlugs": [
       "distance-formula"
     ],

@@ -23,9 +23,9 @@
     "hintLatex": [
       "Think of a full turn as one whole circle, and measure the angle as a fraction of that turn.",
       "A straight angle is $\\frac{\\pi}{2}$ radians, and a full turn is $2\\pi$, so a degree measure converts by the factor $\\frac{\\pi}{180}$.",
-      "$150^\\circ$ is five sixths of a full turn, so the radian measure is $\\frac{5}{6} \\cdot 2\\pi$."
+      "$150^\\circ$ is $\\frac{150}{360} = \\frac{5}{12}$ of a full turn, so the radian measure is $\\frac{5}{12} \\cdot 2\\pi$."
     ],
-    "solutionLatex": "A full turn is $2\\pi$ radians and $360$ degrees, so the angle is the fraction $\\frac{150}{360} = \\frac{5}{6}$ of a turn.\n\n$\\theta_{rad} = \\frac{5}{6} \\cdot 2\\pi = \\frac{5\\pi}{6}$\n\nCheck: $\\frac{5\\pi}{6} \\cdot \\frac{180}{\\pi} = 150$ degrees.",
+    "solutionLatex": "A full turn is $2\\pi$ radians and $360$ degrees, so the angle is the fraction $\\frac{150}{360} = \\frac{5}{12}$ of a turn.\n\n$\\theta_{rad} = \\frac{5}{12} \\cdot 2\\pi = \\frac{5\\pi}{6}$\n\nCheck: $\\frac{5\\pi}{6} \\cdot \\frac{180}{\\pi} = 150$ degrees.",
     "techniqueSlugs": [
       "degree-radian-conversion"
     ],

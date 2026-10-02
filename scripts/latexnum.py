@@ -38,6 +38,14 @@ class P:
         if not self.eat(ch):
             raise ValueError(f"expected {ch!r} at {self.i} in {self.s!r}")
 
+    def eat_str(self, tok):
+        """Consume a multi-character token such as \\rfloor."""
+        self.ws()
+        if self.s.startswith(tok, self.i):
+            self.i += len(tok)
+            return True
+        return False
+
     # expr := term (('+'|'-') term)*
     def expr(self):
         v = self.term()
@@ -99,6 +107,18 @@ class P:
         self.ws()
         if self.i >= len(self.s):
             raise ValueError("unexpected end")
+        # \lfloor E \rfloor / \lceil E \rceil. The body is not braced, so expr()
+        # stops on its own at the closer (a backslash cannot start an atom) and
+        # the rounding is applied here. The guard is a negative lookahead rather
+        # than \b, because \lceil15/5\rceil has no word boundary after the name.
+        m = re.match(r"\\(?:left)?(lfloor|lceil)(?![A-Za-z])", self.s[self.i:])
+        if m:
+            self.i += m.end()
+            v = self.expr()
+            closer = r"\rfloor" if m.group(1) == "lfloor" else r"\rceil"
+            if not self.eat_str(closer):
+                raise ValueError(f"expected {closer!r} at {self.i} in {self.s!r}")
+            return math.floor(v) if m.group(1) == "lfloor" else math.ceil(v)
         # \pi and friends
         m = re.match(r"\\pi", self.s[self.i:])
         if m:
@@ -152,6 +172,9 @@ def to_number(latex):
     for junk in ("\\left", "\\right", "\\middle", "^\\circ", "^{\\circ}",
                  "\\!", "\\,", "\\;", "\\ ", "~"):
         s = s.replace(junk, "")
+    # Unicode brackets, which some records use in place of the LaTeX macros
+    s = (s.replace("\u230a", "\\lfloor").replace("\u230b", "\\rfloor")
+          .replace("\u2308", "\\lceil").replace("\u2309", "\\rceil"))
     s = s.replace("\\circ", "").replace("\\angle", "")
     p = P(s)
     v = p.expr()

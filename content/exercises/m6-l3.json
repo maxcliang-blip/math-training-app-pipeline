@@ -188,7 +188,7 @@
       "Complete the square on each variable in turn, keeping track of the constants that move to the other side.",
       "$2(x-2)^{2} + 2(y-2)^{2} = 16$, so dividing through by the leading coefficient gives the form asked for"
     ],
-    "solutionLatex": "Complete the square on each variable.\n\n$2(x^{2}-4x) + 2(y^{2}-4y) = 0$ becomes $2(x-2)^{2} - 8 + 2(y-2)^{2} - 8 = 0$, so $2(x-2)^{2} + 2(y-2)^{2} = 16$.\n\nDividing through by $2$ gives $(x-2)^{2} + (y-2)^{2} = 8$, which is in the form asked for with $h=2$ and $k=2$.\n\n$h+k = 4$\n\nThe center is $(2,2)$ and the radius is $\\sqrt{8}$, consistent with the fact that the original equation is satisfied at $(2,2)$: $2(4)-16+2(4)-16=0$.",
+    "solutionLatex": "Complete the square on each variable.\n\n$2(x^{2}-4x) + 2(y^{2}-4y) = 0$ becomes $2(x-2)^{2} - 8 + 2(y-2)^{2} - 8 = 0$, so $2(x-2)^{2} + 2(y-2)^{2} = 16$.\n\nDividing through by $2$ gives $(x-2)^{2} + (y-2)^{2} = 8$, which is in the form asked for with $h=2$ and $k=2$.\n\n$h+k = 4$\n\nThe center is $(2,2)$ and the radius is $\\sqrt{8}$, so the circle passes through $(2+\\sqrt{8},2)$; substituting back confirms $2(x-2)^{2}+2(y-2)^{2}-8-8 = 0$.",
     "techniqueSlugs": [
       "complete-the-square-conic"
     ],
