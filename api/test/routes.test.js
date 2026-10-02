@@ -184,7 +184,7 @@ const unusableManifest = () =>
   });
 
 test("GET /api/figures is a hard 503 when the build did not produce a usable manifest", async () => {
-  // The contract is explicit that a build which never produced a usable manifest must be a 503
+// The contract is explicit that a build which never produced a usable manifest must be a 503
   // and never an empty list.
   const unusable = createApp({ dataDir, figureStore: unusableManifest() });
   const server3 = unusable.listen(0);
@@ -215,7 +215,6 @@ test("a figure key lookup against an unusable manifest is a 503, not a 404", asy
     await new Promise((resolve) => server3.close(resolve));
   }
 });
-
 test("with a passing manifest, the figure route serves exactly the contract payload", async () => {
   const passing = createApp({
     dataDir,
@@ -480,6 +479,10 @@ test("an unknown API path answers with the same JSON error shape as everything e
 test("the corpus warnings are reachable, so a dangling reference is not only a startup log line", async () => {
   const { status, body } = await get("/api/content/warnings");
   assert.equal(status, 200);
+  // The endpoint contract is asserted, not the corpus's current health: content fixes land
+  // independently of this branch, and a test that fails because a content bug got fixed is a
+  // test that has to be deleted before the fix can merge.
   assert.ok(Array.isArray(body.warnings));
-  assert.ok(body.warnings.length > 0, "the shipped corpus does have gaps and they should be visible");
+  assert.equal(typeof body.stats.exercises, "number");
+  for (const warning of body.warnings) assert.equal(typeof warning, "string");
 });
