@@ -25,9 +25,9 @@
         {
           "id": "m1-l1-fig-1",
           "captionLatex": "The number line marks the two breakpoints $-4$ and $1$ where the two absolute values in $|x-1|+|x+4|$ change definition; the segment between them is where the sum of the two terms is constant.",
-          "asymptoteSource": "// Breakpoints of |x-1| + |x+4| on the real line.\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nsize(320,120);\npair A=(-5.6,0), B=(3.8,0);\ndraw(A--B,Arrow);\nlabel(\"$x$\",B,SE);\nfor (int x = -5; x <= 3; ++x) {\n  draw((x,-0.12)--(x,0.12),gray);\n}\nlabel(\"$-4$\",(-4,-0.55),S);\nlabel(\"$1$\",(1,-0.55),S);\nlabel(\"$|x-1|+|x+4|$\",(-1.5,1.1),N);\ndot((-4,0), black+2.5pt);\ndot((1,0), black+2.5pt);\nlabel(\"minimised at $x=-1.5$\",(-0.5,2.4),N);\nlabel(\"flat between the breakpoints\",(-0.5,-2.4),S);",
+          "asymptoteSource": "// Breakpoints of |x-1| + |x+4| on the real line.\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nsize(187,121);\npair A=(-5.6,0), B=(3.8,0);\ndraw(A--B,Arrow);\nlabel(\"$x$\",B,SE);\nfor (int x = -5; x <= 3; ++x) {\n  draw((x,-0.12)--(x,0.12),gray);\n}\nlabel(\"$-4$\",(-4,-0.55),S);\nlabel(\"$1$\",(1,-0.55),S);\nlabel(\"$|x-1|+|x+4|$\",(-1.5,1.1),N);\ndot((-4,0), black+2.5pt);\ndot((1,0), black+2.5pt);\nlabel(\"minimised at $x=-1.5$\",(-0.5,2.4),N);\nlabel(\"flat between the breakpoints\",(-0.5,-2.4),S);",
           "asymptoteAlt": "A horizontal number line with an arrow at the right end and a label x. Short tick marks run from -5 to 3. The two ticks at -4 and 1 are drawn as filled dots and labelled below the line, and the expression |x-1|+|x+4| is written above the line between them.",
-          "asymptoteAspectRatio": 2.667
+          "asymptoteAspectRatio": 1.545
         }
       ],
       "examples": [

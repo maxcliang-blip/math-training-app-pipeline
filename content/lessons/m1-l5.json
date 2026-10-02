@@ -30,9 +30,9 @@
         {
           "id": "m1-l5-fig-1",
           "captionLatex": "The graph of $y=x^{2}-5x+6$ meets the axis at the two marked intercepts, and the vertex sits above the axis between them; the factorization $(x-2)(x-3)$ records the two intercepts directly.",
-          "asymptoteSource": "// The parabola y = x^2 - 5x + 6, with both x-intercepts marked.\n//\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nimport graph;\nsize(320,240);\npair O=(0,0);\nreal f(real x){return x*x-5*x+6;}\npair A=(-0.6,0), B=(6.6,0);\ndraw(A--B,Arrow);\nlabel(\"$x$\",B,SE);\ndraw((0,0)--(0,9.5),Arrow);\nlabel(\"$y$\",(0,9.5),N);\ndraw(graph(f,-0.6,6.6,400),blue);\ndot((2,0), black+2.5pt);\ndot((3,0), black+2.5pt);\nlabel(\"$2$\",(2,-1.1),S);\nlabel(\"$3$\",(3,-1.1),S);\ndot((0,0), black+2.5pt);\nlabel(\"$O$\",(0,0),SW);\nlabel(\"$y=x^{2}-5x+6$\",(5.9,8.6),N);",
+          "asymptoteSource": "// The parabola y = x^2 - 5x + 6, with both x-intercepts marked.\n//\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nimport graph;\nsize(131,241);\npair O=(0,0);\nreal f(real x){return x*x-5*x+6;}\npair A=(-0.6,0), B=(6.6,0);\ndraw(A--B,Arrow);\nlabel(\"$x$\",B,SE);\ndraw((0,0)--(0,9.5),Arrow);\nlabel(\"$y$\",(0,9.5),N);\ndraw(graph(f,-0.6,6.6,400),blue);\ndot((2,0), black+2.5pt);\ndot((3,0), black+2.5pt);\nlabel(\"$2$\",(2,-1.1),S);\nlabel(\"$3$\",(3,-1.1),S);\ndot((0,0), black+2.5pt);\nlabel(\"$O$\",(0,0),SW);\nlabel(\"$y=x^{2}-5x+6$\",(5.9,8.6),N);",
           "asymptoteAlt": "A Cartesian plane with arrowheaded axes. An upward-opening parabola crosses the horizontal axis at two points marked with solid dots, which sit close together beneath the vertex. The vertex is above the axis, and the curve is labelled with the expression it graphs.",
-          "asymptoteAspectRatio": 1.333
+          "asymptoteAspectRatio": 0.544
         }
       ],
       "examples": [

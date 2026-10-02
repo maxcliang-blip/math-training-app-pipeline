@@ -283,9 +283,9 @@
     "techniqueSlugs": [
       "section-formula"
     ],
-    "asymptoteSource": "// A segment divided internally in the ratio 3:1.\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nsize(320,160);\npair A=(0,0), B=(6,0), P=(4.5,0);\ndraw(A--B,Arrow);\ndot(A, black+2.5pt);\ndot(B, black+2.5pt);\ndot(P, black+3.5pt);\nlabel(\"$A=(-8,2)$\",A,SW);\nlabel(\"$B=(8,6)$\",B,SE);\nlabel(\"$P$\",P,N);\nlabel(\"$\\frac{3}{4}$\",(2.25,0),N);\nlabel(\"$\\frac{1}{4}$\",(5.25,0),N);\nlabel(\"measured from $A$\",(3,-1.4),S);\nlabel(\"the internal division point\",(3,2.6),N);",
+    "asymptoteSource": "// A segment divided internally in the ratio 3:1.\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nsize(317,161);\npair A=(0,0), B=(6,0), P=(4.5,0);\ndraw(A--B,Arrow);\ndot(A, black+2.5pt);\ndot(B, black+2.5pt);\ndot(P, black+3.5pt);\nlabel(\"$A=(-8,2)$\",A,SW);\nlabel(\"$B=(8,6)$\",B,SE);\nlabel(\"$P$\",P,N);\nlabel(\"$\\frac{3}{4}$\",(2.25,0),N);\nlabel(\"$\\frac{1}{4}$\",(5.25,0),N);\nlabel(\"measured from $A$\",(3,-1.4),S);\nlabel(\"the internal division point\",(3,2.6),N);",
     "asymptoteAlt": "A horizontal segment runs from left to right with an arrowhead at the right end. A small filled dot marks each endpoint and a larger filled dot marks a point about three quarters of the way along, labelled P. The long left portion of the segment carries a label showing three quarters and the short right portion shows one quarter, with a note underneath saying the fractions are measured from the left endpoint, and the two endpoints are labelled with their coordinates.",
-    "asymptoteAspectRatio": 2
+    "asymptoteAspectRatio": 1.969
   },
   {
     "id": "m6-l1-p11",
