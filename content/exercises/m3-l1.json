@@ -1,8 +1,8 @@
 [
   {
-    "id": "m7-l1-p1",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p1",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "10",
     "difficulty": 1,
     "tags": [
@@ -27,9 +27,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p2",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p2",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "10",
     "difficulty": 1,
     "tags": [
@@ -59,9 +59,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p3",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p3",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "10",
     "difficulty": 1,
     "tags": [
@@ -85,9 +85,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p4",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p4",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "10",
     "difficulty": 2,
     "tags": [
@@ -117,9 +117,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p5",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p5",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "10",
     "difficulty": 2,
     "tags": [
@@ -149,9 +149,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p6",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p6",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "12",
     "difficulty": 2,
     "tags": [
@@ -177,9 +177,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p7",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p7",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "12",
     "difficulty": 2,
     "tags": [
@@ -211,9 +211,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p8",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p8",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "12",
     "difficulty": 2,
     "tags": [
@@ -244,9 +244,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p9",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p9",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "12",
     "difficulty": 3,
     "tags": [
@@ -272,9 +272,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p10",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p10",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "12",
     "difficulty": 3,
     "tags": [
@@ -300,9 +300,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p11",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p11",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "12",
     "difficulty": 3,
     "tags": [
@@ -333,9 +333,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p12",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p12",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "12",
     "difficulty": 3,
     "tags": [
@@ -361,9 +361,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p13",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p13",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "A",
     "difficulty": 4,
     "tags": [
@@ -389,9 +389,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p14",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p14",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "A",
     "difficulty": 4,
     "tags": [
@@ -417,9 +417,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-p15",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-p15",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "A",
     "difficulty": 5,
     "tags": [
@@ -445,9 +445,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-m1",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-m1",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "10",
     "difficulty": 2,
     "tags": [
@@ -478,9 +478,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-m2",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-m2",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "12",
     "difficulty": 3,
     "tags": [
@@ -506,9 +506,9 @@
     "asymptoteAspectRatio": null
   },
   {
-    "id": "m7-l1-m3",
-    "moduleId": "M7",
-    "lessonId": "m7-l1",
+    "id": "m3-l1-m3",
+    "moduleId": "M3",
+    "lessonId": "m3-l1",
     "tier": "A",
     "difficulty": 4,
     "tags": [

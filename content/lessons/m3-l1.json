@@ -1,6 +1,6 @@
 {
-  "id": "m7-l1",
-  "moduleId": "M7",
+  "id": "m3-l1",
+  "moduleId": "M3",
   "order": 1,
   "title": "The Fundamental Counting Principle, Permutations, and Combinations",
   "topicSlug": "fundamental-counting-permutations-combinations",
@@ -24,7 +24,7 @@
       "conceptLatex": "The Fundamental Counting Principle is the single engine that drives every counting problem: if a choice can be made in $a$ ways and a subsequent independent choice can be made in $b$ ways, then the two choices together can be made in $a \\cdot b$ ways. Extending this, a sequence of $k$ independent choices with $n_1, n_2, \\ldots, n_k$ options each yields $n_1 n_2 \\cdots n_k$ total outcomes.\n\nA permutation is an ordered arrangement. The number of permutations of $n$ distinct objects is $n! = n(n-1) \\cdots 1$. The number of permutations of $k$ objects chosen from $n$ distinct objects is $P(n,k) = n(n-1)\\cdots(n-k+1) = \\frac{n!}{(n-k)!}$. Every position in the sequence matters, so swapping two elements produces a different permutation.\n\nA combination is an unordered selection. The number of combinations of $k$ objects chosen from $n$ distinct objects is $\\binom{n}{k} = \\frac{n!}{k!(n-k)!}$. Swapping two selected elements does not change the combination; the $k!$ orders of the same $k$ elements are identified, which is why the permutation count is divided by $k!$.\n\nThe binomial coefficient satisfies $\\binom{n}{k} = \\binom{n}{n-k}$ (complement symmetry) and Pascal's recurrence $\\binom{n}{k} = \\binom{n-1}{k-1} + \\binom{n-1}{k}$. These identities turn many counting problems into algebraic manipulations rather than casework.\n\nA quick decision rule: if the problem describes a sequence, a line, a code, a password, or any arrangement where order is visible, it is a permutation. If it describes a committee, a hand, a subset, or a group where order is invisible, it is a combination.",
       "figures": [
         {
-          "id": "m7-l1-fig-1",
+          "id": "m3-l1-fig-1",
           "captionLatex": "A tree diagram for choosing a three-course meal with 2 appetizers, 3 mains, and 2 desserts; each complete path from left to right is one meal, and the total number of paths is the product of the branching factors.",
           "asymptoteSource": "// Tree diagram for the Fundamental Counting Principle: 2 appetizers, 3 mains, 2 desserts.\n// Two-argument size fixes the output box, so the declared 16/3 is exact.\nsize(480,360);\npen thin = gray(0.6) + 1;\npen thick = black + 1.5;\nreal x0 = 0, dx = 140;\nreal y0 = 160, dy = 50;\n// Appetizers\nlabel(\"Appetizer\", (x0, y0+20), N);\ndot((x0-dx, y0+dy), black+3pt);\ndot((x0-dx, y0-dy), black+3pt);\ndraw((x0-dx, y0+dy)--(x0+dx, y0+2*dy), thin);\ndraw((x0-dx, y0+dy)--(x0+dx, y0), thin);\ndraw((x0-dx, y0+dy)--(x0+dx, y0-2*dy), thin);\ndraw((x0-dx, y0-dy)--(x0+dx, y0+2*dy), thin);\ndraw((x0-dx, y0-dy)--(x0+dx, y0), thin);\ndraw((x0-dx, y0-dy)--(x0+dx, y0-2*dy), thin);\nlabel(\"$A_1$\", (x0-dx, y0+dy), W);\nlabel(\"$A_2$\", (x0-dx, y0-dy), W);\nlabel(\"$M_1$\", (x0, y0+2*dy), N);\nlabel(\"$M_2$\", (x0, y0), N);\nlabel(\"$M_3$\", (x0, y0-2*dy), N);\n// Desserts\nlabel(\"Dessert\", (x0+2*dx, y0+20), N);\ndraw((x0+dx, y0+2*dy)--(x0+2*dx, y0+3*dy), thick);\ndraw((x0+dx, y0+2*dy)--(x0+2*dx, y0+dy), thick);\ndraw((x0+dx, y0)--(x0+2*dx, y0+dy), thick);\ndraw((x0+dx, y0)--(x0+2*dx, y0-dy), thick);\ndraw((x0+dx, y0-2*dy)--(x0+2*dx, y0+dy), thick);\ndraw((x0+dx, y0-2*dy)--(x0+2*dx, y0-dy), thick);\ndraw((x0+dx, y0-2*dy)--(x0+2*dx, y0-3*dy), thick);\nlabel(\"$D_1$\", (x0+2*dx, y0+3*dy), E);\nlabel(\"$D_2$\", (x0+2*dx, y0+dy), E);\nlabel(\"$D_1$\", (x0+2*dx, y0-dy), E);\nlabel(\"$D_2$\", (x0+2*dx, y0-3*dy), E);\nlabel(\"$2 \\times 3 \\times 2 = 12$ meals\", (x0+dx, y0-4.5*dy), S);",
           "asymptoteAlt": "A left-to-right tree diagram with three levels labeled Appetizer, Main, and Dessert. The first level splits into two branches labelled A1 and A2. Each of those splits into three branches labelled M1, M2, M3. Each of those six splits into two branches labelled D1 and D2. The total number of complete paths from left to right is twelve, shown at the bottom.",
@@ -33,25 +33,25 @@
       ],
       "examples": [
         {
-          "id": "m7-l1-ex-1",
+          "id": "m3-l1-ex-1",
           "titleLatex": "Worked example: a password with constraints",
           "bodyLatex": "A password must be 6 characters long. The first character is a letter (26 choices), the last is a digit (10 choices), and the middle four are letters or digits (36 choices each). How many such passwords exist?\n\nBy the multiplication principle, the total is $26 \\times 36^4 \\times 10$. The choices for each position are independent, so we multiply the number of options per position.",
           "answerLatex": "$26 \\times 36^4 \\times 10$"
         },
         {
-          "id": "m7-l1-ex-2",
+          "id": "m3-l1-ex-2",
           "titleLatex": "Worked example: arranging books on a shelf",
           "bodyLatex": "In how many ways can 4 different math books and 3 different science books be arranged on a shelf if the math books must stay together?\n\nTreat the 4 math books as one block. We then have 4 items to arrange (the block and the 3 science books), giving $4!$ orders. Inside the block, the 4 math books can be ordered in $4!$ ways. By the multiplication principle, the total is $4! \\times 4! = 24 \\times 24 = 576$.",
           "answerLatex": "576"
         },
         {
-          "id": "m7-l1-ex-3",
+          "id": "m3-l1-ex-3",
           "titleLatex": "Worked example: choosing a committee with roles",
           "bodyLatex": "A club has 12 members. In how many ways can we choose a president, a vice-president, and a treasurer, all distinct?\n\nThis is a permutation of 3 chosen from 12 because the roles are distinct and order matters. $P(12,3) = 12 \\times 11 \\times 10 = 1320$. Equivalently, 12 choices for president, then 11 for vice-president, then 10 for treasurer.",
           "answerLatex": "1320"
         },
         {
-          "id": "m7-l1-ex-4",
+          "id": "m3-l1-ex-4",
           "titleLatex": "Worked example: choosing a committee without roles",
           "bodyLatex": "From the same 12 members, how many ways to choose a 3-person committee with no designated roles?\n\nThis is a combination because the committee is an unordered set. $\\binom{12}{3} = \\frac{12 \\times 11 \\times 10}{3 \\times 2 \\times 1} = 220$. Note that $1320 = 220 \\times 3!$, since each committee of 3 can be assigned roles in $3!$ ways.",
           "answerLatex": "220"
@@ -131,47 +131,47 @@
     },
     "practice": {
       "exerciseIds": [
-        "m7-l1-p1",
-        "m7-l1-p2",
-        "m7-l1-p3",
-        "m7-l1-p4",
-        "m7-l1-p5",
-        "m7-l1-p6",
-        "m7-l1-p7",
-        "m7-l1-p8",
-        "m7-l1-p9",
-        "m7-l1-p10",
-        "m7-l1-p11",
-        "m7-l1-p12",
-        "m7-l1-p13",
-        "m7-l1-p14",
-        "m7-l1-p15"
+        "m3-l1-p1",
+        "m3-l1-p2",
+        "m3-l1-p3",
+        "m3-l1-p4",
+        "m3-l1-p5",
+        "m3-l1-p6",
+        "m3-l1-p7",
+        "m3-l1-p8",
+        "m3-l1-p9",
+        "m3-l1-p10",
+        "m3-l1-p11",
+        "m3-l1-p12",
+        "m3-l1-p13",
+        "m3-l1-p14",
+        "m3-l1-p15"
       ]
     },
     "solutions": {
       "exerciseIds": [
-        "m7-l1-p1",
-        "m7-l1-p2",
-        "m7-l1-p3",
-        "m7-l1-p4",
-        "m7-l1-p5",
-        "m7-l1-p6",
-        "m7-l1-p7",
-        "m7-l1-p8",
-        "m7-l1-p9",
-        "m7-l1-p10",
-        "m7-l1-p11",
-        "m7-l1-p12",
-        "m7-l1-p13",
-        "m7-l1-p14",
-        "m7-l1-p15"
+        "m3-l1-p1",
+        "m3-l1-p2",
+        "m3-l1-p3",
+        "m3-l1-p4",
+        "m3-l1-p5",
+        "m3-l1-p6",
+        "m3-l1-p7",
+        "m3-l1-p8",
+        "m3-l1-p9",
+        "m3-l1-p10",
+        "m3-l1-p11",
+        "m3-l1-p12",
+        "m3-l1-p13",
+        "m3-l1-p14",
+        "m3-l1-p15"
       ]
     },
     "mastery": {
       "exerciseIds": [
-        "m7-l1-m1",
-        "m7-l1-m2",
-        "m7-l1-m3"
+        "m3-l1-m1",
+        "m3-l1-m2",
+        "m3-l1-m3"
       ],
       "passThreshold": 2
     }
