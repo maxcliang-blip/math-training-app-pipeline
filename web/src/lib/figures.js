@@ -63,6 +63,45 @@ export function figureAssetUrl(figureSvgUrl, origin = "") {
   return figureSvgUrl.startsWith("/") ? `${origin}${figureSvgUrl}` : figureSvgUrl;
 }
 
+// How far a ratio may drift before it counts as a discrepancy. The manifest rounds to three
+// decimals, so anything inside this band is rounding and not a disagreement.
+const RATIO_TOLERANCE = 0.02;
+
+// Which aspect ratio the <img> box should use, and whether the manifest's numbers disagree.
+//
+// Two ratios come from the build (declared is the author's, compiled is the compiler's) and a third
+// from the browser once the SVG decodes. They are not equally trustworthy, and treating them as
+// interchangeable is how a diagram ends up drawn at the wrong shape: applying the declared ratio to
+// an SVG whose intrinsic ratio differs stretches the picture, and a stretched geometry figure
+// teaches the wrong thing. The measured ratio wins for layout because it is the only one that
+// describes the bytes actually being painted.
+//
+// The declared/compiled numbers still have a job — reserving the box before the SVG arrives — and a
+// disagreement between them is a build defect worth reporting rather than silently picking a
+// winner. This returns both so the component can reserve, then correct, then say so.
+export function resolveFigureRatio({ declaredAspectRatio, compiledAspectRatio, measuredAspectRatio } = {}) {
+  const usable = (value) =>
+    typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
+
+  const declared = usable(declaredAspectRatio);
+  const compiled = usable(compiledAspectRatio);
+  const measured = usable(measuredAspectRatio);
+
+  // Before the SVG arrives the compiler's measurement beats the author's declaration.
+  const reserved = compiled ?? declared;
+  const resolved = measured ?? reserved;
+
+  const drift = [];
+  if (declared && compiled && Math.abs(declared - compiled) / compiled > RATIO_TOLERANCE) {
+    drift.push({ kind: "declared-vs-compiled", expected: declared, actual: compiled });
+  }
+  if (reserved && measured && Math.abs(reserved - measured) / measured > RATIO_TOLERANCE) {
+    drift.push({ kind: "reserved-vs-measured", expected: reserved, actual: measured });
+  }
+
+  return { reserved, resolved, drift };
+}
+
 // Per-key cache. Figures are immutable for a given figureHash, and a lesson page asks for the
 // same figure every time the learner navigates back to it.
 export function createFigureClient({ fetchImpl, apiBase = "", origin = "" } = {}) {

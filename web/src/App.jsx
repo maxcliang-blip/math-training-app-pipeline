@@ -35,6 +35,21 @@ function Section({ name, section }) {
   if (!section || typeof section !== "object") return null;
   const body = [];
 
+  // conceptLatex is the section's own body: the paragraphs that teach it. It leads, because in every
+  // section that carries it the rest is reference material for what this says. Split on blank
+  // lines and render each as a block, so a paragraph that is one display equation gets display
+  // spacing and a prose paragraph still gets its inline math.
+  if (section.conceptLatex) {
+    body.push(
+      <div key="concept">
+        {String(section.conceptLatex)
+          .split(/\n{2,}/)
+          .map((paragraph, index) => (
+            <MathBlock key={index} source={paragraph} block />
+          ))}
+      </div>
+    );
+  }
   if (section.objectiveLatex) {
     body.push(<MathBlock key="objective" source={section.objectiveLatex} />);
   }
@@ -51,7 +66,13 @@ function Section({ name, section }) {
                 <MathBlock source={item.titleLatex} />
               </strong>
             ) : item.name ? (
-              <strong>{item.name}</strong>
+              // `name` is the fallback title and, like every other title field, may carry LaTeX —
+              // several corpus records hold expressions in it. Rendering it as a bare string is what
+              // leaves a learner looking at literal "$\binom{n}{k}$"; MathBlock renders plain prose
+              // as text, so nothing is lost when a name has no math in it.
+              <strong>
+                <MathBlock source={item.name} />
+              </strong>
             ) : null}
             {item.summaryLatex ? <MathBlock source={item.summaryLatex} /> : null}
             {item.bodyLatex ? <MathBlock source={item.bodyLatex} /> : null}
@@ -207,7 +228,7 @@ function ModuleList({ onPick }) {
       {modules.data.map((module) => (
         <li key={module.id}>
           <button type="button" onClick={() => onPick(module.id)}>
-            {module.title || module.id}
+            <MathBlock source={module.title || module.id} />
           </button>
           {module.title === null ? (
             <span className="status status--warn" title="No content/modules.json entry">
@@ -228,7 +249,9 @@ function ModuleView({ moduleId, onPickLesson }) {
   }
   return (
     <article className="module">
-      <h2>{module.data.module?.title || moduleId}</h2>
+      <h2>
+        <MathBlock source={module.data.module?.title || moduleId} />
+      </h2>
       {module.data.lessons.length === 0 ? (
         <p className="status">No lessons in {moduleId} yet.</p>
       ) : (
