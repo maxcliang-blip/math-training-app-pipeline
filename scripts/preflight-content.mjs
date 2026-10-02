@@ -151,6 +151,15 @@ const TAG_TOPIC = [
   "trig-equations", "trig-graphing", "inverse-trig", "law-of-sines", "law-of-cosines",
   "triangle-area", "triangle-solving", "sss-triangles", "sas-triangles", "ssa-triangles",
   "cyclic-quadrilaterals", "angle-chasing", "oblique-triangles", "trigonometric-area",
+  // Module 8, lesson 4 (MAX-20): the polar and roots-of-unity half of trigonometry. The
+  // topics already filed under Module 6 ("complex-numbers") are what an exercise is about;
+  // these two name the parts of it a learner can ask for on their own.
+  "polar-form", "complex-powers",
+  // Module 8, lesson 5 (MAX-50): the equations, inverse functions and graphs half of
+  // trigonometry. "trig-equations", "inverse-trig" and "trig-graphing" were already
+  // declared here and unused; these two name what a learner asks for inside them that
+  // is not itself an equation or a graph.
+  "amplitude-period-shift", "trig-function-ranges",
   // Module 7: counting and probability.
   "fundamental-counting", "permutations", "combinations", "inclusion-exclusion",
   "stars-and-bars", "complementary-counting", "pigeonhole-principle", "probability",
@@ -213,6 +222,20 @@ const TAG_TECHNIQUE = [
   "radius-times-angle", "sector-area-formula", "double-angle-recovery",
   "angle-addition-expansion", "identity-proof-strategy", "area-from-two-sides-angle",
   "chord-angle-relation", "sine-law-inverse-solve", "angles-in-a-quadrilateral",
+  // Module 8, lesson 4 (MAX-20): how a polar-form or roots-of-unity argument is built.
+  // "complex-modulus", "conjugate-arithmetic", "de-moivre" and "roots-of-unity" are
+  // already filed under Module 6 and are reused here rather than restated.
+  "modulus-and-argument", "polar-rectangular-conversion", "argument-quadrant-fix",
+  "de-moivre-power", "angle-multiplication-reduction", "nth-root-extraction",
+  "root-of-unity-sums", "regular-polygon-vertices",
+  // Module 8, lesson 5 (MAX-50): how a trigonometric-equation, inverse-function or
+  // graph argument is built. "supplementary-angle-case-split" from Module 5 is about
+  // plane geometry and is deliberately not reused here; the angle split in this lesson
+  // is the one that picks two angles inside a single turn of a trig curve.
+  "isolate-the-trig-value", "general-solution-capture", "angle-pair-case-split",
+  "interval-solution-count", "principal-value-range", "inverse-composition",
+  "auxiliary-angle-expansion", "graph-amplitude-period", "graph-phase-readoff",
+  "graph-construction", "tangent-graph-asymptotes", "reciprocal-graph-reflection",
   // Module 7: how a counting or probability argument is actually built.
   "multiplication-principle", "factorial-counting", "complementary-count",
   "inclusion-exclusion-principle", "stars-and-bars-method", "pigeonhole-application",

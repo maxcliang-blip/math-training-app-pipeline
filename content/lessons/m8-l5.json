@@ -1,0 +1,241 @@
+{
+  "id": "m8-l5",
+  "moduleId": "M8",
+  "order": 5,
+  "title": "Trigonometric Equations, Inverse Functions, and Graphs",
+  "topicSlug": "trig-equations-inverse-functions-and-graphs",
+  "tiers": [
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 80,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m8-l1",
+    "m8-l2"
+  ],
+  "tags": [
+    "trig-equations",
+    "inverse-trig",
+    "trig-graphing",
+    "amplitude-period-shift",
+    "trig-function-ranges"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Solve an equation of the form $a\\sin(bx + c) = d$ and its cosine and tangent relatives over a stated interval, by isolating the trigonometric value and then splitting the angle into the two cases that share it. Evaluate the inverse trigonometric functions, respecting the restricted range each of them returns, and read the amplitude, the period, the phase shift and the range off a graph of the form $y = a\\sin(b(x - h)) + d$. Locate the vertical asymptotes of the tangent, the secant and the cosecant, and sketch a full cycle of any of the four families from its parameters."
+    },
+    "prerequisites": {
+      "items": [
+        {
+          "labelLatex": "[m8-l1](/M8/lessons/m8-l1) the unit circle and exact values",
+          "noteLatex": "for reading the angles whose sine, cosine or tangent takes a given value, and for the quadrants that carry a given sign"
+        },
+        {
+          "labelLatex": "[m8-l2](/M8/lessons/m8-l2) trigonometric identities",
+          "noteLatex": "for expanding a compound argument with the addition formulas and for collapsing $\\cos A = \\cos B$ or $\\sin A = \\sin B$ back to linear conditions on the arguments"
+        }
+      ],
+      "noteLatex": "Nothing beyond [m8-l1](/M8/lessons/m8-l1) and [m8-l2](/M8/lessons/m8-l2) is assumed. The algebra is the same algebra the first lessons used, and the only new idea is that a restricted range can make an answer unique."
+    },
+    "concept": {
+      "conceptLatex": "A trigonometric equation asks for angles, and every trigonometric function takes each of its values twice in every full turn, or once for the tangent. That single fact decides almost everything about how these equations are solved, because the work is never in finding one angle; it is in finding both and then discarding the ones a stated interval rules out.\n\nStart by making the equation say one thing. An equation like $a\\sin(bx + c) = d$ becomes $\\sin(bx + c) = \\frac{d}{a}$ the moment you divide through by $a$, and from there the sine on the left is all you have to think about. The argument $bx + c$ is where the frequency and the translation are hidden, so restate the interval for the new argument before you do anything else: if $0^\\circ \\le x \\le 360^\\circ$, then $0^\\circ \\le bx + c \\le 360b$ plus whatever $c$ contributes. Counting solutions in the wrong variable is the most common way to lose one.\n\nFor a sine, the two angles in one turn with a given value $s$ are supplementary to each other. If $\\alpha$ is the angle in the first quadrant with $\\sin \\alpha = s$, the two are $\\alpha$ and $180^\\circ - \\alpha$, and the pattern repeats with period $360^\\circ$. For a cosine the two are reflections of each other across $0^\\circ$, namely $\\alpha$ and $360^\\circ - \\alpha$. For a tangent there is only one per turn, at $\\alpha$, repeating every $180^\\circ$, which is half a turn. So the same count that gives $2$ for a sine over $[0^\\circ, 360^\\circ]$ gives $2$ for a cosine and only $1$ for a tangent, and gives $2$ for the tangent over $[0^\\circ, 180^\\circ]$.\n\nWhen two different functions appear on the two sides, convert one of them. $\\sin x = \\cos x$ becomes $\\sin x = \\sin(90^\\circ - x)$ because $\\cos x = \\sin(90^\\circ - x)$, and then the rule above applies to two sines.\n\nThe inverse functions run the map backwards, and the catch is that a backwards map has to pick one branch to stay a function at all. The inverse sine takes a value in $[-1, 1]$ and returns the unique angle of $[-90^\\circ, 90^\\circ]$ with that sine; the inverse cosine returns the unique angle of $[0^\\circ, 180^\\circ]$ with that cosine; the inverse tangent returns the unique angle of $(-90^\\circ, 90^\\circ)$ with that tangent. So $\\arcsin\\left(-\\frac{1}{2}\\right) = -30^\\circ$ while $\\arccos\\left(-\\frac{1}{2}\\right) = 120^\\circ$: the same input, two different answers, because the two ranges are not mirror images.\n\nComposition is where the branch restriction shows. Going forwards then backwards always works on the restricted domain, so $\\sin(\\arcsin x) = x$ and $\\cos(\\arccos x) = x$ hold for every $x$ in $[-1, 1]$. Going backwards then forwards does not, because the forward step throws away which side of a peak the angle was on: $\\arcsin(\\sin 210^\\circ) = -30^\\circ$, not $210^\\circ$. The correct statement is that $\\arcsin(\\sin x) = x$ exactly when $x$ lies in the principal interval.\n\nA graph of $y = a\\sin(b(x - h)) + d$ has four numbers in it and no others worth knowing. The amplitude is $|a|$, never $a$: a negative multiplier reflects the curve about the midline and does not shrink it, so the range is $[d - |a|, d + |a|]$. The period is $360^\\circ$ divided by $|b|$. The midline is $y = d$, and the horizontal shift is $h$ degrees to the right when $h$ is positive. All four are read straight off the rule, and a question that quotes a maximum and a minimum is quoting you an amplitude of half their difference and a midline of their average.\n\nThe tangent is the exception to the picture, because it does not oscillate between two lines: it rises without bound. Between consecutive asymptotes at $90^\\circ + 180^\\circ k$ it climbs from minus infinity to plus infinity and crosses zero once, which is why counting its asymptotes is the same problem as counting the zeros of a cosine. The secant and the cosecant are the reciprocals of the cosine and the sine, so their graphs are reflections of those curves across the horizontal axis, with an asymptote wherever the denominator vanishes.",
+      "figures": [
+        {
+          "id": "m8-l5-fig-1",
+          "captionLatex": "The sine and the cosine are the same wave displaced by a quarter of a turn: $\\cos x = \\sin(90^\\circ + x)$, which is why every trigonometric equation in this lesson has two solutions per cycle instead of one.",
+          "asymptoteSource": "// The sine and the cosine over one full turn. The two curves are a quarter of a\n// period apart: the cosine is already at its maximum where the sine is still\n// climbing through zero.\n// Two-argument size fixes the output box at 340 x 260, so the declared aspect\n// ratio 340/260 = 1.308 is exact and the reserved space cannot drift.\nsize(340,260);\nimport graph;\nreal r(real d){return d*pi/180;}\ndraw((-0.7,-1.7)--(7.6,1.9),Arrow);\nlabel(\"$x$\",(7.6,1.9),SE);\ndraw((0,-1.7)--(0,1.9),Arrow);\nlabel(\"$y$\",(0,1.9),N);\ndraw(graph(new real(real t){return sin(r(t));},0,360),red+1pt);\ndraw(graph(new real(real t){return cos(r(t));},0,360),blue+1pt);\ndot((pi/2,1),black+2.5pt);\ndot((pi,0),black+2.5pt);\nlabel(\"$90^\\\\circ$\",(pi/2,-1.45),S);\nlabel(\"$180^\\\\circ$\",(pi,-1.45),S);\nlabel(\"$\\\\sin x$\",(5.1,0.42),N);\nlabel(\"$\\\\cos x$\",(2.35,-0.95),S);",
+          "asymptoteAlt": "A Cartesian plane with arrowheaded axes. Two smooth waves run from the left of the plot to the right over one full turn. The upper wave starts on the horizontal axis just right of the origin, rises to a rounded peak a quarter of the way along, and returns to the axis in the middle of the plot. The lower wave is the same shape shifted along by a quarter of the turn: it starts at its highest point on the vertical axis and dips to a trough halfway along. Filled dots mark the peak of the upper wave and the point where it crosses back through the axis.",
+          "asymptoteAspectRatio": 1.308
+        },
+        {
+          "id": "m8-l5-fig-2",
+          "captionLatex": "The four numbers of $y = 3\\sin(2(x - 30^\\circ)) + 1$: the midline $y = 1$, the amplitude $3$, the phase shift $30^\\circ$ and the period $180^\\circ$, which is the gap between two crossings of the midline going the same way.",
+          "asymptoteSource": "// One and a half cycles of 3 sin(2(x - 30 degrees)) + 1, with the midline, the\n// extreme values and the phase shift marked.\n// Two-argument size fixes the output box at 360 x 240, so the declared 1.5 is exact.\nsize(360,240);\nimport graph;\nreal r(real d){return d*pi/180;}\nreal f(real x){return 3*sin(r(2*x-60))+1;}\ndraw((-0.5,-3.4)--(6.5,5.0),Arrow);\nlabel(\"$x$\",(6.5,5.0),SE);\ndraw((0,-3.4)--(0,5.0),Arrow);\nlabel(\"$y$\",(0,5.0),N);\ndraw((0,1)--(6.4,1),dashed);\nlabel(\"$y=1$\",(0.15,1.3),NW);\ndraw(graph(f,0,200),red+1pt);\ndot((r(30),1),black+2.5pt);\ndot((r(75),4),black+2.5pt);\ndot((r(165),-2),black+2.5pt);\nlabel(\"$30^\\\\circ$\",(r(30),-3.2),S);\nlabel(\"$75^\\\\circ$\",(r(75),-3.2),S);\nlabel(\"$165^\\\\circ$\",(r(165),-3.2),S);\nlabel(\"$4$\",(r(75),4),NE);\nlabel(\"$-2$\",(r(165),-2),SE);",
+          "asymptoteAlt": "A Cartesian plane with arrowheaded axes and a dashed horizontal line marking the midline. A smooth wave crosses that dashed line just to the right of the vertical axis, climbs to a filled dot on a marked high point, falls back through the midline, and reaches a filled dot on a marked low point before rising again. Angles along the horizontal axis are labelled under the crossing, the peak and the trough, and the peak and trough heights are labelled beside their dots.",
+          "asymptoteAspectRatio": 1.5
+        },
+        {
+          "id": "m8-l5-fig-3",
+          "captionLatex": "The tangent has period $180^\\circ$ and rises without bound on each stretch between its asymptotes at $90^\\circ + 180^\\circ k$, which is why counting the vertical asymptotes of $y = \\tan 2x$ is the same problem as counting the zeros of its cosine.",
+          "asymptoteSource": "// The tangent between its asymptotes. Every branch is strictly increasing and\n// runs from minus infinity to plus infinity across the interval it owns.\n// Two-argument size fixes the output box at 320 x 260, so the declared\n// 320/260 = 1.231 is exact.\nsize(320,260);\nimport graph;\nreal r(real d){return d*pi/180;}\nreal f(real x){return 3*tan(r(x));}\ndraw((-0.5,-6.0)--(7.3,6.0),Arrow);\nlabel(\"$x$\",(7.3,6.0),SE);\ndraw((0,-6.0)--(0,6.0),Arrow);\nlabel(\"$y$\",(0,6.0),N);\ndraw((r(90),-6.0)--(r(90),6.0),dashed);\ndraw((r(270),-6.0)--(r(270),6.0),dashed);\ndraw(graph(f,92,268),red+1pt);\ndraw(graph(f,-88,88),red+1pt);\ndot((r(180),0),black+2.5pt);\nlabel(\"$90^\\\\circ$\",(r(90),5.7),N);\nlabel(\"$180^\\\\circ$\",(r(180),-5.7),S);\nlabel(\"$270^\\\\circ$\",(r(270),5.7),N);\nlabel(\"$y=\\\\tan x$\",(r(240),3.9),NW);",
+          "asymptoteAlt": "A Cartesian plane with arrowheaded axes and two vertical dashed lines standing across the whole plot, one to the left of the peak of a wave and one to the right. Between them a smooth wave climbs steeply from the bottom left of the dashed corridor to the top right, crossing the horizontal axis at a filled dot in the middle. A second piece of the same steep wave is drawn on the far left, rising out of the bottom of the plot, and the three vertical lines are labelled with the angles ninety, one hundred eighty and two hundred seventy degrees.",
+          "asymptoteAspectRatio": 1.231
+        }
+      ],
+      "examples": [
+        {
+          "id": "m8-l5-ex-1",
+          "titleLatex": "Reading four numbers off one rule",
+          "bodyLatex": "Take $y = 3\\sin(2(x - 30^\\circ)) + 1$. Write the argument in the standard form $b(x - h)$ and every parameter is in front of you: the frequency is $b = 2$, the horizontal shift is $h = 30^\\circ$, the amplitude is $|a| = 3$, and the midline is $y = 1$. The period is therefore $\\frac{360^\\circ}{2} = 180^\\circ$, and the range runs from $1 - 3 = -2$ to $1 + 3 = 4$. The extreme values really are attained: the curve crosses its midline at $x = 30^\\circ$, peaks at $x = 75^\\circ$ where the argument is $90^\\circ$, and reaches its minimum at $x = 165^\\circ$ where the argument is $270^\\circ$.",
+          "answerLatex": "Amplitude $3$, period $180^\\circ$, phase shift $30^\\circ$, midline $y = 1$, range $[-2, 4]$"
+        },
+        {
+          "id": "m8-l5-ex-2",
+          "titleLatex": "Solving $2\\cos 3x = 1$ on a stated interval",
+          "bodyLatex": "Divide through by $2$ to get $\\cos 3x = \\frac{1}{2}$, then restate the interval for the argument: over $0^\\circ \\le x \\le 120^\\circ$ the argument $3x$ runs from $0^\\circ$ to $360^\\circ$, exactly one turn. A cosine of $\\frac{1}{2}$ is reached at $60^\\circ$ and at $360^\\circ - 60^\\circ = 300^\\circ$, so $3x = 60^\\circ$ or $3x = 300^\\circ$, giving $x = 20^\\circ$ or $x = 100^\\circ$. Both are inside the interval. Dividing by the frequency at the end, rather than looking for angles of $x$ directly, is what keeps the count right.",
+          "answerLatex": "$x = 20^\\circ$ or $x = 100^\\circ$"
+        },
+        {
+          "id": "m8-l5-ex-3",
+          "titleLatex": "Three inverse values that share one input",
+          "bodyLatex": "Evaluate the three inverses at $\\frac{1}{2}$. The inverse sine wants an angle of $[-90^\\circ, 90^\\circ]$, and $\\sin 30^\\circ = \\frac{1}{2}$, so it returns $30^\\circ$. The inverse cosine wants an angle of $[0^\\circ, 180^\\circ]$, and $\\cos 60^\\circ = \\frac{1}{2}$, so it returns $60^\\circ$. The inverse tangent wants an angle of $(-90^\\circ, 90^\\circ)$, and $\\tan(\\arctan \\frac{1}{2})$ is simply the angle whose tangent is $\\frac{1}{2}$, which is about $26.57^\\circ$ and is not one of the special values. The first two are exact because their ranges happen to contain the special angles.",
+          "answerLatex": "$30^\\circ$, $60^\\circ$, and an angle of about $26.57^\\circ$"
+        },
+        {
+          "id": "m8-l5-ex-4",
+          "titleLatex": "Counting solutions without solving them",
+          "bodyLatex": "$\\cos 2x = 0$ over $0^\\circ \\le x \\le 360^\\circ$ asks how many times the argument $2x$ hits $90^\\circ$ or $270^\\circ$ while it sweeps from $0^\\circ$ to $720^\\circ$, which is two full turns. Each turn contributes two hits, so there are four. The values are $x = 45^\\circ$, $135^\\circ$, $225^\\circ$ and $315^\\circ$. Counting this way is the same computation as locating the asymptotes of $y = \\tan 2x$, because the cosine vanishes in exactly the places the tangent is undefined.",
+          "answerLatex": "4 solutions, at $x = 45^\\circ$, $135^\\circ$, $225^\\circ$ and $315^\\circ$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "isolate-the-trig-value",
+          "name": "Reduce the equation to a single trigonometric value",
+          "summaryLatex": "Divide by the multiplier and restate the interval for the compound argument before reading any angles.",
+          "bodyLatex": "An equation of the form $a\\sin(bx + c) = d$ hides two separate problems. The first is algebraic: divide through by $a$ to reach $\\sin(bx + c) = \\frac{d}{a}$. The second is bookkeeping: the interval given for $x$ is not an interval for $bx + c$, so convert it, because $0^\\circ \\le x \\le L$ becomes $c \\le bx + c \\le bL + c$, and counting in the original variable loses or invents solutions. Doing both steps first means every angle you read afterwards is already a value of $x$."
+        },
+        {
+          "slug": "general-solution-capture",
+          "name": "Capture the whole solution family, then intersect it with the interval",
+          "summaryLatex": "Write down every family at once, with its own period, and only then cut down to the interval that was asked for.",
+          "bodyLatex": "The answer to $\\sin x = s$ is a family, not a number: $x = \\alpha + 360^\\circ k$ or $x = 180^\\circ - \\alpha + 360^\\circ k$. The answer to $\\cos x = s$ is $x = \\pm\\alpha + 360^\\circ k$, and the answer to $\\tan x = s$ is $x = \\alpha + 180^\\circ k$. Writing the family down forces you to state the period explicitly, which is where the sine-versus-tangent asymmetry gets caught. Only after both families exist should you keep the members inside the interval, and you must then remove duplicates, because $s = 0$ and $s = \\pm 1$ make the two branches coincide."
+        },
+        {
+          "slug": "angle-pair-case-split",
+          "name": "Split the two angles that share a value",
+          "summaryLatex": "Reduce both sides to one function, then use the two ways two sines, or two cosines, can be equal.",
+          "bodyLatex": "Sines are equal when $A = B + 360^\\circ k$ or $A = 180^\\circ - B + 360^\\circ k$; cosines are equal when $A = B + 360^\\circ k$ or $A = -B + 360^\\circ k$. Either way the equations that come out are linear in the unknown, so they solve like anything else. The catch is that the second branch sometimes degenerates. In $\\sin x = \\cos x$, writing $\\cos x = \\sin(90^\\circ - x)$ leads to a branch that reduces to $360^\\circ k = 0$ and contributes nothing, so it is worth carrying both branches to the end rather than assuming symmetry."
+        },
+        {
+          "slug": "interval-solution-count",
+          "name": "Count solutions on a stated interval by counting cycles",
+          "summaryLatex": "Convert the interval to one for the argument, divide its length by the period, and multiply by the hits per cycle.",
+          "bodyLatex": "For $\\sin(bx + c) = s$ the argument travels a span of $|b|L$ over an interval of length $L$, so the span in cycles is $\\frac{|b|L}{360^\\circ}$, and each whole cycle contributes two hits while each half cycle contributes one. A clean multiple of the period is the easy case; an interval that ends mid-cycle is where an off-by-one hides, so list the arguments explicitly there rather than multiplying. The endpoint test is not optional either: $\\sin 0^\\circ = 0$, so $0$ and $360$ are solutions of $\\sin x = 0$ on a closed interval and the count reflects that."
+        },
+        {
+          "slug": "principal-value-range",
+          "name": "Use the restricted range of an inverse function",
+          "summaryLatex": "An inverse trigonometric function returns the one angle in a fixed range, so check the range before accepting an answer.",
+          "bodyLatex": "The three ranges are $[-90^\\circ, 90^\\circ]$ for the inverse sine, $[0^\\circ, 180^\\circ]$ for the inverse cosine, and $(-90^\\circ, 90^\\circ)$ for the inverse tangent, with domains $[-1, 1]$, $[-1, 1]$ and all reals. Once you have an angle whose sine or cosine is the target, the range selects it: $\\arcsin\\left(-\\frac{1}{2}\\right) = -30^\\circ$ because the other candidate $210^\\circ$ is out of range, while $\\arccos\\left(-\\frac{1}{2}\\right) = 120^\\circ$ because $240^\\circ$ is. This is the difference between the two inverse functions on the same input, and forgetting it is the commonest inverse-trigonometric error there is."
+        },
+        {
+          "slug": "inverse-composition",
+          "name": "Know which composition inverts and which does not",
+          "summaryLatex": "Applying a function after its own inverse on a restricted domain returns the input; the other order does not.",
+          "bodyLatex": "$\\sin(\\arcsin x) = x$ and $\\cos(\\arccos x) = x$ hold for every $x$ in $[-1, 1]$, because the inner call lands inside the range the outer function reads from. The reverse order loses information: $\\arcsin(\\sin 210^\\circ)$ is $\\arcsin\\left(-\\frac{1}{2}\\right)$, which is $-30^\\circ$, not $210^\\circ$. The exact statement is that $\\arcsin(\\sin x) = x$ if and only if $x \\in [-90^\\circ, 90^\\circ]$, so a question of the form $\\arcsin(\\sin x) = c$ is really the equation $\\sin x = \\sin c$ with an extra answer."
+        },
+        {
+          "slug": "auxiliary-angle-expansion",
+          "name": "Expand a compound argument onto one function",
+          "summaryLatex": "Rewrite the harder side with an addition or cofunction identity until both sides involve the same function.",
+          "bodyLatex": "$\\cos x = \\sin(90^\\circ - x)$ turns $\\sin x = \\cos x$ into a single function, and $\\sin x = \\cos(90^\\circ - x)$ turns it the other way. Once both sides are the same function the case split is mechanical. The same move handles a double angle against a single one: writing $\\cos 2x = 2\\cos^2 x - 1$ turns $\\cos 2x = \\cos x$ into the quadratic $2c^2 - c - 1 = 0$ with $c = \\cos x$, which factors to $(2c+1)(c-1) = 0$ and gives $\\cos x = -\\frac{1}{2}$ or $\\cos x = 1$. Both routes should return the same set of angles, and disagreeing is a reliable signal of an algebra slip."
+        },
+        {
+          "slug": "graph-amplitude-period",
+          "name": "Read the amplitude and the period off the rule",
+          "summaryLatex": "The amplitude is $|a|$ and the period is $360^\\circ$ divided by $|b|$, whatever the signs.",
+          "bodyLatex": "A negative multiplier reflects the curve about the midline and a negative frequency reflects it about the vertical axis, so neither sign changes the amplitude or the period. That is why the range of $y = -4\\sin 2x + 3$ is $[-1, 7]$ and its period is $180^\\circ$, exactly as if both numbers were positive. Conversely, a graph that quotes a maximum $M$ and a minimum $m$ has amplitude $\\frac{M - m}{2}$ and midline $y = \\frac{M + m}{2}$, which is the recovery direction and the one worth memorising, because it is what a sketch of an unknown graph gives you."
+        },
+        {
+          "slug": "graph-phase-readoff",
+          "name": "Read the phase shift and the vertical shift off the rule",
+          "summaryLatex": "Put the argument in the form $b(x - h)$; then $h$ is the horizontal shift and the constant outside is the midline.",
+          "bodyLatex": "Once the argument is written $b(x - h)$, the graph is the standard curve moved $h$ degrees to the right when $h$ is positive and $|h|$ degrees to the left when it is negative, and moved $|d|$ units up or down by the constant outside the brackets. The frequency stays out of it, which is worth internalising: in $5\\sin(2(x - 30^\\circ)) + 1$ the phase shift is $30^\\circ$, not $60^\\circ$, because $2$ only compresses the curve afterwards. A graph also reports these numbers: the midline is the line the curve crosses most, the extremes are the top and bottom turning points, and the period is the gap between two crossings in the same direction."
+        },
+        {
+          "slug": "graph-construction",
+          "name": "Sketch one cycle from the four parameters",
+          "summaryLatex": "Plot one midline crossing, then one extreme, then the next crossing, and repeat with the period.",
+          "bodyLatex": "A sine curve is fixed by four points: a midline crossing going up, the maximum a quarter of a period later, a midline crossing going down a half of a period in all, and the minimum three quarters of the way along. For a cosine curve the cycle starts at a maximum instead, because $\\cos 0^\\circ = 1$ while $\\sin 0^\\circ = 0$. Placing those four points against a drawn midline is enough to make the sketch recognisable, and it is the fastest way to check a multiple-choice option without computing anything else."
+        },
+        {
+          "slug": "tangent-graph-asymptotes",
+          "name": "Locate the asymptotes of the tangent, the secant and the cosecant",
+          "summaryLatex": "The tangent is undefined where its cosine is zero; the secant and the cosecant are undefined where their denominators are zero.",
+          "bodyLatex": "$y = \\tan(bx)$ has vertical asymptotes where $bx = 90^\\circ + 180^\\circ k$, so on $0^\\circ \\le x \\le 360^\\circ$ the graph of $y = \\tan 2x$ has them at $x = 45^\\circ$, $135^\\circ$, $225^\\circ$ and $315^\\circ$. Every branch is strictly increasing, so a horizontal line meets each branch at most once and a tangent equation over one full period of its own has exactly one solution. For the secant and the cosecant the asymptotes come from the denominator: $y = \\csc x$ is undefined at $x = 0^\\circ$, $180^\\circ$ and $360^\\circ$, which is why the reciprocal families carry two asymptotes per turn where the tangent carries two per half turn."
+        },
+        {
+          "slug": "reciprocal-graph-reflection",
+          "name": "Get the secant and cosecant graphs from the cosine and sine graphs",
+          "summaryLatex": "A reciprocal is a reflection in the horizontal axis, plus an asymptote wherever the original graph crosses the axis.",
+          "bodyLatex": "Wherever $\\cos x$ is positive, $\\sec x = \\frac{1}{\\cos x}$ is a positive curve sitting above the cosine and falling towards it as the cosine grows; wherever the cosine is negative, the secant is negative and the picture is reflected below. The branch structure follows from the sign changes, and the vertical asymptotes from the zeros. That is the whole of the relationship, and it is what makes $\\sec^2 x = \\frac{1}{\\cos^2 x}$ readable as a graph rather than only as an identity."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "amplitude-is-absolute-value",
+          "titleLatex": "The amplitude is $|a|$, not $a$",
+          "wrongLatex": "The amplitude of $y = -3\\cos x$ is $-3$, so its range is $[-8, 2]$.",
+          "whyLatex": "A negative multiplier reflects the curve about the midline; it does not turn it upside down past the extremes. The sine still runs between $-1$ and $1$, so $-3\\cos x$ still runs between $-3$ and $3$ before the shift is added.",
+          "fixLatex": "Take the absolute value first: the amplitude of $-3\\cos x$ is $3$, and with a midline of $0$ the range is $[-3, 3]$. With the midline of $5$ in $y = -3\\cos x + 5$ the range is $[2, 8]$."
+        },
+        {
+          "slug": "one-branch-of-a-sine",
+          "titleLatex": "Writing down only one of the two angles that share a sine",
+          "wrongLatex": "$\\sin x = \\frac{1}{2}$ gives $x = 30^\\circ + 360^\\circ k$.",
+          "whyLatex": "The family is only half of it. The sine reaches $\\frac{1}{2}$ in the second quadrant as well, at the supplement of the first-quadrant angle, and that is why the equation has two solutions per turn rather than one. Writing one branch halves the count and usually also loses the smaller of two answers to a sum-of-solutions question.",
+          "fixLatex": "Always write both branches, $x = \\alpha + 360^\\circ k$ or $x = 180^\\circ - \\alpha + 360^\\circ k$, then cut down to the interval. For $\\sin x = \\frac{1}{2}$ that is $x = 30^\\circ$ and $x = 150^\\circ$ on $[0^\\circ, 360^\\circ]$."
+        },
+        {
+          "slug": "arcsin-of-sin-is-not-the-angle",
+          "titleLatex": "Treating $\\arcsin(\\sin x)$ as if it returned $x$",
+          "wrongLatex": "$\\arcsin(\\sin 300^\\circ) = 300^\\circ$",
+          "whyLatex": "The inverse sine may only return an angle of $[-90^\\circ, 90^\\circ]$, and $300^\\circ$ is not one. What survives is the sine itself: $\\sin 300^\\circ = -\\frac{\\sqrt{3}}{2}$, so the answer is $\\arcsin\\left(-\\frac{\\sqrt{3}}{2}\\right) = -60^\\circ$.",
+          "fixLatex": "Say when the round trip is valid instead: $\\arcsin(\\sin x) = x$ holds exactly for $x \\in [-90^\\circ, 90^\\circ]$, and outside that interval it returns a reflection of $x$ into it. Use it to solve, not to evaluate."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m8-l5-p1",
+        "m8-l5-p2",
+        "m8-l5-p3",
+        "m8-l5-p4",
+        "m8-l5-p5",
+        "m8-l5-p6",
+        "m8-l5-p7",
+        "m8-l5-p8",
+        "m8-l5-p9",
+        "m8-l5-p10",
+        "m8-l5-p11",
+        "m8-l5-p12",
+        "m8-l5-p13",
+        "m8-l5-p14",
+        "m8-l5-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m8-l5-p1",
+        "m8-l5-p2",
+        "m8-l5-p3",
+        "m8-l5-p4",
+        "m8-l5-p5",
+        "m8-l5-p6",
+        "m8-l5-p7",
+        "m8-l5-p8",
+        "m8-l5-p9",
+        "m8-l5-p10",
+        "m8-l5-p11",
+        "m8-l5-p12",
+        "m8-l5-p13",
+        "m8-l5-p14",
+        "m8-l5-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m8-l5-m1",
+        "m8-l5-m2",
+        "m8-l5-m3"
+      ],
+      "passThreshold": 2
+    }
+  }
+}

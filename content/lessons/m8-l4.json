@@ -1,0 +1,234 @@
+{
+  "id": "m8-l4",
+  "moduleId": "M8",
+  "order": 4,
+  "title": "Complex Numbers, Polar Form, and Roots of Unity",
+  "topicSlug": "complex-numbers-polar-form-roots-of-unity",
+  "tiers": [
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 80,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m8-l1",
+    "m8-l2"
+  ],
+  "tags": [
+    "complex-numbers",
+    "polar-form",
+    "trig-identities",
+    "special-angles"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Write a complex number in polar form and read a modulus and an argument off one; convert between rectangular and polar form in both directions with the correct quadrant; raise a complex number to an integer power using De Moivre's theorem and reduce the resulting angle; find all $n$-th roots of a nonzero complex number; and evaluate sums built from the roots of unity."
+    },
+    "prerequisites": {
+      "items": [
+        {
+          "labelLatex": "[m8-l1](/M8/lessons/m8-l1) the unit circle",
+          "noteLatex": "for the exact cosine and sine of the reference angles used throughout, and for the fact that a point on the circle is a pair of coordinates"
+        },
+        {
+          "labelLatex": "[m8-l2](/M8/lessons/m8-l2) trigonometric identities",
+          "noteLatex": "for the angle-addition formula, which is exactly what De Moivre's theorem is"
+        }
+      ],
+      "noteLatex": "The one new object is the imaginary unit $\\mathrm{i}$, with $\\mathrm{i}^2 = -1$; everything else is plane geometry and trigonometry already introduced. A reader who can draw the unit circle from memory and expand $(\\cos a + \\mathrm{i}\\sin a)(\\cos b + \\mathrm{i}\\sin b)$ is ready. No knowledge of complex analysis is assumed or needed, and nothing here requires a calculator: every answer here is exact."
+    },
+    "concept": {
+      "conceptLatex": "A complex number $z = a + b\\mathrm{i}$ is a point of the plane: $a$ is its signed horizontal coordinate and $b$ is its signed vertical coordinate. Nothing in this lesson is a new kind of number. It is the unit-circle geometry of [m8-l1](/M8/lessons/m8-l1) with the radius freed from the value $1$, so every fact here is a fact about a triangle in the plane.\n\nTwo numbers describe that point, and they are called the modulus and the argument. The modulus is the ordinary distance from the origin, $|z| = \\sqrt{a^2 + b^2}$, so it is never negative and it vanishes only for $z = 0$. The argument is the directed angle from the positive real axis to the ray through the point, measured counterclockwise. The argument is therefore determined only up to a whole number of full turns: $\\theta$ and $\\theta + 2\\pi$ describe the same point. Writing the two together gives the polar form $z = r(\\cos\\theta + \\mathrm{i}\\sin\\theta)$, and the parentheses matter, because $\\mathrm{i}\\sin\\theta$ is the vertical part of the point rather than a multiplier of the whole.\n\nThe angle is not free. It has to place the point in the correct quadrant, and the quadrant is read off the signs of $a$ and $b$: both positive puts $\\theta$ in the first quadrant, a negative $a$ with a positive $b$ in the second, and so on. One procedure that always works is to find the reference angle from $\\tan\\theta = b/a$ and then add or subtract a full turn until the point sits in the intended quadrant. Choosing the wrong quadrant is the single most common error in this lesson, and it is invisible in the modulus, which is why a correct $r$ is not evidence of a correct $\\theta$.\n\nThe conjugate $\\overline{z} = a - b\\mathrm{i}$ is the reflection of $z$ across the real axis, which is why $|\\overline{z}| = |z|$ while the argument of the conjugate is the negative of the argument of $z$. That one reflection explains most of the arithmetic in the lesson: a product's modulus is the product of the moduli and a quotient's modulus is the quotient of them, so $|z_1 z_2| = |z_1||z_2|$ and $|z_1 / z_2| = |z_1| / |z_2|$ hold without any computation beyond the moduli themselves. Multiplying by a modulus of $1$ is a rotation and nothing else.\n\nDe Moivre's theorem is the angle-addition formula applied to a power:\n$(\\cos\\theta + \\mathrm{i}\\sin\\theta)^n = \\cos n\\theta + \\mathrm{i}\\sin n\\theta$.\nIts content is that multiplying by $\\cos\\theta + \\mathrm{i}\\sin\\theta$ rotates by $\\theta$, so raising to the $n$-th power rotates by $n\\theta$ and scales by $r^n$. In polar form that is $z^n = r^n(\\cos n\\theta + \\mathrm{i}\\sin n\\theta)$, and a power problem collapses to doubling the angle and raising the modulus. The angle is only ever needed modulo $2\\pi$, so the arithmetic of $n\\theta$ is a reduction, not an evaluation.\n\nThe $n$-th roots of a nonzero complex number follow from the same rotation. Asking for the points whose $n$-th power is a given number is asking where $n$ identical rotations land, and the answer is exactly $n$ points spaced by one $n$-th of a full turn: with the target written as $r(\\cos\\theta + \\mathrm{i}\\sin\\theta)$, the roots are $r^{1/n}(\\cos\\frac{\\theta + 2\\pi k}{n} + \\mathrm{i}\\sin\\frac{\\theta + 2\\pi k}{n})$ for $k = 0, 1, \\ldots, n-1$. The $k = n$ case repeats the $k = 0$ case, so the list stops at $n - 1$. When the target has modulus $1$ these are the roots of unity, and they are the vertices of a regular $n$-gon inscribed in the unit circle.\n\nTheir sum is what makes roots of unity worth learning. A rotation by one $n$-th of a full turn, applied $n$ times, returns every point to where it started, and the $n$ rotation vectors all have the same length and the same spacing, so they pair off head to tail into a closed polygon: the $n$-th roots of unity sum to $0$ for every $n \\ge 2$. The same cancellation collapses any geometric sum whose ratio is a nontrivial root of unity into a one-line calculation, and that is the standard way to evaluate a sum of cosines at equally spaced angles without a calculator.\n\nTwo cautions carry most of the remaining risk. The imaginary unit cycles, since $\\mathrm{i}^2 = -1$ and $\\mathrm{i}^4 = 1$, so any direct expansion must track powers of $\\mathrm{i}$ modulo $4$. And the statement that there are exactly $n$ roots requires a nonzero target, because $0$ has the single root $0$ however large $n$ is.",
+      "figures": [
+        {
+          "id": "m8-l4-fig-1",
+          "captionLatex": "The modulus is a distance and the argument is a swept angle, so the same point has infinitely many arguments and exactly one modulus. The dashed segment is the conjugate, the reflection across the real axis, and it has the same length as the solid one.",
+          "asymptoteSource": "// The complex plane as a picture. The modulus is the segment from the origin\n// to the point, the argument is the swept angle, and the conjugate is the same\n// point reflected across the real axis.\nsize(320,300);\npair O = (0,0);\npair z = dir(140) * 2.3;\npair zb = conj(z);\ndraw(shift(O)*scale(1.25)*unitcircle, gray(0.75));\ndraw((-2.6,0)--(2.6,0), gray(0.45));\ndraw((0,-2.6)--(0,2.6), gray(0.45));\ndraw(O--z, black);\ndraw(O--zb, dashed);\ndraw(arc(O, 2.3, 0, 140), gray(0.5));\ndot(z, black);\ndot(zb, black);\ndot(O, black);\nlabel(\"$z$\", z, NW);\nlabel(\"$\\overline{z}$\", zb, SW);\nlabel(\"$|z|$\", (O+z)/2 + (-0.3,0.05), NW);\nlabel(\"$\\theta$\", dir(70)*0.72, N);\nlabel(\"$\\mathrm{Re}$\", (2.55,-0.35), SE);\nlabel(\"$\\mathrm{Im}$\", (0.25,2.55), E);",
+          "asymptoteAlt": "A pair of perpendicular grey axes cross at a point marked O, with the horizontal one labelled Re and the vertical one labelled Im. A dashed circle is drawn around them. One solid black segment runs from O up and to the left to a solid dot labelled z, and a short grey arc near the origin marks a counterclockwise angle between the horizontal axis and that segment, labelled with a Greek theta. The segment is labelled with the modulus of z. A second dashed segment runs from O down and to the left to a second dot labelled as the conjugate of z, which is the reflection of the first dot across the horizontal axis.",
+          "asymptoteAspectRatio": 1.067
+        },
+        {
+          "id": "m8-l4-fig-2",
+          "captionLatex": "The sixth roots of unity, drawn as radii from the centre on the left and laid head to tail on the right. Equal length and equal spacing make the second picture close, which is the geometric content of the statement that they sum to $0$.",
+          "asymptoteSource": "// The six sixth roots of unity, drawn twice. On the left as radii from the\n// centre; on the right laid head to tail, where they close into a hexagon and\n// the six of them add to zero.\nsize(360,300);\npair O = (0,0);\ndraw(shift(O)*scale(1.05)*unitcircle, gray(0.75));\nfor (int k = 0; k < 6; ++k) {\n  pair p = dir(60*k);\n  draw(O--p, gray(0.5));\n  dot(p, black);\n}\npair S = (-3.1,-0.5);\npair q = S;\nfor (int k = 0; k < 6; ++k) {\n  pair r = q + dir(60*k);\n  draw(q--r, black);\n  q = r;\n}\ndot(S, gray(0.55));\ndot(q, gray(0.55));\nlabel(\"$1$\", O+dir(0), E);\nlabel(\"$\\zeta$\", dir(60), NE);\nlabel(\"$\\zeta^{5}$\", dir(300), SE);\nlabel(\"$\\sum_{k=0}^{5}\\zeta^{k}=0$\", S + (0.5,-1.6), S);",
+          "asymptoteAlt": "Two pictures sit side by side. On the left, a dashed unit circle centred on a marked point holds six solid dots on its circumference, each joined to the centre by a thin grey radius, with the rightmost dot labelled 1 and the two dots above and below it labelled with a Greek zeta and its fifth power. On the right, the same six radii are drawn again as six black segments laid head to tail, starting and ending at the same marked point, which shows the closed hexagon. A line of text under the right picture states that the six powers of zeta, from the zeroth to the fifth, sum to zero.",
+          "asymptoteAspectRatio": 1.2
+        },
+        {
+          "id": "m8-l4-fig-3",
+          "captionLatex": "The seventh roots of unity are the vertices of a regular heptagon, because consecutive roots differ by one rotation of $\\frac{2\\pi}{7}$. Every roots-of-unity picture is this picture with a different number of sides.",
+          "asymptoteSource": "// The seven seventh roots of unity as a regular heptagon. Each vertex is one\n// rotation of 360/7 degrees from the last, and that spacing is what every\n// roots-of-unity picture is made of.\nsize(320,320);\npair O = (0,0);\npair p0 = dir(90);\npair p1 = dir(90+360/7);\npair p2 = dir(90+720/7);\npair p3 = dir(90+1080/7);\npair p4 = dir(90+1440/7);\npair p5 = dir(90+1800/7);\npair p6 = dir(90+2160/7);\ndraw(shift(O)*scale(1.15)*unitcircle, gray(0.75));\ndraw(p0--p1--p2--p3--p4--p5--p6--cycle, black);\ndot(p0, black);\ndot(p1, black);\ndot(p2, black);\ndot(p3, black);\ndot(p4, black);\ndot(p5, black);\ndot(p6, black);\nlabel(\"$\\zeta^{0}$\", p0*1.2, N);\nlabel(\"$\\zeta^{1}$\", p1*1.2, NE);\nlabel(\"$\\zeta^{3}$\", p3*1.2, E);\nlabel(\"$\\zeta^{6}$\", p6*1.2, NW);",
+          "asymptoteAlt": "A dashed unit circle centred on a marked point holds a bold regular heptagon whose seven vertices are marked with solid dots, one of them at the top of the circle. The vertex at the top is labelled with zeta to the zeroth power, the next vertex clockwise with zeta to the first power, the vertex on the right with zeta to the third power, and the vertex just before the top on the left with zeta to the sixth power. The seven vertices are evenly spaced, which is the equal spacing the caption describes.",
+          "asymptoteAspectRatio": 1.0
+        }
+      ],
+      "examples": [
+        {
+          "id": "m8-l4-wex-1",
+          "titleLatex": "Worked example: polar form back to rectangular form",
+          "bodyLatex": "Write $6(\\cos 210^\\circ + \\mathrm{i}\\sin 210^\\circ)$ in the form $a + b\\mathrm{i}$.\n\n$210^\\circ$ is in the third quadrant, so both parts are negative. The reference angle is $210^\\circ - 180^\\circ = 30^\\circ$, and $\\cos 210^\\circ = -\\cos 30^\\circ = -\\frac{\\sqrt{3}}{2}$ while $\\sin 210^\\circ = -\\sin 30^\\circ = -\\frac{1}{2}$.\n\n$6\\left(-\\frac{\\sqrt{3}}{2} + \\mathrm{i}\\left(-\\frac{1}{2}\\right)\\right) = -3\\sqrt{3} - 3\\mathrm{i}$\n\nBoth signs are negative, which is the check that the quadrant was handled: the original form already located the point in the third quadrant, and the answer agrees with it. The modulus is worth confirming, since $6$ was the modulus and $\\sqrt{27 + 9} = 6$.",
+          "answerLatex": "$-3\\sqrt{3} - 3\\mathrm{i}$"
+        },
+        {
+          "id": "m8-l4-wex-2",
+          "titleLatex": "Worked example: rectangular form back to polar form",
+          "bodyLatex": "Write $-1 + \\mathrm{i}$ in polar form with the argument in $[0, 2\\pi)$.\n\nThe modulus is $\\sqrt{(-1)^2 + 1^2} = \\sqrt{2}$.\n\nThe real part is negative and the imaginary part positive, so the point is in the second quadrant and the argument is $180^\\circ$ less the reference angle. The reference angle satisfies $\\tan\\phi = \\frac{1}{-1}$, whose acute value is $45^\\circ$, so $\\theta = 180^\\circ - 45^\\circ = 135^\\circ$.\n\n$-1 + \\mathrm{i} = \\sqrt{2}(\\cos 135^\\circ + \\mathrm{i}\\sin 135^\\circ)$\n\nThe reference angle alone would have given $45^\\circ$, which is the reflection of this point across the real axis, and the modulus is the same for both. That is the whole reason the quadrant has to be written down before the angle is.",
+          "answerLatex": "$\\sqrt{2}(\\cos 135^\\circ + \\mathrm{i}\\sin 135^\\circ)$"
+        },
+        {
+          "id": "m8-l4-wex-3",
+          "titleLatex": "Worked example: a high power by De Moivre's theorem",
+          "bodyLatex": "Compute $(1 + \\mathrm{i})^{20}$ exactly.\n\nIn polar form $1 + \\mathrm{i} = \\sqrt{2}(\\cos 45^\\circ + \\mathrm{i}\\sin 45^\\circ)$.\n\nDe Moivre's theorem raises the modulus and multiplies the angle, so $(1 + \\mathrm{i})^{20} = (\\sqrt{2})^{20}(\\cos 900^\\circ + \\mathrm{i}\\sin 900^\\circ)$.\n\nThe modulus is $(\\sqrt{2})^{20} = 2^{10} = 1024$. The angle reduces by two full turns: $900^\\circ - 720^\\circ = 180^\\circ$, and $\\cos 180^\\circ = -1$ with $\\sin 180^\\circ = 0$.\n\n$(1 + \\mathrm{i})^{20} = 1024(-1 + 0\\mathrm{i}) = -1024$\n\nA cheap check is to power in stages, since $(1 + \\mathrm{i})^2 = 2\\mathrm{i}$, $(1 + \\mathrm{i})^4 = (2\\mathrm{i})^2 = -4$, $(1 + \\mathrm{i})^{20} = ((1 + \\mathrm{i})^4)^5 = (-4)^5 = -1024$, which agrees. Note that the reduction of $900^\\circ$ kept the negative sign rather than flipping it: a periodic function repeats its values, it does not alternate them.",
+          "answerLatex": "$-1024$",
+          "asymptoteSource": "// Successive powers of 1 + i: each multiplication rotates a further 45 degrees\n// and multiplies the length by root 2, so the partial products spiral outwards\n// along a regular octagon.\nsize(340,300);\npair O = (0,0);\npair q = O;\nfor (int k = 1; k <= 4; ++k) {\n  pair r = q + dir(45*k)*(1.4142^(k-1));\n  draw(q--r, black);\n  q = r;\n}\ndraw(shift(O)*scale(2.4)*unitcircle, gray(0.8));\ndot(O, black);\ndot(q, black);\nlabel(\"$0$\", O, SW);\nlabel(\"$1+\\\\mathrm{i}$\", dir(45)*1.5, NE);\nlabel(\"$(1+\\\\mathrm{i})^{4}$\", q*1.2, E);\nlabel(\"$\\\\times\\\\sqrt{2},\\\\ +45^\\\\circ$\", (-1.2,-2.6), N);",
+          "asymptoteAlt": "A large faint dashed circle is centred on a marked point labelled zero. Four black segments are laid head to tail from that point, each turning a little further counterclockwise and each a little longer than the last, so the chain spirals outwards and ends at a marked point on the upper right of the circle labelled with the fourth power of one plus the imaginary unit. A line of text under the circle says that each step multiplies the length by the square root of two and adds forty-five degrees.",
+          "asymptoteAspectRatio": 1.133
+        },
+        {
+          "id": "m8-l4-wex-4",
+          "titleLatex": "Worked example: the fourth roots of a negative number",
+          "bodyLatex": "Find all four solutions of $z^4 = -4$.\n\nA negative real number has modulus $4$ and argument $180^\\circ$, never $0^\\circ$. Write $-4 = 4(\\cos 180^\\circ + \\mathrm{i}\\sin 180^\\circ)$.\n\nTaking fourth roots takes the fourth root of the modulus and divides the argument by $4$, then adds a quarter turn three more times. The modulus is $\\sqrt[4]{4} = \\sqrt{2}$, and the arguments are $\\frac{180^\\circ + 360^\\circ k}{4}$ for $k = 0, 1, 2, 3$, which are $45^\\circ$, $135^\\circ$, $225^\\circ$, and $315^\\circ$. The case $k = 4$ would give $405^\\circ$, which is the first root again.\n\nSince $\\sqrt{2}\\cos 45^\\circ = \\sqrt{2}\\cdot\\frac{\\sqrt{2}}{2} = 1$ and $\\sqrt{2}\\sin 45^\\circ = 1$, the four roots are exactly the four points $1 + \\mathrm{i}$, $-1 + \\mathrm{i}$, $-1 - \\mathrm{i}$, and $1 - \\mathrm{i}$.\n\nEvery one has modulus $\\sqrt{2}$ and each is a quarter turn from the last, so the four are the corners of a square. Checking one directly: $(1 + \\mathrm{i})^2 = 2\\mathrm{i}$ and $(1 + \\mathrm{i})^4 = (2\\mathrm{i})^2 = -4$, as required. Had the target been written with argument $0^\\circ$ the same computation would have produced the roots of $+4$ instead, which is the failure mode that makes the argument of a negative real number worth stating explicitly.",
+          "answerLatex": "$1 + \\mathrm{i}$, $-1 + \\mathrm{i}$, $-1 - \\mathrm{i}$, and $1 - \\mathrm{i}$",
+          "asymptoteSource": "// The fourth roots of -4. Writing -4 as 4 cis 180 degrees and taking fourth\n// roots gives four angles spaced 90 degrees apart, at radius root 2, which\n// lands exactly on the four points 1+i, -1+i, -1-i and 1-i.\nsize(320,320);\npair O = (0,0);\npair q1 = (1,1);\npair q2 = (-1,1);\npair q3 = (-1,-1);\npair q4 = (1,-1);\ndraw((-2.2,0)--(2.2,0), gray(0.45));\ndraw((0,-2.2)--(0,2.2), gray(0.45));\ndraw(shift(O)*scale(1.4142)*unitcircle, gray(0.75));\ndraw(q1--q2--q3--q4--cycle, black);\ndot(q1, black);\ndot(q2, black);\ndot(q3, black);\ndot(q4, black);\nlabel(\"$1+\\\\mathrm{i}$\", q1, NE);\nlabel(\"$-1+\\\\mathrm{i}$\", q2, NW);\nlabel(\"$-1-\\\\mathrm{i}$\", q3, SW);\nlabel(\"$1-\\\\mathrm{i}$\", q4, SE);\nlabel(\"$45^\\\\circ$\", dir(22.5)*0.75, E);",
+          "asymptoteAlt": "Perpendicular grey axes cross at a marked centre, and a dashed circle of radius root two is drawn around them. A bold square with sides parallel to the axes has its four corners on that circle and each corner marked with a solid dot. The top right corner is labelled one plus the imaginary unit, the top left minus one plus the imaginary unit, the bottom left minus one minus the imaginary unit, and the bottom right one minus the imaginary unit. A short angle near the horizontal axis between the axis and the diagonal is marked forty-five degrees.",
+          "asymptoteAspectRatio": 1.0
+        },
+        {
+          "id": "m8-l4-wex-5",
+          "titleLatex": "Worked example: the fifth roots of unity and their sum",
+          "bodyLatex": "Let $\\zeta = \\cos\\frac{2\\pi}{5} + \\mathrm{i}\\sin\\frac{2\\pi}{5}$. Find all fifth roots of unity and their sum.\n\nThe fifth roots of unity solve $z^5 = 1 = 1(\\cos 0^\\circ + \\mathrm{i}\\sin 0^\\circ)$, so the modulus is $1$ and the arguments are $\\frac{360^\\circ k}{5} = 72^\\circ k$ for $k = 0, 1, 2, 3, 4$. They are $1$, $\\zeta$, $\\zeta^2$, $\\zeta^3$, and $\\zeta^4$, at angles $0^\\circ$, $72^\\circ$, $144^\\circ$, $216^\\circ$, and $288^\\circ$, which are the vertices of a regular pentagon inscribed in the unit circle.\n\nFor the sum, use the geometric-series identity: $(1 - \\zeta)(1 + \\zeta + \\zeta^2 + \\zeta^3 + \\zeta^4) = 1 - \\zeta^5$.\n\nSince $\\zeta^5 = 1$ the right-hand side is $0$, and since $\\zeta \neq 1$ the factor $1 - \\zeta$ is not $0$, so $1 + \\zeta + \\zeta^2 + \\zeta^3 + \\zeta^4 = 0$.\n\nTaking real parts gives the same statement for cosines, $\\sum_{k=0}^{4}\\cos\\frac{2\\pi k}{5} = 0$, and taking imaginary parts gives the sum of the sines. The division is the step that matters: the numerator vanishing is what forces the sum, and a reader who divides without checking that $1 - \\zeta \neq 0$ has not proved anything.",
+          "answerLatex": "$1$, $\\zeta$, $\\zeta^{2}$, $\\zeta^{3}$, $\\zeta^{4}$, summing to $0$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "modulus-and-argument",
+          "name": "Reading the modulus and the argument",
+          "summaryLatex": "$r = \\sqrt{a^2 + b^2}$ is the distance from the origin, and $\\theta$ is the directed angle to the point, which is unique only up to a full turn.",
+          "bodyLatex": "Compute $r$ from $a$ and $b$ with no further information: it is the only quantity about a complex number that needs nothing but arithmetic. For $\\theta$, state the quadrant before the value. The argument is a ray, not a point, so any representative is correct provided it lands in the right quadrant, and the safest convention for hand work is to report $\\theta$ in $[0, 2\\pi)$ and name the quadrant explicitly. A useful consistency check is that $r = 0$ forces $a = b = 0$, and in that case there is no argument at all rather than every argument."
+        },
+        {
+          "slug": "polar-rectangular-conversion",
+          "name": "Converting between the two forms",
+          "summaryLatex": "$a = r\\cos\\theta$ and $b = r\\sin\\theta$ go one way, and $r = \\sqrt{a^2+b^2}$ with a quadrant check comes back.",
+          "bodyLatex": "Polar to rectangular is a substitution with nothing to decide: expand $r(\\cos\\theta + \\mathrm{i}\\sin\\theta)$ and evaluate the special angle. Rectangular to polar is the direction that carries the only risk, because $\\sqrt{a^2+b^2}$ is unambiguous while the angle is not. Compute $r$ first, then find the reference angle, then convert it into the quadrant the signs of $a$ and $b$ demand. Do not take the angle from $\\arctan(b/a)$ alone: that returns a value in the wrong quadrant whenever $a$ is negative, which is the single most frequent error in this lesson."
+        },
+        {
+          "slug": "argument-quadrant-fix",
+          "name": "Fixing the quadrant of the argument",
+          "summaryLatex": "The signs of the real and imaginary parts determine the quadrant, and the reference angle has to be moved into it by adding or subtracting a full turn.",
+          "bodyLatex": "Both signs positive is the first quadrant, real part negative with imaginary part positive is the second, both negative the third, and real part positive with imaginary part negative the fourth. From the reference angle $\\phi$ the candidate arguments are $\\phi$, $\\pi - \\phi$, $\\pi + \\phi$, and $2\\pi - \\phi$, and exactly one lies in the quadrant the signs require. Writing the quadrant down before the number is the cheap habit that prevents the expensive error, because the modulus is identical for all four candidates and so cannot detect the mistake afterwards."
+        },
+        {
+          "slug": "conjugate-and-modulus",
+          "name": "The conjugate and the modulus of a product or quotient",
+          "summaryLatex": "$|z_1 z_2| = |z_1||z_2|$ and $|z_1 / z_2| = |z_1| / |z_2|$, because conjugation reflects across the real axis and preserves distance.",
+          "bodyLatex": "The proof is geometric: reflecting both points of a product across the real axis reflects the product, so the product and its conjugate have the same modulus, and expanding $\\overline{z_1 z_2} = \\overline{z_1}\\,\\overline{z_2}$ together with $|\\overline{z}| = |z|$ forces the multiplicative rule. The practical payoff is that the modulus of a product never needs the product itself, so a problem that asks only for a modulus, a modulus of a quotient, or the argument of a product should never be expanded at all. Multiplying by $\\mathrm{i}$ is the extreme case: a rotation of $90^\\circ$ and no change of length."
+        },
+        {
+          "slug": "de-moivre-power",
+          "name": "Raising to a power with De Moivre's theorem",
+          "summaryLatex": "$z^n = r^n(\\cos n\\theta + \\mathrm{i}\\sin n\\theta)$: raise the modulus, multiply the angle, and only then evaluate.",
+          "bodyLatex": "Three steps in a fixed order. Write the number in polar form, which may be the whole problem if the given form is already polar. Replace $r$ by $r^n$ and $\\theta$ by $n\\theta$. Reduce $n\\theta$ modulo $2\\pi$ before evaluating anything, since the cosine and sine are periodic and an unreduced angle only invites a sign error. Direct expansion by the binomial theorem is the check rather than the method: for exponents up to about five it is a usable second route, and when the two routes disagree the reduction step is almost always where the mistake is."
+        },
+        {
+          "slug": "angle-multiplication-reduction",
+          "name": "Reducing a multiplied angle",
+          "summaryLatex": "An angle is needed only modulo $2\\pi$, so $n\\theta$ is reduced by whole turns before any cosine or sine is taken.",
+          "bodyLatex": "Reduce by dividing by a full turn, keeping the fractional part, and putting the remainder back in $[0, 2\\pi)$. Sign is preserved by the reduction: $900^\\circ$ reduces to $180^\\circ$, not to $180^\\circ$ with a sign flip, so the cosine of $900^\\circ$ is negative exactly as the cosine of $180^\\circ$ is. Reduce before converting to a special angle, never after, because a reduced angle is either one of the familiar $30$, $45$, $60$, $90$ degree values or it is a genuinely irrational multiple of $\\pi$, and a problem that expects an exact answer has been built to land on the first case."
+        },
+        {
+          "slug": "nth-root-extraction",
+          "name": "Finding the $n$-th roots of a complex number",
+          "summaryLatex": "Take the $n$-th root of the modulus and divide the argument by $n$, then add one $n$-th of a full turn $n-1$ more times.",
+          "bodyLatex": "There are exactly $n$ roots for a nonzero target, and they are $r^{1/n}(\\cos\\frac{\\theta + 2\\pi k}{n} + \\mathrm{i}\\sin\\frac{\\theta + 2\\pi k}{n})$ for $k = 0, \\ldots, n-1$. Two arithmetic slips dominate. The first is stopping at $k = n$ instead of $k = n - 1$, which repeats the first root. The second is forgetting that a real negative target has argument $\\pi$ rather than $0$: writing $-4$ as $4(\\cos 0 + \\mathrm{i}\\sin 0)$ silently asks for the fourth roots of $4$, and the whole set comes out rotated by $45^\\circ$ from the truth. Draw the roots before writing them if the count is what the problem asks for."
+        },
+        {
+          "slug": "root-of-unity-sums",
+          "name": "Sums of roots of unity",
+          "summaryLatex": "The $n$ roots of unity sum to $0$ for every $n \\ge 2$, because a nontrivial root of unity generates a geometric sum whose numerator vanishes.",
+          "bodyLatex": "Write the sum as a geometric series with ratio $\\zeta$, where $\\zeta$ is a root of unity other than $1$. Since $\\zeta^n = 1$, the usual formula gives $(1 - \\zeta)\\sum_{k=0}^{n-1}\\zeta^k = 1 - \\zeta^n = 0$, and since $\\zeta \neq 1$ the sum itself is $0$. Take real parts and the same argument evaluates any sum of cosines at equally spaced angles, and imaginary parts do the same for the sines. This is the standard way to evaluate such a sum exactly, and it is also the way to evaluate the slightly harder variants where the summand is $\\cos^2$ or $\\cos 2\\theta$, because a double angle is a second root of unity."
+        },
+        {
+          "slug": "regular-polygon-vertices",
+          "name": "Roots of unity as the vertices of a regular polygon",
+          "summaryLatex": "The $n$-th roots of unity are the vertices of a regular $n$-gon inscribed in the unit circle, one vertex on each positive real axis direction.",
+          "bodyLatex": "Consecutive roots differ by a rotation of one $n$-th of a full turn, so they are equally spaced on the circle, which is exactly the definition of a regular $n$-gon. Because $1$ is always a root, one vertex sits on the positive real axis and the vertices are indexed by the angle $2\\pi k/n$. The picture then settles every counting question in the module for free: the roots strictly inside a sector are counted by the multiples of $360/n$ that fall between the bounding angles, and a vertex on a bounding ray is excluded because the sector is open. Real parts of roots of unity are the heights of the polygon above the horizontal axis, which pairs off across the axis."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "reference-angle-taken-as-the-argument",
+          "titleLatex": "Taking the reference angle as the argument",
+          "wrongLatex": "$-1 - \\mathrm{i}$ has modulus $\\sqrt{2}$ and argument $45^\\circ$",
+          "whyLatex": "The reference angle is always measured from the negative real axis or the $y$-axis as appropriate, so it only lands in the first or fourth quadrant. $-1 - \\mathrm{i}$ is in the third, where the argument is $180^\\circ + 45^\\circ = 225^\\circ$. The modulus is right, which is exactly what makes this error survive: $\\sqrt{2}$ is correct and nothing in it can be wrong, so the mistake shows up only in the angle and only when the angle is used.",
+          "fixLatex": "Name the quadrant before the angle. From the reference angle $\\phi$ the third quadrant is $\\pi + \\phi$, so $225^\\circ$ and not $45^\\circ$. A check that catches this class of error is to evaluate the polar form: $r(\\cos 225^\\circ + \\mathrm{i}\\sin 225^\\circ) = \\sqrt{2}(-\\frac{\\sqrt{2}}{2} - \\frac{\\sqrt{2}}{2}\\mathrm{i}) = -1 - \\mathrm{i}$, which round-trips. With argument $45^\\circ$ the same form gives $1 + \\mathrm{i}$, the reflection across the real axis."
+        },
+        {
+          "slug": "forgotten-cycle-of-the-imaginary-unit",
+          "titleLatex": "Losing the cycle of the imaginary unit in a direct expansion",
+          "wrongLatex": "$(1 + \\mathrm{i})^4 = 1 + 4\\mathrm{i} + 6\\mathrm{i}^2 + 4\\mathrm{i}^3 + \\mathrm{i}^4 = 1 + 4\\mathrm{i} - 6 + 4\\mathrm{i} + 1 = -4 + 8\\mathrm{i}$",
+          "whyLatex": "Powers of $\\mathrm{i}$ cycle with period four: $\\mathrm{i}^0 = 1$, $\\mathrm{i}^1 = \\mathrm{i}$, $\\mathrm{i}^2 = -1$, $\\mathrm{i}^3 = -\\mathrm{i}$, $\\mathrm{i}^4 = 1$. The error above uses $\\mathrm{i}^3 = \\mathrm{i}$ and $\\mathrm{i}^4 = -1$ instead of $-\\mathrm{i}$ and $1$. Squaring twice is the reliable check, since $(1 + \\mathrm{i})^2 = 2\\mathrm{i}$ and $(2\\mathrm{i})^2 = -4$. This is the arithmetic counterpart of forgetting to reduce $n\\theta$, and both are the same mistake: a quantity that is periodic was treated as though it were growing.",
+          "fixLatex": "Reduce every power of $\\mathrm{i}$ modulo $4$ as you write it, and keep the sign attached to the reduced power. Or skip the expansion entirely and use De Moivre: the modulus is $\\sqrt{2}$ and the argument is $45^\\circ$, so the fourth power has modulus $(\\sqrt{2})^4 = 4$ and argument $180^\\circ$, giving $-4$. When the two routes disagree, the reduction is where the mistake is."
+        },
+        {
+          "slug": "root-of-unity-sum-read-as-one",
+          "titleLatex": "Reading the sum of the roots of unity as $1$",
+          "wrongLatex": "the sum of the five fifth roots of unity is $1$, because $1$ is one of them",
+          "whyLatex": "Being a summand says nothing about the total. The five fifth roots of unity are spaced by $72^\\circ$ all the way around the circle and their rotation vectors close head to tail into a pentagon, so they sum to $0$. The mistake is reasonable when a geometric-series formula is applied without checking its hypotheses: the formula gives $(1 - \\zeta)(1 + \\zeta + \\zeta^2 + \\zeta^3 + \\zeta^4) = 1 - \\zeta^5$, and the right-hand side is $0$ while $1 - \\zeta$ is not, so the sum is $0$. The formula divides, and the division is the whole step.",
+          "fixLatex": "Before dividing, look at the numerator. When the ratio is a nontrivial root of unity the numerator vanishes and the sum is $0$, and the only exception is the trivial root $1$, whose sum is $n$ rather than $0$. The two cases are worth stating outright, since a problem that mixes them, asking for $\\sum_{k=0}^{n-1} 1$ on one line and $\\sum_{k=0}^{n-1}\\zeta^k$ on the next, is testing exactly this distinction."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m8-l4-p1",
+        "m8-l4-p2",
+        "m8-l4-p3",
+        "m8-l4-p4",
+        "m8-l4-p5",
+        "m8-l4-p6",
+        "m8-l4-p7",
+        "m8-l4-p8",
+        "m8-l4-p9",
+        "m8-l4-p10",
+        "m8-l4-p11",
+        "m8-l4-p12",
+        "m8-l4-p13",
+        "m8-l4-p14",
+        "m8-l4-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m8-l4-p1",
+        "m8-l4-p2",
+        "m8-l4-p3",
+        "m8-l4-p4",
+        "m8-l4-p5",
+        "m8-l4-p6",
+        "m8-l4-p7",
+        "m8-l4-p8",
+        "m8-l4-p9",
+        "m8-l4-p10",
+        "m8-l4-p11",
+        "m8-l4-p12",
+        "m8-l4-p13",
+        "m8-l4-p14",
+        "m8-l4-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m8-l4-m1",
+        "m8-l4-m2",
+        "m8-l4-m3"
+      ],
+      "passThreshold": 2
+    }
+  }
+}

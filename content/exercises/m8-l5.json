@@ -1,0 +1,544 @@
+[
+  {
+    "id": "m8-l5-p1",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 1,
+    "tags": [
+      "trig-equations",
+      "angle-pair-case-split",
+      "interval-solution-count"
+    ],
+    "promptLatex": "Over the closed interval $0^\\circ \\le x \\le 360^\\circ$, how many values of $x$ satisfy $\\sin x = \\frac{1}{2}$?",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "6"
+    ],
+    "answerLatex": "2",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "In one full turn a sine curve reaches any value strictly between $-1$ and $1$ exactly twice.",
+      "Find the one angle in the first quadrant with that sine, then take its supplement.",
+      "The two angles are $x = 30^\\circ$ and $x = 150^\\circ$, and both lie in the interval."
+    ],
+    "solutionLatex": "$\\sin x = \\frac{1}{2}$ asks for the angles whose sine is $\\frac{1}{2}$. On the unit circle\nthat value is reached once in the first quadrant and once in the second, and those two\nangles are supplementary.\n\nThe first is $x = 30^\\circ$, since $\\sin 30^\\circ = \\frac{1}{2}$. The second is its\nsupplement, $180^\\circ - 30^\\circ = 150^\\circ$, because\n$\\sin(180^\\circ - x) = \\sin x$.\n\nNeither endpoint of the interval is a solution: $\\sin 0^\\circ = 0$ and\n$\\sin 360^\\circ = 0$, and $\\frac{1}{2}$ is not $0$.\n\nBoth $30^\\circ$ and $150^\\circ$ lie inside the interval, and the next occurrence would be at\n$390^\\circ$, which is outside it, so the count is $2$.",
+    "techniqueSlugs": [
+      "angle-pair-case-split",
+      "interval-solution-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p2",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "trig-equations",
+      "angle-pair-case-split",
+      "general-solution-capture"
+    ],
+    "promptLatex": "Solve $\\cos x = -\\frac{\\sqrt{3}}{2}$ for $0^\\circ \\le x \\le 360^\\circ$, and give the sum of the two solutions in degrees.",
+    "choices": null,
+    "answerLatex": "360",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A negative cosine points to the left half of the unit circle.",
+      "The two angles in one turn are the reference angle measured on either side of $180^\\circ$.",
+      "They are $x = 150^\\circ$ and $x = 210^\\circ$, so the sum is $150 + 210$."
+    ],
+    "solutionLatex": "A negative cosine places the terminal side in the second or the third quadrant, so the\nreference angle is measured from $180^\\circ$.\n\n$\\cos 30^\\circ = \\frac{\\sqrt{3}}{2}$, so the reference angle is $30^\\circ$ and the two\nsolutions in one turn are\n\n$x = 180^\\circ - 30^\\circ = 150^\\circ \\quad\\text{and}\\quad x = 180^\\circ + 30^\\circ = 210^\\circ$\n\nBoth lie in $[0^\\circ, 360^\\circ]$, and no third value of $x$ in that interval has this\ncosine, since the cosine completes exactly one full cycle there.\n\nThe sum is $150 + 210 = 360$.",
+    "techniqueSlugs": [
+      "angle-pair-case-split",
+      "general-solution-capture"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p3",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "trig-equations",
+      "angle-pair-case-split",
+      "interval-solution-count"
+    ],
+    "promptLatex": "Find the sum, in degrees, of all $x$ in $0^\\circ \\le x \\le 180^\\circ$ that satisfy $\\sin 2x = \\sin x$.",
+    "choices": null,
+    "answerLatex": "240",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Two sines agree in two ways: at equal angles, and at supplementary angles.",
+      "Write $2x = x + 360^\\circ k$ and $2x = 180^\\circ - x + 360^\\circ k$, then keep only what lands in the interval.",
+      "The three values that survive are $x = 0$, $x = 60^\\circ$ and $x = 180^\\circ$."
+    ],
+    "solutionLatex": "Two sines are equal when their angles are equal up to a whole turn, or when the angles\nsum to $180^\\circ$ up to a whole turn. So for integers $k$ either\n\n$2x = x + 360^\\circ k \\quad\\text{or}\\quad 2x = 180^\\circ - x + 360^\\circ k$\n\nThe first branch gives $x = 360^\\circ k$, and only $x = 0$ survives in $[0^\\circ, 180^\\circ]$.\n\nThe second branch gives $3x = 180^\\circ + 360^\\circ k$, so $x = 60^\\circ + 120^\\circ k$, which\nyields $x = 60^\\circ$ and $x = 180^\\circ$ in the interval.\n\nChecking each one: $x=0$ gives $\\sin 0 = \\sin 0$; $x=60^\\circ$ gives\n$\\sin 120^\\circ = \\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$; and $x=180^\\circ$ gives\n$\\sin 360^\\circ = \\sin 180^\\circ = 0$. All three hold.\n\nThe sum is $0 + 60 + 180 = 240$.",
+    "techniqueSlugs": [
+      "angle-pair-case-split",
+      "interval-solution-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p4",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 1,
+    "tags": [
+      "trig-equations",
+      "inverse-trig",
+      "principal-value-range"
+    ],
+    "promptLatex": "What is the smallest positive value of $x$, in degrees, that satisfies $\\tan x = 1$?",
+    "choices": [
+      "30",
+      "45",
+      "60",
+      "90",
+      "135"
+    ],
+    "answerLatex": "45",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The tangent repeats twice as often as the sine, so its period is half a turn.",
+      "Look for the angle in the first quadrant whose opposite and adjacent sides are equal.",
+      "The isosceles right triangle gives $45^\\circ$, and the repeat comes at $225^\\circ$."
+    ],
+    "solutionLatex": "The tangent is positive in the first and third quadrants, and the $3$ -\n$4$ -$5$ triangle gives the first-quadrant angle whose tangent is $1$ directly.\n\nBecause the opposite and adjacent legs are equal there, the angle is $45^\\circ$:\n$\\tan 45^\\circ = \\frac{1}{1} = 1$.\n\nThe next positive angle with the same tangent is $45^\\circ + 180^\\circ = 225^\\circ$, since the\ntangent repeats every $180^\\circ$, and nothing lies between $0^\\circ$ and $45^\\circ$ because\nthe tangent grows without bound on $(0^\\circ, 90^\\circ)$ starting from $0$.\n\nThe smallest positive solution is $45$.",
+    "techniqueSlugs": [
+      "principal-value-range",
+      "general-solution-capture"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p5",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "trig-equations",
+      "isolate-the-trig-value",
+      "interval-solution-count"
+    ],
+    "promptLatex": "How many values of $x$ in $0^\\circ \\le x \\le 360^\\circ$ satisfy $2\\sin 3x = -1$?",
+    "choices": null,
+    "answerLatex": "6",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Isolate the trigonometric value before you start reading angles off the unit circle.",
+      "The compound argument spans three full turns, so count the hits of that value in three turns and then divide by the frequency.",
+      "Six arguments work, and dividing each of them by $3$ keeps all six inside the interval."
+    ],
+    "solutionLatex": "Divide both sides by $2$ first, so the equation becomes $\\sin 3x = -\\frac{1}{2}$ and the\ncompound argument is left carrying the frequency.\n\nBecause $0^\\circ \\le x \\le 360^\\circ$, the argument $3x$ runs over $0^\\circ \\le 3x \\le 1080^\\circ$,\nwhich is three full turns of the sine curve.\n\nA sine of $-\\frac{1}{2}$ occurs at $3x = 210^\\circ, 330^\\circ, 570^\\circ, 690^\\circ, 930^\\circ$\nand $1050^\\circ$: three turns give six such points.\n\nDividing each by $3$ gives $x = 70^\\circ, 110^\\circ, 190^\\circ, 230^\\circ, 310^\\circ$ and\n$350^\\circ$, all of which lie in the interval.\n\nThe count is $6$.",
+    "techniqueSlugs": [
+      "isolate-the-trig-value",
+      "interval-solution-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p6",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "trig-equations",
+      "interval-solution-count",
+      "tangent-graph-asymptotes"
+    ],
+    "promptLatex": "How many values of $x$ in $0^\\circ \\le x \\le 540^\\circ$ satisfy $\\tan x = -1$?",
+    "choices": null,
+    "answerLatex": "3",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The tangent completes one full cycle in half as many degrees as the sine.",
+      "The interval is exactly three of those cycles, and each cycle carries one solution.",
+      "They are $x = 135^\\circ$, $x = 315^\\circ$ and $x = 495^\\circ$."
+    ],
+    "solutionLatex": "The tangent has period $180^\\circ$, and the interval $0^\\circ \\le x \\le 540^\\circ$ is\nexactly three of its periods.\n\nThe tangent equals $-1$ where the angle is $135^\\circ$ in a turn, since\n$\\tan 135^\\circ = \\tan(180^\\circ - 45^\\circ) = -\\tan 45^\\circ = -1$.\n\nRepeating every $180^\\circ$ gives $x = 135^\\circ$, $x = 315^\\circ$ and $x = 495^\\circ$. The\nnext one, $675^\\circ$, is past the end, and the previous one, $-45^\\circ$, is before the start.\n\nThree periods and one solution per period give a count of $3$.",
+    "techniqueSlugs": [
+      "interval-solution-count",
+      "tangent-graph-asymptotes"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p7",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "inverse-trig",
+      "principal-value-range"
+    ],
+    "promptLatex": "Evaluate $\\arcsin\\left(-\\frac{1}{2}\\right)$, giving your answer in degrees.",
+    "choices": null,
+    "answerLatex": "-30",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "An inverse trigonometric function has a restricted output range, and only one angle in it is the answer.",
+      "The range of the inverse sine runs from $-90$ to $90$, so the answer must be a negative angle of at most $90$ degrees.",
+      "The sine of $-30^\\circ$ is $-\\frac{1}{2}$, and $-30^\\circ$ is inside the allowed range."
+    ],
+    "solutionLatex": "The principal value of an inverse sine is the unique angle of the principal interval\n$[-90^\\circ, 90^\\circ]$ with the given sine, and that interval is the only place the answer\ncan live.\n\n$\\sin(-30^\\circ) = -\\sin 30^\\circ = -\\frac{1}{2}$, and $-30^\\circ$ lies inside\n$[-90^\\circ, 90^\\circ]$, so it is the principal value.\n\nThe other angles with a sine of $-\\frac{1}{2}$ are $210^\\circ$ and $330^\\circ$, and none of\nthem is a legal output of an inverse sine.\n\nThe value is $-30$.",
+    "techniqueSlugs": [
+      "principal-value-range",
+      "inverse-composition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p8",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "inverse-trig",
+      "principal-value-range"
+    ],
+    "promptLatex": "What is the exact value, in degrees, of $\\arccos\\left(-\\frac{\\sqrt{3}}{2}\\right)$?",
+    "choices": [
+      "30",
+      "60",
+      "120",
+      "150",
+      "210"
+    ],
+    "answerLatex": "150",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The inverse cosine never returns a negative angle.",
+      "A negative cosine comes from the second or third quadrant, and the second one is inside its range.",
+      "The angle is $180^\\circ - 30^\\circ = 150^\\circ$, not the $210^\\circ$ that has the same cosine."
+    ],
+    "solutionLatex": "The inverse cosine is defined on $[-1, 1]$ and returns the angle of\n$[0^\\circ, 180^\\circ]$ with the given cosine, so the answer is never negative and never\nexceeds a straight angle.\n\nSince $\\cos 30^\\circ = \\frac{\\sqrt{3}}{2}$, and the cosine changes sign across $90^\\circ$,\n$\\cos 150^\\circ = \\cos(180^\\circ - 30^\\circ) = -\\frac{\\sqrt{3}}{2}$.\n\n$150^\\circ$ lies in $[0^\\circ, 180^\\circ]$, so it is the principal value. The angle\n$210^\\circ$ has the same cosine and lies outside that range, and $330^\\circ$ has cosine\n$\\frac{\\sqrt{3}}{2}$, which is the opposite sign.\n\nThe value is $150$.",
+    "techniqueSlugs": [
+      "principal-value-range"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p9",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "inverse-trig",
+      "principal-value-range"
+    ],
+    "promptLatex": "Evaluate $\\arctan(-\\sqrt{3})$, giving your answer in degrees.",
+    "choices": null,
+    "answerLatex": "-60",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The inverse tangent only ever answers with an angle strictly between two right angles.",
+      "A tangent value of $-\\sqrt{3}$ occurs in the fourth quadrant and again in the second, and only the fourth is in range.",
+      "The angle is $-60^\\circ$, whose tangent is $-\\sqrt{3}$."
+    ],
+    "solutionLatex": "The inverse tangent returns the unique angle of $(-90^\\circ, 90^\\circ)$ with the given\ntangent, an interval that is symmetric about $0^\\circ$ and never reaches either asymptote.\n\n$\\tan 60^\\circ = \\sqrt{3}$, and the tangent is odd, so\n$\\tan(-60^\\circ) = -\\tan 60^\\circ = -\\sqrt{3}$.\n\n$-60^\\circ$ lies inside $(-90^\\circ, 90^\\circ)$, so it is the principal value. The angle\n$120^\\circ$ has the same tangent but is out of range.\n\nThe value is $-60$.",
+    "techniqueSlugs": [
+      "principal-value-range"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p10",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "inverse-trig",
+      "principal-value-range",
+      "inverse-composition"
+    ],
+    "promptLatex": "Let $\\theta$ be the principal value of $\\arcsin\\left(-\\frac{1}{2}\\right)$ and let $\\phi$ be the principal value of $\\arccos\\left(-\\frac{1}{2}\\right)$. What is $\\theta + \\phi$, in degrees?",
+    "choices": null,
+    "answerLatex": "90",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The same input gives different angles in the two cases, because the two output ranges are not mirror images.",
+      "One of the values is negative and the other is an obtuse angle.",
+      "They are $-30^\\circ$ and $120^\\circ$, so the sum is $90$."
+    ],
+    "solutionLatex": "Each principal value is the one angle in its own restricted range, and the two ranges\nare different, so the two numbers are not negatives of each other.\n\nFor the inverse sine, $\\sin(-30^\\circ) = -\\frac{1}{2}$ and $-30^\\circ$ lies in\n$[-90^\\circ, 90^\\circ]$, so $\\theta = -30^\\circ$.\n\nFor the inverse cosine, $\\cos 120^\\circ = -\\frac{1}{2}$ and $120^\\circ$ lies in\n$[0^\\circ, 180^\\circ]$, so $\\phi = 120^\\circ$.\n\nAdding, $\\theta + \\phi = -30 + 120 = 90$.",
+    "techniqueSlugs": [
+      "principal-value-range",
+      "inverse-composition"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p11",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "trig-equations",
+      "auxiliary-angle-expansion",
+      "interval-solution-count"
+    ],
+    "promptLatex": "Find the sum, in degrees, of all $x$ in $0^\\circ \\le x \\le 360^\\circ$ that satisfy $\\sin x = \\cos x$.",
+    "choices": null,
+    "answerLatex": "270",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Turn the two sides into the same trigonometric function before comparing them.",
+      "Use $\\cos x = \\sin(90^\\circ - x)$, then apply the two ways two sines can be equal.",
+      "Only $x = 45^\\circ$ and $x = 225^\\circ$ survive, and they add to $270$."
+    ],
+    "solutionLatex": "Rewrite the cosine as a sine so that one equation has one shape:\n$\\cos x = \\sin(90^\\circ - x)$.\n\nTwo sines are equal when their arguments are equal up to a whole turn, or when they sum to\n$180^\\circ$ up to a whole turn, so for an integer $k$ either\n\n$x = 90^\\circ - x + 360^\\circ k \\quad\\text{or}\\quad x = 180^\\circ - (90^\\circ - x) + 360^\\circ k$\n\nThe first branch gives $2x = 90^\\circ + 360^\\circ k$, so $x = 45^\\circ$ and $x = 225^\\circ$.\n\nThe second branch reads $x = 90^\\circ + x + 360^\\circ k$, which collapses to\n$360^\\circ k = -90^\\circ$, and no integer $k$ satisfies that, so this branch contributes\nnothing at all.\n\nBoth surviving values work: $\\sin 45^\\circ = \\cos 45^\\circ = \\frac{\\sqrt{2}}{2}$ and\n$\\sin 225^\\circ = \\cos 225^\\circ = -\\frac{\\sqrt{2}}{2}$. Their sum is $45 + 225 = 270$.",
+    "techniqueSlugs": [
+      "auxiliary-angle-expansion",
+      "angle-pair-case-split"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p12",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "trig-graphing",
+      "reciprocal-graph-reflection"
+    ],
+    "promptLatex": "How many vertical asymptotes does the graph of $y = \\csc x$ have in the interval $0^\\circ \\le x \\le 360^\\circ$?",
+    "choices": null,
+    "answerLatex": "3",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The graph of a reciprocal is a reflection, and a vertical asymptote appears exactly where the denominator vanishes.",
+      "Locate the zeros of the sine over one full turn.",
+      "They are $x = 0^\\circ$, $x = 180^\\circ$ and $x = 360^\\circ$, so there are three."
+    ],
+    "solutionLatex": "The cosecant is the reciprocal of the sine, $y = \\csc x = \\frac{1}{\\sin x}$, so it takes\nits vertical asymptotes exactly where the sine vanishes: at the zeros of the denominator,\nthe reciprocal has no value.\n\n$\\sin x = 0$ at $x = 0^\\circ$, $x = 180^\\circ$ and $x = 360^\\circ$ in this interval, the\nonly three zeros in one full turn.\n\nEach of those three values gives a vertical asymptote, and there are no others, because\nelsewhere the denominator is nonzero and the quotient is finite.\n\nThe count is $3$.",
+    "techniqueSlugs": [
+      "reciprocal-graph-reflection",
+      "interval-solution-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p13",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "trig-graphing",
+      "amplitude-period-shift",
+      "trig-function-ranges"
+    ],
+    "promptLatex": "For the function $y = 5\\sin(2(x - 30^\\circ)) + 1$, what is the phase shift of the graph, in degrees?",
+    "choices": [
+      "0",
+      "15",
+      "30",
+      "60",
+      "90"
+    ],
+    "answerLatex": "30",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Only the part of the argument that survives the frequency matters for a horizontal translation.",
+      "Rewrite the argument in the standard form $b(x - h)$ and read off $h$.",
+      "It is already in that form, with $h = 30$, so the graph is shifted $30$ degrees to the right."
+    ],
+    "solutionLatex": "The phase shift is the horizontal translation of the whole graph, and it is read off\nthe constant inside the argument once that argument has been factored.\n\nHere the argument is $2(x - 30^\\circ)$, which is exactly of the form\n$b(x - h)$ with $h = 30^\\circ$.\n\nThe frequency $2$ rescales the argument but does not move the crossing point: the sine\nvanishes where $2(x-30^\\circ) = 0$, and that gives $x = 30^\\circ$, so the curve crosses its\nmidline there and the graph is shifted $30^\\circ$ to the right of the unshifted sine.\n\nThe phase shift is $30$.",
+    "techniqueSlugs": [
+      "graph-phase-readoff",
+      "graph-amplitude-period"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p14",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "trig-graphing",
+      "tangent-graph-asymptotes",
+      "interval-solution-count"
+    ],
+    "promptLatex": "How many vertical asymptotes does the graph of $y = \\tan 2x$ have in the interval $0^\\circ \\le x \\le 360^\\circ$?",
+    "choices": null,
+    "answerLatex": "4",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Asymptotes appear where the denominator vanishes, which for the tangent means where the cosine is zero.",
+      "Apply that condition to the argument $2x$, not to $x$.",
+      "They are $x = 45^\\circ$, $135^\\circ$, $225^\\circ$ and $315^\\circ$."
+    ],
+    "solutionLatex": "The tangent is undefined exactly where its cosine vanishes, so its asymptotes sit at\n$90^\\circ + 180^\\circ k$ measured on the argument.\n\nHere the argument is $2x$, so the asymptotes occur where\n$2x = 90^\\circ + 180^\\circ k$, that is, at $x = 45^\\circ + 90^\\circ k$.\n\nIn $0^\\circ \\le x \\le 360^\\circ$ that family gives\n$x = 45^\\circ$, $x = 135^\\circ$, $x = 225^\\circ$ and $x = 315^\\circ$. The next one,\n$x = 405^\\circ$, is past the end of the interval and the previous one, $x = -45^\\circ$, is\nbefore its start.\n\nThe frequency of $2$ has halved the spacing between asymptotes to $90^\\circ$, which is why\nthe tangent shows four of them per turn where the cosine shows two.\n\nThe count is $4$.",
+    "techniqueSlugs": [
+      "tangent-graph-asymptotes",
+      "isolate-the-trig-value"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-p15",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "trig-graphing",
+      "amplitude-period-shift",
+      "trig-function-ranges"
+    ],
+    "promptLatex": "What is the least value that the function $y = 5\\sin(2(x - 30^\\circ)) + 1$ takes on $0^\\circ \\le x \\le 360^\\circ$?",
+    "choices": null,
+    "answerLatex": "-4",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The extremes of a shifted or scaled curve depend only on its amplitude and its midline.",
+      "The amplitude is the absolute value of the multiplier and the midline is the constant outside the brackets.",
+      "The midline is $1$ and the amplitude is $5$, so the lowest value is $1 - 5$."
+    ],
+    "solutionLatex": "The sine is bounded between $-1$ and $1$ and reaches both bounds, so the whole graph\nis squeezed between the midline and the midline plus or minus the amplitude.\n\nHere the amplitude is $|5| = 5$ and the midline is $y = 1$, so the lowest the curve can go\nis $1 - 5 = -4$ and the highest is $1 + 5 = 6$.\n\nThe shift does not affect this: the argument $2(x-30^\\circ)$ still sweeps through whole\ncycles on the interval, so the minimum is attained rather than merely approached.\n\nOne such point is $x = 165^\\circ$, where $2(x - 30^\\circ) = 270^\\circ$ and the sine is $-1$,\nso the least value is $-4$.",
+    "techniqueSlugs": [
+      "graph-amplitude-period",
+      "graph-phase-readoff"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-m1",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "12",
+    "difficulty": 4,
+    "tags": [
+      "trig-equations",
+      "radians",
+      "interval-solution-count",
+      "isolate-the-trig-value"
+    ],
+    "promptLatex": "A particle's height in centimetres is $h(t) = 2\\sin 3t + 4$, where $t$ is measured in seconds. How many times in the interval $0 < t < \\pi$ does the particle reach a height of exactly $5$ centimetres?",
+    "choices": null,
+    "answerLatex": "4",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Clear the constant and the multiplier before touching the angles, then restate the interval for the new argument.",
+      "The new argument $3t$ runs through one and a half cycles, so a full cycle contributes two hits and the extra half cycle one more.",
+      "The arguments are $\\frac{\\pi}{6}$, $\\frac{5\\pi}{6}$, $\\frac{13\\pi}{6}$ and $\\frac{17\\pi}{6}$."
+    ],
+    "solutionLatex": "Set the height equal to $5$ and clear the vertical shift and the amplitude, leaving a\nsingle sine value to solve for:\n\n$2\\sin 3t + 4 = 5 \\quad\\implies\\quad \\sin 3t = \\frac{1}{2}$\n\nThe interval becomes $0 < 3t < 3\\pi$, which is one and a half full cycles of the sine, each\nfull cycle being $2\\pi$ long.\n\nA sine of $\\frac{1}{2}$ occurs at $3t = \\frac{\\pi}{6}$, $\\frac{5\\pi}{6}$,\n$\\frac{13\\pi}{6}$ and $\\frac{17\\pi}{6}$. The next two candidates,\n$\\frac{25\\pi}{6}$ and $\\frac{29\\pi}{6}$, exceed $3\\pi = \\frac{18\\pi}{6}$.\n\nThe four listed arguments all satisfy $0 < 3t < 3\\pi$, giving\n$t = \\frac{\\pi}{18}$, $\\frac{5\\pi}{18}$, $\\frac{13\\pi}{18}$ and $\\frac{17\\pi}{18}$.\n\nThe particle is at that height on $4$ occasions.",
+    "techniqueSlugs": [
+      "isolate-the-trig-value",
+      "interval-solution-count"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null,
+    "angleUnit": "rad"
+  },
+  {
+    "id": "m8-l5-m2",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "trig-graphing",
+      "amplitude-period-shift",
+      "trig-function-ranges"
+    ],
+    "promptLatex": "For the function $y = -4\\sin 2x + 3$, let $P$ be its period in degrees and let $[m, M]$ be its range. What is $P + m + M$?",
+    "choices": null,
+    "answerLatex": "186",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The period and the range are both read off the constants of the rule, and the sign of the multiplier only reflects the curve.",
+      "Take the frequency from the coefficient of $x$ and the amplitude from the absolute value of the multiplier.",
+      "The period is $180$, the range is $[-1, 7]$, and their three numbers add to $186$."
+    ],
+    "solutionLatex": "The period of a sine curve is a full turn divided by the frequency, whatever the sign of\nthe multiplier, so here\n\n$P = \\frac{360^\\circ}{2} = 180^\\circ$\n\nThe range comes from the midline and the amplitude. The midline is the constant outside the\nbrackets, $y = 3$, and the amplitude is the absolute value of the multiplier, $|-4| = 4$. The\nnegative sign flips the curve about the midline but does not shrink it.\n\nSo $m = 3 - 4 = -1$ and $M = 3 + 4 = 7$.\n\nBoth extremes are attained on any interval holding a full period, since the sine reaches\n$\\pm 1$: at $x = 45^\\circ$ the argument is $90^\\circ$ and $y = 7$, and at $x = 135^\\circ$ the\nargument is $270^\\circ$ and $y = -1$.\n\nTherefore $P + m + M = 180 - 1 + 7 = 186$.",
+    "techniqueSlugs": [
+      "graph-amplitude-period",
+      "graph-phase-readoff"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l5-m3",
+    "moduleId": "M8",
+    "lessonId": "m8-l5",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "trig-equations",
+      "trig-identities",
+      "angle-pair-case-split"
+    ],
+    "promptLatex": "Find the sum, in degrees, of all $x$ in $0^\\circ \\le x \\le 360^\\circ$ that satisfy $\\cos 2x = \\cos x$.",
+    "choices": null,
+    "answerLatex": "720",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The two arguments are $2x$ and $x$, and a cosine can be equal to another cosine in two different ways.",
+      "Write $2x = x + 360^\\circ k$ and $2x = -x + 360^\\circ k$, then keep the union of the two families without repeating a value.",
+      "The four values are $0^\\circ$, $120^\\circ$, $240^\\circ$ and $360^\\circ$, and they add to $720$."
+    ],
+    "solutionLatex": "Two cosines are equal when their angles agree up to a whole turn or are negatives of\neach other up to a whole turn, so for an integer $k$ either\n\n$2x = x + 360^\\circ k \\quad\\text{or}\\quad 2x = -x + 360^\\circ k$\n\nThe first branch gives $x = 360^\\circ k$, so $x = 0^\\circ$ and $x = 360^\\circ$ fall in the\ninterval.\n\nThe second branch gives $3x = 360^\\circ k$, so $x = 120^\\circ k$, giving\n$x = 0^\\circ$, $120^\\circ$, $240^\\circ$ and $360^\\circ$. The value $x = 0$ and $x = 360$\nappear in both branches and are counted once.\n\nThe union is therefore $x = 0^\\circ$, $120^\\circ$, $240^\\circ$ and $360^\\circ$, and each\nchecks: the cosines of $0$ and $120$ are $1$ and $-\\frac{1}{2}$, of $240$ and $480$ are\nboth $-\\frac{1}{2}$, and of $360$ and $720$ are both $1$.\n\nTheir sum is $0 + 120 + 240 + 360 = 720$.",
+    "techniqueSlugs": [
+      "angle-pair-case-split",
+      "general-solution-capture"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]
