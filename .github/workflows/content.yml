@@ -28,6 +28,25 @@ jobs:
       # gate proves it can fail before it is trusted to block anything.
       - name: Content math gate
         run: npm run content:selftest
+      # Answer correctness is a different kind of claim from well-formedness, so it is a
+      # separate step rather than another rule inside the gate. The gate is a static checker
+      # with no interpreter; deciding whether an answer follows from its own derivation needs
+      # arithmetic, and smuggling that in as a heuristic is what makes a check vacuous. So the
+      # numeric layer stays its own program, with its own exit code, and CI runs both.
+      #
+      # The selftest comes first for the same reason the gate's does: it replays the five
+      # wrong answers MAX-29 removed and fails unless the detector still catches every one.
+      # A corpus-wide check that reports zero findings is only evidence if it can still
+      # produce them, and that is the only thing standing between "clean" and "looking at
+      # nothing". It costs one record set and no toolchain.
+      - name: Answer/solution audit selftest
+        run: npm run content:answers:selftest
+      # Exits non-zero on any `unreachable` or `broken-chain` finding: an answer the record's
+      # own solution never reaches, or an equality inside a solution that is simply false.
+      # `intermediate` and `no-arithmetic` are reported and do not fail the build, because a
+      # conclusion phrased as a check sentence is normal and a solution can be prose-only.
+      - name: Answer/solution audit
+        run: npm run content:answers
       - uses: actions/upload-artifact@v4
         if: always()
         with:
