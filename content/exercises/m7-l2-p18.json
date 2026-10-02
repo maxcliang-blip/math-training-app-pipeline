@@ -21,7 +21,6 @@
   ],
   "solutionLatex": "Let $X$ and $Y$ be the two results. Each has expected value $\\mathbb{E}[X] = \\frac{1+2+3+4+5+6}{6} = \\frac{21}{6} = \\frac{7}{2}$.\n\nThe two rolls are independent, and for independent random variables $\\mathbb{E}[XY] = \\mathbb{E}[X]\\,\\mathbb{E}[Y]$.\n\nTherefore $\\mathbb{E}[XY] = \\frac{7}{2} \\cdot \\frac{7}{2} = \\frac{49}{4}$. Linearity of expectation alone would not justify this: it applies to sums, and the product rule requires independence, which was checked above.",
   "techniqueSlugs": [
-    "linearity-of-expectation",
     "independence-check"
   ],
   "asymptoteSource": null,

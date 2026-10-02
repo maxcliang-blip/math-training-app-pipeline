@@ -21,8 +21,7 @@
   ],
   "solutionLatex": "Let $I_j$ be $1$ if the $j$-th ball drawn is white and $0$ otherwise, for $j = 1, 2, 3$. The number of white balls drawn is $X = I_1 + I_2 + I_3$.\n\nEven though the draws are without replacement, every position in the draw is equally likely to hold any of the $10$ balls, so $P(I_j = 1) = \\mathbb{E}[I_j] = \\frac{4}{10}$ for each of the three draws.\n\nLinearity of expectation requires no independence, so $\\mathbb{E}[X] = \\sum_{j=1}^{3} \\mathbb{E}[I_j] = 3 \\cdot \\frac{4}{10} = \\frac{6}{5}$. The value need not be a whole number, and it is not the most likely number of white balls, which is $1$.",
   "techniqueSlugs": [
-    "indicator-variables",
-    "linearity-of-expectation"
+    "symmetry-argument"
   ],
   "asymptoteSource": null,
   "asymptoteAlt": null,

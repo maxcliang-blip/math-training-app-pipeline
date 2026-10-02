@@ -24,8 +24,8 @@
   ],
   "solutionLatex": "The second marble is red either because both marbles are red or because the first was blue and the second red.\n\nThe first case has probability $\\frac{3}{10} \\cdot \\frac{2}{9} = \\frac{6}{90}$, and the second has probability $\\frac{7}{10} \\cdot \\frac{3}{9} = \\frac{21}{90}$. These cases are disjoint, so they add.\n\nTherefore $P = \\frac{6}{90} + \\frac{21}{90} = \\frac{27}{90} = \\frac{3}{10}$. This agrees with symmetry: every marble is equally likely to occupy the second position, so $3$ of the $10$ marbles can be there.",
   "techniqueSlugs": [
-    "law-of-total-probability",
-    "symmetry-argument"
+    "symmetry-argument",
+    "chain-rule-of-probability"
   ],
   "asymptoteSource": null,
   "asymptoteAlt": null,

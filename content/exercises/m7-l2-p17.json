@@ -21,7 +21,6 @@
   ],
   "solutionLatex": "Let $X$ be the larger of the two results. For $k$ from $1$ to $6$, $P(X \\le k) = \\left(\\frac{k}{6}\\right)^2$, so $P(X = k) = \\left(\\frac{k}{6}\\right)^2 - \\left(\\frac{k-1}{6}\\right)^2 = \\frac{2k - 1}{36}$.\n\nThe values of $2k - 1$ are $1, 3, 5, 7, 9, 11$, which sum to $36$, confirming the distribution is complete. The expected value is\n\n$\\mathbb{E}[X] = \\sum_{k=1}^{6} k \\cdot \\frac{2k - 1}{36} = \\frac{1 \\cdot 1 + 2 \\cdot 3 + 3 \\cdot 5 + 4 \\cdot 7 + 5 \\cdot 9 + 6 \\cdot 11}{36} = \\frac{1 + 6 + 15 + 28 + 45 + 66}{36} = \\frac{161}{36}$.\n\nThis lies between the expectations of the larger roll and the sum of both rolls, as it must.",
   "techniqueSlugs": [
-    "expected-value-setup",
     "distribution-identification"
   ],
   "asymptoteSource": null,

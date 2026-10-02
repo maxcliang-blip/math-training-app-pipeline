@@ -24,9 +24,7 @@
     "So the expectation is $6 \\cdot \\frac{1}{6} + 0 \\cdot \\frac{5}{6} = 1$."
   ],
   "solutionLatex": "Let $X$ be the payout. It takes the value $6$ when a $6$ is rolled and $0$ otherwise, so $P(X = 6) = \\frac{1}{6}$ and $P(X = 0) = \\frac{5}{6}$.\n\nThe expected value is the weighted average\n\n$\\mathbb{E}[X] = 6 \\cdot \\frac{1}{6} + 0 \\cdot \\frac{5}{6} = 1$.\n\nThe expectation equals $1$ dollar even though the payout is never $1$, which is the point of an expectation: it is a long-run average, not a possible result.",
-  "techniqueSlugs": [
-    "expected-value-setup"
-  ],
+  "techniqueSlugs": [],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null
