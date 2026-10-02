@@ -1,0 +1,128 @@
+{
+  "note": "The module catalogue the API serves at GET /api/modules. Titles, tiers, order and target exercise counts are the agreed curriculum baseline; the corpus in content/lessons and content/exercises is filed under these codes. A module with no lessons yet is declared here on purpose - the catalogue is wider than the corpus. M3 = Counting & Combinatorics holds m3-l1/m3-l2 (the counting lessons previously misfiled as m7-l1/m7-l2). M7 = Probability has no lessons authored yet.",
+  "modules": [
+    {
+      "id": "M1",
+      "code": "M1",
+      "title": "Algebra Foundations",
+      "topicSlug": "algebra",
+      "order": 1,
+      "summary": "Linear and quadratic equations, inequalities, absolute value, functional equations intro.",
+      "tiers": [
+        "10",
+        "12"
+      ],
+      "targetExerciseCount": 120
+    },
+    {
+      "id": "M2",
+      "code": "M2",
+      "title": "Number Theory",
+      "topicSlug": "number-theory",
+      "order": 2,
+      "summary": "Divisibility, modular arithmetic, CRT, gcd/lcm, base representation.",
+      "tiers": [
+        "10",
+        "12",
+        "A"
+      ],
+      "targetExerciseCount": 140
+    },
+    {
+      "id": "M3",
+      "code": "M3",
+      "title": "Counting & Combinatorics",
+      "topicSlug": "counting",
+      "order": 3,
+      "summary": "Permutations, combinations, inclusion-exclusion, recurrences, graph counting.",
+      "tiers": [
+        "10",
+        "12",
+        "A"
+      ],
+      "targetExerciseCount": 150
+    },
+    {
+      "id": "M4",
+      "code": "M4",
+      "title": "Sequences & Series",
+      "topicSlug": "sequences",
+      "order": 4,
+      "summary": "Arithmetic and geometric, telescoping, sigma manipulation, series bounds.",
+      "tiers": [
+        "10",
+        "12",
+        "A"
+      ],
+      "targetExerciseCount": 100
+    },
+    {
+      "id": "M5",
+      "code": "M5",
+      "title": "Geometry",
+      "topicSlug": "geometry",
+      "order": 5,
+      "summary": "Angles, circles, triangles, similar and congruent, area and volume, power of a point.",
+      "tiers": [
+        "10",
+        "12"
+      ],
+      "targetExerciseCount": 130
+    },
+    {
+      "id": "M6",
+      "code": "M6",
+      "title": "Coordinate & Analytic Geometry",
+      "topicSlug": "analytic-geometry",
+      "order": 6,
+      "summary": "Distance and midpoint, lines, conics, loci, vectors, complex numbers viewed geometrically.",
+      "tiers": [
+        "10",
+        "12",
+        "A"
+      ],
+      "targetExerciseCount": 110
+    },
+    {
+      "id": "M7",
+      "code": "M7",
+      "title": "Probability",
+      "topicSlug": "probability",
+      "order": 7,
+      "summary": "Counting outcomes, conditional probability, Bayes, expectation, independence.",
+      "tiers": [
+        "10",
+        "12",
+        "A"
+      ],
+      "targetExerciseCount": 110
+    },
+    {
+      "id": "M8",
+      "code": "M8",
+      "title": "Trigonometry",
+      "topicSlug": "trigonometry",
+      "order": 8,
+      "summary": "Identities, unit circle, law of sines and cosines, complex roots of unity, polar form.",
+      "tiers": [
+        "12",
+        "A"
+      ],
+      "targetExerciseCount": 90
+    },
+    {
+      "id": "M9",
+      "code": "M9",
+      "title": "Precalculus & Proof Technique",
+      "topicSlug": "precalculus",
+      "order": 9,
+      "summary": "Logs, AM-GM and Cauchy, Vieta, polynomial inequalities, olympiad proof patterns.",
+      "tiers": [
+        "12",
+        "A",
+        "A+"
+      ],
+      "targetExerciseCount": 100
+    }
+  ]
+}
