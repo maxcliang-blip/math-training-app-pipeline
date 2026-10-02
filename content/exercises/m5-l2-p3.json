@@ -1,0 +1,29 @@
+{
+  "id": "m5-l2-p3",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "triangles",
+    "similarity",
+    "right-triangle-altitude-similarity"
+  ],
+  "promptLatex": "In right triangle $ABC$ the right angle is at $C$. The altitude from $C$ meets hypotenuse $\\overline{AB}$ at $D$, where $AD = 9$ and $DB = 16$. What is the length of $CD$?",
+  "choices": null,
+  "answerLatex": "12",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The altitude to the hypotenuse cuts the triangle into two smaller triangles, each similar to the original.",
+    "Look for a length that is the geometric mean of two others.",
+    "$CD^2 = AD \\cdot DB = 9 \\cdot 16 = 144$."
+  ],
+  "solutionLatex": "Because $CD$ is the altitude to the hypotenuse, $\\triangle ACD \\sim \\triangle CBD$, and each of the two small triangles is also similar to $\\triangle ABC$.\n\nMatching sides across those similarities gives $CD^2 = AD \\cdot DB$, which is the geometric mean relation for the altitude.\n\nSubstituting, $CD^2 = 9 \\cdot 16 = 144$, and $CD = 12$ since a length is positive.",
+  "techniqueSlugs": [
+    "right-triangle-altitude-similarity",
+    "similarity-aa"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

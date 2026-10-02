@@ -1,0 +1,31 @@
+{
+  "id": "m5-l2-p13",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "triangles",
+    "similarity",
+    "parallel-lines",
+    "perimeter"
+  ],
+  "promptLatex": "In triangle $ABC$, points $D$ and $E$ lie on $\\overline{BC}$ and $\\overline{AC}$ with $\\overline{DE}$ parallel to $\\overline{AB}$. If $CD = 3$, $CB = 12$, $CA = 16$, and $DE = 6$, what is the perimeter of $\\triangle CDE$?",
+  "choices": null,
+  "answerLatex": "13",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "State the similarity with the vertices in matching order before touching any ratio.",
+    "The vertex $C$ is shared, so the side opposite it matches the side opposite it in the big triangle.",
+    "$CE = CA/4 = 4$, and $CD + CE + DE = 3 + 4 + 6$."
+  ],
+  "solutionLatex": "Since $\\overline{DE} \\parallel \\overline{AB}$, the angle at $C$ is common and $\\angle CDE = \\angle CBA$ as corresponding angles, so $\\triangle CDE \\sim \\triangle CBA$ with $C$ matching $C$, $D$ matching $B$, and $E$ matching $A$.\n\nThe scale factor from the big triangle to the small one is $CD/CB = 3/12 = 1/4$.\n\nEach small side is one quarter of its match, so $CE = \\frac{1}{4} CA = 4$. The third side follows the same rule, giving $AB = 4 \\cdot DE = 24$, consistent with the data.\n\nThe perimeter of $\\triangle CDE$ is $3 + 4 + 6 = 13$.",
+  "techniqueSlugs": [
+    "similarity-aa",
+    "parallel-line-similarity",
+    "missing-length-in-similar-triangles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

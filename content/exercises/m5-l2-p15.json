@@ -1,0 +1,30 @@
+{
+  "id": "m5-l2-p15",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "triangles",
+    "similarity",
+    "pythagorean",
+    "right-triangle-altitude-similarity"
+  ],
+  "promptLatex": "In triangle $ABC$, $AB = 13$, $BC = 14$, and $CA = 15$. Let $D$ be the foot of the perpendicular from $A$ to $\\overline{BC}$, and let $E$ be the foot of the perpendicular from $D$ to $\\overline{AB}$. What is the length of $DE$?",
+  "choices": null,
+  "answerLatex": "60/13",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "First split the triangle with the first perpendicular and find the two pieces of the base.",
+    "Then notice which side of the right triangle at $D$ is the hypotenuse.",
+    "The pieces of the base are $5$ and $9$, so $AD = 12$, and the altitude to the hypotenuse is $(12)(5)/13$."
+  ],
+  "solutionLatex": "Write $BD = x$, so $DC = 14 - x$. Because $AD$ is perpendicular to $BC$, the two right triangles give $AD^2 = AB^2 - BD^2 = 169 - x^2$ and $AD^2 = AC^2 - DC^2 = 225 - (14 - x)^2$.\n\nEquating them, $169 - x^2 = 225 - (196 - 28x + x^2)$, so $169 = 29 + 28x$ and $28x = 140$, giving $x = 5$. Thus $BD = 5$, $DC = 9$, and $AD = \\sqrt{169 - 25} = \\sqrt{144} = 12$.\n\nNow $\\angle ADB = 90^{\\circ}$, so $\\overline{AB}$ is the hypotenuse of right triangle $ADB$, and $DE$ is the altitude drawn to it.\n\nThe altitude to the hypotenuse equals the product of the legs divided by the hypotenuse, which follows from the geometric mean relation $DE^2 = AE \\cdot EB$ together with $AD^2 = AB \\cdot AE$ and $DB^2 = AB \\cdot EB$. Hence $DE = \\frac{AD \\cdot DB}{AB} = \\frac{12 \\cdot 5}{13} = \\frac{60}{13}$.",
+  "techniqueSlugs": [
+    "right-triangle-altitude-similarity",
+    "similarity-aa"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

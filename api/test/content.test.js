@@ -24,8 +24,8 @@ test("every lesson and every exercise in the repository is loaded", () => {
   // worth keeping -- a loader that drops exercises is invisible otherwise -- but it is only worth
   // something if the person who grows the corpus moves it in the same commit.
   const stats = store.stats();
-  assert.equal(stats.lessons, 35);
-  assert.equal(stats.exercises, 705);
+  assert.equal(stats.lessons, 36);
+  assert.equal(stats.exercises, 723);
   assert.ok(stats.modules >= 8, `expected at least the eight authored modules, got ${stats.modules}`);
 });
 

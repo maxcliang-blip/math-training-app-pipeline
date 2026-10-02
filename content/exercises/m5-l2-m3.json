@@ -1,0 +1,31 @@
+{
+  "id": "m5-l2-m3",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "triangles",
+    "similarity",
+    "area-of-triangles",
+    "parallel-lines"
+  ],
+  "promptLatex": "In triangle $ABC$, point $D$ lies on $\\overline{AB}$ with $AD = 3$ and $DB = 9$, and point $E$ lies on $\\overline{AC}$ with $\\overline{DE}$ parallel to $\\overline{BC}$. If the area of $\\triangle ADE$ is $8$, what is the area of trapezoid $DECB$?",
+  "choices": null,
+  "answerLatex": "120",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The trapezoid is what is left of the big triangle once the small one is removed.",
+    "Get the linear ratio from the split of side $AB$, then square it for the area.",
+    "$AD/AB = 3/12 = 1/4$, so $[ABC] = 8 \\cdot 16 = 128$ and the trapezoid has area $128 - 8$."
+  ],
+  "solutionLatex": "Since $\\overline{DE} \\parallel \\overline{BC}$, the triangles $ADE$ and $ABC$ are similar by AA, and the ratio of corresponding sides is $AD/AB$.\n\nHere $AB = AD + DB = 3 + 9 = 12$, so $AD/AB = 3/12 = 1/4$.\n\nAreas of similar triangles are in the ratio of the squares of the side ratios, so $[ADE]/[ABC] = (1/4)^2 = 1/16$. With $[ADE] = 8$, that forces $[ABC] = 8 \\cdot 16 = 128$.\n\nTrapezoid $DECB$ is the whole triangle less $\\triangle ADE$, so its area is $128 - 8 = 120$.",
+  "techniqueSlugs": [
+    "similarity-aa",
+    "parallel-line-similarity",
+    "area-scaling-from-scale"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
