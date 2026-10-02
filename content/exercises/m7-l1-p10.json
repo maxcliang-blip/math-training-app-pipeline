@@ -1,0 +1,33 @@
+{
+  "id": "m7-l1-p10",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "probability",
+    "binomial-distribution"
+  ],
+  "promptLatex": "A fair coin is flipped four times. What is the probability of getting at least three heads?",
+  "choices": [
+    "\\frac{1}{16}",
+    "\\frac{1}{4}",
+    "\\frac{5}{16}",
+    "\\frac{3}{8}",
+    "\\frac{11}{16}"
+  ],
+  "answerLatex": "\\frac{5}{16}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Both halves of the event have few outcomes, so the complement is the easy direction.",
+    "The complement is getting no heads or exactly one head, which is $1 + 4 = 5$ of the $16$ sequences.",
+    "So the probability asked for is $\\frac{16 - 5}{16} = \\frac{5}{16}$."
+  ],
+  "solutionLatex": "Four flips give $2^4 = 16$ equally likely sequences.\n\nThe sequences with at least three heads are exactly those with three heads, of which there are $\\binom{4}{3} = 4$, and the single sequence with four heads. That is $5$ sequences.\n\nTherefore $P = \\frac{5}{16}$.",
+  "techniqueSlugs": [
+    "counting-outcome-space"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

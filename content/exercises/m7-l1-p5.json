@@ -1,0 +1,34 @@
+{
+  "id": "m7-l1-p5",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "probability",
+    "inclusion-exclusion"
+  ],
+  "promptLatex": "One card is drawn from a standard $52$-card deck. What is the probability that the card is a heart or a king?",
+  "choices": [
+    "\\frac{1}{13}",
+    "\\frac{3}{13}",
+    "\\frac{4}{13}",
+    "\\frac{5}{13}",
+    "\\frac{1}{4}"
+  ],
+  "answerLatex": "\\frac{4}{13}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The two families overlap, so decide what the shared card is before adding.",
+    "There are $13$ hearts and $4$ kings, and the king of hearts belongs to both.",
+    "So the union has $13 + 4 - 1 = 16$ cards, and the probability is $\\frac{16}{52} = \\frac{4}{13}$."
+  ],
+  "solutionLatex": "A standard deck has $52$ cards, each equally likely to be drawn.\n\nThere are $13$ hearts and $4$ kings. The king of hearts lies in both families, so adding $13 + 4 = 17$ counts it twice. Subtracting the intersection once gives $13 + 4 - 1 = 16$ cards.\n\nTherefore $P = \\frac{16}{52} = \\frac{4}{13}$.",
+  "techniqueSlugs": [
+    "inclusion-exclusion-for-events",
+    "probability-as-fraction"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

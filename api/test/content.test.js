@@ -18,8 +18,8 @@ test("every lesson and every exercise in the repository is loaded", () => {
   // assumes one of them silently serves about a third of the exercises, and the only symptom is
   // a 404 on an exercise the board can see listed. Pin the count so the drop cannot come back.
   const stats = store.stats();
-  assert.equal(stats.lessons, 27);
-  assert.equal(stats.exercises, 474);
+  assert.equal(stats.lessons, 29);
+  assert.equal(stats.exercises, 532);
   assert.ok(stats.modules >= 8, `expected at least the eight authored modules, got ${stats.modules}`);
 });
 
@@ -329,8 +329,45 @@ test("every lesson and every exercise claims a module the catalogue declares", (
   // And the two codes this branch moved between really do name different topics.
   assert.equal(catalogue.get("M3"), "Counting & Combinatorics");
   assert.equal(catalogue.get("M7"), "Probability");
+  // This assertion used to be `getLesson("m7-l1") === null`, which was true only while M7 happened
+  // to be empty. It is not the guard the misfiling needed: both codes are declared, so "M7 is
+  // empty" was a coincidence of the corpus, not the absence of the bug. M7 now holds its own
+  // probability lessons, and the invariant that must not come back is the one below - each module
+  // holds the topic the catalogue gives it.
   assert.ok(store.getLesson("m3-l1"), "the counting lessons are m3-l1/m3-l2");
-  assert.equal(store.getLesson("m7-l1"), null, "nothing is filed under the probability code any more");
+  assert.ok(store.getLesson("m3-l2"), "the counting lessons are m3-l1/m3-l2");
+  assert.equal(store.getLesson("m3-l1").moduleId, "M3");
+  assert.equal(store.getLesson("m3-l2").moduleId, "M3");
+  assert.ok(store.getLesson("m7-l1"), "M7 holds probability lessons of its own now");
+  assert.equal(store.getLesson("m7-l1").moduleId, "M7");
+  // Topic is asserted from the lesson tags, because that is the only thing in a content file that
+  // states what it actually teaches. The code in the id and the moduleId both agreed in the
+  // original bug; only the prose was on the wrong module.
+  const COUNTING_TAGS = [
+    "fundamental-counting", "permutations", "inclusion-exclusion", "stars-and-bars", "pigeonhole-principle",
+  ];
+  const PROBABILITY_TAGS = [
+    "probability", "conditional-probability", "geometric-probability", "bayes-theorem", "expected-value", "independence",
+  ];
+  // "complementary-counting" is deliberately in neither list: it is genuinely shared by M3 and M7,
+  // so a cross-module tag must not be able to satisfy either side of this.
+  for (const lesson of store.lessons.values()) {
+    const tags = lesson.tags || [];
+    const counting = tags.filter((t) => COUNTING_TAGS.includes(t));
+    const probability = tags.filter((t) => PROBABILITY_TAGS.includes(t));
+    if (lesson.moduleId === "M3") {
+      assert.ok(counting.length > 0, `counting lesson ${lesson.id} carries no counting tag: ${tags}`);
+      assert.equal(probability.length, 0, `counting lesson ${lesson.id} carries probability tags ${probability}`);
+    }
+    if (lesson.moduleId === "M7") {
+      assert.ok(probability.length > 0, `lesson ${lesson.id} is filed under Probability and teaches ${tags}`);
+      assert.equal(counting.length, 0, `lesson ${lesson.id} is filed under Probability but carries counting tags ${counting}`);
+    }
+  }
+  // The exercises follow their lesson, so one anchor on each side catches an exercise authored
+  // against the wrong module even if its lesson is filed correctly.
+  assert.equal(store.exercises.get("m7-l1-p1").moduleId, "M7");
+  assert.equal(store.exercises.get("m3-l1-p1").moduleId, "M3");
 });
 
 test("a dangling reference is still reported, so zero warnings means clean rather than unchecked", () => {

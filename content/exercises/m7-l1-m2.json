@@ -1,0 +1,33 @@
+{
+  "id": "m7-l1-m2",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "probability",
+    "geometric-probability"
+  ],
+  "promptLatex": "A point is chosen at random from inside a rectangle of width $8$ and height $4$. What is the probability that its distance from the left side of the rectangle is less than $2$?",
+  "choices": [
+    "\\frac{1}{4}",
+    "\\frac{1}{2}",
+    "\\frac{3}{8}",
+    "\\frac{2}{3}",
+    "\\frac{3}{4}"
+  ],
+  "answerLatex": "\\frac{1}{4}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Inside a rectangle, a strip's probability is the ratio of the widths.",
+    "The strip has width $2$ out of a total width of $8$, and both share the full height of $4$.",
+    "So the probability is $\\frac{2 \\cdot 4}{8 \\cdot 4} = \\frac{1}{4}$."
+  ],
+  "solutionLatex": "A uniformly chosen point makes the probability equal to the ratio of areas.\n\nThe favourable region is the strip of width $2$ along the left side, of area $2 \\cdot 4 = 8$. The rectangle has area $8 \\cdot 4 = 32$.\n\nTherefore $P = \\frac{8}{32} = \\frac{1}{4}$.",
+  "techniqueSlugs": [
+    "geometric-probability-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

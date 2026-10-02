@@ -1,0 +1,33 @@
+{
+  "id": "m7-l2-p3",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "independence",
+    "probability"
+  ],
+  "promptLatex": "A bag holds $4$ red marbles and $6$ blue marbles. A marble is drawn, noted, returned to the bag, and a second marble is drawn. What is the probability that the two marbles drawn are of different colours?",
+  "choices": [
+    "\\frac{12}{25}",
+    "\\frac{2}{5}",
+    "\\frac{3}{5}",
+    "\\frac{1}{3}",
+    "\\frac{13}{25}"
+  ],
+  "answerLatex": "\\frac{12}{25}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Because the marble is returned, the second draw has the same composition available as the first.",
+    "$P(\\text{red}) = \\frac{4}{10}$ and $P(\\text{blue}) = \\frac{6}{10}$, so there are two orders for different colours.",
+    "The answer is $2 \\cdot \\frac{4}{10} \\cdot \\frac{6}{10} = \\frac{12}{25}$."
+  ],
+  "solutionLatex": "Each draw sees the same bag, because the first marble is returned before the second draw. So the two draws are independent.\n\nFor different colours the outcome is either red then blue or blue then red. These are disjoint, and each has probability $\\frac{4}{10} \\cdot \\frac{6}{10} = \\frac{24}{100}$.\n\nTherefore $P = 2 \\cdot \\frac{24}{100} = \\frac{48}{100} = \\frac{12}{25}$. The return is what licenses the multiplication; without it the answer would differ.",
+  "techniqueSlugs": [
+    "independence-check"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,30 @@
+{
+  "id": "m7-l2-p25",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 3,
+  "tags": [
+    "expected-value",
+    "random-variables"
+  ],
+  "promptLatex": "Al rolls one fair six-sided die and Bea rolls two fair six-sided dice. What is the expected value of the sum of the three results?",
+  "choices": null,
+  "answerLatex": "\\frac{21}{2}",
+  "answerAlternatives": [
+    "21/2"
+  ],
+  "hintLatex": [
+    "The expected value of a sum is the sum of the expected values, with no independence needed.",
+    "One die has expectation $\\frac{7}{2}$ and two dice have expectation $2 \\cdot \\frac{7}{2} = 7$.",
+    "The total expectation is $\\frac{7}{2} + 7 = \\frac{21}{2}$."
+  ],
+  "solutionLatex": "A single fair die has expected value $\\frac{1+2+3+4+5+6}{6} = \\frac{7}{2}$, so Al's result has expectation $\\frac{7}{2}$.\n\nBea's two results each have expectation $\\frac{7}{2}$, so by linearity of expectation Bea's total has expectation $\\frac{7}{2} + \\frac{7}{2} = 7$.\n\nApplying linearity once more to the sum of Al's result and Bea's total,\n\n$\\mathbb{E}[\\text{sum}] = \\frac{7}{2} + 7 = \\frac{21}{2}$. No independence hypothesis is needed at either step, because linearity of expectation never requires one.",
+  "techniqueSlugs": [
+    "linearity-of-expectation",
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,33 @@
+{
+  "id": "m7-l1-p19",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "probability",
+    "inclusion-exclusion"
+  ],
+  "promptLatex": "An integer is chosen at random from $1$ to $20$, inclusive. What is the probability that the integer is divisible by $4$ or by $5$?",
+  "choices": [
+    "\\frac{2}{5}",
+    "\\frac{9}{20}",
+    "\\frac{1}{4}",
+    "\\frac{3}{10}",
+    "\\frac{11}{20}"
+  ],
+  "answerLatex": "\\frac{2}{5}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "List both families, then look for the integers that appear in both.",
+    "Multiples of $4$ give $4$ values, multiples of $5$ give $4$ values, and the only multiple of both is $20$.",
+    "So $8$ of the $20$ integers qualify, and the probability is $\\frac{8}{20} = \\frac{2}{5}$."
+  ],
+  "solutionLatex": "The sample space is the $20$ integers from $1$ to $20$, all equally likely.\n\nThe multiples of $4$ are $4, 8, 12, 16, 20$ and the multiples of $5$ are $5, 10, 15, 20$, so each family has $4$ members. The integers divisible by both are the multiples of $20$, which in this range is just $20$, so the overlap has size $1$.\n\nBy inclusion-exclusion the union has $4 + 4 - 1 = 8$ members, and $P = \\frac{8}{20} = \\frac{2}{5}$.",
+  "techniqueSlugs": [
+    "inclusion-exclusion-for-events"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

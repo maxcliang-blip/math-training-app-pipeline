@@ -1,0 +1,33 @@
+{
+  "id": "m7-l2-p5",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "probability",
+    "complementary-counting"
+  ],
+  "promptLatex": "A fair coin is flipped three times. What is the probability of getting at least one head?",
+  "choices": [
+    "\\frac{1}{8}",
+    "\\frac{1}{4}",
+    "\\frac{1}{2}",
+    "\\frac{3}{4}",
+    "\\frac{7}{8}"
+  ],
+  "answerLatex": "\\frac{7}{8}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The complementary event is that every flip shows a tail, which is a single outcome.",
+    "There are $2^3 = 8$ equally likely sequences.",
+    "So the probability is $1 - \\frac{1}{8} = \\frac{7}{8}$."
+  ],
+  "solutionLatex": "Three flips give $2^3 = 8$ equally likely sequences.\n\nThe complementary event is that all three flips are tails, which is the single sequence $(T,T,T)$.\n\nTherefore $P(\\text{at least one head}) = 1 - \\frac{1}{8} = \\frac{7}{8}$.",
+  "techniqueSlugs": [
+    "complementary-count"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

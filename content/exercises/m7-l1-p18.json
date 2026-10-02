@@ -1,0 +1,33 @@
+{
+  "id": "m7-l1-p18",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "probability",
+    "combinations"
+  ],
+  "promptLatex": "A club has $7$ men and $5$ women. A committee of $3$ is chosen at random from the $12$ members. What is the probability that all three members of the committee are men?",
+  "choices": [
+    "\\frac{7}{60}",
+    "\\frac{7}{44}",
+    "\\frac{21}{110}",
+    "\\frac{1}{4}",
+    "\\frac{7}{40}"
+  ],
+  "answerLatex": "\\frac{7}{44}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Both the favourable count and the total count are combinations of the same size.",
+    "There are $\\binom{12}{3} = 220$ committees in all, and $\\binom{7}{3} = 35$ of them are all men.",
+    "So the probability is $\\frac{35}{220} = \\frac{7}{44}$."
+  ],
+  "solutionLatex": "The sample space is the set of $3$-person committees from $12$ members, all equally likely, and there are $\\binom{12}{3} = 220$ of them.\n\nThe favourable committees consist of $3$ of the $7$ men, giving $\\binom{7}{3} = 35$.\n\nTherefore $P = \\frac{35}{220} = \\frac{7}{44}$.",
+  "techniqueSlugs": [
+    "probability-as-fraction"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

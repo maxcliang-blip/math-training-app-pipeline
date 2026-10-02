@@ -1,0 +1,30 @@
+{
+  "id": "m7-l1-p23",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "probability",
+    "geometric-probability",
+    "symmetry"
+  ],
+  "promptLatex": "A square is divided into $25$ equal unit squares arranged in $5$ rows and $5$ columns, numbered from $1$. A point is chosen at random from inside the square. What is the probability that it lands in a square whose row number and column number are both odd?",
+  "choices": null,
+  "answerLatex": "\\frac{9}{25}",
+  "answerAlternatives": [
+    "9/25"
+  ],
+  "hintLatex": [
+    "The favourable region is a collection of unit squares, so count them.",
+    "The odd row numbers are $1$, $3$ and $5$, and the odd column numbers are $1$, $3$ and $5$ as well.",
+    "That gives $3 \\cdot 3 = 9$ of the $25$ squares."
+  ],
+  "solutionLatex": "The point is chosen uniformly, so the probability is the fraction of the total area covered by the favourable squares.\n\nThere are $3$ odd row numbers and $3$ odd column numbers, and every combination of one of each gives a square satisfying the condition, so there are $3 \\cdot 3 = 9$ such squares. The total number of squares is $25$.\n\nTherefore $P = \\frac{9}{25}$, which is in lowest terms.",
+  "techniqueSlugs": [
+    "geometric-probability-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,34 @@
+{
+  "id": "m7-l1-p2",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "probability",
+    "divisibility"
+  ],
+  "promptLatex": "A fair six-sided die is rolled once. What is the probability that the result is a multiple of 3?",
+  "choices": [
+    "\\frac{1}{6}",
+    "\\frac{1}{4}",
+    "\\frac{1}{3}",
+    "\\frac{1}{2}",
+    "\\frac{2}{3}"
+  ],
+  "answerLatex": "\\frac{1}{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "List the faces on the die, then mark which of them are multiples of 3.",
+    "The faces are $1$ through $6$, so the multiples of $3$ among them are $3$ and $6$.",
+    "Two of the six faces, so the probability is $\\frac{2}{6} = \\frac{1}{3}$."
+  ],
+  "solutionLatex": "The sample space is $\\{1,2,3,4,5,6\\}$, the six faces of a fair die, all equally likely.\n\nThe multiples of $3$ in that set are $3$ and $6$, so there are $2$ favourable outcomes.\n\nTherefore $P = \\frac{2}{6} = \\frac{1}{3}$.",
+  "techniqueSlugs": [
+    "probability-as-fraction",
+    "counting-outcome-space"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

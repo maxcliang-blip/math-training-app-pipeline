@@ -1,0 +1,28 @@
+{
+  "id": "m7-l2-p20",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "expected-value",
+    "indicator-variables"
+  ],
+  "promptLatex": "The numbers $1$ through $10$ are written on ten cards, and the cards are shuffled uniformly at random and laid out in a row. Let $X$ be the number of cards that end up in the position they originally occupied. What is the expected value of $X$?",
+  "choices": null,
+  "answerLatex": "1",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Write the number of fixed positions as a sum, one term for each of the ten cards.",
+    "Each particular card has probability $\\frac{1}{10}$ of landing back in its own position.",
+    "So the expectation is $10 \\cdot \\frac{1}{10} = 1$."
+  ],
+  "solutionLatex": "For each card $i$ let $I_i$ be $1$ if card $i$ lands in its original position and $0$ otherwise. Then the number of fixed positions is $X = I_1 + I_2 + \\cdots + I_{10}$.\n\nEach card is equally likely to occupy any of the $10$ positions, so $\\mathbb{E}[I_i] = P(I_i = 1) = \\frac{1}{10}$. Linearity of expectation, which needs no independence, gives\n\n$\\mathbb{E}[X] = \\sum_{i=1}^{10} \\mathbb{E}[I_i] = 10 \\cdot \\frac{1}{10} = 1$.",
+  "techniqueSlugs": [
+    "indicator-variables",
+    "linearity-of-expectation"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,34 @@
+{
+  "id": "m7-l2-p1",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "independence",
+    "probability"
+  ],
+  "promptLatex": "Two fair coins are flipped. What is the probability that the two coins show the same face?",
+  "choices": [
+    "\\frac{1}{4}",
+    "\\frac{1}{3}",
+    "\\frac{1}{2}",
+    "\\frac{2}{3}",
+    "\\frac{3}{4}"
+  ],
+  "answerLatex": "\\frac{1}{2}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "There are four equally likely pairs of results.",
+    "Three of the pairs have two identical faces: heads-heads, tails-tails, and heads-tails in either order gives two more.",
+    "Of those $4$ outcomes, $2$ have the same face on both coins."
+  ],
+  "solutionLatex": "Two flips of a fair coin give $4$ equally likely outcomes: $(H,H)$, $(H,T)$, $(T,H)$ and $(T,T)$.\n\nTwo of these have the same face on both coins, namely $(H,H)$ and $(T,T)$.\n\nTherefore $P = \\frac{2}{4} = \\frac{1}{2}$. This also follows by independence: $P(H \\cap H) + P(T \\cap T) = \\frac{1}{4} + \\frac{1}{4} = \\frac{1}{2}$.",
+  "techniqueSlugs": [
+    "complementary-count",
+    "independence-check"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

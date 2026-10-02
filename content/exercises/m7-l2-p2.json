@@ -1,0 +1,34 @@
+{
+  "id": "m7-l2-p2",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "independence",
+    "probability"
+  ],
+  "promptLatex": "A fair six-sided die is rolled twice. What is the probability that both results are even?",
+  "choices": [
+    "\\frac{1}{4}",
+    "\\frac{1}{3}",
+    "\\frac{1}{2}",
+    "\\frac{3}{4}",
+    "\\frac{2}{3}"
+  ],
+  "answerLatex": "\\frac{1}{4}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Three of the six faces are even, and the two rolls are separate experiments.",
+    "$P(\\text{even}) = \\frac{3}{6} = \\frac{1}{2}$ for each roll.",
+    "The rolls are independent, so the probability of both is $\\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$."
+  ],
+  "solutionLatex": "On one roll, $3$ of the $6$ faces are even, so $P(\\text{even}) = \\frac{3}{6} = \\frac{1}{2}$.\n\nThe two rolls are separate and neither affects the other, so the events are independent and the probabilities multiply.\n\nTherefore $P = \\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$. By counting, $9$ of the $36$ ordered pairs have both entries even, and $\\frac{9}{36} = \\frac{1}{4}$ agrees.",
+  "techniqueSlugs": [
+    "independence-check",
+    "counting-in-the-conditional-set"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,27 @@
+{
+  "id": "m7-l1-p25",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "probability",
+    "binomial-distribution"
+  ],
+  "promptLatex": "A fair coin is flipped $10$ times. The probability of getting exactly $5$ heads is $\\frac{m}{n}$ in lowest terms. Find $m + n$.",
+  "choices": null,
+  "answerLatex": "319",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Count the sequences with exactly five heads and divide by the total number of sequences.",
+    "There are $2^{10} = 1024$ sequences in total, and $\\binom{10}{5} = 252$ of them have exactly five heads.",
+    "Reduce $\\frac{252}{1024}$ and add the numerator and denominator."
+  ],
+  "solutionLatex": "Ten flips of a fair coin give $2^{10} = 1024$ equally likely sequences.\n\nThe sequences with exactly $5$ heads are determined by choosing which $5$ of the $10$ positions show heads, so there are $\\binom{10}{5} = 252$ of them.\n\nTherefore $P = \\frac{252}{1024} = \\frac{63}{256}$, which is in lowest terms since $63 = 9 \\cdot 7$ and $256 = 2^8$. Hence $m + n = 63 + 256 = 319$.",
+  "techniqueSlugs": [
+    "probability-as-fraction"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

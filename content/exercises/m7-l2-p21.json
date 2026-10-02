@@ -1,0 +1,28 @@
+{
+  "id": "m7-l2-p21",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "bayes-theorem",
+    "distributions"
+  ],
+  "promptLatex": "A disease affects $10$ percent of a population. A test detects the disease when it is present with probability $0.95$, and reports a positive result when the disease is absent with probability $0.10$. A person from this population tests positive. The probability that the person has the disease is $\\frac{m}{n}$ in lowest terms. Find $m + n$.",
+  "choices": null,
+  "answerLatex": "200",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "There are two disjoint routes to a positive result: the person has the disease and the test catches it, or the person is healthy and the test gives a false positive.",
+    "Work in units of $100$ people: $10$ are sick and $90$ are well.",
+    "Of the sick, $9.5$ test positive, and of the well, $9$ do. Divide the first count by the total $18.5$."
+  ],
+  "solutionLatex": "Work with a group of $100$ people. Of these, $10$ have the disease and $90$ do not.\n\nAmong the $10$ sick people the test is positive for $10 \\cdot 0.95 = 9.5$. Among the $90$ healthy people it is positive for $90 \\cdot 0.10 = 9$. These groups are disjoint, so $18.5$ people test positive in total.\n\nOf those, the ones who actually have the disease number $9.5$. Bayes' theorem gives $P(\\text{disease} \\mid \\text{positive}) = \\frac{9.5}{18.5} = \\frac{95}{185} = \\frac{19}{181}$. Since $19$ and $181$ share no factor, $m + n = 19 + 181 = 200$. The test is very accurate and the disease is fairly common, which is why the answer here is not tiny; the same test with the disease affecting one person in a thousand would give a far smaller value.",
+  "techniqueSlugs": [
+    "bayes-reversal",
+    "law-of-total-probability"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

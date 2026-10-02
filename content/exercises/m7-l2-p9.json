@@ -1,0 +1,34 @@
+{
+  "id": "m7-l2-p9",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "independence",
+    "probability"
+  ],
+  "promptLatex": "For two events $A$ and $B$ it is given that $P(A) = \\frac{1}{3}$, $P(B) = \\frac{1}{2}$ and $P(A \\cup B) = \\frac{2}{3}$. What is $P(A \\cap B)$?",
+  "choices": [
+    "\\frac{1}{6}",
+    "\\frac{1}{12}",
+    "\\frac{1}{4}",
+    "\\frac{1}{3}",
+    "\\frac{5}{12}"
+  ],
+  "answerLatex": "\\frac{1}{6}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Two of the three quantities on offer are known, and the third follows from inclusion-exclusion.",
+    "$P(A \\cap B) = P(A) + P(B) - P(A \\cup B)$.",
+    "That is $\\frac{1}{3} + \\frac{1}{2} - \\frac{2}{3} = \\frac{1}{6}$."
+  ],
+  "solutionLatex": "By inclusion-exclusion,\n\n$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$\n\nSolving for the intersection gives $P(A \\cap B) = P(A) + P(B) - P(A \\cup B) = \\frac{1}{3} + \\frac{1}{2} - \\frac{2}{3} = \\frac{1}{6}$.\n\nAs a check, $P(A)P(B) = \\frac{1}{6}$ as well, so these two events happen to be independent.",
+  "techniqueSlugs": [
+    "independence-check",
+    "counting-in-the-conditional-set"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
