@@ -133,7 +133,21 @@ jobs:
             exit 1
           fi
           grep -q "<svg" "$work/smoke.svg"
-          echo "smoke svg: $(wc -c < "$work/smoke.svg") bytes, box $(grep -oE 'width=.[0-9.]+. height=.[0-9.]+' "$work/smoke.svg" | head -1)"
+          # The S5.5 declared-vs-compiled drift check reads the compiled box off the root <svg>.
+          # Asserting only that an <svg> tag exists is not enough: a version that emits a root
+          # element with no width/height and no viewBox produces a perfectly valid, perfectly
+          # unmeasurable file, which used to leave every figure reported as measuredWidth: null
+          # while the build still claimed zero contract violations.
+          echo "root element: $(grep -oE '<svg[^>]*>' "$work/smoke.svg" | head -1 | cut -c1-300)"
+          node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            const { measureBox } = await import("./scripts/build-figures.mjs");
+            const svg = readFileSync(process.argv[1], "utf8");
+            const box = measureBox(svg);
+            if (!box) throw new Error("smoke svg root declares no measurable box; S5.5 would be vacuous for every figure");
+            console.log("smoke box: " + box.width + "x" + box.height + " (ratio " + (box.width / box.height).toFixed(3) + ")");
+          ' "$work/smoke.svg"
+          echo "smoke svg: $(wc -c < "$work/smoke.svg") bytes"
           rm -rf "$work"
       - name: Figure build
         if: ${{ !inputs.record_aspect_ratios }}
