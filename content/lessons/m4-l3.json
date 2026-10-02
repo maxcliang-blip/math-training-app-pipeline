@@ -33,9 +33,9 @@
         {
           "id": "m4-l3-fig-1",
           "captionLatex": "Six partial sums of a decreasing geometric series drawn as stacked bars; each bar is half the height of the one above it, and the top of the stack creeps toward the dashed line without ever crossing it.",
-          "asymptoteSource": "// Partial sums of 1/2 + 1/4 + 1/8 + ... as stacked bars, approaching the\n// dashed limit. Two-argument size fixes the output box exactly.\nsize(280,240);\nreal h = 0.5;\nreal y = 0;\nfor (int i=0; i<6; ++i) {\n  filldraw((0,y)--(4,y+h)--(0,y+h)--cycle, lightgray);\n  label(\"$\"+string(i+1)+\"$\", (-0.5,y+h/2), E);\n  y = y + h;\n  h = h/2;\n}\ndraw((0,0)--(4.6,0));\ndraw((0,1)--(4.6,1), dashed);\nlabel(\"$1$\", (-0.5,1), E);\nlabel(\"the sum the stack is heading for\", (2.3,1.1), N);",
+          "asymptoteSource": "// Partial sums of 1/2 + 1/4 + 1/8 + ... as stacked bars, approaching the\n// dashed limit. Two-argument size fixes the output box exactly.\nsize(281,77);\nreal h = 0.5;\nreal y = 0;\nfor (int i=0; i<6; ++i) {\n  filldraw((0,y)--(4,y+h)--(0,y+h)--cycle, lightgray);\n  label(\"$\"+string(i+1)+\"$\", (-0.5,y+h/2), E);\n  y = y + h;\n  h = h/2;\n}\ndraw((0,0)--(4.6,0));\ndraw((0,1)--(4.6,1), dashed);\nlabel(\"$1$\", (-0.5,1), E);\nlabel(\"the sum the stack is heading for\", (2.3,1.1), N);",
           "asymptoteAlt": "A stack of six shaded horizontal bars rising from a baseline, each one about half the height of the bar below it, so the top of the stack sits just below a horizontal dashed line drawn across the picture. The dashed line carries a label of one at its left end, a small number sits beside the left edge of each bar counting it from the bottom, and a short note above the dashed line says the stack is heading for that height.",
-          "asymptoteAspectRatio": 1.167
+          "asymptoteAspectRatio": 3.649
         }
       ],
       "examples": [

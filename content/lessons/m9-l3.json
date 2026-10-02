@@ -22,9 +22,9 @@
         {
           "id": "m9-l3-fig-1",
           "captionLatex": "The inductive step: if P(k) holds then P(k+1) follows, building a chain from the base case.",
-          "asymptoteSource": "// Inductive step visualization\n// Two-argument size fixes the output box at 320 x 200\nsize(320,200);\nint k = 3;\npair points[] = { (1,1), (2,4), (3,9), (4,16) };\nfor (int i = 0; i <= k; ++i) {\n  dot(points[i], black+3pt);\n  if (i < k) draw(points[i]--points[i+1], blue);\n}\nlabel(\"P(1)\", (1,1), SW);\nlabel(\"P(2)\", (2,4), SE);\nlabel(\"\\\\ldots\", (3,9), N);\nlabel(\"P(k)\", (k, k*k), NE);\nlabel(\"P(k+1)\", (k+1, (k+1)*(k+1)), N);",
+          "asymptoteSource": "// Inductive step visualization\n// Two-argument size fixes the output box at 320 x 200\nsize(81,201);\nint k = 3;\npair points[] = { (1,1), (2,4), (3,9), (4,16) };\nfor (int i = 0; i <= k; ++i) {\n  dot(points[i], black+3pt);\n  if (i < k) draw(points[i]--points[i+1], blue);\n}\nlabel(\"P(1)\", (1,1), SW);\nlabel(\"P(2)\", (2,4), SE);\nlabel(\"\\\\ldots\", (3,9), N);\nlabel(\"P(k)\", (k, k*k), NE);\nlabel(\"P(k+1)\", (k+1, (k+1)*(k+1)), N);",
           "asymptoteAlt": "A plot of points (1,1), (2,4), (3,9), (4,16) with arrows connecting consecutive points, labeled P(1) through P(k+1), showing the inductive step chain.",
-          "asymptoteAspectRatio": 1.6
+          "asymptoteAspectRatio": 0.403
         }
       ],
       "examples": [
@@ -55,9 +55,9 @@
         {
           "id": "m9-l3-fig-1",
           "captionLatex": "The inductive step: if P(k) holds then P(k+1) follows, building a chain from the base case.",
-          "asymptoteSource": "// Inductive step visualization\n// Two-argument size fixes the output box at 320 x 200\nsize(320,200);\nint k = 3;\npair points[] = { (1,1), (2,4), (3,9), (4,16) };\nfor (int i = 0; i <= k; ++i) {\n  dot(points[i], black+3pt);\n  if (i < k) draw(points[i]--points[i+1], blue);\n}\nlabel(\"P(1)\", (1,1), SW);\nlabel(\"P(2)\", (2,4), SE);\nlabel(\"\\\\ldots\", (3,9), N);\nlabel(\"P(k)\", (k, k*k), NE);\nlabel(\"P(k+1)\", (k+1, (k+1)*(k+1)), N);",
+          "asymptoteSource": "// Inductive step visualization\n// Two-argument size fixes the output box at 320 x 200\nsize(81,201);\nint k = 3;\npair points[] = { (1,1), (2,4), (3,9), (4,16) };\nfor (int i = 0; i <= k; ++i) {\n  dot(points[i], black+3pt);\n  if (i < k) draw(points[i]--points[i+1], blue);\n}\nlabel(\"P(1)\", (1,1), SW);\nlabel(\"P(2)\", (2,4), SE);\nlabel(\"\\\\ldots\", (3,9), N);\nlabel(\"P(k)\", (k, k*k), NE);\nlabel(\"P(k+1)\", (k+1, (k+1)*(k+1)), N);",
           "asymptoteAlt": "A plot of points (1,1), (2,4), (3,9), (4,16) with arrows connecting consecutive points, labeled P(1) through P(k+1), showing the inductive step chain.",
-          "asymptoteAspectRatio": 1.6
+          "asymptoteAspectRatio": 0.403
         }
       ],
       "examples": [

@@ -283,9 +283,9 @@
     "techniqueSlugs": [
       "section-formula"
     ],
-    "asymptoteSource": "// A segment divided internally in the ratio 3:1.\n// Two-argument size call fixes the output box, so the declared 2 is exact.\nsize(320,160);\npair A=(0,0), B=(6,0), P=(4.5,0);\ndraw(A--B,Arrow);\ndot(A, black+2.5pt);\ndot(B, black+2.5pt);\ndot(P, black+3.5pt);\nlabel(\"$A=(-8,2)$\",A,SW);\nlabel(\"$B=(8,6)$\",B,SE);\nlabel(\"$P$\",P,N);\nlabel(\"$\\frac{3}{4}$\",(2.25,0),N);\nlabel(\"$\\frac{1}{4}$\",(5.25,0),N);\nlabel(\"measured from $A$\",(3,-1),S);",
+    "asymptoteSource": "// A segment divided internally in the ratio 3:1.\n// size(W,H) bounds the output under Asymptote's default keepAspect and does not scale labels,\n// so the compiled box is a measurement rather than the declaration. The values below are what\n// asy 2.87 actually produced; re-measure with `npm run content:figures --\n// --record-aspect-ratios` if the toolchain changes.\nsize(321,67);\npair A=(0,0), B=(6,0), P=(4.5,0);\ndraw(A--B,Arrow);\ndot(A, black+2.5pt);\ndot(B, black+2.5pt);\ndot(P, black+3.5pt);\nlabel(\"$A=(-8,2)$\",A,SW);\nlabel(\"$B=(8,6)$\",B,SE);\nlabel(\"$P$\",P,N);\nlabel(\"$\\frac{3}{4}$\",(2.25,0),N);\nlabel(\"$\\frac{1}{4}$\",(5.25,0),N);\nlabel(\"measured from $A$\",(3,-1),S);",
     "asymptoteAlt": "A horizontal segment runs from left to right with an arrowhead at the right end. A small filled dot marks each endpoint and a larger filled dot marks a point about three quarters of the way along, labelled P. The long left portion of the segment carries a label showing three quarters and the short right portion shows one quarter, with a note underneath saying the fractions are measured from the left endpoint, and the two endpoints are labelled with their coordinates.",
-    "asymptoteAspectRatio": 2
+    "asymptoteAspectRatio": 4.791
   },
   {
     "id": "m6-l1-p11",

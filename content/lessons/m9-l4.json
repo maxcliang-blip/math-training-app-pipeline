@@ -23,9 +23,9 @@
         {
           "id": "m9-l4-fig-1",
           "captionLatex": "A counterexample to the claim that all odd numbers greater than 1 are prime: the number 9 is odd, greater than 1, but not prime.",
-          "asymptoteSource": "// Counterexample visualization\n// Two-argument size fixes the output box at 320 x 120\nsize(320,120);\nlabel(\"9\", (0,0), N);\nlabel(\"not prime\", (0,-1.5), S);\ncircle((0,0), 1.5);\nlabel(\"odd > 1\", (0,2), N);\nlabel(\"prime\", (-2,0), W);\nlabel(\"counterexample: 9\", (2,0), E);",
+          "asymptoteSource": "// Counterexample visualization\n// Two-argument size fixes the output box at 320 x 120\nsize(237,121);\nlabel(\"9\", (0,0), N);\nlabel(\"not prime\", (0,-1.5), S);\ncircle((0,0), 1.5);\nlabel(\"odd > 1\", (0,2), N);\nlabel(\"prime\", (-2,0), W);\nlabel(\"counterexample: 9\", (2,0), E);",
           "asymptoteAlt": "A circle labeled 9 with an arrow pointing down labeled 'not prime' and text above the circle saying 'odd > 1' and to the right labeled 'counterexample: 9'.",
-          "asymptoteAspectRatio": 2.667
+          "asymptoteAspectRatio": 1.959
         }
       ],
       "examples": [
@@ -57,9 +57,9 @@
         {
           "id": "m9-l4-fig-1",
           "captionLatex": "A counterexample to the claim that all odd numbers greater than 1 are prime: the number 9 is odd, greater than 1, but not prime.",
-          "asymptoteSource": "// Counterexample visualization\n// Two-argument size fixes the output box at 320 x 120\nsize(320,120);\nlabel(\"9\", (0,0), N);\nlabel(\"not prime\", (0,-1.5), S);\ncircle((0,0), 1.5);\nlabel(\"odd > 1\", (0,2), N);\nlabel(\"prime\", (-2,0), W);\nlabel(\"counterexample: 9\", (2,0), E);",
+          "asymptoteSource": "// Counterexample visualization\n// Two-argument size fixes the output box at 320 x 120\nsize(237,121);\nlabel(\"9\", (0,0), N);\nlabel(\"not prime\", (0,-1.5), S);\ncircle((0,0), 1.5);\nlabel(\"odd > 1\", (0,2), N);\nlabel(\"prime\", (-2,0), W);\nlabel(\"counterexample: 9\", (2,0), E);",
           "asymptoteAlt": "A circle labeled 9 with an arrow pointing down labeled 'not prime' and text above the circle saying 'odd > 1' and to the right labeled 'counterexample: 9'.",
-          "asymptoteAspectRatio": 2.667
+          "asymptoteAspectRatio": 1.959
         }
       ],
       "examples": [
