@@ -17,9 +17,15 @@ test("every lesson and every exercise in the repository is loaded", () => {
   // Both file shapes exist in the corpus - 42 single-record files and 24 arrays. A loader that
   // assumes one of them silently serves about a third of the exercises, and the only symptom is
   // a 404 on an exercise the board can see listed. Pin the count so the drop cannot come back.
+  //
+  // Raising a pinned count is part of adding exercises. 669 is the count cc48b1a left behind:
+  // it topped m1-l1, m5-l1 and m9-l3 up to 15 practice exercises each and the pin still said 648,
+  // so main went red on three tests that have nothing to do with content authoring. The pin is
+  // worth keeping -- a loader that drops exercises is invisible otherwise -- but it is only worth
+  // something if the person who grows the corpus moves it in the same commit.
   const stats = store.stats();
   assert.equal(stats.lessons, 33);
-  assert.equal(stats.exercises, 648);
+  assert.equal(stats.exercises, 669);
   assert.ok(stats.modules >= 8, `expected at least the eight authored modules, got ${stats.modules}`);
 });
 
