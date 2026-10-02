@@ -1,0 +1,224 @@
+// Unit tests for the figure client.
+//
+// The two things worth testing hard here are the 503 path and the payload whitelist, because both
+// are contract requirements rather than implementation choices: the API is required to make
+// toolchain-missing a hard 503, and only eight named fields may reach a learner.
+
+import test from "node:test";
+import assert from "node:assert/strict";
+import {
+  createFigureClient,
+  figureRoute,
+  figureAssetUrl,
+  validateFigurePayload,
+  isToolchainMissing,
+  isSameOriginPath,
+  figurePlaceholder
+} from "../src/lib/figures.js";
+
+const KEY = "m1-linear-equations.figures[0]";
+
+function payload(overrides = {}) {
+  return {
+    figureKey: KEY,
+    figureSvgUrl: "/artifacts/figures/svg/m1-linear-equations-figures-0.svg",
+    figureHash: "sha256:abc123",
+    figurePipelineVersion: "3",
+    declaredAspectRatio: 1.5,
+    compiledAspectRatio: 1.49,
+    alt: "A line crossing the x-axis at two units",
+    captionLatex: "The roots of $x^2 - 2x = 0$",
+    ...overrides
+  };
+}
+
+function jsonResponse(status, body) {
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    json: async () => body
+  };
+}
+
+test("encodes the figure key into a path segment", () => {
+  // Unencoded, this key contains dots, brackets and a space, and the route does not match.
+  const route = figureRoute(KEY);
+  assert.equal(route, `/api/figures/${encodeURIComponent(KEY)}`);
+  assert.ok(!route.includes("["), "brackets are encoded");
+  assert.ok(!route.includes(" "), "spaces are encoded");
+  assert.equal(decodeURIComponent(route.replace("/api/figures/", "")), KEY, "it round-trips");
+});
+
+test("an empty figure key has no route", () => {
+  assert.equal(figureRoute(""), null);
+  assert.equal(figureRoute(null), null);
+  assert.equal(figureRoute(undefined), null);
+});
+
+test("fetches a passing manifest entry and serves it ready", async () => {
+  const client = createFigureClient({ fetchImpl: async () => jsonResponse(200, payload()) });
+  const result = await client.getFigure(KEY);
+  assert.equal(result.status, "ready");
+  assert.equal(result.figureKey, KEY);
+  assert.equal(result.src, "/artifacts/figures/svg/m1-linear-equations-figures-0.svg");
+});
+
+test("a 503 is toolchain-missing, not a broken figure", async () => {
+  const client = createFigureClient({
+    fetchImpl: async () =>
+      jsonResponse(503, { error: "toolchain-missing", status: "toolchain-missing" })
+  });
+  const result = await client.getFigure(KEY);
+  assert.equal(result.status, "toolchain-missing");
+  assert.equal(result.reason, "pipeline-not-run");
+  assert.ok(figurePlaceholder(result).label.includes("not built"));
+});
+
+test("a build that never ran and a 404 do not look the same", async () => {
+  // The whole reason toolchain-missing is a hard 503 rather than an empty list: the client has to
+  // be able to tell them apart.
+  const missing = createFigureClient({
+    fetchImpl: async () => jsonResponse(503, { status: "toolchain-missing" })
+  });
+  const notFound = createFigureClient({ fetchImpl: async () => jsonResponse(404, {}) });
+  assert.notEqual((await missing.getFigure(KEY)).status, (await notFound.getFigure(KEY)).status);
+});
+
+test("a 503 with an HTML body from a proxy is still toolchain-missing", async () => {
+  const client = createFigureClient({
+    fetchImpl: async () => ({
+      ok: false,
+      status: 503,
+      json: async () => {
+        throw new Error("Unexpected token < in JSON");
+      }
+    })
+  });
+  const result = await client.getFigure(KEY);
+  assert.equal(result.status, "toolchain-missing");
+});
+
+test("recognises the toolchain-missing status in a few shapes", () => {
+  assert.equal(isToolchainMissing({ status: "toolchain-missing" }), true);
+  assert.equal(isToolchainMissing({ error: "toolchain-missing" }), true);
+  assert.equal(isToolchainMissing({ status: "ok" }), false);
+  assert.equal(isToolchainMissing(null), false);
+});
+
+test("a network failure is unavailable, never toolchain-missing", async () => {
+  // A learner on a train is not the same as a broken build, and reporting it as one hides a real
+  // outage behind a message that says "we have not run the build yet".
+  const client = createFigureClient({
+    fetchImpl: async () => {
+      throw new Error("network down");
+    }
+  });
+  const result = await client.getFigure(KEY);
+  assert.equal(result.status, "unavailable");
+  assert.equal(result.reason, "network");
+});
+
+test("rejects a payload missing a field needed to render", () => {
+  for (const field of ["figureKey", "figureSvgUrl", "figureHash"]) {
+    const broken = payload();
+    delete broken[field];
+    const result = validateFigurePayload(broken);
+    assert.equal(result.ok, false, `${field} is required`);
+    assert.equal(result.reason, `missing:${field}`);
+  }
+});
+
+test("accepts a payload carrying build provenance, and drops it", () => {
+  // The whitelist is the point: asymptoteSource is kilobytes of build input per figure and must
+  // never reach a learner even if it arrives on the wire.
+  const result = validateFigurePayload(
+    payload({ asymptoteSource: "import graph; size(200,200);", asymptoteVersion: "3.1" })
+  );
+  assert.equal(result.ok, true);
+  assert.equal("asymptoteSource" in result.payload, false);
+  assert.equal("asymptoteVersion" in result.payload, false);
+});
+
+test("rejects a payload whose figureSvgUrl leaves the origin", () => {
+  const result = validateFigurePayload(payload({ figureSvgUrl: "https://cdn.evil.example/x.svg" }));
+  assert.equal(result.ok, false);
+  assert.equal(result.reason, "off-origin-figureSvgUrl");
+});
+
+test("accepts a same-origin path and rejects a protocol-relative one", () => {
+  assert.equal(isSameOriginPath("/artifacts/figures/svg/a.svg"), true);
+  assert.equal(isSameOriginPath("//cdn.evil.example/a.svg"), false);
+  assert.equal(isSameOriginPath("https://cdn.evil.example/a.svg"), false);
+  assert.equal(isSameOriginPath(""), false);
+});
+
+test("a non-object payload is invalid, not a crash", () => {
+  for (const value of [null, undefined, "svg", 7]) {
+    assert.equal(validateFigurePayload(value).ok, false);
+  }
+});
+
+test("caches per key so revisiting a lesson does not refetch", async () => {
+  let calls = 0;
+  const client = createFigureClient({
+    fetchImpl: async () => {
+      calls += 1;
+      return jsonResponse(200, payload());
+    }
+  });
+  await client.getFigure(KEY);
+  await client.getFigure(KEY);
+  assert.equal(calls, 1);
+});
+
+test("caches the toolchain-missing result too, but not a network failure", async () => {
+  // A build can start and finish between requests, so a 503 is cached for the session. A network
+  // blip is not: caching that would leave a figure permanently missing after one bad request.
+  let missingCalls = 0;
+  const missing = createFigureClient({
+    fetchImpl: async () => {
+      missingCalls += 1;
+      return jsonResponse(503, { status: "toolchain-missing" });
+    }
+  });
+  await missing.getFigure(KEY);
+  await missing.getFigure(KEY);
+  assert.equal(missingCalls, 1);
+
+  let netCalls = 0;
+  const flaky = createFigureClient({
+    fetchImpl: async () => {
+      netCalls += 1;
+      throw new Error("down");
+    }
+  });
+  await flaky.getFigure(KEY);
+  await flaky.getFigure(KEY);
+  assert.equal(netCalls, 2);
+});
+
+test("an empty key is invalid without a request", async () => {
+  let called = false;
+  const client = createFigureClient({
+    fetchImpl: async () => {
+      called = true;
+      return jsonResponse(200, payload());
+    }
+  });
+  assert.equal((await client.getFigure("")).status, "invalid");
+  assert.equal(called, false);
+});
+
+test("every status has a placeholder, so a new status cannot ship unstyled", () => {
+  for (const status of ["ready", "unavailable", "invalid", "toolchain-missing"]) {
+    const placeholder = figurePlaceholder({ status, reason: "x" });
+    assert.equal(placeholder.kind, "unavailable");
+    assert.ok(placeholder.label.length > 0);
+  }
+});
+
+test("resolves a relative asset url against an origin", () => {
+  assert.equal(figureAssetUrl("/a.svg", "https://app.example"), "https://app.example/a.svg");
+  assert.equal(figureAssetUrl("https://x/a.svg", "https://app.example"), "https://x/a.svg");
+  assert.equal(figureAssetUrl("", "https://app.example"), null);
+});
