@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-p7",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "bayes-theorem",
+    "conditional-probability"
+  ],
+  "promptLatex": "Urn A holds 3 red and 2 blue balls, and urn B holds 1 red and 4 blue balls. One urn is chosen at random and a ball is drawn from it. Given that the first ball drawn is red, what is the probability that a second ball drawn from the same urn without replacement is also red?",
+  "choices": [
+    "\\frac{2}{5}",
+    "\\frac{1}{2}",
+    "\\frac{3}{7}",
+    "\\frac{3}{8}",
+    "\\frac{1}{3}"
+  ],
+  "answerLatex": "\\frac{3}{8}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "After the first draw the urn is no longer equally likely, so the second draw has to be weighted by the updated weights.",
+    "The first red ball leaves urn A with probability $\\frac{3}{4}$ and urn B with probability $\\frac{1}{4}$.",
+    "From urn A two of the remaining four balls are red and from urn B none are, giving $\\frac{3}{4} \\cdot \\frac{2}{4}$."
+  ],
+  "solutionLatex": "The first draw was red, so urn A is now the posterior choice with probability $\\frac{3/10}{2/5} = \\frac{3}{4}$, and urn B with probability $\\frac{1}{4}$.\n\nThe red ball is not replaced. If the urn was A it now holds $2$ red and $2$ blue, so the chance of a second red is $\\frac{2}{4}$. If the urn was B it now holds $0$ red and $4$ blue, so the chance is $0$.\n\nP(\\text{second red} \\mid \\text{first red}) = \\frac{3}{4} \\cdot \\frac{2}{4} + \\frac{1}{4} \\cdot 0 = \\frac{3}{8}",
+  "techniqueSlugs": [
+    "posterior-predictive",
+    "posterior-normalization"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

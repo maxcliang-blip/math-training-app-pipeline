@@ -1,0 +1,237 @@
+{
+  "id": "m7-l4",
+  "moduleId": "M7",
+  "order": 4,
+  "title": "Expected Value, Linearity, and Random Variables",
+  "topicSlug": "expected-value-random-variables",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 75,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m7-l2",
+    "m7-l3"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Compute the expected value of a discrete random variable from its distribution, use linearity of expectation to find means of sums whose terms are dependent, apply expectation to a function of a variable, and turn a counting question into a sum of indicator variables. Recognise when a uniform choice has its mean at the midpoint of a range, when a maximum or minimum is cheaper to find by subtraction, and when a game should be judged on its mean payoff rather than on its most likely outcome."
+    },
+    "prerequisites": {
+      "items": [
+        "m7-l2",
+        "m7-l3"
+      ],
+      "noteLatex": "This lesson needs the probability machinery of the first three and nothing beyond it. You should be comfortable listing a distribution with its probabilities and multiplying them out. What is new here is not a formula but a stance: a question about a random variable is usually a question about one weighted sum, and the work lies in choosing which sum is the cheap one."
+    },
+    "concept": {
+      "conceptLatex": "An expected value is a weighted average, and almost every problem in this topic is one weighted average written down in a clever way. The definition for a discrete random variable is\n\nE[X] = \\sum_x x \\cdot P(X = x)\n\nThe word to notice is weighted. The most likely outcome is not automatically the expected value, and a value far from the middle can pull the mean a long way if its outcomes are common enough. Since the weights are nonnegative and sum to one, the mean always lies between the smallest and the largest value the variable can take, which is the cheapest check there is.\n\nThe identity that unlocks the topic is linearity. For any two random variables, with no assumption of any kind,\n\nE[X + Y] = E[X] + E[Y]\n\nThe variables may be dependent. The identity holds because the expectation of a sum is a sum of expectations, and the sum does not care how the two variables are related. This single fact removes the need to find joint distributions. Two cards drawn without replacement are dependent, and the expected total is still twice the expected value of one card. The product has no such rule: $E[XY]$ equals $E[X] E[Y]$ only under independence or some equally strong condition, so the expected product of two dice is twice the work of the expected sum.\n\nExpectation also commutes with a function, in exactly one direction that matters here.\n\nE[g(X)] = \\sum_x g(x) \\cdot P(X = x)\n\nThe weights are unchanged and only the summand changes. For a reciprocal this puts most of the weight on the smallest values, so $E[1/X]$ is much larger than $1/E[X]$, and for a square it puts most of the weight on the largest values. Neither equals the function applied to the mean.\n\nCounting problems are handled by indicators. For the $i$th object of a collection, let $I_i$ be $1$ when the event happens to it and $0$ otherwise. The count you want is $\\sum_i I_i$, and linearity gives\n\nE[\\text{count}] = \\sum_i P(\\text{the event happens to object } i)\n\nNo joint analysis is required. The expected number of people sharing a birthday with a fixed person is just that person's birthday probability, however badly the other birthdays are distributed, and the expected number of letters landing in their own envelope in a random filing is exactly one.\n\nTwo structural tools finish the topic. When the variable counts something positive, the tail sum identity\n\nE[X] = \\sum_{k=1}^{\\infty} P(X \\ge k)\n\nturns the mean into a sum of probabilities that are easy to compute and that fall off quickly. And for a maximum or a minimum, linearity gives a shortcut: for two rolls, $E[\\max] + E[\\min] = E[X] + E[Y]$, so whichever of the two extremes is easier to enumerate determines the other.\n\nSpread is measured by the variance, $E[X^2] - (E[X])^2$, both of whose terms come from the weighted sums already in hand. And a game is fair precisely when its expected net payoff is zero. That is the practical use of the whole subject: not the single outcome, which is not the typical one, but the mean over many repetitions, which is the only thing that survives them.",
+      "figures": [
+        {
+          "id": "m7-l4-fig-1",
+          "captionLatex": "A discrete distribution with its mean drawn as a vertical rule: the mean is pulled toward whichever value carries the most probability, and it is not the middle of the range whenever the mass is lopsided.",
+          "asymptoteSource": "// Distribution of a small random variable with its mean marked by a vertical rule.\n// Two-argument size() fixes the output box, so the declared ratio is exact.\nsize(420,350);\npen ax = gray(0.35) + 1;\npen bar = gray(0.2) + 1.2;\npen m = red + 1.4;\nreal h[5] = {0.1, 0.4, 0.2, 0.2, 0.1};\nfor (int i = 0; i < 5; ++i) {\n  filldraw((i*1.6-0.6,0)--(i*1.6+0.6,0)--(i*1.6+0.6,h[i]*2.2)--(i*1.6-0.6,h[i]*2.2), bar, bar);\n}\ndraw((-1.1,0)--(7.1,0), ax);\ndraw((3.4,0)--(3.4,2.9), m);\nlabel(\"mean\", (3.4,2.9), N);\nlabel(\"value\", (3.0,-0.4), S);\nlabel(\"probability\", (7.1,0.4), E);\n",
+          "asymptoteAlt": "A bar chart of a five-valued random variable. The second bar is the tallest at about four tenths of the height, the first and last bars are the shortest, and the two middle bars are equal and half the height of the tallest. A vertical rule labelled mean stands to the right of centre, at about three and a third of the way across.",
+          "asymptoteAspectRatio": 1.2
+        },
+        {
+          "id": "m7-l4-fig-2",
+          "captionLatex": "Two variables feed into a single sum, and only their means are needed: the arrows are ordinary and the caption is the whole content of linearity of expectation.",
+          "asymptoteSource": "// Linearity diagram: two dependent variables whose means simply add.\n// Two-argument size() fixes the output box, so the declared ratio is exact.\nsize(400,320);\npen t = gray(0.55) + 1;\npen ax = gray(0.35) + 1;\nlabel(\"$X$\", (0.2,2.4), W);\nlabel(\"$Y$\", (0.2,0.2), W);\nlabel(\"$X+Y$\", (4.9,1.3), E);\ndraw((0.6,2.2)--(2.3,1.3), t);\ndraw((0.6,0.4)--(2.3,1.3), t);\ndraw((2.3,1.3)--(4.5,1.3), t);\ndraw((5.4,0.5)--(7.8,0.5), ax);\nlabel(\"means add even when the variables are dependent\", (3.6,2.5), N);\n",
+          "asymptoteAlt": "A diagram with two boxes on the left, one above the other, each joined by an arrow to a single box in the middle, which is in turn joined by a horizontal arrow to a short segment on the right labelled X plus Y. A caption above the diagram states that the means add even when the two variables are dependent.",
+          "asymptoteAspectRatio": 1.25
+        }
+      ],
+      "examples": [
+        {
+          "id": "m7-l4-ex-1",
+          "titleLatex": "Worked example: what a game is really worth",
+          "bodyLatex": "A ticket costs $2$ and pays $10$ with probability $\\frac{1}{20}$, paying nothing otherwise. What is the ticket worth?\n\nThe net payoff is $8$ with probability $\\frac{1}{20}$ and $-2$ with probability $\\frac{19}{20}$, so\n\nE[\\text{payoff}] = \\frac{1}{20} \\cdot 8 + \\frac{19}{20} \\cdot (-2) = \\frac{8}{20} - \\frac{38}{20} = -\\frac{3}{2}\n\nThe ticket loses one dollar fifty per play on average, so it is worth less than its price and should be declined. Note that the good outcome, a profit of eight dollars, is the one that looks attractive and is the one that arrives nineteen times out of twenty in reverse.",
+          "answerLatex": "-\\frac{3}{2}"
+        },
+        {
+          "id": "m7-l4-ex-2",
+          "titleLatex": "Worked example: linearity without independence",
+          "bodyLatex": "A card is drawn from a standard deck and its value is taken to be its number, with ace, king, queen and jack all worth $10$. Two cards are drawn without replacement. What is the expected total?\n\nFor a single card the values $2$ through $9$ contribute $4(2+3+\\cdots+9) = 176$, the tens contribute $40$, and the twelve face cards contribute $120$, over $52$ cards, so\n\nE[X] = \\frac{176 + 40 + 120}{52} = \\frac{336}{52} = \\frac{84}{13}.\n\nThe two draws are dependent, but linearity does not care:\n\nE[X + Y] = E[X] + E[Y] = \\frac{168}{13}.",
+          "answerLatex": "\\frac{168}{13}"
+        },
+        {
+          "id": "m7-l4-ex-3",
+          "titleLatex": "Worked example: indicators counting fixed points",
+          "bodyLatex": "Five letters are placed into five addressed envelopes at random. Let $X$ be the number of letters that arrive in their own envelope. What is $E[X]$?\n\nFor each letter define $I_i$ to be $1$ if that letter is correctly placed and $0$ otherwise. Then $X = I_1 + \\cdots + I_5$, and each letter is equally likely to land in any envelope, so $E[I_i] = \\frac{1}{5}$.\n\nE[X] = \\sum_{i=1}^{5} E[I_i] = 5 \\cdot \\frac{1}{5} = 1.\n\nThe letters are thoroughly dependent, since one letter's placement blocks another's, and the answer is unaffected. What surprises most people is not the mean but the spread: the number correctly placed is usually $0$ and only occasionally $2$, $3$, or $4$.",
+          "answerLatex": "1"
+        },
+        {
+          "id": "m7-l4-ex-4",
+          "titleLatex": "Worked example: a maximum found by subtraction",
+          "bodyLatex": "A fair die is rolled twice. What is the expected value of the larger of the two rolls?\n\nLet $U$ and $V$ be the rolls. The minimum takes the value $k$ on $2(6-k) + 1$ of the $36$ ordered pairs, so\n\nE[\\min] = \\frac{1 \\cdot 11 + 2 \\cdot 9 + 3 \\cdot 7 + 4 \\cdot 5 + 5 \\cdot 3 + 6 \\cdot 1}{36} = \\frac{91}{36}.\n\nSince $\\max + \\min = U + V$ on every outcome, linearity gives\n\nE[\\max] = E[U] + E[V] - E[\\min] = \\frac{7}{2} + \\frac{7}{2} - \\frac{91}{36} = \\frac{161}{36}.",
+          "answerLatex": "\\frac{161}{36}"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "expected-value-setup",
+          "name": "List the values, weight them, add once",
+          "summaryLatex": "The expected value of a discrete random variable is one weighted sum over its possible values.",
+          "bodyLatex": "Write\n\n$E[X] = \\sum_x x \\cdot P(X = x)$\n\nwith every value the variable can take. The setup is finished only when the values listed are all of them, and the last step is always the same single weighted sum. Resist the urge to compute a full distribution if only the mean is needed: enumerate the outcomes with their probabilities and add."
+        },
+        {
+          "slug": "weighted-average-reading",
+          "name": "Read the mean as a weighted average",
+          "summaryLatex": "The expected value is a convex combination of the values, so it cannot leave their range.",
+          "bodyLatex": "Because the probabilities are nonnegative and sum to one, the expected value lies between the smallest and the largest value the variable can take, and moving toward whichever value carries more probability pulls it that way. This gives a fast sanity check on arithmetic and a fast way to rank answers: an option outside the range of the variable is wrong before any computation is done."
+        },
+        {
+          "slug": "expectation-of-a-function",
+          "name": "Take the function value, then the weighted sum",
+          "summaryLatex": "The expectation of a function of a variable is the weighted sum of that function's values.",
+          "bodyLatex": "For any function $g$,\n\n$E[g(X)] = \\sum_x g(x) \\cdot P(X = x)$\n\nThe weight stays the probability of $X = x$; only the summand changes from $x$ to $g(x)$. This matters most for the reciprocal, where the small values carry the most weight, and for the square, where the large values do."
+        },
+        {
+          "slug": "linearity-of-expectation",
+          "name": "Add the means, never the outcomes",
+          "summaryLatex": "The expected value of a sum is the sum of the expected values, with no independence required.",
+          "bodyLatex": "For any two random variables, $E[X + Y] = E[X] + E[Y]$. The result is unconditional: the two variables may be dependent, and the computation is unchanged. This is the most useful identity in the topic, because it removes the need to find the joint distribution of variables that have nothing to do with each other."
+        },
+        {
+          "slug": "indicator-variables",
+          "name": "Turn a counting question into a sum of zeroes and ones",
+          "summaryLatex": "For each object in a collection, define an indicator that records whether the event happens to that object.",
+          "bodyLatex": "For the $i$th object let $I_i$ be $1$ if the event occurs to it and $0$ otherwise. Then the count you want is $I_1 + I_2 + \\cdots + I_n$, and\n\n$E[\\text{count}] = \\sum_i E[I_i] = \\sum_i P(\\text{the event occurs to object } i)$\n\nLinearity does all the work, so the indicators need not be independent and the objects need not interact."
+        },
+        {
+          "slug": "symmetry-on-uniforms",
+          "name": "Use the midpoint of the range",
+          "summaryLatex": "A uniform choice from a consecutive set of integers has its mean at the midpoint of that set.",
+          "bodyLatex": "Choosing uniformly from $a, a+1, \\dots, b$ gives an expected value of $\\frac{a+b}{2}$, because the values pair off symmetrically about their midpoint. This shortcut is not available for a maximum or a minimum, whose distributions are skewed by construction, and it is not available for a nonuniform distribution at all."
+        },
+        {
+          "slug": "expected-minimum-and-maximum",
+          "name": "Relate the extreme values back to the sum",
+          "summaryLatex": "Since the maximum of two numbers is their sum minus their minimum, the two means are linked.",
+          "bodyLatex": "For two rolls $X$ and $Y$,\n\n$E[\\max] + E[\\min] = E[X] + E[Y]$\n\nby linearity alone. When the minimum is the easier distribution to enumerate, compute it and subtract from the sum of the means rather than enumerating the maximum directly. The same identity pushes out to more rolls with the alternating sum $E[X_1] + E[X_2] - E[\\min] + E[\\min \\text{ of two}] - \\cdots$."
+        },
+        {
+          "slug": "tail-sum-for-distinct-values",
+          "name": "Convert the mean into a count of levels",
+          "summaryLatex": "For a positive integer-valued variable, the mean is the sum of the chances of reaching each level.",
+          "bodyLatex": "The identity\n\n$E[X] = \\sum_{k=1}^{\\infty} P(X \\ge k)$\n\nholds whenever $X$ takes positive integer values. A variable that is usually small contributes little to this sum, so the tail probabilities drop off quickly and only the first few terms are worth computing. It is also the natural tool for a variable described as a number of trials or a number of objects."
+        },
+        {
+          "slug": "variance-from-moments",
+          "name": "Subtract the square of the mean from the mean of the square",
+          "summaryLatex": "The variance of a discrete variable is $E[X^2] - (E[X])^2$.",
+          "bodyLatex": "Both terms come from the same weighted sums you already know how to compute, so no distribution beyond the mean and the mean of the square is needed. The result measures spread in squared units; its square root is the standard deviation. Because a variance is always nonnegative, a negative answer means one of the two moments was computed with a mistake rather than that the problem was unusual."
+        },
+        {
+          "slug": "fair-game-fairness",
+          "name": "A game is fair exactly when the expected net payoff is zero",
+          "summaryLatex": "Judge a game by its mean payoff rather than by which outcome seems most likely.",
+          "bodyLatex": "Compute the expected winnings, subtract the entry cost or the stake, and compare with zero. A negative mean means the game should be declined no matter how often the good outcome seems likely to come up, because the long run repeats the experiment. This is the one place in the module where an answer that looks wrong, a guaranteed loss on every single play, can still be the right thing to accept."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "expectation-is-not-the-likely-outcome",
+          "titleLatex": "Treating the mean as the typical result",
+          "wrongLatex": "$8$",
+          "whyLatex": "For the ticket above the expected value is a loss, and the outcome people picture, a payout of ten dollars, arrives once in twenty plays. The mean is not a prediction of the next play. It is a statement about an indefinitely repeated experiment, and it says nothing at all about whether the very next play wins.",
+          "fixLatex": "Use the mean to judge a repeated decision, such as whether to buy a ticket at a fixed price. For any single play, work out the actual distribution instead."
+        },
+        {
+          "slug": "symmetrising-an-extreme",
+          "titleLatex": "Averaging the extreme outcomes instead of weighting them",
+          "wrongLatex": "$6$",
+          "whyLatex": "The larger of two dice rolls has possible values $1$ through $6$, but they are not equally likely. A value of $6$ arises only when the pair is $(6,j)$ or $(j,6)$, so it is the least likely outcome of all, and the distribution leans towards small values. Treating the extreme values as a uniform choice gives the mean of the range, which is the answer to a different question.",
+          "fixLatex": "Either enumerate the distribution of the extreme value with its probabilities, or use $E[\\max] + E[\\min] = E[X] + E[Y]$ and enumerate whichever of the two is cheaper."
+        },
+        {
+          "slug": "pushing-a-nonlinear-through",
+          "titleLatex": "Applying a function to the mean",
+          "wrongLatex": "$\\frac{2}{7}$",
+          "whyLatex": "The identity $E[g(X)] = g(E[X])$ is false. For the reciprocal of a fair die the mean of the reciprocals is $\\frac{49}{120}$, which is larger than the reciprocal of the mean, $\\frac{2}{7}$, because the smallest faces carry the most weight in a reciprocal. The square fails in the other direction, since $\\frac{91}{6}$ is far larger than $(\\frac{7}{2})^2$ because the largest face dominates.",
+          "fixLatex": "Take the function value of each possible outcome first, then take the weighted sum. Linearity applies to sums of variables, and only to sums, never to a nonlinear function of one variable."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m7-l4-p1",
+        "m7-l4-p2",
+        "m7-l4-p3",
+        "m7-l4-p4",
+        "m7-l4-p5",
+        "m7-l4-p6",
+        "m7-l4-p7",
+        "m7-l4-p8",
+        "m7-l4-p9",
+        "m7-l4-p10",
+        "m7-l4-p11",
+        "m7-l4-p12",
+        "m7-l4-p13",
+        "m7-l4-p14",
+        "m7-l4-p15",
+        "m7-l4-p16",
+        "m7-l4-p17",
+        "m7-l4-p18",
+        "m7-l4-p19",
+        "m7-l4-p20",
+        "m7-l4-p21",
+        "m7-l4-p22",
+        "m7-l4-p23",
+        "m7-l4-p24",
+        "m7-l4-p25",
+        "m7-l4-p26"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m7-l4-p1",
+        "m7-l4-p2",
+        "m7-l4-p3",
+        "m7-l4-p4",
+        "m7-l4-p5",
+        "m7-l4-p6",
+        "m7-l4-p7",
+        "m7-l4-p8",
+        "m7-l4-p9",
+        "m7-l4-p10",
+        "m7-l4-p11",
+        "m7-l4-p12",
+        "m7-l4-p13",
+        "m7-l4-p14",
+        "m7-l4-p15",
+        "m7-l4-p16",
+        "m7-l4-p17",
+        "m7-l4-p18",
+        "m7-l4-p19",
+        "m7-l4-p20",
+        "m7-l4-p21",
+        "m7-l4-p22",
+        "m7-l4-p23",
+        "m7-l4-p24",
+        "m7-l4-p25",
+        "m7-l4-p26"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m7-l4-m1",
+        "m7-l4-m2",
+        "m7-l4-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "expected-value",
+    "random-variables",
+    "distributions"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "m7-l4-p25",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "expected-value",
+    "distributions"
+  ],
+  "promptLatex": "A fair six-sided die is rolled. If the result is 1 the die is rolled once more and the larger of the two results is kept; otherwise the first result stands. What is the expected value of the score?",
+  "choices": [
+    "\\frac{121}{36}",
+    "\\frac{7}{2}",
+    "\\frac{10}{3}",
+    "\\frac{37}{12}",
+    "\\frac{29}{9}"
+  ],
+  "answerLatex": "\\frac{121}{36}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Split on the first roll: a result of 1 triggers a fresh die, and anything else is kept as it stands.",
+    "With probability $\\frac{5}{6}$ the first roll is kept, contributing $\\frac{2+3+4+5+6}{6} = \\frac{10}{3}$.",
+    "With probability $\\frac{1}{6}$ the second roll decides, and a fresh die averages $\\frac{7}{2}$."
+  ],
+  "solutionLatex": "With probability $\\frac{5}{6}$ the first roll is $2,3,4,5$ or $6$ and is kept, so that branch contributes $\\frac{5}{6} \\cdot \\frac{2+3+4+5+6}{6} = \\frac{5}{6} \\cdot \\frac{10}{3}$.\n\nWith probability $\\frac{1}{6}$ the first roll is $1$, a second roll is made, and its value stands; a fresh die averages $\\frac{7}{2}$.\n\nE = \\frac{5}{6} \\cdot \\frac{10}{3} + \\frac{1}{6} \\cdot \\frac{7}{2} = \\frac{25}{9} + \\frac{7}{12} = \\frac{100 + 21}{36} = \\frac{121}{36}.\n\nThe rule helps only when the first roll is a 1, so the improvement over $\\frac{7}{2}$ is modest.",
+  "techniqueSlugs": [
+    "fair-game-fairness",
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

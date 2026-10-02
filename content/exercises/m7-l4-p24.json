@@ -1,0 +1,35 @@
+{
+  "id": "m7-l4-p24",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "expected-value",
+    "distributions",
+    "geometric-probability"
+  ],
+  "promptLatex": "A fair six-sided die is rolled repeatedly until every one of the six faces has appeared at least once. What is the expected number of rolls needed?",
+  "choices": [
+    "\\frac{147}{10}",
+    "\\frac{49}{4}",
+    "13",
+    "\\frac{37}{2}",
+    "\\frac{24}{5}"
+  ],
+  "answerLatex": "\\frac{147}{10}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Break the waiting time into stages: first a face appears, then a second, and so on.",
+    "After $k$ distinct faces have appeared, the chance the next roll is new is $\\frac{6-k}{6}$, so that stage takes $\\frac{6}{6-k}$ rolls on average.",
+    "Adding the six stage means gives $1 + \\frac{6}{5} + \\frac{6}{4} + \\frac{6}{3} + \\frac{6}{2} + \\frac{6}{1}$."
+  ],
+  "solutionLatex": "Once $k$ distinct faces have appeared, the roll shows a face already seen with probability $\\frac{k}{6}$, so the chance of a new face is $\\frac{6-k}{6}$. The waiting time for that new face therefore has mean $\\frac{6}{6-k}$.\n\nAdding the expected lengths of the six stages,\n\nE = \\frac{6}{6} + \\frac{6}{5} + \\frac{6}{4} + \\frac{6}{3} + \\frac{6}{2} + \\frac{6}{1} = 1 + \\frac{6}{5} + \\frac{3}{2} + 2 + 3 + 6.\n\nIn fractions with denominator $20$ this is $\\frac{20 + 24 + 30 + 40 + 60 + 120}{20} = \\frac{294}{20} = \\frac{147}{10}$.\n\nThe last two stages dominate, because near the end a new face is unlikely and waiting takes a long time.",
+  "techniqueSlugs": [
+    "tail-sum-for-distinct-values",
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

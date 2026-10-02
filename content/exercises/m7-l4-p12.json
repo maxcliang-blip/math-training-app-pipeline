@@ -1,0 +1,35 @@
+{
+  "id": "m7-l4-p12",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "expected-value",
+    "distributions",
+    "complementary-counting"
+  ],
+  "promptLatex": "A card is drawn at random from a standard 52-card deck. A card is worth its number if it is a 2 through 9 and worth 10 if it is an ace, jack, queen or king. What is the expected value of the card?",
+  "choices": [
+    "\\frac{84}{13}",
+    "7",
+    "\\frac{25}{4}",
+    "\\frac{73}{13}",
+    "\\frac{39}{6}"
+  ],
+  "answerLatex": "\\frac{84}{13}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Add the total value of all 52 cards and divide by 52.",
+    "The cards worth $2$ through $9$ total $4(2+3+\\cdots+9) = 176$, the tens contribute $40$, and the 12 face cards contribute $120$.",
+    "The whole deck totals $336$, so the mean is $\\frac{336}{52}$."
+  ],
+  "solutionLatex": "The eight values from $2$ through $9$ each appear on four cards, so they contribute $4(2 + 3 + \\cdots + 9) = 4 \\cdot 44 = 176$. The four tens contribute $40$, and the twelve ace, jack, queen and king cards contribute $12 \\cdot 10 = 120$.\n\nThe deck totals $176 + 40 + 120 = 336$ over $52$ cards, so\n\nE = \\frac{336}{52} = \\frac{84}{13}.",
+  "techniqueSlugs": [
+    "expected-value-setup",
+    "symmetry-on-uniforms"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

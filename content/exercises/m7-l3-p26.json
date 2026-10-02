@@ -1,0 +1,35 @@
+{
+  "id": "m7-l3-p26",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "bayes-theorem",
+    "complementary-counting",
+    "probability"
+  ],
+  "promptLatex": "An urn holds 3 red, 2 white, and 1 blue ball. Three balls are drawn one at a time without replacement. Given that the first and third balls have the same colour, what is the probability that all three balls have the same colour?",
+  "choices": [
+    "\\frac{1}{4}",
+    "\\frac{3}{16}",
+    "\\frac{5}{16}",
+    "\\frac{3}{13}",
+    "\\frac{1}{5}"
+  ],
+  "answerLatex": "\\frac{3}{16}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The condition leaves a restricted sample space of ordered triples, so enumerate it directly.",
+    "With the first and third both red there are $3 \\cdot 2 \\cdot 4 = 24$ ordered triples, and with both white $2 \\cdot 1 \\cdot 4 = 8$.",
+    "There are $32$ such triples, and $3 \\cdot 2 \\cdot 1 = 6$ of them are all red."
+  ],
+  "solutionLatex": "With the first and third balls both red there are $3$ choices for the first, $2$ for the third, and $4$ remaining balls for the second, giving $3 \\cdot 2 \\cdot 4 = 24$ ordered triples. With both white there are $2 \\cdot 1 \\cdot 4 = 8$. With both blue the event is impossible, since there is only one blue ball.\n\nSo the conditioning event contains $24 + 8 = 32$ ordered triples.\n\nFor all three balls to share a colour only red works, since there are just two white balls and one blue ball. The all-red triples number $3 \\cdot 2 \\cdot 1 = 6$.\n\nP(\\text{all same} \\mid \\text{first and third agree}) = \\frac{6}{32} = \\frac{3}{16}",
+  "techniqueSlugs": [
+    "discordant-pair-conditioning",
+    "posterior-normalization"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

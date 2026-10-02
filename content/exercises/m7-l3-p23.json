@@ -1,0 +1,35 @@
+{
+  "id": "m7-l3-p23",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "12",
+  "difficulty": 5,
+  "tags": [
+    "bayes-theorem",
+    "expected-value",
+    "probability"
+  ],
+  "promptLatex": "A box holds two fifths of its coins with two heads and three fifths of its coins that are fair. A coin is drawn at random and flipped, and the flip shows heads. A second flip of the same coin is then made. What is the probability that the second flip also shows heads?",
+  "choices": [
+    "\\frac{7}{10}",
+    "\\frac{3}{5}",
+    "\\frac{11}{14}",
+    "\\frac{4}{7}",
+    "\\frac{9}{14}"
+  ],
+  "answerLatex": "\\frac{11}{14}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The first flip changes the weights of the two kinds of coin, and the second flip must use the new weights.",
+    "The two-headed coins contribute $\\frac{2}{5}$ and the fair coins contribute $\\frac{3}{5} \\cdot \\frac{1}{2} = \\frac{3}{10}$ to the first head, a total of $\\frac{7}{10}$.",
+    "So after the first head the two-headed weight is $\\frac{4}{7}$ and the fair weight is $\\frac{3}{7}$."
+  ],
+  "solutionLatex": "The chance that the first flip is a head is $\\frac{2}{5} \\cdot 1 + \\frac{3}{5} \\cdot \\frac{1}{2} = \\frac{2}{5} + \\frac{3}{10} = \\frac{7}{10}$.\n\nAmong first heads the share produced by the two-headed coins is $\\frac{2/5}{7/10} = \\frac{4}{7}$, and the share produced by the fair coins is $\\frac{3/10}{7/10} = \\frac{3}{7}$.\n\nWith those updated weights the chance the second flip is also a head is\n\n\\frac{4}{7} \\cdot 1 + \\frac{3}{7} \\cdot \\frac{1}{2} = \\frac{4}{7} + \\frac{3}{14} = \\frac{11}{14}",
+  "techniqueSlugs": [
+    "posterior-predictive",
+    "posterior-normalization"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

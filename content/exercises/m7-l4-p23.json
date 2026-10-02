@@ -1,0 +1,34 @@
+{
+  "id": "m7-l4-p23",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "expected-value",
+    "distributions"
+  ],
+  "promptLatex": "Two numbers are chosen independently and at random, each uniformly from the integers 1 through 10. What is the expected value of the larger of the two?",
+  "choices": [
+    "\\frac{143}{20}",
+    "\\frac{11}{2}",
+    "\\frac{27}{5}",
+    "\\frac{61}{10}",
+    "\\frac{14}{5}"
+  ],
+  "answerLatex": "\\frac{143}{20}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Use the tail sum, since the maximum is a positive integer-valued variable.",
+    "The chance that the larger is at least $k$ is $1 - (\\frac{k-1}{10})^2$.",
+    "Summing over $k = 1$ through $10$ gives $10 - \\frac{1}{100}(0 + 1 + 4 + \\cdots + 81)$."
+  ],
+  "solutionLatex": "Let $M$ be the larger of the two numbers. Then $M \\ge k$ exactly when at least one of the two numbers is at least $k$, which fails only when both are below $k$.\n\nP(M \\ge k) = 1 - \\left(\\frac{k-1}{10}\\right)^2.\n\nThe tail sum identity gives\n\nE[M] = \\sum_{k=1}^{10} \\left(1 - \\frac{(k-1)^2}{100}\\right) = 10 - \\frac{1}{100}\\left(0 + 1 + 4 + 9 + 16 + 25 + 36 + 49 + 64 + 81\\right) = 10 - \\frac{285}{100} = \\frac{143}{20}.\n\nThe maximum sits well above the midpoint of the range because it leans towards the large values, which is the opposite of the minimum's bias.",
+  "techniqueSlugs": [
+    "tail-sum-for-distinct-values",
+    "expected-minimum-and-maximum"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

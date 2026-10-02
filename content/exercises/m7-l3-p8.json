@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-p8",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "bayes-theorem",
+    "probability"
+  ],
+  "promptLatex": "A drawer holds one fair coin and one coin with two heads, indistinguishable by appearance. A coin is chosen at random from the drawer and flipped once. Given that the flip shows heads, what is the probability that the coin drawn was the fair one?",
+  "choices": [
+    "\\frac{1}{4}",
+    "\\frac{1}{3}",
+    "\\frac{1}{2}",
+    "\\frac{2}{3}",
+    "\\frac{3}{4}"
+  ],
+  "answerLatex": "\\frac{1}{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Both coins produce heads with positive probability, so both contribute to the evidence.",
+    "The fair coin contributes $\\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$ and the two-headed coin contributes $\\frac{1}{2} \\cdot 1 = \\frac{1}{2}$.",
+    "The total is $\\frac{3}{4}$, and the fair coin's share is $\\frac{1/4}{3/4}$."
+  ],
+  "solutionLatex": "Each coin was drawn with probability $\\frac{1}{2}$. The fair coin shows heads with probability $\\frac{1}{2}$, so its weight is $\\frac{1}{4}$. The two-headed coin always shows heads, so its weight is $\\frac{1}{2}$.\n\nThe total weight on heads is $\\frac{1}{4} + \\frac{1}{2} = \\frac{3}{4}$, and the fair coin's share of it is $\\frac{1}{4}$.\n\nP(\\text{fair} \\mid \\text{heads}) = \\frac{1/4}{3/4} = \\frac{1}{3}",
+  "techniqueSlugs": [
+    "posterior-normalization",
+    "uniform-prior-geometry"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

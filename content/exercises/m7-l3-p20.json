@@ -1,0 +1,33 @@
+{
+  "id": "m7-l3-p20",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "bayes-theorem",
+    "conditional-probability"
+  ],
+  "promptLatex": "A test detects 95 percent of the cases of a condition and reports a positive result for 10 percent of the people who do not have it. One fifth of the population has the condition. A person tests negative. What is the probability that the person does not have the condition?",
+  "choices": [
+    "\\frac{72}{73}",
+    "\\frac{19}{20}",
+    "\\frac{9}{10}",
+    "\\frac{18}{19}",
+    "\\frac{4}{5}"
+  ],
+  "answerLatex": "\\frac{72}{73}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A negative result for someone without the condition is a true negative, so the specificity is needed rather than the sensitivity.",
+    "In a population of $1000$, $200$ have the condition and $10$ of them test negative, while $800$ do not and $720$ of them test negative.",
+    "So $730$ people test negative and $720$ of them are free of the condition."
+  ],
+  "solutionLatex": "Take a population of $1000$. One fifth, or $200$ people, has the condition, and $800$ do not.\n\nOf the $200$ with the condition the test misses $5$ percent, so $0.05 \\cdot 200 = 10$ test negative. Of the $800$ without it the test is negative for $90$ percent, so $0.9 \\cdot 800 = 720$ test negative.\n\nAltogether $730$ people test negative, of whom $720$ do not have the condition.\n\nP(\\text{no condition} \\mid -) = \\frac{720}{730} = \\frac{72}{73}",
+  "techniqueSlugs": [
+    "sensitivity-specificity-split"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

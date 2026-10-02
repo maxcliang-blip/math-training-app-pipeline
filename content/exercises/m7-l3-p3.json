@@ -1,0 +1,35 @@
+{
+  "id": "m7-l3-p3",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "probability",
+    "complementary-counting",
+    "conditional-probability"
+  ],
+  "promptLatex": "A fair six-sided die is rolled twice. Given that the sum of the two rolls is even, what is the probability that the two rolls show the same number?",
+  "choices": [
+    "\\frac{1}{6}",
+    "\\frac{1}{4}",
+    "\\frac{1}{3}",
+    "\\frac{5}{18}",
+    "\\frac{1}{2}"
+  ],
+  "answerLatex": "\\frac{1}{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "An even sum means the two rolls have the same parity, and that restricts the sample space.",
+    "There are $18$ ordered pairs with an even sum, $9$ of them even-even and $9$ odd-odd.",
+    "Of those $18$ pairs, $6$ show the same number on both rolls."
+  ],
+  "solutionLatex": "The sum is even exactly when both rolls are even or both are odd. There are $3 \\cdot 3 = 9$ ordered even-even pairs and $3 \\cdot 3 = 9$ ordered odd-odd pairs, so $18$ of the $36$ ordered pairs give an even sum.\n\nAmong those $18$ pairs the two rolls agree on the six values $1$ through $6$, giving $6$ pairs.\n\nP(\\text{same} \\mid \\text{even sum}) = \\frac{6}{18} = \\frac{1}{3}",
+  "techniqueSlugs": [
+    "posterior-normalization",
+    "uniform-prior-geometry"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

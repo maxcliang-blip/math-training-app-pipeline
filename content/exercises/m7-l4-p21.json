@@ -1,0 +1,34 @@
+{
+  "id": "m7-l4-p21",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "expected-value",
+    "distributions"
+  ],
+  "promptLatex": "A coin shows heads with probability 1 third on every flip. It is flipped until the first tail. What is the expected number of heads shown before that tail?",
+  "choices": [
+    "\\frac{1}{2}",
+    "\\frac{1}{3}",
+    "\\frac{2}{3}",
+    "\\frac{3}{4}",
+    "1"
+  ],
+  "answerLatex": "\\frac{1}{2}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Count the heads before the first tail with an indicator at each position.",
+    "The chance of getting at least $k$ heads before the first tail is $(\\frac{2}{3})^{k}$.",
+    "Adding the geometric series gives $\\sum_{k \\ge 1} (\\frac{2}{3})^{k} = \\frac{2/3}{1 - 2/3}$."
+  ],
+  "solutionLatex": "Let $H$ be the number of heads before the first tail. Then $H \\ge k$ exactly when the first $k$ flips are all heads, which has probability $\\left(\\frac{1}{3}\\right)^{k}$, not the tail form, because the heads all come first.\n\nE[H] = \\sum_{k=1}^{\\infty} P(H \\ge k) = \\sum_{k=1}^{\\infty} \\left(\\frac{1}{3}\\right)^{k} = \\frac{\\frac{1}{3}}{1 - \\frac{1}{3}} = \\frac{1}{2}.\n\nThis is the geometric sum $\\frac{p}{1-p}$ for the number of successes in a row before the first failure, with $p = \\frac{1}{3}$.",
+  "techniqueSlugs": [
+    "tail-sum-for-distinct-values",
+    "indicator-variables"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

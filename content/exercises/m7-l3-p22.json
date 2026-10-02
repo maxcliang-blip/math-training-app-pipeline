@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-p22",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "bayes-theorem",
+    "conditional-probability"
+  ],
+  "promptLatex": "Half of a population has a condition. One screening test detects 80 percent of cases and gives a false positive for 10 percent of healthy people. An independent second test of the same population detects 70 percent of cases and gives a false positive for 5 percent of healthy people. A person tests positive on both. What is the probability that the person has the condition?",
+  "choices": [
+    "\\frac{9}{10}",
+    "\\frac{112}{113}",
+    "\\frac{1}{2}",
+    "\\frac{56}{57}",
+    "\\frac{8}{9}"
+  ],
+  "answerLatex": "\\frac{112}{113}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The two tests are conditionally independent given the condition, so a likelihood is a product of the two directions.",
+    "For a person with the condition the chance of two positives is $0.8 \\cdot 0.7 = 0.56$.",
+    "For a person without it the chance is $0.1 \\cdot 0.05 = 0.005$, giving the ratio $\\frac{0.56}{0.56 + 0.005}$."
+  ],
+  "solutionLatex": "Because half the population has the condition, the prior odds are $1$.\n\nFor a person who has the condition, the two independent tests are both positive with probability $0.8 \\cdot 0.7 = 0.56$. For a person who does not, both are positive with probability $0.1 \\cdot 0.05 = 0.005$.\n\nThe posterior odds are therefore $\\frac{0.56}{0.005} = 112$, which means\n\nP(\\text{condition} \\mid ++) = \\frac{112}{113}",
+  "techniqueSlugs": [
+    "prior-times-likelihood",
+    "odds-form-of-bayes"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
