@@ -184,7 +184,7 @@ const TAG_TOPIC = [
   // other is measured from a point inside and pairs the two halves of one chord. Same
   // underlying invariant, opposite pairings, and the pairing is the whole of the arithmetic.
   "power-of-a-point", "intersecting-chords", "trapezoids", "circle-area", "arc-length",
-  "volume", "surface-area", "composite-solids", "inradius",
+  "volume", "surface-area", "composite-solids", "inradius", "midsegment", "areas",
 ];
 
 const TAG_TECHNIQUE = [

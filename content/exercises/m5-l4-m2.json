@@ -1,0 +1,30 @@
+{
+  "id": "m5-l4-m2",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "regular-polygons",
+    "polygons",
+    "triangles",
+    "area-of-triangles"
+  ],
+  "promptLatex": "A regular hexagon has side length $4$. What is the distance between two of its vertices that have exactly one other vertex between them, expressed in simplest radical form?",
+  "choices": null,
+  "answerLatex": "4\\sqrt{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "In a regular hexagon the centre is as far from each vertex as the side is long.",
+    "Two vertices with one between them subtend $120^{\\circ}$ at the centre.",
+    "That gives an isoceles triangle with sides $4$ and $4$ and a $120^{\\circ}$ vertex angle, so the base is $\\sqrt{48} = 4\\sqrt{3}$."
+  ],
+  "solutionLatex": "A regular hexagon splits into six congruent equilateral triangles when segments are drawn from its centre to the vertices, so each central angle is $360^{\\circ} / 6 = 60^{\\circ}$ and the distance from the centre to each vertex equals the side length $4$.\n\nTwo vertices with exactly one vertex between them are therefore $2 \\cdot 60^{\\circ} = 120^{\\circ}$ apart as seen from the centre. Join the centre to them: this gives an isoceles triangle with two sides of $4$, an included angle of $120^{\\circ}$, and the required distance as its base.\n\nBisect that $120^{\\circ}$ angle. Each half is a right triangle with hypotenuse $4$ and a $60^{\\circ}$ angle, so the side opposite the $60^{\\circ}$ angle is $\\frac{\\sqrt{3}}{2} \\cdot 4 = 2\\sqrt{3}$. The full base is twice that, namely $4\\sqrt{3}$.",
+  "techniqueSlugs": [
+    "regular-polygon-triangulation",
+    "apothem-perimeter"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

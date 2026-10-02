@@ -1,0 +1,29 @@
+{
+  "id": "m5-l4-p7",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "regular-polygons",
+    "polygons",
+    "area-of-triangles"
+  ],
+  "promptLatex": "A regular hexagon has side length $6$. What is the area of the hexagon, expressed in simplest radical form?",
+  "choices": null,
+  "answerLatex": "54\\sqrt{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Cut the hexagon into congruent triangles by drawing segments from its centre to every vertex.",
+    "Each of the six triangles has two sides equal to the hexagon's side, with a $120^{\\circ}$ angle between them.",
+    "Six times $\\frac{\\sqrt{3}}{4} \\cdot 6^{2}$ is $54\\sqrt{3}$."
+  ],
+  "solutionLatex": "The centre of a regular hexagon is $6$ units from every vertex, because the six triangles the centre forms are equilateral. Consecutive vertices therefore subtend $60^{\\circ}$ at the centre.\n\nDrop a perpendicular from the centre to one side. It bisects that side into two segments of $3$ and cuts the $60^{\\circ}$ central angle into two $30^{\\circ}$ angles, so the resulting right triangle has hypotenuse $6$, short leg $3$, and long leg $3\\sqrt{3}$. Its area is $\\frac{1}{2} \\cdot 3 \\cdot 3\\sqrt{3} = \\frac{9\\sqrt{3}}{2}$.\n\nThere are twelve such half-triangles in the hexagon, so the area is $12 \\cdot \\frac{9\\sqrt{3}}{2} = 54\\sqrt{3}$.",
+  "techniqueSlugs": [
+    "regular-polygon-triangulation",
+    "apothem-area"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

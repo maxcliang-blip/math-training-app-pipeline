@@ -1,0 +1,35 @@
+{
+  "id": "m5-l4-p14",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "volume",
+    "surface-area",
+    "composite-solids"
+  ],
+  "promptLatex": "A cone has radius $6$ and perpendicular height $8$. What is the total surface area of the cone, in terms of $\\pi$?",
+  "choices": [
+    "36\\pi",
+    "60\\pi",
+    "84\\pi",
+    "96\\pi",
+    "120\\pi"
+  ],
+  "answerLatex": "96\\pi",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A cone's surface is one circular base and one curved part.",
+    "The curved part is $\\pi$ times the radius times the slant height, and the slant height comes from a right triangle with legs $6$ and $8$.",
+    "The slant height is $\\sqrt{6^{2} + 8^{2}} = 10$, so the total is $36\\pi + 60\\pi = 96\\pi$."
+  ],
+  "solutionLatex": "Drop a perpendicular from the apex to the centre of the base. That segment is the height $8$, the radius to the rim is $6$, and the segment from the apex to the rim is the slant height; the three form a right triangle, so the slant height is $\\sqrt{6^{2} + 8^{2}} = \\sqrt{100} = 10$.\n\nThe base contributes $\\pi r^{2} = 36\\pi$. The curved part unrolls into a sector of radius $10$ whose arc length is the base circumference $2 \\pi r = 12\\pi$, so its area is $\\frac{1}{2} \\cdot 10 \\cdot 12\\pi = 60\\pi$.\n\nThe total surface area is $36\\pi + 60\\pi = 96\\pi$. Note that the volume formula wants $8$ and not $10$, because it takes the perpendicular height and not the slant height.",
+  "techniqueSlugs": [
+    "surface-area-lateral-plus-base",
+    "pyramid-and-cone-volume"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

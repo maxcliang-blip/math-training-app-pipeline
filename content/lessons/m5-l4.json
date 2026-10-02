@@ -1,0 +1,280 @@
+{
+  "id": "m5-l4",
+  "moduleId": "M5",
+  "order": 4,
+  "title": "Area and Volume",
+  "topicSlug": "area-and-volume",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 80,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m5-l2"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Compute the area of a triangle, a quadrilateral, a regular polygon, a sector, and a region built from those pieces, then carry the same reasoning into space to find the volume and the surface area of a prism, a cylinder, a pyramid, a cone, and a sphere, in AMC-10, AMC-12, and AIME configurations."
+    },
+    "prerequisites": {
+      "items": [
+        "m5-l2"
+      ],
+      "noteLatex": "Area scaling under similarity comes from $m5$-$l2$: perimeters scale by $k$ and areas by $k^{2}$. The altitude-to-the-hypotenuse relations there are the same right-triangle Pythagorean theorem used here to reach a slant height. The circle facts come from $m5$-$l3$, where the central angle already divides a circle into $360$ equal parts."
+    },
+    "concept": {
+      "conceptLatex": "A triangle's area is $\\frac{1}{2}bh$, where $b$ is any chosen side and $h$ is the perpendicular distance from the opposite vertex to the **line** carrying that side. The word *line* is the whole content of the subtlety: when the angle at one end of the base is obtuse the altitude lands outside the triangle, and the formula is unchanged. Because the area does not depend on which side is chosen, the working rule is to pick the longest side as the base, which makes $h$ as small as the arithmetic allows.\n\nThe quadrilaterals follow by cutting into triangles. A parallelogram is $\\frac{1}{2}bh$ after halving it, and a rhombus is $\\frac{1}{2}d_1 d_2$ because its diagonals are perpendicular bisectors of each other, which splits it into four congruent right triangles with legs $\\frac{1}{2}d_1$ and $\\frac{1}{2}d_2$. A trapezoid's area is $\\frac{1}{2}(b_1 + b_2)h$, and since the midsegment $m$ joining the midpoints of the non-parallel sides equals $\\frac{1}{2}(b_1 + b_2)$, the same area is simply $mh$.\n\nWhen the three sides are all that is known, Heron's formula takes over: with semiperimeter $s = \\frac{a+b+c}{2}$, the area is $\\sqrt{s(s-a)(s-b)(s-c)}$. It carries one extra fact with it, the inradius relation $K = rs$, which comes from cutting the triangle at the centre of its inscribed circle into three triangles of height $r$ and adding their areas.\n\nA regular polygon splits into as many congruent isoceles triangles as it has sides, each with base $s$ and height equal to the **apothem** $a$, the perpendicular distance from the centre to a side. So the area is $\\frac{1}{2}Pa$ for perimeter $P$, and the apothem should not be confused with the radius $\\pi a^{2}$ is the area of the circle *inscribed in* the polygon rather than of the polygon. On a circle, area is $\\pi r^{2}$, circumference is $2\\pi r$, and a central angle divides both the same way, so an arc is $\\frac{\\theta}{360} \\cdot 2\\pi r$ long and a sector is $\\frac{\\theta}{360} \\cdot \\pi r^{2}$ in area. Once the angle is measured in radians the two collapse into one formula, a sector being $\\frac{1}{2} r^{2}\\theta$.\n\nInto space, a prism has volume $Bh$ and a pyramid or cone has $\\frac{1}{3}Bh$ over the same base and height, so a cone of radius $r$ and height $h$ holds $\\frac{1}{3}\\pi r^{2}h$. A sphere of radius $r$ has volume $\\frac{4}{3}\\pi r^{3}$ and surface area $4\\pi r^{2}$, the latter being four times its great circle. Total surface area is always the lateral or sloped part plus the flat faces that are actually exposed, which is why a closed cylinder carries $2\\pi r^{2} + 2\\pi rh$ while a cone carries $\\pi r^{2} + \\pi r \\ell$ with $\\ell$ the slant height from a right triangle on the radius and the height. A solid assembled from a cylinder and a cone has a volume equal to the sum of the parts, and that sum is the only step a composite solid adds to the list. The volume formulas always want the perpendicular height; only the surface formulas want $\\ell$.",
+      "figures": [
+        {
+          "id": "m5-l4-fig-1",
+          "captionLatex": "A trapezoid cut by its midsegment: the midsegment is the average of the two parallel sides, and multiplying it by the height gives the area directly.",
+          "asymptoteSource": "size(300,200);\npen p = currentpen;\npair A = (0,0);\npair B = (7,0);\npair C = (5.4,3);\npair D = (1.6,3);\ndraw(A--B--C--D--cycle);\ndraw((1.6,0)--(1.6,3), dashed);\ndraw((5.4,0)--(5.4,3), dashed);\ndraw((1.6,1.5)--(5.4,1.5), dotted+linewidth(1.2));\nlabel(\"$A$\", A, SW);\nlabel(\"$B$\", B, SE);\nlabel(\"$C$\", C, NE);\nlabel(\"$D$\", D, NW);\nlabel(\"$b_1$\", (3.5,0), S);\nlabel(\"$b_2$\", (3.5,3), N);\nlabel(\"$h$\", (1.6,1.5), W);\nlabel(\"$m$\", (3.5,1.5), E);",
+          "asymptoteAlt": "A trapezoid with a long horizontal bottom side and a shorter horizontal top side. Two dashed vertical lines drop from the top corners to the bottom side, and a dotted horizontal segment joins the two dashed lines halfway up. The two parallel sides, the height, and the midsegment are each labelled.",
+          "asymptoteAspectRatio": 1.5
+        },
+        {
+          "id": "m5-l4-fig-2",
+          "captionLatex": "A regular hexagon split into triangles from its centre: each triangle has two sides equal to the hexagon's side, and the perpendicular from the centre to a side is the apothem.",
+          "asymptoteSource": "import graph;\nsize(240,240);\npen p = currentpen;\ndraw(scale(2)*polygon(6));\npair O = (0,0);\npair A = dir(0);\npair B = dir(60);\npair M = (A+B)/2;\ndraw(O--A--B);\ndraw(O--M);\ndot(O); dot(A); dot(B); dot(M);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, SE);\nlabel(\"$B$\", B, NW);\nlabel(\"$M$\", M, E);\nlabel(\"$a$\", M/2, S);\nlabel(\"$s$\", (A+B)/2 + (0,0.3), NE);",
+          "asymptoteAlt": "A regular hexagon with its centre marked. One corner triangle is outlined with two segments from the centre to two adjacent vertices, and a third segment from the centre to the midpoint of the side joining those two vertices. The centre, the two vertices, and that midpoint are all marked with dots, and the radii, the apothem, and the side are labelled.",
+          "asymptoteAspectRatio": 1.0
+        },
+        {
+          "id": "m5-l4-fig-3",
+          "captionLatex": "A sector is the piece of the disc cut off by two radii: its area and its arc length are the central angle's fraction of the whole, taken out of the full area and the full circumference.",
+          "asymptoteSource": "import graph;\nsize(240,230);\npen p = currentpen;\npair O = (0,0);\ndraw(scale(2)*unitcircle, lightgray);\npair A = dir(150);\npair B = dir(30);\nfill(O--A--arc(O,2,A,B)--cycle, white);\ndraw(scale(2)*unitcircle);\ndraw(O--A); draw(O--B);\ndot(O);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, W);\nlabel(\"$B$\", B, E);\nlabel(\"$r$\", A/2, NW);\nlabel(\"$\\\\theta$\", O + (0,0.45), N);",
+          "asymptoteAlt": "A circle with a wedge-shaped piece of its interior left blank and the rest of the disc shaded lightly. Two radii bound the blank wedge, the centre is marked with a dot, and the radius and the central angle are labelled.",
+          "asymptoteAspectRatio": 1.043
+        },
+        {
+          "id": "m5-l4-fig-4",
+          "captionLatex": "A pyramid stands on a polygonal base: the volume is one third of the base area times the perpendicular height, and the surface area adds the lateral faces to the base.",
+          "asymptoteSource": "size(240,260);\npen p = currentpen;\npair A = (-2,-1.1);\npair B = (2,-1.1);\npair C = (2,0.9);\npair D = (-2,0.9);\npair V = (0,2.4);\npair M = (0,0.9);\ndraw(A--B--C--D--cycle);\ndraw(V--A); draw(V--B); draw(V--C); draw(V--D);\ndraw(V--M, dashed);\ndot(V); dot(M);\nlabel(\"$V$\", V, N);\nlabel(\"$M$\", M, E);\nlabel(\"$h$\", (0,1.65), W);\nlabel(\"base\", (0,-1.1), S);",
+          "asymptoteAlt": "A pyramid drawn over a four-sided base shown as a flat parallelogram, with four edges running from the top vertex down to the base corners. A dashed segment drops from the top vertex to the centre of the base, and the height along it is labelled.",
+          "asymptoteAspectRatio": 0.923
+        }
+      ],
+      "examples": [
+        {
+          "id": "m5-l4-ex-1",
+          "titleLatex": "Worked example: Heron's formula on a $13$, $14$, $15$ triangle",
+          "bodyLatex": "Heron's formula turns three side lengths into an area. With sides $13$, $14$, and $15$, the semiperimeter is $s = \\frac{13 + 14 + 15}{2} = 21$.\n\nSubstitute each side as a difference from $s$: the three differences are $21 - 13 = 8$, $21 - 14 = 7$, and $21 - 15 = 6$. So the area is $\\sqrt{21 \\cdot 8 \\cdot 7 \\cdot 6} = \\sqrt{7056} = 84$.\n\nPassing the full perimeter $42$ where the semiperimeter belongs would give $\\sqrt{42 \\cdot 29 \\cdot 28 \\cdot 27}$, which is not an area any triangle with these sides could have — a useful sanity check, since the area can never exceed the area of the square on its longest side.",
+          "answerLatex": "$84$"
+        },
+        {
+          "id": "m5-l4-ex-2",
+          "titleLatex": "Worked example: a regular polygon from its apothem",
+          "bodyLatex": "A regular hexagon has side length $4$.\n\nDrop a perpendicular from the centre to each of the six sides. Each one bisects the side it lands on and gives six congruent isoceles triangles with a side of the hexagon as their base and the apothem as their height.\n\nIn a regular hexagon the apothem is $\\frac{\\sqrt{3}}{2}$ times the side, so $a = 2\\sqrt{3}$, and the perimeter is $P = 24$. The area is therefore $\\frac{1}{2}Pa = \\frac{1}{2} \\cdot 24 \\cdot 2\\sqrt{3} = 24\\sqrt{3}$.\n\nThe midpoint of every side is a distance $2\\sqrt{3}$ from the centre, so the same hexagon is also the disc of that radius with six triangles removed. That disc has area $\\pi \\cdot (2\\sqrt{3})^{2} = 12\\pi$, and $24\\sqrt{3} > 12\\pi$ because the corners stick out past it. Which of the two a question wants is settled by whether it asks for the polygon or for the circle inscribed in it.",
+          "answerLatex": "$24\\sqrt{3}$"
+        },
+        {
+          "id": "m5-l4-ex-3",
+          "titleLatex": "Worked example: arc length and sector area from one angle",
+          "bodyLatex": "An arc of a circle of radius $10$ is cut off by a central angle of $72^{\\circ}$.\n\nThe angle is $\\frac{72}{360} = \\frac{1}{5}$ of a full turn, and both the circumference and the area of the circle are divided the same way. The circumference is $2\\pi r = 20\\pi$, so the arc is $\\frac{1}{5} \\cdot 20\\pi = 4\\pi$.\n\nThe area of the circle is $\\pi r^{2} = 100\\pi$, so the sector is $\\frac{1}{5} \\cdot 100\\pi = 20\\pi$.\n\nBoth numbers fall out of the same fraction, which is why they are worth computing together whenever one of them is known.",
+          "answerLatex": "$4\\pi$"
+        },
+        {
+          "id": "m5-l4-ex-4",
+          "titleLatex": "Worked example: a cone's surface, and where the slant height comes from",
+          "bodyLatex": "A cone has radius $6$ and perpendicular height $8$.\n\nThe slant height is not given, and it is not the height. Drop a perpendicular from the apex to the centre of the base: that segment is the height $8$, the radius to the rim is $6$, and the segment from the apex to the rim of the base is the slant height. They form a right triangle, so the slant height is $\\sqrt{6^{2} + 8^{2}} = \\sqrt{100} = 10$.\n\nThe surface is one circular base of area $\\pi r^{2} = 36\\pi$ plus a lateral part that unrolls into a sector of radius $10$ and arc length $2\\pi r = 12\\pi$, and the area of that sector is $\\frac{1}{2} \\cdot 10 \\cdot 12\\pi = 60\\pi$. The total surface area is $36\\pi + 60\\pi = 96\\pi$.\n\nUsing $10$ in the volume formula instead of $8$ would give $\\frac{1}{3} \\cdot 36\\pi \\cdot 10 = 120\\pi$, which is the standard error: the volume wants the perpendicular height, and only the surface area wants the slant height.",
+          "answerLatex": "$96\\pi$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "triangle-area-from-base-height",
+          "name": "Triangle area from a base and its height",
+          "summaryLatex": "\\text{The area of a triangle is half the base times the perpendicular height to the line through that base.}",
+          "bodyLatex": "\\text{With base } b \\text{ and height } h, \\text{ the area is } \\frac{1}{2}bh. \\text{ The height is the distance to the line, so an altitude that lands outside the triangle still works.}"
+        },
+        {
+          "slug": "polygon-rectangle-decomposition",
+          "name": "Decompose into rectangles",
+          "summaryLatex": "\\text{An irregular figure's area is found by cutting it into rectangles and triangles and adding.}",
+          "bodyLatex": "\\text{Drop perpendiculars from the vertices that need them; the pieces then have computable areas and nothing overlaps.}"
+        },
+        {
+          "slug": "rhombus-diagonal-area",
+          "name": "Area of a rhombus from its diagonals",
+          "summaryLatex": "\\text{The diagonals of a rhombus are perpendicular and bisect each other.}",
+          "bodyLatex": "\\text{With diagonals } d_1 \\text{ and } d_2, \\text{ the four half-diagonals form congruent right triangles and } A = \\frac{1}{2} d_1 d_2."
+        },
+        {
+          "slug": "trapezoid-midsegment-area",
+          "name": "Trapezoid area and midsegment",
+          "summaryLatex": "\\text{A trapezoid's area is the average of its parallel sides times the height between them.}",
+          "bodyLatex": "\\text{With parallel sides } b_1, b_2 \\text{ and height } h, \\text{ the area is } \\frac{1}{2}(b_1 + b_2)h. \\text{ The midsegment } m = \\frac{1}{2}(b_1 + b_2) \\text{ so } A = mh."
+        },
+        {
+          "slug": "regular-polygon-triangulation",
+          "name": "Split a regular polygon into triangles from its centre",
+          "summaryLatex": "\\text{Drawing segments from the centre to every vertex cuts a regular } n \\text{-gon into } n \\text{ congruent triangles.}",
+          "bodyLatex": "\\text{Each triangle has base } s \\text{ and height } a, \\text{ the apothem, so the areas sum to } \\frac{1}{2} n s a."
+        },
+        {
+          "slug": "apothem-perimeter",
+          "name": "Apothem and perimeter of a regular polygon",
+          "summaryLatex": "\\text{The apothem is the perpendicular distance from the centre to a side, and it bisects that side.}",
+          "bodyLatex": "\\text{With side } s \\text{ and apothem } a, \\text{ each half-side is } \\sqrt{r^{2} - a^{2}} \\text{ where } r \\text{ is the circumradius.}"
+        },
+        {
+          "slug": "apothem-area",
+          "name": "Area of a regular polygon from its apothem",
+          "summaryLatex": "\\text{A regular polygon's area is half its perimeter times its apothem.}",
+          "bodyLatex": "\\text{With perimeter } P \\text{ and apothem } a, \\text{ the area is } A = \\frac{1}{2} P a."
+        },
+        {
+          "slug": "heron-area",
+          "name": "Heron's formula",
+          "summaryLatex": "\\text{Three side lengths determine an area through the semiperimeter.}",
+          "bodyLatex": "\\text{With semiperimeter } s = \\frac{a + b + c}{2}, \\text{ the area is } K = \\sqrt{s(s-a)(s-b)(s-c)}."
+        },
+        {
+          "slug": "inradius-from-area",
+          "name": "Inradius from the area",
+          "summaryLatex": "\\text{Joining an inscribed circle's centre to the vertices cuts the triangle into pieces of height equal to the radius.}",
+          "bodyLatex": "\\text{Those areas sum to the whole, so } K = \\frac{1}{2} r (a + b + c) = r s \\text{ and } r = \\frac{K}{s}."
+        },
+        {
+          "slug": "area-scaling-from-scale",
+          "name": "Area scales as the square of the scale factor",
+          "summaryLatex": "\\text{Perimeter scales by } k \\text{ and area by } k^{2} \\text{ for similar figures.}",
+          "bodyLatex": "\\text{So a linear ratio of } 4:3 \\text{ gives an area ratio of } 16:9, \\text{ and a perimeter ratio of } 4:3."
+        },
+        {
+          "slug": "circle-area-formula",
+          "name": "Area of a circle",
+          "summaryLatex": "\\text{The area of a circle is the square of its radius times } \\pi.",
+          "bodyLatex": "\\text{So a circle of radius } r \\text{ encloses } \\pi r^{2}, \\text{ and its circumference is } 2 \\pi r."
+        },
+        {
+          "slug": "radius-times-angle",
+          "name": "Length from radius times angle",
+          "summaryLatex": "\\text{An arc or sector is the fraction of the whole that its central angle takes of a full turn.}",
+          "bodyLatex": "\\text{With angle } \\theta \\text{ out of } 360^{\\circ}, \\text{ the arc is } \\frac{\\theta}{360} \\cdot 2 \\pi r \\text{ and the sector is } \\frac{\\theta}{360} \\cdot \\pi r^{2}."
+        },
+        {
+          "slug": "sector-area-formula",
+          "name": "Sector area from the central angle",
+          "summaryLatex": "\\text{A sector of angle } \\theta \\text{ in a circle of radius } r \\text{ has area } \\frac{1}{2} r^{2}\\theta \\text{ with } \\theta \\text{ in radians.}",
+          "bodyLatex": "\\text{With } \\theta \\text{ in degrees, the same quantity is } \\frac{\\theta}{360} \\pi r^{2}."
+        },
+        {
+          "slug": "arc-length-from-central-angle",
+          "name": "Arc length from the central angle",
+          "summaryLatex": "\\text{An arc's length is its fraction of the circumference, set by its central angle.}",
+          "bodyLatex": "\\text{With angle } \\theta \\text{ out of } 360^{\\circ} \\text{ in a circle of radius } r, \\text{ the arc measures } \\frac{\\theta}{360} \\cdot 2 \\pi r."
+        },
+        {
+          "slug": "prism-and-cylinder-volume",
+          "name": "Volume of a prism or a cylinder",
+          "summaryLatex": "\\text{A prism's volume is the area of its base times the distance between the two bases.}",
+          "bodyLatex": "\\text{So a cylinder of radius } r \\text{ and height } h \\text{ has volume } \\pi r^{2} h."
+        },
+        {
+          "slug": "pyramid-and-cone-volume",
+          "name": "Volume of a pyramid or a cone",
+          "summaryLatex": "\\text{A pyramid or cone has one third the volume of the prism with the same base and height.}",
+          "bodyLatex": "\\text{So } V = \\frac{1}{3} Bh, \\text{ and a cone of radius } r \\text{ and height } h \\text{ has volume } \\frac{1}{3} \\pi r^{2} h."
+        },
+        {
+          "slug": "sphere-volume-and-area",
+          "name": "Volume and surface area of a sphere",
+          "summaryLatex": "\\text{A sphere of radius } r \\text{ has volume } \\frac{4}{3} \\pi r^{3} \\text{ and surface area } 4 \\pi r^{2}.",
+          "bodyLatex": "\\text{The surface area is four times the area of the great circle, and the volume is one third of the circumscribing cylinder.}"
+        },
+        {
+          "slug": "surface-area-lateral-plus-base",
+          "name": "Surface area is lateral area plus the bases",
+          "summaryLatex": "\\text{A solid's total surface area is its curved or sloped part plus whichever flat faces are exposed.}",
+          "bodyLatex": "\\text{For a cone that is } \\pi r^{2} + \\pi r l \\text{ with } l \\text{ the slant height; for a closed cylinder, } 2 \\pi r^{2} + 2 \\pi r h."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "slant-height-used-as-height",
+          "titleLatex": "Using the slant height as the height in a cone's volume",
+          "wrongLatex": "$V = \\frac{1}{3} \\cdot \\pi \\cdot 6^{2} \\cdot 10 = 120\\pi$",
+          "whyLatex": "\\text{The volume of a cone is one third of the base area times the perpendicular height, and the slant height runs from the apex to the rim of the base rather than down to the centre of it.}",
+          "fixLatex": "\\text{Use the height measured straight down from the apex to the centre of the base. The slant height belongs to the surface area, where it multiplies the base radius.}"
+        },
+        {
+          "slug": "perimeter-into-heron",
+          "titleLatex": "Passing the perimeter to Heron's formula",
+          "wrongLatex": "$K = \\sqrt{42 \\cdot 29 \\cdot 28 \\cdot 27}$",
+          "whyLatex": "\\text{Heron's formula takes the semiperimeter, which is half the perimeter. A full perimeter in that slot inflates every factor and produces an area larger than the square on the longest side, which no triangle can have.}",
+          "fixLatex": "\\text{Compute } s = \\frac{a + b + c}{2} \\text{ first, then substitute } s \\text{ and the three differences } s - a, s - b, s - c."
+        },
+        {
+          "slug": "circle-inscribed-in-a-polygon",
+          "titleLatex": "Reading a regular polygon as its inscribed circle",
+          "wrongLatex": "$A = \\pi a^{2}$ for a regular polygon with apothem $a$",
+          "whyLatex": "\\text{That is the area of the circle inscribed in the polygon, which is strictly smaller than the polygon itself because the polygon's corners lie outside the circle.}",
+          "fixLatex": "\\text{Use } A = \\frac{1}{2}Pa, \\text{ the sum of the triangles whose bases are the sides and whose common height is the apothem.}"
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m5-l4-p1",
+        "m5-l4-p2",
+        "m5-l4-p3",
+        "m5-l4-p4",
+        "m5-l4-p5",
+        "m5-l4-p6",
+        "m5-l4-p7",
+        "m5-l4-p8",
+        "m5-l4-p9",
+        "m5-l4-p10",
+        "m5-l4-p11",
+        "m5-l4-p12",
+        "m5-l4-p13",
+        "m5-l4-p14",
+        "m5-l4-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m5-l4-p1",
+        "m5-l4-p2",
+        "m5-l4-p3",
+        "m5-l4-p4",
+        "m5-l4-p5",
+        "m5-l4-p6",
+        "m5-l4-p7",
+        "m5-l4-p8",
+        "m5-l4-p9",
+        "m5-l4-p10",
+        "m5-l4-p11",
+        "m5-l4-p12",
+        "m5-l4-p13",
+        "m5-l4-p14",
+        "m5-l4-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m5-l4-m1",
+        "m5-l4-m2",
+        "m5-l4-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "area-of-triangles",
+    "trapezoids",
+    "circle-area",
+    "arc-length",
+    "volume",
+    "surface-area",
+    "inradius",
+    "composite-solids"
+  ]
+}
