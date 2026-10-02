@@ -1,0 +1,28 @@
+{
+  "id": "m7-l2-p26",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "bayes-theorem",
+    "distributions"
+  ],
+  "promptLatex": "A factory makes $60$ percent of its items on machine $M_1$ and $40$ percent on machine $M_2$. The defect rate is $2$ percent on $M_1$ and $5$ percent on $M_2$. An item produced by this factory is found to be defective. The probability that it came from $M_1$ is $\\frac{m}{n}$ in lowest terms. Find $m + n$.",
+  "choices": null,
+  "answerLatex": "11",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Consider a large batch of items and count how many defective items each machine contributes.",
+    "Out of $100$ items, $60$ come from $M_1$ and of those about $1.2$ are defective; of the $40$ from $M_2$ about $2$ are defective.",
+    "So the answer is $\\frac{1.2}{1.2 + 2} = \\frac{3}{8}$, and $m + n = 11$."
+  ],
+  "solutionLatex": "Consider $100$ items. $60$ come from $M_1$ and $40$ from $M_2$.\n\nThe number of defective items from $M_1$ is $60 \\cdot 0.02 = 1.2$, and the number from $M_2$ is $40 \\cdot 0.05 = 2$. Defective items from the two machines are disjoint families, so $3.2$ items in the batch are defective.\n\nBayes' theorem gives $P(M_1 \\mid \\text{defective}) = \\frac{1.2}{3.2} = \\frac{12}{32} = \\frac{3}{8}$, which is in lowest terms, so $m + n = 3 + 8 = 11$. Even though $M_1$ makes the larger share of the output, its lower defect rate means less than half of the defective items come from it.",
+  "techniqueSlugs": [
+    "bayes-reversal",
+    "law-of-total-probability"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

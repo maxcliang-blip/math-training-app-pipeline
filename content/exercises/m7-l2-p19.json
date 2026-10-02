@@ -1,0 +1,29 @@
+{
+  "id": "m7-l2-p19",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 3,
+  "tags": [
+    "expected-value",
+    "random-variables"
+  ],
+  "promptLatex": "A random variable $X$ takes the value $1$ with probability $\\frac{1}{2}$, the value $2$ with probability $\\frac{1}{3}$ and the value $3$ with probability $\\frac{1}{6}$. What is the expected value of $X$?",
+  "choices": null,
+  "answerLatex": "\\frac{5}{3}",
+  "answerAlternatives": [
+    "5/3"
+  ],
+  "hintLatex": [
+    "Check that the listed probabilities form a complete distribution before averaging.",
+    "The probabilities sum to $\\frac{1}{2} + \\frac{1}{3} + \\frac{1}{6} = 1$, so nothing is missing.",
+    "The expectation is $1 \\cdot \\frac{1}{2} + 2 \\cdot \\frac{1}{3} + 3 \\cdot \\frac{1}{6} = \\frac{5}{3}$."
+  ],
+  "solutionLatex": "The probabilities $\\frac{1}{2}, \\frac{1}{3}, \\frac{1}{6}$ sum to $1$, so the distribution is complete.\n\nThe expected value is the weighted average\n\n$\\mathbb{E}[X] = 1 \\cdot \\frac{1}{2} + 2 \\cdot \\frac{1}{3} + 3 \\cdot \\frac{1}{6} = \\frac{3}{6} + \\frac{4}{6} + \\frac{3}{6} = \\frac{10}{6} = \\frac{5}{3}$.\n\nThe value $\\frac{5}{3}$ is not one of the possible values of $X$, which is normal for an expectation.",
+  "techniqueSlugs": [
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

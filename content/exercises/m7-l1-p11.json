@@ -1,0 +1,33 @@
+{
+  "id": "m7-l1-p11",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "probability",
+    "complementary-counting"
+  ],
+  "promptLatex": "A fair six-sided die is rolled twice. What is the probability that at least one of the two rolls shows a $6$?",
+  "choices": [
+    "\\frac{5}{18}",
+    "\\frac{11}{36}",
+    "\\frac{1}{6}",
+    "\\frac{25}{36}",
+    "\\frac{1}{3}"
+  ],
+  "answerLatex": "\\frac{11}{36}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The complementary event has no six on either roll, which makes both rolls come from five faces.",
+    "There are $6 \\cdot 6 = 36$ ordered pairs, and $5 \\cdot 5 = 25$ of them contain no six at all.",
+    "So the answer is $1 - \\frac{25}{36} = \\frac{11}{36}$."
+  ],
+  "solutionLatex": "The sample space is the $36$ ordered pairs of faces.\n\nThe complementary event is that neither roll is a $6$. Each roll then has $5$ possibilities, so there are $5 \\cdot 5 = 25$ such pairs.\n\nTherefore $P(\\text{at least one six}) = 1 - \\frac{25}{36} = \\frac{11}{36}$.",
+  "techniqueSlugs": [
+    "complementary-count"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

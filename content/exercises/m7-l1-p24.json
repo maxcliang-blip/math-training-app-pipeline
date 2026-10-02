@@ -1,0 +1,28 @@
+{
+  "id": "m7-l1-p24",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "probability",
+    "inclusion-exclusion"
+  ],
+  "promptLatex": "How many of the integers from $1$ to $200$, inclusive, are divisible by neither $3$ nor $5$?",
+  "choices": null,
+  "answerLatex": "107",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "It is easier to count the integers that are divisible by $3$ or by $5$, then subtract.",
+    "There are $\\lfloor \\frac{200}{3} \\rfloor = 66$ multiples of $3$ and $40$ multiples of $5$, with $13$ multiples of $15$ counted in both.",
+    "Subtract $66 + 40 - 13$ from $200$."
+  ],
+  "solutionLatex": "There are $200$ integers from $1$ to $200$, and the integers we want are the ones outside the union of two families.\n\nThe multiples of $3$ number $\\lfloor \\frac{200}{3} \\rfloor = 66$. The multiples of $5$ number $\\lfloor \\frac{200}{5} \\rfloor = 40$. The multiples of both are the multiples of $15$, of which there are $\\lfloor \\frac{200}{15} \\rfloor = 13$, and these have been counted twice.\n\nBy inclusion-exclusion the union has $66 + 40 - 13 = 93$ members, so the integers divisible by neither number $200 - 93 = 107$.",
+  "techniqueSlugs": [
+    "inclusion-exclusion-for-events",
+    "complementary-count"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

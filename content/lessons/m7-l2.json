@@ -1,0 +1,248 @@
+{
+  "id": "m7-l2",
+  "moduleId": "M7",
+  "order": 2,
+  "title": "Independence, Conditional Probability, and Expectation",
+  "topicSlug": "independence-conditional-probability-expectation",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 75,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m7-l1"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Decide whether two events are independent, compute conditional probabilities by restricting the sample space, reverse a conditional probability with Bayes' theorem, and compute expectations of random variables, including by linearity of expectation and indicator variables."
+    },
+    "prerequisites": {
+      "items": [
+        "m7-l1"
+      ],
+      "noteLatex": "You need the counting definition and the complement rule from the first probability lesson, together with $\\binom{n}{k}$ and $n!$. Bayes' theorem is a rearrangement of multiplication, so nothing here is a new idea, only a new arrangement of what you can already count."
+    },
+    "concept": {
+      "conceptLatex": "Independence is the condition that makes multiplication possible. Events $A$ and $B$ are independent when the outcome of one does not change the chance of the other, which in the counting definition is the single identity\n\n$P(A \\cap B) = P(A) \\cdot P(B)$\n\nThis is a statement to be checked, not an assumption to be made. The check has three outcomes worth telling apart. The events are independent when the identity holds. They are disjoint when the intersection is impossible, and then they can only both be independent if one of them has probability $0$. Otherwise the two are dependent, and $P(A \\cap B)$ is strictly between $0$ and $P(A)P(B)$. The last case is the interesting one: knowing that $A$ happened has made $B$ more or less likely, and the size of that shift is what conditional probability measures.\n\nThe chain rule extends the identity to any number of events. For any sequence of events,\n\n$P(A_1 \\cap A_2 \\cap \\cdots \\cap A_n) = P(A_1) \\cdot P(A_2 \\mid A_1) \\cdot P(A_3 \\mid A_1 \\cap A_2) \\cdots$\n\nEvery factor after the first is conditional, which is exactly why sampling without replacement produces a chain of decreasing fractions. Drawing three reds from a bag of four red and four blue is $\\frac{4}{10} \\cdot \\frac{3}{9} \\cdot \\frac{2}{8} = \\frac{1}{30}$, and the factors $3/9$ and $2/8$ are not the same as the first precisely because the earlier draws removed cards.\n\nConditional probability is defined by restricting the sample space. For $P(B \\mid A)$ with $P(A) > 0$,\n\n$P(B \\mid A) = \\frac{P(A \\cap B)}{P(A)}$\n\nThere are two ways to compute it and the right one depends on the problem. Divide two probabilities when the sample space is already counted. Or, more often, reduce the count: the outcomes consistent with $A$ become the whole sample space, and $P(B \\mid A)$ is the fraction of them that satisfy $B$. Conditioning on a face card from a deck means working inside the $12$ face cards, where $4$ of them are kings.\n\nThe law of total probability reassembles the sample space from a partition. If $A$ and $A^c$ are complementary, then for any $B$,\n\n$P(B) = P(A) \\cdot P(B \\mid A) + P(A^c) \\cdot P(B \\mid A^c)$\n\nBayes' theorem is the same identity solved for the reversed conditional probability. Substituting the total probability law into the definition of a conditional probability and solving gives\n\n$P(A \\mid B) = \\frac{P(B \\mid A) \\cdot P(A)}{P(B)}$\n\nThis reversal is the step that feels hardest and matters most. $P(B \\mid A)$ and $P(A \\mid B)$ answer different questions and are usually very different numbers: a rare condition that almost always produces a positive test does not mean that a positive test almost always means the rare condition. That failure of reversal is the single most common error in this topic, and it has a memorable shape: always write the condition you are given on the right of the bar before you compute anything.\n\nA random variable is a rule that assigns a number to each outcome. Its expected value is the long-run average, defined by a weighted sum,\n\n$\\mathbb{E}[X] = \\sum_x x \\cdot P(X = x)$\n\nThe definition is short, and computing with it is often tedious because the distribution has to be tabulated first.\n\nLinearity of expectation removes the tediousness. For any random variables $X$ and $Y$, whether or not they are independent,\n\n$\\mathbb{E}[X + Y] = \\mathbb{E}[X] + \\mathbb{E}[Y]$\n\nThe absence of any independence hypothesis is the whole point, and it is why an expectation can often be computed without knowing a single joint probability. Linearity extends to any number of summands, and it applies to indicators in particular.\n\nAn indicator variable $I$ is $1$ when an event happens and $0$ otherwise, so $\\mathbb{E}[I] = P(\\text{the event})$. Writing a count as a sum of indicators turns a hard expectation into a sum of easy ones. The number of fixed points of a random permutation of $10$ objects is a sum of $10$ indicators, each of probability $\\frac{1}{10}$, so its expectation is $10 \\cdot \\frac{1}{10} = 1$, with no counting of cases at all. The number of white balls drawn when three are drawn from a bag of four white and six black balls is a sum of three indicators of probability $\\frac{4}{10}$ each, so its expectation is $\\frac{6}{5}$ even though the draw is without replacement.",
+      "figures": [
+        {
+          "id": "m7-l2-fig-1",
+          "captionLatex": "A two-stage tree for an urn experiment: the first branch selects urn $A$ or urn $B$ with equal probability, and the second branch shows the chance of a red or a blue ball from each urn, which is what Bayes' theorem needs.",
+          "asymptoteSource": "// Two-stage probability tree used to reverse a conditional probability.\n// Two-argument size() fixes the output box, so the declared 1.167 is exact.\nsize(420,360);\npen t = gray(0.55) + 1;\npen n = black + 1.4;\ndot((0,0), n);\ndraw((0,0)--(4,2.2)..(0,0)--(4,-2.2), t);\ndot((4,2.2), n);\ndot((4,-2.2), n);\nlabel(\"urn A\", (4,2.2), N);\nlabel(\"urn B\", (4,-2.2), S);\ndraw((4,2.2)--(8,3.6)..(4,2.2)--(8,0.8), t);\ndraw((4,-2.2)--(8,-0.8)..(4,-2.2)--(8,-3.6), t);\ndot((8,3.6), n);\ndot((8,0.8), n);\ndot((8,-0.8), n);\ndot((8,-3.6), n);\nlabel(\"red\", (8,3.6), E);\nlabel(\"blue\", (8,0.8), E);\nlabel(\"red\", (8,-0.8), E);\nlabel(\"blue\", (8,-3.6), E);\nlabel(\"two of three are red\", (6,2.6), N);\nlabel(\"urn B: one red\", (6,-2.6), N);",
+          "asymptoteAlt": "A branching tree diagram read from left to right. The leftmost marked point splits into an upper branch and a lower branch ending at points labelled urn A and urn B. Urn A then splits into an upper branch labelled red and a lower branch labelled blue, and urn B splits into an upper branch labelled red and a lower branch labelled blue. Two further labels say that two of the three balls in urn A are red and that one of the three balls in urn B is red.",
+          "asymptoteAspectRatio": 1.167
+        },
+        {
+          "id": "m7-l2-fig-2",
+          "captionLatex": "A dot diagram for the sum of two fair dice: every dot is one of the $36$ equally likely ordered outcomes, so the average of the dots is the expected value of the sum.",
+          "asymptoteSource": "// Dot diagram for the sum of two dice: one dot per ordered outcome.\n// Two-argument size() fixes the output box, so the declared 1.6 is exact.\nsize(480,300);\npen d = rgb(0.13,0.33,0.62) + 2pt;\npen e = rgb(0.74,0.33,0.13) + 2pt;\nfor (int k = 0; k < 6; k = k + 1) {\n  dot((0.8+k,3.4), d);\n  dot((0.8+k,2.2), d);\n  dot((0.8+k,1.0), d);\n  dot((0.8+k,-0.2), d);\n  dot((2.6+k,-0.2), e);\n}\ndraw((0.4,3.9)--(6.4,3.9), gray(0.55)+0.7);\ndraw((0.4,-0.7)--(6.4,-0.7), gray(0.55)+0.7);\nlabel(\"four dots each\", (3.4,4.3), N);\nlabel(\"one dot each\", (3.4,-1.1), S);\nlabel(\"total $14$ dots, mean $14/6$\", (7.2,1.6), W);",
+          "asymptoteAlt": "A dot diagram with two horizontal guide lines. Above the upper line there are four rows of six blue dots, and along the lower line there are six more blue dots with six orange dots extending past them. Labels say four dots each above, one dot each below, and a third label at the right reads total fourteen dots, mean fourteen over six.",
+          "asymptoteAspectRatio": 1.6
+        }
+      ],
+      "examples": [
+        {
+          "id": "m7-l2-ex-1",
+          "titleLatex": "Worked example: an independent pair",
+          "bodyLatex": "A fair die is rolled twice. Let $A$ be the event that the first roll is even and $B$ the event that the second roll is a $6$. What is $P(A \\cap B)$?\n\n$P(A) = \\frac{3}{6} = \\frac{1}{2}$ and $P(B) = \\frac{1}{6}$. The rolls are separate, so the events are independent and $P(A \\cap B) = \\frac{1}{2} \\cdot \\frac{1}{6} = \\frac{1}{12}$. Equivalently, of the $36$ ordered pairs exactly $3 \\cdot 1 = 3$ have an even first roll and a $6$ second, giving $\\frac{3}{36} = \\frac{1}{12}$.",
+          "answerLatex": "\\frac{1}{12}"
+        },
+        {
+          "id": "m7-l2-ex-2",
+          "titleLatex": "Worked example: conditioning by restriction",
+          "bodyLatex": "A card is drawn from a standard deck and it is found to be a face card. What is the probability it is a king?\n\nOnce we know the card is a face card, the sample space has shrunk to the $12$ jacks, queens and kings. Of those, $4$ are kings, so $P = \\frac{4}{12} = \\frac{1}{3}$. The other $40$ cards of the deck are no longer relevant.",
+          "answerLatex": "\\frac{1}{3}"
+        },
+        {
+          "id": "m7-l2-ex-3",
+          "titleLatex": "Worked example: reversing with Bayes",
+          "bodyLatex": "An urn $A$ holds $2$ red and $1$ blue ball, and an urn $B$ holds $1$ red and $2$ blue balls. One urn is chosen at random and a ball is drawn from it. Given that the ball is red, what is the probability that urn $A$ was chosen?\n\nBy the total probability law, $P(\\text{red}) = \\frac{1}{2} \\cdot \\frac{2}{3} + \\frac{1}{2} \\cdot \\frac{1}{3} = \\frac{1}{2}$. Bayes' theorem then gives\n\n$P(A \\mid \\text{red}) = \\frac{P(\\text{red} \\mid A) \\cdot P(A)}{P(\\text{red})} = \\frac{\\frac{2}{3} \\cdot \\frac{1}{2}}{\\frac{1}{2}} = \\frac{2}{3}$.",
+          "answerLatex": "\\frac{2}{3}"
+        },
+        {
+          "id": "m7-l2-ex-4",
+          "titleLatex": "Worked example: expectation by linearity",
+          "bodyLatex": "Two fair six-sided dice are rolled and the two results are multiplied. What is the expected product?\n\nLet $X$ and $Y$ be the two results. $\\mathbb{E}[X] = \\frac{1+2+3+4+5+6}{6} = \\frac{7}{2}$, and $Y$ has the same mean. Linearity of expectation gives $\\mathbb{E}[XY]$ only when the variables are independent, and here they are, so $\\mathbb{E}[XY] = \\mathbb{E}[X]\\mathbb{E}[Y] = \\frac{7}{2} \\cdot \\frac{7}{2} = \\frac{49}{4}$. Without independence the product formula is unavailable, which is why the independence check comes first.",
+          "answerLatex": "\\frac{49}{4}"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "independence-check",
+          "name": "Test independence with the product identity",
+          "summaryLatex": "$A$ and $B$ are independent exactly when $P(A \\cap B) = P(A) \\cdot P(B)$.",
+          "bodyLatex": "Compute $P(A \\cap B)$ one way and $P(A)P(B)$ another, then compare. If they agree, every product rule that follows is available. If they do not, write the correct value down and expect the product rules to fail. The two situations that are not dependent are disjoint events and events with probability $0$, so those two never pass the independence test unless they are trivial."
+        },
+        {
+          "slug": "chain-rule-of-probability",
+          "name": "Multiply a chain of conditional factors",
+          "summaryLatex": "$P(A \\cap B \\cap C) = P(A) \\cdot P(B \\mid A) \\cdot P(C \\mid A \\cap B)$.",
+          "bodyLatex": "Each factor is the chance of the next thing given everything that came before. Drawing without replacement is the standard case: the numerator of each factor drops by one and the denominator drops by one, because one card has already been removed. Writing the chain in one line makes the shrinking denominators impossible to overlook, and it converts to a single factorial product when you would rather count."
+        },
+        {
+          "slug": "conditional-probability-formula",
+          "name": "Condition by restricting the sample space",
+          "summaryLatex": "$P(B \\mid A) = \\frac{P(A \\cap B)}{P(A)}$, which counts only the outcomes inside $A$.",
+          "bodyLatex": "Rewrite the problem so that $A$ is the entire sample space, then count the outcomes in it that also satisfy $B$. For a standard deck, conditioning on a face card leaves $12$ cards and $4$ kings, giving $\\frac{4}{12}$. The formula $\\frac{P(A \\cap B)}{P(A)}$ and the restricted count are the same computation; the second one is easier to get right when the outcomes can be listed."
+        },
+        {
+          "slug": "counting-in-the-conditional-set",
+          "name": "Rebuild the count inside the condition",
+          "summaryLatex": "Once $A$ is known, recount the sample space from $A$ and count the favourable members of it.",
+          "bodyLatex": "This is the workhorse for card and urn problems. After the condition, the pool is smaller and often uniform again: conditioning on a face card leaves a pool of $12$ identical-probability cards. Recounting from the pool is faster than dividing two large probabilities, and it is the step a careless solution skips, which is how a probability larger than $1$ gets published."
+        },
+        {
+          "slug": "bayes-reversal",
+          "name": "Reverse a conditional probability with Bayes' theorem",
+          "summaryLatex": "$P(A \\mid B) = \\frac{P(B \\mid A) \\, P(A)}{P(B)}$.",
+          "bodyLatex": "Read the problem twice. Write the condition you were given on the right of the bar, and note that Bayes' theorem needs it that way round. Then compute the denominator $P(B)$ with the total probability law over all the ways $B$ can happen, which for a diagnosis means every cause of a positive test. The answer collapses to $\\frac{P(B \\mid A)P(A)}{P(B \\mid A)P(A) + P(B \\mid A^c)P(A^c)}$ whenever $B$ has exactly two causes, and that form is worth memorising."
+        },
+        {
+          "slug": "law-of-total-probability",
+          "name": "Split on a partition and add",
+          "summaryLatex": "$P(B) = P(A) \\, P(B \\mid A) + P(A^c) \\, P(B \\mid A^c)$.",
+          "bodyLatex": "Use this whenever $B$ can arise from several mutually exclusive routes and the overall chance of $B$ is needed, typically as the denominator of Bayes' theorem. The partition must be exhaustive, so $A$ and $A^c$ together cover everything, and the terms are added because the routes are disjoint. As a consistency check, the result must lie between the smallest and largest conditional probability appearing in it."
+        },
+        {
+          "slug": "expected-value-setup",
+          "name": "Compute an expectation as a weighted average",
+          "summaryLatex": "$\\mathbb{E}[X] = \\sum_x x \\, P(X = x)$.",
+          "bodyLatex": "Tabulate the values of $X$ and the probability of each, then take the weighted average. The probabilities must sum to $1$, and that is the check worth doing first because an incomplete distribution is the usual cause of a wrong mean. The answer need not be a value $X$ can take, and it is not the most likely value."
+        },
+        {
+          "slug": "linearity-of-expectation",
+          "name": "Add expectations, independence or not",
+          "summaryLatex": "$\\mathbb{E}[X + Y] = \\mathbb{E}[X] + \\mathbb{E}[Y]$ with no independence hypothesis.",
+          "bodyLatex": "Whenever the quantity asked for is a sum of pieces, sum the individual expectations instead of computing the distribution of the sum. This works for any number of summands and never requires joint probabilities. It does not extend to products unless the factors are independent, and it says nothing about a ratio, so a problem asking for $\\mathbb{E}[X/Y]$ needs a different route."
+        },
+        {
+          "slug": "indicator-variables",
+          "name": "Count a quantity with indicators and sum the probabilities",
+          "summaryLatex": "$\\mathbb{E}[\\text{count}] = \\sum P(\\text{each object is counted})$.",
+          "bodyLatex": "For each object that could be counted, define $I$ to be $1$ if it is counted and $0$ otherwise. The total count is the sum of the $I$, so its expectation is the sum of the probabilities. This removes the casework entirely, and it works whether or not the objects are drawn with replacement: the probability that a given object is counted is the same on each draw."
+        },
+        {
+          "slug": "complementary-count",
+          "name": "Take the complement when the condition is awkward",
+          "summaryLatex": "$P(E) = 1 - P(E^c)$, and inside a conditioned space the two still add to $1$.",
+          "bodyLatex": "Without replacement it is sometimes easier to ask what would spoil the event than what would complete it, and the two are related by subtraction from $1$ inside whichever conditioned space you are working in. A useful shape is $P(\text{both red} \\mid \text{first red}) = 1 - \\frac{\\text{remaining non-red}}{\\text{remaining total}}$, which avoids a running tally of the cases in which the property already holds."
+        },
+        {
+          "slug": "distribution-identification",
+          "name": "Decide between the binomial and the hypergeometric model",
+          "summaryLatex": "Sampling with replacement or a fixed success chance gives a binomial model; sampling without replacement gives a hypergeometric model.",
+          "bodyLatex": "Binomial counts use $n$ independent trials, each with the same success probability, so the count of successes is $\\binom{n}{k}p^k(1-p)^{n-k}$: guessing on repeated questions, flipping a coin. A hypergeometric count draws $n$ items without replacement from a population of $N$ containing $K$ of the desired type, so the chance of $k$ successes is $\\frac{\\binom{K}{k}\\binom{N-K}{n-k}}{\\binom{N}{n}}$: committees, hands, and balls from an urn. The two models agree only when the population is large relative to the number drawn, and in a hypergeometric count each draw changes the population, so a chain of marginals will not reproduce it."
+        },
+        {
+          "slug": "symmetry-argument",
+          "name": "Use symmetry to avoid counting",
+          "summaryLatex": "When the experiment treats all objects alike, each object is equally likely to hold any one outcome.",
+          "bodyLatex": "If a permutation of the objects leaves the experiment unchanged, then every position receives the same share of the probability. Drawing two marbles from a bag of five red and five blue, the second marble is red with probability $\\frac{1}{2}$ by symmetry, with no conditioning needed. Symmetry also handles three identical coins: given that the first two flips agree, the favourable flips are the two all-heads and all-tails outcomes out of the four possible ones."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "reversing-a-conditional",
+          "titleLatex": "Reading a conditional probability backwards",
+          "wrongLatex": "$0.95$",
+          "whyLatex": "A test that is $95$ percent accurate is not a $95$ percent probability that a positive result means disease. If the disease affects one person in ten, then among the positive results there are roughly $9.5$ true positives for every $90$ false positives, and the probability a positive result means disease is $\\frac{9.5}{99.5} = \\frac{19}{199}$. The base rate is missing, and without it the reversal cannot be computed at all.",
+          "fixLatex": "Write the condition you were given on the right of the bar before doing anything else, then compute every cause of the observed outcome for the denominator. The given direction is a property of the experiment; the reversed direction is a property of how common the condition is."
+        },
+        {
+          "slug": "assuming-independence",
+          "titleLatex": "Multiplying probabilities that are not independent",
+          "wrongLatex": "$\\frac{1}{4}$",
+          "whyLatex": "Drawing two cards from a deck without replacement, the chance that both are aces is $\\frac{4}{52} \\cdot \\frac{3}{51} = \\frac{1}{221}$ rather than $\\left(\\frac{4}{52}\\right)^2 = \\frac{1}{169}$. The first card removed changes the composition of the deck, so the second factor is smaller than the first. Replacing, and the two rolls of a die, genuinely do leave the chance unchanged, and the difference between those cases is the whole content of the independence check.",
+          "fixLatex": "Before multiplying, ask whether the experiment would look different if the earlier outcome were different. If it would, chain conditional probabilities instead of multiplying the marginals."
+        },
+        {
+          "slug": "conditioning-without-restricting",
+          "titleLatex": "Conditioning without shrinking the sample space",
+          "wrongLatex": "$4$",
+          "whyLatex": "Given that a drawn card is a face card, there are $12$ cards still in play, not $52$. Leaving the denominator at $52$ and counting $4$ kings produces $\\frac{4}{52}$, which is the probability that a card drawn from the whole deck is both a king and a face card. That is a different question, and it is always smaller than the answer actually asked for.",
+          "fixLatex": "After reading the condition, redraw the sample space from scratch. Write down what remains, confirm those outcomes are still equally likely, and then count."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m7-l2-p1",
+        "m7-l2-p2",
+        "m7-l2-p3",
+        "m7-l2-p4",
+        "m7-l2-p5",
+        "m7-l2-p6",
+        "m7-l2-p7",
+        "m7-l2-p8",
+        "m7-l2-p9",
+        "m7-l2-p10",
+        "m7-l2-p11",
+        "m7-l2-p12",
+        "m7-l2-p13",
+        "m7-l2-p14",
+        "m7-l2-p15",
+        "m7-l2-p16",
+        "m7-l2-p17",
+        "m7-l2-p18",
+        "m7-l2-p19",
+        "m7-l2-p20",
+        "m7-l2-p21",
+        "m7-l2-p22",
+        "m7-l2-p23",
+        "m7-l2-p24",
+        "m7-l2-p25",
+        "m7-l2-p26"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m7-l2-p1",
+        "m7-l2-p2",
+        "m7-l2-p3",
+        "m7-l2-p4",
+        "m7-l2-p5",
+        "m7-l2-p6",
+        "m7-l2-p7",
+        "m7-l2-p8",
+        "m7-l2-p9",
+        "m7-l2-p10",
+        "m7-l2-p11",
+        "m7-l2-p12",
+        "m7-l2-p13",
+        "m7-l2-p14",
+        "m7-l2-p15",
+        "m7-l2-p16",
+        "m7-l2-p17",
+        "m7-l2-p18",
+        "m7-l2-p19",
+        "m7-l2-p20",
+        "m7-l2-p21",
+        "m7-l2-p22",
+        "m7-l2-p23",
+        "m7-l2-p24",
+        "m7-l2-p25",
+        "m7-l2-p26"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m7-l2-m1",
+        "m7-l2-m2",
+        "m7-l2-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "conditional-probability",
+    "independence",
+    "bayes-theorem",
+    "expected-value"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "m7-l2-p22",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "probability",
+    "binomial-distribution"
+  ],
+  "promptLatex": "A five-question multiple choice test has three options per question, and a student answers every question by guessing at random. The probability of getting at least four questions correct is $\\frac{m}{n}$ in lowest terms. Find $m + n$.",
+  "choices": null,
+  "answerLatex": "254",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The guesses are independent, so the number correct follows a binomial distribution with $3$ equally likely options.",
+    "Exactly five correct has probability $\\left(\\frac{1}{3}\\right)^5$ and exactly four has probability $5 \\left(\\frac{1}{3}\\right)^4 \\left(\\frac{2}{3}\\right)$.",
+    "Their sum is $\\frac{1}{243} + \\frac{10}{243} = \\frac{11}{243}$."
+  ],
+  "solutionLatex": "Each question is answered correctly with probability $\\frac{1}{3}$ and incorrectly with probability $\\frac{2}{3}$, independently of the other questions.\n\nExactly five correct has probability $\\left(\\frac{1}{3}\\right)^5 = \\frac{1}{243}$, and exactly four correct has probability $\\binom{5}{4} \\left(\\frac{1}{3}\\right)^4 \\left(\\frac{2}{3}\\right) = \\frac{5 \\cdot 1 \\cdot 2}{243} = \\frac{10}{243}$. These two cases are disjoint.\n\nTherefore $P = \\frac{1}{243} + \\frac{10}{243} = \\frac{11}{243}$, and since $243 = 3^5$ and $11$ is prime the fraction is in lowest terms, so $m + n = 11 + 243 = 254$.",
+  "techniqueSlugs": [
+    "distribution-identification",
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

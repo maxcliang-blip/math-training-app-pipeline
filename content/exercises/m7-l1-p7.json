@@ -1,0 +1,34 @@
+{
+  "id": "m7-l1-p7",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "probability",
+    "fractions"
+  ],
+  "promptLatex": "In a class of $30$ students, $18$ study Spanish. One student is chosen at random from the class. What is the probability that the student does not study Spanish?",
+  "choices": [
+    "\\frac{1}{5}",
+    "\\frac{2}{5}",
+    "\\frac{3}{5}",
+    "\\frac{7}{10}",
+    "\\frac{11}{15}"
+  ],
+  "answerLatex": "\\frac{2}{5}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The complement of a named group is the group left over once you remove it.",
+    "There are $30 - 18 = 12$ students who do not study Spanish.",
+    "That gives $\\frac{12}{30}$, which reduces to $\\frac{2}{5}$."
+  ],
+  "solutionLatex": "The sample space is the $30$ students in the class.\n\nThe number who do not study Spanish is $30 - 18 = 12$.\n\nTherefore $P = \\frac{12}{30} = \\frac{2}{5}$.",
+  "techniqueSlugs": [
+    "complementary-count",
+    "probability-as-fraction"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

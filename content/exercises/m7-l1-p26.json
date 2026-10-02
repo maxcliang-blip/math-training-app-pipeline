@@ -1,0 +1,27 @@
+{
+  "id": "m7-l1-p26",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "probability",
+    "independence"
+  ],
+  "promptLatex": "A spinner has six equal sectors: two red, three blue and one green. The spinner is spun twice. The probability that the two spins show the same colour is $\\frac{m}{n}$ in lowest terms. Find $m + n$.",
+  "choices": null,
+  "answerLatex": "25",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The colour of one spin does not affect the other, so the two events are independent.",
+    "Both red has probability $\\frac{2}{6}$, both blue $\\frac{3}{6}$, and both green $\\frac{1}{6}$.",
+    "Add the three squares and reduce."
+  ],
+  "solutionLatex": "Each spin shows one of the six sectors, and the two spins are independent because the spinner is reset between them.\n\nThe probability of two reds is $\\left(\\frac{2}{6}\\right)^2 = \\frac{4}{36}$, of two blues is $\\left(\\frac{3}{6}\\right)^2 = \\frac{9}{36}$, and of two greens is $\\left(\\frac{1}{6}\\right)^2 = \\frac{1}{36}$. These three cases are disjoint and together they are the event.\n\nTherefore $P = \\frac{4 + 9 + 1}{36} = \\frac{14}{36} = \\frac{7}{18}$, so $m + n = 7 + 18 = 25$.",
+  "techniqueSlugs": [
+    "probability-as-fraction"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

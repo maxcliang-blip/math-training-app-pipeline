@@ -1,0 +1,33 @@
+{
+  "id": "m7-l2-p24",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 3,
+  "tags": [
+    "conditional-probability"
+  ],
+  "promptLatex": "One card is drawn at random from a standard $52$-card deck. It is found to be a face card. What is the probability that the card is a king?",
+  "choices": [
+    "\\frac{1}{13}",
+    "\\frac{1}{12}",
+    "\\frac{1}{6}",
+    "\\frac{1}{4}",
+    "\\frac{1}{3}"
+  ],
+  "answerLatex": "\\frac{1}{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Once the card is known to be a face card, the remaining $40$ cards of the deck are out of play.",
+    "The face cards are the $4$ kings, $4$ queens and $4$ jacks, so there are $12$ of them.",
+    "So the probability is $\\frac{4}{12} = \\frac{1}{3}$."
+  ],
+  "solutionLatex": "Conditioning on the card being a face card restricts the sample space to the face cards.\n\nThere are $12$ face cards: $4$ kings, $4$ queens and $4$ jacks. Of these, $4$ are kings, and each of the $12$ is equally likely given the information.\n\nTherefore $P(\\text{king} \\mid \\text{face card}) = \\frac{4}{12} = \\frac{1}{3}$. The unconditional probability of a king is $\\frac{4}{52} = \\frac{1}{13}$, so the information has made a king four times as likely.",
+  "techniqueSlugs": [
+    "counting-in-the-conditional-set",
+    "conditional-probability-formula"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

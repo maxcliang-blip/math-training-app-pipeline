@@ -77,7 +77,7 @@ test("health reports the corpus it actually loaded", async () => {
   const { status, body } = await get("/api/health");
   assert.equal(status, 200);
   assert.equal(body.ok, true);
-  assert.equal(body.content.exercises, 474);
+  assert.equal(body.content.exercises, 532);
   assert.equal(typeof body.figures.usable, "boolean");
 });
 
@@ -165,14 +165,24 @@ test("a lesson route lists solutions the client can actually render", async () =
   }
 });
 
-test("a module with no lessons yet still declares its tiers", async () => {
+test("a module with no lessons yet still declares its tiers", async (t) => {
+  // Every module in content/modules.json now has at least one authored lesson, so there is no
+  // longer a module to run this against. Skipping says that in the output; a vacuous pass would
+  // read as coverage that still exists. This comes back on its own the day a module is declared
+  // ahead of its lessons, which is the normal way a new module enters the catalogue.
   const { body } = await get("/api/modules");
   const unauthored = body.filter((m) => m.lessonCount === 0);
-  assert.ok(unauthored.length > 0, "expected the catalogue to be wider than the corpus");
+  if (unauthored.length === 0) {
+    return t.skip("every declared module has lessons authored, so there is nothing to check");
+  }
   for (const m of unauthored) {
     assert.ok(m.tiers.length > 0, `${m.code} has no lessons and reports no tiers`);
     assert.deepEqual(m.tiers, m.declaredTiers);
   }
+});
+
+test("an authored module reports the tiers its lessons actually carry", async () => {
+  const { body } = await get("/api/modules");
   // A module with lessons reports the union of the tiers its lessons actually carry. That union is
   // not required to equal the catalogue: M1's lessons claim A and the catalogue does not, M4 and
   // M8's claim 10 and A+ and the catalogue does not. Both numbers are reported so a client can

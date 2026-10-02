@@ -1,0 +1,34 @@
+{
+  "id": "m7-l1-p15",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "probability",
+    "geometric-probability",
+    "circles"
+  ],
+  "promptLatex": "A point is chosen at random from inside a circle of radius $6$. What is the probability that the point is within distance $4$ of the centre?",
+  "choices": [
+    "\\frac{2}{9}",
+    "\\frac{4}{9}",
+    "\\frac{1}{3}",
+    "\\frac{5}{9}",
+    "\\frac{8}{9}"
+  ],
+  "answerLatex": "\\frac{4}{9}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Inside a circle, probability is the ratio of two areas and the constants cancel.",
+    "The favourable region is a concentric disc of radius $4$, of area $\\pi 4^2$, and the total area is $\\pi 6^2$.",
+    "The $\\pi$ factors cancel, leaving $\\frac{16}{36} = \\frac{4}{9}$."
+  ],
+  "solutionLatex": "A uniformly chosen point in a circle makes probability an area ratio.\n\nThe favourable region is the disc of radius $4$ centred at the same point, of area $\\pi 4^2 = 16\\pi$. The total region has area $\\pi 6^2 = 36\\pi$.\n\nTherefore $P = \\frac{16\\pi}{36\\pi} = \\frac{16}{36} = \\frac{4}{9}$. Note that every radius cancels, so a circle of radius $r$ with the favourable region extending to $\\frac{2}{3}r$ would give the same answer.",
+  "techniqueSlugs": [
+    "geometric-probability-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

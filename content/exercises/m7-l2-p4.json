@@ -1,0 +1,33 @@
+{
+  "id": "m7-l2-p4",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "independence",
+    "probability"
+  ],
+  "promptLatex": "A fair six-sided die is rolled twice. Let $A$ be the event that the first roll is even and let $B$ be the event that the second roll is a $6$. What is $P(A \\cap B)$?",
+  "choices": [
+    "\\frac{1}{6}",
+    "\\frac{1}{12}",
+    "\\frac{1}{3}",
+    "\\frac{1}{2}",
+    "\\frac{1}{4}"
+  ],
+  "answerLatex": "\\frac{1}{12}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Decide first whether knowing the outcome of the first roll would change the second.",
+    "The two rolls do not interact, so $A$ and $B$ are independent.",
+    "Multiply: $P(A) \\cdot P(B) = \\frac{3}{6} \\cdot \\frac{1}{6} = \\frac{1}{12}$."
+  ],
+  "solutionLatex": "On the first roll $3$ of the $6$ faces are even, so $P(A) = \\frac{3}{6} = \\frac{1}{2}$. On the second roll exactly one face is a $6$, so $P(B) = \\frac{1}{6}$.\n\nThe two rolls are separate experiments, so $A$ and $B$ are independent and $P(A \\cap B) = P(A) \\cdot P(B)$ applies.\n\nTherefore $P(A \\cap B) = \\frac{1}{2} \\cdot \\frac{1}{6} = \\frac{1}{12}$. By counting, $3 \\cdot 1 = 3$ of the $36$ ordered pairs qualify, and $\\frac{3}{36} = \\frac{1}{12}$ agrees.",
+  "techniqueSlugs": [
+    "independence-check"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

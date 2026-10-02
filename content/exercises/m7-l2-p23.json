@@ -1,0 +1,28 @@
+{
+  "id": "m7-l2-p23",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "probability",
+    "hypergeometric-distribution"
+  ],
+  "promptLatex": "A committee of $4$ people is chosen at random from a group of $5$ men and $5$ women. The probability that the committee contains exactly $2$ men and $2$ women is $\\frac{m}{n}$ in lowest terms. Find $m + n$.",
+  "choices": null,
+  "answerLatex": "31",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Both the total number of committees and the favourable ones are combinations of the same size.",
+    "There are $\\binom{10}{4} = 210$ committees and $\\binom{5}{2}\\binom{5}{2} = 100$ with two of each.",
+    "Reduce $\\frac{100}{210}$ before adding numerator and denominator."
+  ],
+  "solutionLatex": "The sample space is the set of $4$-person committees from $10$ people, of which there are $\\binom{10}{4} = 210$, all equally likely.\n\nA committee with exactly $2$ men and $2$ women is obtained by choosing $2$ of the $5$ men and $2$ of the $5$ women, giving $\\binom{5}{2}\\binom{5}{2} = 10 \\cdot 10 = 100$ committees.\n\nTherefore $P = \\frac{100}{210} = \\frac{10}{21}$, which is in lowest terms, so $m + n = 10 + 21 = 31$.",
+  "techniqueSlugs": [
+    "distribution-identification",
+    "counting-in-the-conditional-set"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

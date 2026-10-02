@@ -1,0 +1,33 @@
+{
+  "id": "m7-l2-p6",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 2,
+  "tags": [
+    "conditional-probability"
+  ],
+  "promptLatex": "A bag holds $3$ red marbles and $5$ green marbles. Two marbles are drawn one at a time without replacement. The first marble drawn is red. What is the probability that the second marble drawn is green?",
+  "choices": [
+    "\\frac{1}{2}",
+    "\\frac{5}{9}",
+    "\\frac{2}{3}",
+    "\\frac{5}{8}",
+    "\\frac{3}{8}"
+  ],
+  "answerLatex": "\\frac{5}{9}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Once the red marble is out of the bag, the remaining collection is what the second draw works from.",
+    "There are $9$ marbles left, of which $5$ are still green.",
+    "So the probability is $\\frac{5}{9}$."
+  ],
+  "solutionLatex": "The first draw removed a red marble, so $9$ marbles remain in the bag: $2$ red and $5$ green.\n\nThe second draw is now uniform over those $9$ marbles, so the sample space for the second draw has $9$ members, of which $5$ are green.\n\nTherefore $P(\\text{second is green} \\mid \\text{first is red}) = \\frac{5}{9}$. Note that this is larger than $\\frac{5}{8}$, the unconditional chance of green, because knowing a red was removed made green more likely.",
+  "techniqueSlugs": [
+    "conditional-probability-formula",
+    "counting-in-the-conditional-set"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

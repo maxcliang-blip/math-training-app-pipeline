@@ -1,0 +1,34 @@
+{
+  "id": "m7-l2-p11",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "independence",
+    "probability"
+  ],
+  "promptLatex": "A bag holds $3$ red marbles and $7$ blue marbles. A marble is drawn, noted, returned to the bag, and a marble is drawn again. What is the probability that the two marbles are the same colour?",
+  "choices": [
+    "\\frac{29}{50}",
+    "\\frac{3}{25}",
+    "\\frac{7}{25}",
+    "\\frac{1}{2}",
+    "\\frac{21}{50}"
+  ],
+  "answerLatex": "\\frac{29}{50}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The same colour means both red or both blue, and those cases are disjoint.",
+    "$P(\\text{both red}) = \\left(\\frac{3}{10}\\right)^2$ and $P(\\text{both blue}) = \\left(\\frac{7}{10}\\right)^2$.",
+    "Adding gives $\\frac{9}{100} + \\frac{49}{100} = \\frac{29}{50}$."
+  ],
+  "solutionLatex": "Because the marble is returned between draws, the two draws are independent.\n\n$P(\\text{both red}) = \\left(\\frac{3}{10}\\right)^2 = \\frac{9}{100}$ and $P(\\text{both blue}) = \\left(\\frac{7}{10}\\right)^2 = \\frac{49}{100}$. These cases are disjoint, so their probabilities add.\n\nTherefore $P(\\text{same colour}) = \\frac{9}{100} + \\frac{49}{100} = \\frac{58}{100} = \\frac{29}{50}$.",
+  "techniqueSlugs": [
+    "independence-check",
+    "complementary-count"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

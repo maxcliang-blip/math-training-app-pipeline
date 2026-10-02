@@ -1,0 +1,33 @@
+{
+  "id": "m7-l2-p8",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "conditional-probability"
+  ],
+  "promptLatex": "A bag holds $4$ red marbles and $4$ blue marbles. Three marbles are drawn one at a time without replacement. What is the probability that all three are red?",
+  "choices": [
+    "\\frac{1}{30}",
+    "\\frac{1}{16}",
+    "\\frac{1}{12}",
+    "\\frac{1}{8}",
+    "\\frac{3}{20}"
+  ],
+  "answerLatex": "\\frac{1}{30}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Each draw changes what the next draw works from, so the three draws are chained rather than combined by a single multiplication.",
+    "The chain is $\\frac{4}{10}$ then $\\frac{3}{9}$ then $\\frac{2}{8}$.",
+    "Their product is $\\frac{4 \\cdot 3 \\cdot 2}{10 \\cdot 9 \\cdot 8} = \\frac{1}{30}$."
+  ],
+  "solutionLatex": "Three draws without replacement form a chain of conditional probabilities.\n\nThe first draw is red with probability $\\frac{4}{10}$. Given that, $3$ of the $9$ remaining marbles are red, so the second is red with probability $\\frac{3}{9}$. Given both of those, $2$ of the $8$ remaining marbles are red, so the third is red with probability $\\frac{2}{8}$.\n\nTherefore $P = \\frac{4}{10} \\cdot \\frac{3}{9} \\cdot \\frac{2}{8} = \\frac{24}{720} = \\frac{1}{30}$. The decreasing factors show why this is not $\\left(\\frac{1}{2}\\right)^3$.",
+  "techniqueSlugs": [
+    "chain-rule-of-probability",
+    "conditional-probability-formula"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

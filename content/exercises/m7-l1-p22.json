@@ -1,0 +1,27 @@
+{
+  "id": "m7-l1-p22",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "probability",
+    "hypergeometric-distribution"
+  ],
+  "promptLatex": "An urn contains $3$ red and $5$ blue balls. Three balls are drawn at random without replacement. The probability that exactly two of them are blue is $\\frac{m}{n}$ in lowest terms. Find $m + n$.",
+  "choices": null,
+  "answerLatex": "43",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Because the balls are not replaced, each outcome is an unordered group of three balls rather than an ordered list of three draws.",
+    "There are $\\binom{8}{3} = 56$ draws, and $\\binom{5}{2}\\binom{3}{1} = 30$ of them have exactly two blue.",
+    "Reduce the resulting fraction before adding numerator and denominator."
+  ],
+  "solutionLatex": "Drawing three balls without replacement gives a uniformly random $3$-element subset of the $8$ balls, and there are $\\binom{8}{3} = 56$ such subsets.\n\nFor exactly two blue balls, choose $2$ of the $5$ blue and $1$ of the $3$ red, giving $\\binom{5}{2}\\binom{3}{1} = 10 \\cdot 3 = 30$ subsets.\n\nTherefore $P = \\frac{30}{56} = \\frac{15}{28}$, which is in lowest terms, so $m + n = 15 + 28 = 43$.",
+  "techniqueSlugs": [
+    "probability-as-fraction"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

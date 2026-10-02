@@ -1,0 +1,32 @@
+{
+  "id": "m7-l1-p17",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "probability"
+  ],
+  "promptLatex": "The odds in favour of an event are $3$ to $5$. What is the probability that the event occurs?",
+  "choices": [
+    "\\frac{3}{8}",
+    "\\frac{5}{8}",
+    "\\frac{3}{5}",
+    "\\frac{5}{3}",
+    "\\frac{1}{8}"
+  ],
+  "answerLatex": "\\frac{3}{8}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Odds compare the favourable count with the unfavourable count, so the denominator is their sum.",
+    "Odds $3$ to $5$ correspond to $3$ favourable outcomes and $5$ unfavourable ones, so the sample space has $8$ outcomes.",
+    "The probability is $\\frac{3}{3 + 5} = \\frac{3}{8}$."
+  ],
+  "solutionLatex": "Odds in favour of $a$ to $b$ mean $a$ favourable outcomes against $b$ unfavourable ones, so the total number of outcomes is $a + b$.\n\nHere the event corresponds to $3$ outcomes out of a total of $3 + 5 = 8$.\n\nTherefore $P = \\frac{3}{8}$.",
+  "techniqueSlugs": [
+    "odds-from-counts"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,32 @@
+{
+  "id": "m7-l1-p3",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "probability"
+  ],
+  "promptLatex": "A bag holds $4$ red marbles and $6$ blue marbles. One marble is drawn at random. What is the probability that it is red?",
+  "choices": [
+    "\\frac{1}{5}",
+    "\\frac{2}{5}",
+    "\\frac{3}{5}",
+    "\\frac{1}{2}",
+    "\\frac{4}{5}"
+  ],
+  "answerLatex": "\\frac{2}{5}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The sample space is the whole collection of marbles in the bag.",
+    "There are $4 + 6 = 10$ marbles in total, and $4$ of them are red.",
+    "So the probability is $\\frac{4}{10} = \\frac{2}{5}$."
+  ],
+  "solutionLatex": "The sample space is the set of marbles in the bag, and drawing one uniformly makes every marble equally likely.\n\nThere are $4 + 6 = 10$ marbles in all, of which $4$ are red.\n\nTherefore $P(\\text{red}) = \\frac{4}{10} = \\frac{2}{5}$.",
+  "techniqueSlugs": [
+    "probability-as-fraction"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

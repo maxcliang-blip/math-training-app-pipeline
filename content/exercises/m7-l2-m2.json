@@ -1,0 +1,33 @@
+{
+  "id": "m7-l2-m2",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "conditional-probability"
+  ],
+  "promptLatex": "A fair coin is flipped three times. It is known that the first two flips show the same face. What is the probability that all three flips show the same face?",
+  "choices": [
+    "\\frac{1}{4}",
+    "\\frac{1}{3}",
+    "\\frac{1}{2}",
+    "\\frac{2}{3}",
+    "\\frac{3}{4}"
+  ],
+  "answerLatex": "\\frac{1}{2}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Conditioning on the first two flips agreeing leaves only four of the eight sequences.",
+    "Those four are $(H,H,H)$, $(H,H,T)$, $(T,T,H)$ and $(T,T,T)$.",
+    "Two of the four have all three flips equal, so the probability is $\\frac{2}{4} = \\frac{1}{2}$."
+  ],
+  "solutionLatex": "Three flips give $8$ equally likely sequences. The condition restricts the sample space to those whose first two entries agree.\n\nThe surviving sequences are $(H,H,H)$, $(H,H,T)$, $(T,T,H)$ and $(T,T,T)$, so there are $4$ of them, and each is still equally likely. Two of them have all three flips equal.\n\nTherefore $P(\\text{all three equal} \\mid \\text{first two equal}) = \\frac{2}{4} = \\frac{1}{2}$.",
+  "techniqueSlugs": [
+    "counting-in-the-conditional-set",
+    "symmetry-argument"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

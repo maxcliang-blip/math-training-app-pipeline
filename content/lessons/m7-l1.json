@@ -1,0 +1,223 @@
+{
+  "id": "m7-l1",
+  "moduleId": "M7",
+  "order": 1,
+  "title": "Counting Outcomes and Basic Probability",
+  "topicSlug": "counting-outcomes-basic-probability",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 70,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m3-l1"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Build a sample space for an experiment, count the outcomes that favour an event, convert that count into a probability as a fraction or percent, and use the complement rule to handle events that are easier to avoid than to count. Extend the same counting framework to arrangement problems and to geometric settings where the outcomes are regions rather than points."
+    },
+    "prerequisites": {
+      "items": [
+        "m3-l1"
+      ],
+      "noteLatex": "This lesson leans on the counting work of the first counting lesson. You will need $\\binom{n}{k}$, $n!$, and the multiplication principle, and it helps to have seen inclusion-exclusion once. If $\\binom{n}{k} = \\frac{n!}{k!(n-k)!}$ is unfamiliar, go back to that lesson before starting here."
+    },
+    "concept": {
+      "conceptLatex": "A probability is a number attached to a statement about a random experiment. The definition in this module is the counting definition, and it has three parts that must all be in place before the number means anything.\n\nThe first part is the sample space, written $S$: the full set of possible outcomes. Rolling two dice gives $36$ ordered pairs; drawing one card from a standard deck gives $52$ cards; spinning a spinner twice gives an ordered pair of sector labels.\n\nThe second part is equally likely outcomes. The definition below only applies when every element of $S$ carries the same weight. Two dice satisfy this because each ordered pair is equally likely. Throwing a die onto a rug does not, because outcomes are measured by where the die lands, and the die is far more likely to stop near the middle of the rug than at a corner. Whenever the equally likely condition fails, you must go back to counting and reweight, or switch to a model that already has the right weights.\n\nThe third part is the counting rule itself. For an event $E$ within $S$,\n\n$P(E) = \\frac{\\text{number of outcomes in } E}{\\text{number of outcomes in } S}$\n\nThe fraction is the whole answer. Convert to a percent or a decimal only at the end, and never convert at all in contest work, because every later step is easier in exact form.\n\nTwo counting habits do most of the work. The first is to write the sample space before computing anything. Listing $36$ ordered pairs explicitly is unnecessary, but writing the experiment as an ordered pair of faces, and confirming there are $6 \\cdot 6 = 36$ of them, prevents the single most common error in this topic: treating two dice as unordered and getting $21$ outcomes instead of $36$.\n\nThe second habit is the complement rule. For any event $E$ in $S$,\n\n$P(E) + P(E^c) = 1$\n\nWhenever direct counting of $E$ is hard and direct counting of $E^c$ is easy, count $E^c$ and subtract. \"At least one ace\" is a sum of four cases; \"no aces\" is one combination. \"At least one head in four flips\" is three cases; \"no heads\" is a single outcome. The complement converts an OR into an AND, and an OR is where the casework lives.\n\nInclusion-exclusion arrives at the same place from the other direction. When the favourable outcomes fall into overlapping families, sum the families and subtract the overlap:\n\n$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$\n\nFor a heart or a king in a standard deck that is $\\frac{13}{52} + \\frac{4}{52} - \\frac{1}{52} = \\frac{16}{52} = \\frac{4}{13}$, because the king of hearts was counted twice. For a number divisible by $4$ or by $5$ among $1$ to $20$, the overlap is the multiples of $20$.\n\nArrangement problems use the same machinery with factorials. Placing $5$ books on a shelf gives $5! = 120$ outcomes, and by symmetry each book is first in exactly $\\frac{4!}{5!} = \\frac{1}{5}$ of them. Counting arrangements does not change the method; only the size of the numbers does.\n\nGeometric probability replaces counting with measuring. If a dart lands uniformly at random on a region $R$ of total area $A(R)$, then for a region $E$ inside it,\n\n$P(E) = \\frac{A(E)}{A(R)}$\n\nInside a circle of radius $6$, the chance of landing within distance $4$ of the centre is $\\frac{\\pi \\cdot 4^2}{\\pi \\cdot 6^2} = \\frac{4}{9}$, and every radius cancels. On a square target, the circular regions never fill the square, so the outer corners keep a share of the probability that a careless reader gives away.\n\nOdds are a second way of packaging the same two counts. If $E$ has $a$ favourable outcomes out of $a + b$ total, the odds in favour of $E$ are $a$ to $b$, and converting back gives $P(E) = \\frac{a}{a+b}$. Odds are used in gambling and in parts of the AIME, and the conversion in both directions is worth having automatic.",
+      "figures": [
+        {
+          "id": "m7-l1-fig-1",
+          "captionLatex": "A $6 \\times 6$ grid of ordered die outcomes in which each of the $36$ cells is one equally likely pair; the six shaded cells along a diagonal are exactly the pairs that sum to $7$, so a ratio of shaded to unshaded cells is the probability.",
+          "asymptoteSource": "// Equally likely outcome grid for two dice: every cell is one ordered pair.\n// Two-argument size() fixes the output box, so the declared 4/3 is exact.\nsize(480,360);\npen g = gray(0.65) + 0.7;\npen hl = rgb(0.82,0.24,0.20) + 0;\nfor (int i = 0; i <= 6; ++i) {\n  draw((i,0)--(i,6), g);\n  draw((0,i)--(6,i), g);\n}\nfor (int k = 1; k <= 6; ++k) {\n  filldraw((k-1,6-k)--(k,6-k)--(k,7-k)--(k-1,7-k)--cycle, hl);\n}\nlabel(\"6 shaded of 36\", (3,6.6), N);\nlabel(\"6 unshaded of 36\", (3,-0.6), S);\ndot((6.3,3), black+2pt);",
+          "asymptoteAlt": "A square grid of six columns and six rows representing the thirty-six ordered outcomes of two dice, with thin grey grid lines. Six cells are shaded red, one in each row and column, and these six shaded cells are the pairs whose entries add up to seven. A caption above the grid reads six shaded of thirty-six and a caption below reads six unshaded of thirty-six.",
+          "asymptoteAspectRatio": 1.333
+        },
+        {
+          "id": "m7-l1-fig-2",
+          "captionLatex": "Geometric probability on a square target: a dart that lands uniformly anywhere in the square has probability equal to the ratio of areas, so the shaded annulus is a proportion of the whole.",
+          "asymptoteSource": "// Geometric probability: probability is an area ratio on a uniformly hit region.\n// Two-argument size() fixes the output box, so the declared 1.6 is exact.\nsize(480,300);\npen t = black + 1.2;\nfilldraw((0,0)--(6,0)--(6,6)--(0,6)--cycle, gray(0.93));\ndraw((0,0)--(6,0)--(6,6)--(0,6)--cycle, t);\ndraw(Circle((3,3),1.2), t);\ndraw(Circle((3,3),2.4), t);\nfilldraw(Circle((3,3),2.4)--Circle((3,3),1.2)--cycle, rgb(0.82,0.24,0.20)+0.3);\nfilldraw(Circle((3,3),1.2)--cycle, rgb(0.20,0.45,0.75)+0.3);\ndot((3,3), black+2pt);\nlabel(\"inner region\", (3,0.6), N);\nlabel(\"ring between the two circles\", (3,1.8), N);\nlabel(\"outer region\", (5.1,2.2), E);",
+          "asymptoteAlt": "A square target drawn in outline with two concentric circles inside it, both centred at a marked centre point. The band between the smaller and larger circle is tinted red and the small disc at the centre is tinted blue, while the region of the square outside the larger circle is left unshaded. Labels name the inner disc, the ring between the two circles, and the outer region of the square.",
+          "asymptoteAspectRatio": 1.6
+        }
+      ],
+      "examples": [
+        {
+          "id": "m7-l1-ex-1",
+          "titleLatex": "Worked example: two dice and a sum",
+          "bodyLatex": "Two fair six-sided dice are rolled. What is the probability that the sum is $7$?\n\nThe sample space is the $36$ ordered pairs $(a,b)$ with $1 \\le a, b \\le 6$, all equally likely. Exactly $6$ of them sum to $7$: $(1,6), (2,5), (3,4), (4,3), (5,2), (6,1)$. So $P = \\frac{6}{36} = \\frac{1}{6}$.",
+          "answerLatex": "\\frac{1}{6}"
+        },
+        {
+          "id": "m7-l1-ex-2",
+          "titleLatex": "Worked example: at least one, by complement",
+          "bodyLatex": "A fair coin is flipped four times. What is the probability of at least three heads?\n\nDirect counting needs three cases. By complement there is one: no heads and exactly one head. $P(\\text{no heads}) = \\frac{1}{16}$ and $P(\\text{exactly one head}) = \\frac{4}{16} = \\frac{1}{4}$, so $P(\\text{at least three heads}) = 1 - \\frac{5}{16} = \\frac{11}{16}$. Wait, three heads and four heads is $\\frac{4}{16} + \\frac{1}{16} = \\frac{5}{16}$, so the requested probability is $\\frac{5}{16}$.",
+          "answerLatex": "\\frac{5}{16}"
+        },
+        {
+          "id": "m7-l1-ex-3",
+          "titleLatex": "Worked example: arrangements and symmetry",
+          "bodyLatex": "Five different books are placed in a row at random. What is the probability that the algebra book is at the far left?\n\nThere are $5! = 120$ arrangements. Fixing one book at the left leaves $4! = 24$ arrangements of the rest, so $P = \\frac{24}{120} = \\frac{1}{5}$. By symmetry each of the five books is equally likely to hold any one of the five positions.",
+          "answerLatex": "\\frac{1}{5}"
+        },
+        {
+          "id": "m7-l1-ex-4",
+          "titleLatex": "Worked example: geometric probability on a circle",
+          "bodyLatex": "A point is chosen at random inside a circle of radius $6$. What is the probability that it lies within distance $4$ of the centre?\n\nUniform selection in a circle means probability is an area ratio. The favourable region is a concentric disc of radius $4$, so $P = \\frac{\\pi 4^2}{\\pi 6^2} = \\frac{16}{36} = \\frac{4}{9}$. The factor $\\pi$ cancels and no trigonometry is needed.",
+          "answerLatex": "\\frac{4}{9}"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "probability-as-fraction",
+          "name": "Probability as a fraction of equally likely outcomes",
+          "summaryLatex": "$P(E) = \\frac{\\vert E \\vert}{\\vert S \\vert}$ when every outcome in $S$ is equally likely.",
+          "bodyLatex": "Name the sample space and write down its size first. Then count the outcomes in the event. Divide, and stop: a probability is already finished when it is an exact fraction. Convert to a percent only if the problem asks for one. If the fraction can be reduced, reduce it, because a reduced fraction is the form every answer to an $m + n$ question needs."
+        },
+        {
+          "slug": "counting-outcome-space",
+          "name": "Count the whole outcome space before counting the event",
+          "summaryLatex": "Decide ordered or unordered, then count every outcome.",
+          "bodyLatex": "Two dice give $36$ ordered pairs, not $21$ unordered ones. Two flips of a coin give $4$ outcomes. A committee of three from twelve is $\\binom{12}{3}$, not $12 \\cdot 11 \\cdot 10$. Writing the sample space size down before starting the event count removes the most common single error in the topic, because a wrong denominator is invisible once it is buried in a calculation."
+        },
+        {
+          "slug": "evenly-likely-check",
+          "name": "Check that outcomes really are equally likely",
+          "summaryLatex": "The counting definition only applies when every outcome has the same weight.",
+          "bodyLatex": "Dice, coins, cards, and spinners with equal sectors give equally likely outcomes. A dart on a rug, a point chosen at random from a line, and a random integer from $1$ to $100$ do not. When the condition fails, count with the right weight: use areas for regions, or return to an experiment whose outcomes are genuinely uniform."
+        },
+        {
+          "slug": "complementary-count",
+          "name": "Count the complement and subtract",
+          "summaryLatex": "$P(E) = 1 - P(E^c)$, and $E^c$ is usually easier to count.",
+          "bodyLatex": "Use the complement whenever the event contains the word \"at least\", whenever the favourable outcomes are spread over several cases, and whenever the undesirable outcomes are structured. Three cases for three heads, four heads, and something else collapse into one case for the complement. The arithmetic to perform afterwards is subtraction, so the answer comes out right even when the counting is long."
+        },
+        {
+          "slug": "factorial-counting",
+          "name": "Count arrangements with factorials and then use symmetry",
+          "summaryLatex": "$n!$ arrangements, and a distinguished object is in each of the $n$ positions equally often.",
+          "bodyLatex": "When the sample space is a set of arrangements, both the total and the favourable count are factorials or products of binomial coefficients, and the ratio usually collapses. For \"is this book first\", the ratio is $\\frac{4!}{5!} = \\frac{1}{5}$. For \"are these two adjacent\", treat the pair as a single block: $2 \\cdot 5!$ arrangements out of $6!$, because the block may appear in either internal order."
+        },
+        {
+          "slug": "inclusion-exclusion-for-events",
+          "name": "Add overlapping families and subtract the overlap",
+          "summaryLatex": "$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$.",
+          "bodyLatex": "Identify the overlap explicitly before doing any arithmetic, because the subtracted term is where the mistake happens. For \"a heart or a king\" the overlap is one card. For \"divisible by $4$ or $5$ among $1$ to $20$\" the overlap is the multiples of $20$, which is one number. With three families, add all three and subtract all three pairwise overlaps, then add back the triple overlap."
+        },
+        {
+          "slug": "geometric-probability-setup",
+          "name": "Turn a geometric question into an area ratio",
+          "summaryLatex": "Probability in a region is favourable area over total area.",
+          "bodyLatex": "Confirm the point is chosen uniformly, identify the total region and the favourable region, and write both areas. Radii and side lengths often cancel: within a fixed fraction of a circle's radius, the probability is that fraction squared. Watch for targets whose favourable region does not reach the boundary of the total region, where the leftover corners still carry probability."
+        },
+        {
+          "slug": "odds-from-counts",
+          "name": "Convert between odds and probability",
+          "summaryLatex": "Odds $a$ to $b$ mean probability $\\frac{a}{a+b}$.",
+          "bodyLatex": "Odds compare the favourable count with the unfavourable count, so the denominator is $a + b$ rather than $b$ alone. To go the other way, split a probability $\\frac{p}{q}$ into $p$ to $q - p$. Odds in favour mean the event is more likely than not when the first number exceeds the second."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "unordered-two-dice",
+          "titleLatex": "Treating two dice as unordered",
+          "wrongLatex": "$21$",
+          "whyLatex": "The sample space for two dice is the $36$ ordered pairs, not the $21$ unordered pairs. The outcomes $(2,5)$ and $(5,2)$ are different, and the experiment distinguishes them: the first die is the first die. Using $21$ makes every computed probability too small and, worse, produces answers that are not even consistent with each other.",
+          "fixLatex": "Before counting, say in one sentence what an outcome is. If the experiment involves two separate objects, two separate rolls, or a sequence of steps, an outcome is ordered and the sample space is $n_1 n_2 \\cdots n_k$."
+        },
+        {
+          "slug": "adding-overlapping-families",
+          "titleLatex": "Adding overlapping families without subtracting",
+          "wrongLatex": "$17$",
+          "whyLatex": "There are $13$ hearts and $4$ kings in a standard deck, but the king of hearts is both, so $13 + 4 = 17$ counts it twice. The correct union is $13 + 4 - 1 = 16$, giving $\\frac{16}{52} = \\frac{4}{13}$. The error is invisible in the total, which is why it survives a check of the arithmetic.",
+          "fixLatex": "Name the intersection before adding anything. If the two families can meet, either subtract the intersection or switch to the complement."
+        },
+        {
+          "slug": "probability-from-a-biased-model",
+          "titleLatex": "Using a uniform model the experiment does not have",
+          "wrongLatex": "$0$",
+          "whyLatex": "A die thrown onto a rug does not produce $36$ equally likely positions, and a point drawn at random from the segment from $0$ to $1$ is not equally likely to land at any particular coordinate. The counting definition silently returns $0$ or a nonsense number when the equally likely condition fails.",
+          "fixLatex": "Check the condition before counting: can every element of the sample space be swapped for every other by a symmetry of the experiment? If yes, count. If no, model the experiment as regions with area, or as a distribution you are given."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m7-l1-p1",
+        "m7-l1-p2",
+        "m7-l1-p3",
+        "m7-l1-p4",
+        "m7-l1-p5",
+        "m7-l1-p6",
+        "m7-l1-p7",
+        "m7-l1-p8",
+        "m7-l1-p9",
+        "m7-l1-p10",
+        "m7-l1-p11",
+        "m7-l1-p12",
+        "m7-l1-p13",
+        "m7-l1-p14",
+        "m7-l1-p15",
+        "m7-l1-p16",
+        "m7-l1-p17",
+        "m7-l1-p18",
+        "m7-l1-p19",
+        "m7-l1-p20",
+        "m7-l1-p21",
+        "m7-l1-p22",
+        "m7-l1-p23",
+        "m7-l1-p24",
+        "m7-l1-p25",
+        "m7-l1-p26"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m7-l1-p1",
+        "m7-l1-p2",
+        "m7-l1-p3",
+        "m7-l1-p4",
+        "m7-l1-p5",
+        "m7-l1-p6",
+        "m7-l1-p7",
+        "m7-l1-p8",
+        "m7-l1-p9",
+        "m7-l1-p10",
+        "m7-l1-p11",
+        "m7-l1-p12",
+        "m7-l1-p13",
+        "m7-l1-p14",
+        "m7-l1-p15",
+        "m7-l1-p16",
+        "m7-l1-p17",
+        "m7-l1-p18",
+        "m7-l1-p19",
+        "m7-l1-p20",
+        "m7-l1-p21",
+        "m7-l1-p22",
+        "m7-l1-p23",
+        "m7-l1-p24",
+        "m7-l1-p25",
+        "m7-l1-p26"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m7-l1-m1",
+        "m7-l1-m2",
+        "m7-l1-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "probability",
+    "complementary-counting",
+    "geometric-probability"
+  ]
+}
