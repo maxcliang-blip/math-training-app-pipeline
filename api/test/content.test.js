@@ -104,6 +104,35 @@ test("a lesson's figure lists become references, and the Asymptote source does n
   assert.equal(JSON.stringify(lesson).includes("size(299,241)"), false);
 });
 
+test("no Asymptote build input reaches any lesson, including inside worked examples", () => {
+  // Worked examples carry figure fields of their own, and a figure in an example is the same kind
+  // of figure as a figure in a section list. Walking every lesson rather than one hand-picked
+  // record is the point: four lessons had a figure-bearing example and the projection used to miss
+  // all four, because only `sections.*.figures` was reduced to references.
+  const offenders = [];
+  for (const lessonId of store.lessons.keys()) {
+    const json = JSON.stringify(store.getLesson(lessonId));
+    for (const field of ["asymptoteSource", "asymptoteAlt", "asymptoteAspectRatio"]) {
+      if (json.includes(`"${field}"`)) offenders.push(`${lessonId}:${field}`);
+    }
+  }
+  assert.deepEqual(offenders, []);
+});
+
+test("a figure-bearing worked example becomes a reference, and an example without one is untouched", () => {
+  const lesson = store.getLesson("m4-l2");
+  const examples = lesson.sections.concept.examples;
+  const withFigure = examples.find((e) => "figureKey" in e);
+  assert.ok(withFigure, "m4-l2 has a worked example with a figure");
+  assert.deepEqual(Object.keys(withFigure).filter((k) => k === "figureKey"), ["figureKey"]);
+  assert.match(withFigure.figureKey, /^m4-l2\.sections\.concept\.examples\[\d+\]$/);
+  // The prose of the example survives the projection; only the figure fields are dropped.
+  assert.ok(withFigure.titleLatex);
+  assert.ok(withFigure.bodyLatex);
+  const withoutFigure = examples.find((e) => !("figureKey" in e));
+  assert.equal("asymptoteSource" in withoutFigure, false);
+});
+
 test("a free-response exercise withholds its key; a multiple-choice exercise ships it", () => {
   // §3.3: "v1 ships the answer for MC, withholds it for free-response."
   const free = store.getExercise("m1-l2-p3");
@@ -115,6 +144,18 @@ test("a free-response exercise withholds its key; a multiple-choice exercise shi
   assert.equal(choice.mode, "choice");
   assert.equal(choice.answerLatex, "64");
   assert.equal("answerWithheld" in choice, false);
+});
+
+test("a free-response exercise withholds its worked solution too", () => {
+  // The solution is the answer written out, so withholding the key while shipping the derivation
+  // withholds nothing. It also made the solution route's three-attempt lock decorative: the client
+  // already had the text the lock exists to protect.
+  const free = store.getExercise("m1-l2-p3");
+  assert.equal(free.solutionWithheld, true);
+  assert.equal("solutionLatex" in free, false);
+  assert.equal("solutionWithheld" in store.getExercise("m1-l2-p1"), false);
+  // Multiple choice keeps its solution; only the free-response key is secret in v1.
+  assert.ok(store.getExercise("m1-l2-p1").solutionLatex);
 });
 
 test("raw LaTeX in, raw LaTeX out - the exercise route never pre-renders", () => {

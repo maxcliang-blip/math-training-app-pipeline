@@ -28,7 +28,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { exerciseFigureKey, lessonFigureKey, figureReference } from "../../lib/figure-contract.mjs";
+import { exerciseFigureKey, exampleFigureKey, lessonFigureKey, figureReference } from "../../lib/figure-contract.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..", "..");
@@ -288,6 +288,13 @@ export function toLessonResponse(store, lesson) {
     if (name === "figures") continue;
     const copy = { ...section };
     if (Array.isArray(section.figures)) copy.figures = lessonFigureRefs(store, lesson, name, section.figures);
+    // Worked examples carry their own figure fields, and a worked example is a section member
+    // like any other, so the same projection applies to it. Without this the asymptoteSource of
+    // every figure-bearing example rides along on every lesson response, which is exactly the
+    // build input the figure contract keeps behind the build.
+    if (Array.isArray(section.examples)) {
+      copy.examples = section.examples.map((example, i) => toExampleResponse(lesson, name, example, i));
+    }
     sections[name] = copy;
   }
   for (const [name, field] of SECTION_ID_FIELDS) sections[field] = lessonExerciseIds(lesson, field).slice();
@@ -314,6 +321,17 @@ function lessonFigureRefs(store, lesson, sectionName, figures) {
     .filter(Boolean);
 }
 
+// A worked example, with its figure reduced to a reference. The figure fields are dropped rather
+// than blanked: an empty asymptoteSource would read as "this figure has no source", which is a
+// different and wrong claim. When there is a figure, figureKey is there instead, and the payload
+// comes from the figure route.
+function toExampleResponse(lesson, sectionName, example, index) {
+  if (!example || typeof example !== "object") return example;
+  const { asymptoteSource, asymptoteAlt, asymptoteAspectRatio, ...rest } = example;
+  if (!asymptoteSource) return rest;
+  return { ...rest, figureKey: exampleFigureKey(lesson.id, sectionName, index) };
+}
+
 // The exercise route's shape. Raw LaTeX in, raw LaTeX out - never pre-rendered HTML (IA S7): the
 // frontend owns the KaTeX options and the per-route render budget, and a server-rendered
 // formula would be rendered with the wrong options or at the wrong size.
@@ -335,7 +353,6 @@ export function toExerciseResponse(store, ex) {
     promptLatex: ex.promptLatex,
     choices: Array.isArray(ex.choices) ? ex.choices : null,
     hintLatex: ex.hintLatex || [],
-    solutionLatex: ex.solutionLatex ?? null,
     techniqueSlugs: ex.techniqueSlugs || [],
     // Lesson spec §3.1: "plus, when present, a one-line explanation field" on a correct answer.
     // No exercise in the corpus carries one yet; it is passed through when authored so the
@@ -349,9 +366,15 @@ export function toExerciseResponse(store, ex) {
   if (isChoice) {
     response.answerLatex = ex.answerLatex ?? null;
     response.answerAlternatives = ex.answerAlternatives || [];
+    // The worked solution is the answer written out, so it rides on the same rule the key does. A
+    // record that ships answerWithheld: true and then prints the derivation is not withholding
+    // anything, and it makes the solution route's three-attempt lock decorative: the client
+    // already has the text the lock exists to protect.
+    response.solutionLatex = ex.solutionLatex ?? null;
   } else {
     // Withheld, not blanked: a client that needs the free-response key has to ask the server.
     response.answerWithheld = true;
+    response.solutionWithheld = true;
   }
 
   if (ex.asymptoteSource) response.figureKey = exerciseFigureKey(ex.id);

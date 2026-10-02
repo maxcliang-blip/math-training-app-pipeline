@@ -29,7 +29,7 @@ import { tmpdir } from "node:os";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS, lessonFigureKey, exerciseFigureKey } from "../lib/figure-contract.mjs";
+import { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS, lessonFigureKey, exampleFigureKey, exerciseFigureKey } from "../lib/figure-contract.mjs";
 
 export { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS };
 
@@ -107,19 +107,38 @@ export function collectFigures(contentRoot) {
   for (const { file, record: lesson } of lessonFiles) {
     for (const [sectionName, section] of Object.entries(lesson.sections || {})) {
       const list = section && section.figures;
-      if (!Array.isArray(list)) continue;
-      list.forEach((fig, i) => {
-        if (!fig || !fig.asymptoteSource) return;
-        figures.push({
-          key: lessonFigureKey(lesson.id, sectionName, i),
-          source: fig.asymptoteSource,
-          alt: fig.asymptoteAlt,
-          declaredRatio: fig.asymptoteAspectRatio,
-          caption: fig.captionLatex || null,
-          file,
-          record: fig,
+      if (Array.isArray(list)) {
+        list.forEach((fig, i) => {
+          if (!fig || !fig.asymptoteSource) return;
+          figures.push({
+            key: lessonFigureKey(lesson.id, sectionName, i),
+            source: fig.asymptoteSource,
+            alt: fig.asymptoteAlt,
+            declaredRatio: fig.asymptoteAspectRatio,
+            caption: fig.captionLatex || null,
+            file,
+            record: fig,
+          });
         });
-      });
+      }
+      // Worked examples carry figures too. They are compiled here for the same reason: an example
+      // whose asymptoteSource reaches a client is build input on the request path, and the
+      // figureKey the API emits has to resolve or the example just loses its figure.
+      const examples = section && section.examples;
+      if (Array.isArray(examples)) {
+        examples.forEach((example, i) => {
+          if (!example || !example.asymptoteSource) return;
+          figures.push({
+            key: exampleFigureKey(lesson.id, sectionName, i),
+            source: example.asymptoteSource,
+            alt: example.asymptoteAlt,
+            declaredRatio: example.asymptoteAspectRatio,
+            caption: example.captionLatex || null,
+            file,
+            record: example,
+          });
+        });
+      }
     }
   }
 
@@ -259,7 +278,14 @@ function compileFigure(toolchain, figure, outDir) {
   const work = mkdtempSync(join(tmpdir(), "figure-build-"));
   try {
     const stem = figure.key.replace(/[^a-zA-Z0-9._-]+/g, "_");
-    const asyFile = `${stem}.asy`;
+    // The working source name is deliberately dotless and nothing to do with the key. asy
+    // derives its output name by stripping the last two dot-separated components off the source
+    // name, so `m1-l3.sections.concept.figures_0_.asy` compiles to `m1-l3.sections.concept.eps`
+    // and the expected output never appears. Every lesson figure key contains dots, so this
+    // silently failed 46 of 55 figures on asy 2.85 (Debian bookworm) while looking like a
+    // content problem. A fixed dotless name makes the output name predictable on every asy
+    // version; the artifact is written under the real stem below either way.
+    const asyFile = "figure.asy";
     writeFileSync(join(work, asyFile), figure.source);
     // No -outdir: asy 2.87 mis-parses it and eats the source filename. cwd is already the work
     // directory, so the compiler writes its output next to the source.
@@ -268,17 +294,18 @@ function compileFigure(toolchain, figure, outDir) {
       stdio: ["ignore", "pipe", "pipe"],
       timeout: 60_000,
     });
-    const svgPath = join(work, `${stem}.svg`);
+    const svgPath = join(work, "figure.svg");
     if (!existsSync(svgPath)) {
-      // asy 2.87 lands EPS here. Convert it; anything else means the compiler produced nothing.
-      const epsPath = join(work, `${stem}.eps`);
+      // asy without dvisvgm support lands EPS here, whatever version it is. Convert it; anything
+      // else means the compiler produced nothing.
+      const epsPath = join(work, "figure.eps");
       if (!existsSync(epsPath)) {
         const leftover = readdirSync(work).filter((f) => !f.endsWith(".asy"));
         return {
           error: `compiler produced no svg or eps for ${figure.key} (saw: ${leftover.join(", ") || "nothing"})`,
         };
       }
-      execFileSync(toolchain.dvisvgm, ["--eps", "--no-fonts", "-o", `${stem}.svg`, `${stem}.eps`], {
+      execFileSync(toolchain.dvisvgm, ["--eps", "--no-fonts", "-o", "figure.svg", "figure.eps"], {
         cwd: work,
         stdio: ["ignore", "pipe", "pipe"],
         timeout: 60_000,

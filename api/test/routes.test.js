@@ -142,21 +142,78 @@ test("no figure payload field appears anywhere on a content route", async () => 
   assert.deepEqual(Object.keys(withFigure.body).filter((k) => k === "figureKey"), ["figureKey"]);
 });
 
+// The seven figure payload fields are not the whole leak. asymptoteSource and its two siblings are
+// build input, they are kilobytes per figure, and a payload-field check cannot see them because
+// none of them is named in FIGURE_PAYLOAD_FIELDS. This walks every lesson and every exercise.
+test("no Asymptote build input appears anywhere on a content route", async () => {
+  const buildInput = ["asymptoteSource", "asymptoteAlt", "asymptoteAspectRatio"];
+  const lessons = await get("/api/lessons");
+  for (const summary of lessons.body) {
+    for (const path of [`/api/lessons/${summary.id}`, `/api/exercises?lessonId=${summary.id}`]) {
+      const { body } = await get(path);
+      const keys = collectKeys(body);
+      for (const field of buildInput) {
+        assert.equal(keys.has(field), false, `${field} leaked onto ${path}`);
+      }
+    }
+  }
+});
+
+test("a free-response exercise on the wire ships neither the key nor the derivation", async () => {
+  const { status, body } = await get("/api/exercises/m1-l1-m2");
+  assert.equal(status, 200);
+  assert.equal(body.choices, null);
+  assert.equal(body.answerWithheld, true);
+  assert.equal(body.solutionWithheld, true);
+  assert.equal("answerLatex" in body, false);
+  assert.equal("solutionLatex" in body, false);
+  // The string "5" is the answer to this exercise. It must not be reachable from the record.
+  assert.equal(JSON.stringify(body).includes("=4$ and $b=9$"), false);
+});
+
+// A manifest the build did not pass. Constructed here rather than read off disk: artifacts/ is
+// gitignored, so a test that reads the shipped manifest asserts whatever the last local Asymptote
+// run happened to leave behind — which is how this suite passed against toolchain-missing and
+// then failed the moment a real image ran the build.
+const unusableManifest = () =>
+  new FigureStore({
+    pipelineVersion: "asymptote-svg-sanitized@2",
+    status: "toolchain-missing",
+    toolchain: null,
+    figures: [],
+  });
+
 test("GET /api/figures is a hard 503 when the build did not produce a usable manifest", async () => {
-  // The shipped manifest in this repository is status toolchain-missing with zero figures,
-  // because no local Asymptote run has happened. The contract is explicit that this must be a
-  // 503 and never an empty list, so that is what is asserted here.
-  const { status, body } = await get("/api/figures");
-  assert.equal(status, 503);
-  assert.ok(body.error.startsWith("figure-pipeline-"));
-  assert.match(body.message, /content:figures/);
+  // The contract is explicit that a build which never produced a usable manifest must be a 503
+  // and never an empty list.
+  const unusable = createApp({ dataDir, figureStore: unusableManifest() });
+  const server3 = unusable.listen(0);
+  await new Promise((resolve) => server3.once("listening", resolve));
+  const url = `http://127.0.0.1:${server3.address().port}`;
+  try {
+    const res = await fetch(`${url}/api/figures`);
+    const body = await res.json();
+    assert.equal(res.status, 503);
+    assert.ok(body.error.startsWith("figure-pipeline-"));
+    assert.match(body.message, /content:figures/);
+  } finally {
+    await new Promise((resolve) => server3.close(resolve));
+  }
 });
 
 test("a figure key lookup against an unusable manifest is a 503, not a 404", async () => {
   // A 404 here would tell a client the figure does not exist. The truth is that no build ran, and
   // those are different bugs with different fixes.
-  const { status } = await get("/api/figures/m6-l3-p6");
-  assert.equal(status, 503);
+  const unusable = createApp({ dataDir, figureStore: unusableManifest() });
+  const server3 = unusable.listen(0);
+  await new Promise((resolve) => server3.once("listening", resolve));
+  const url = `http://127.0.0.1:${server3.address().port}`;
+  try {
+    const res = await fetch(`${url}/api/figures/m6-l3-p6`);
+    assert.equal(res.status, 503);
+  } finally {
+    await new Promise((resolve) => server3.close(resolve));
+  }
 });
 
 test("with a passing manifest, the figure route serves exactly the contract payload", async () => {
