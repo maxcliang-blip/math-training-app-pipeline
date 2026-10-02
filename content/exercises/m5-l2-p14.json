@@ -1,0 +1,31 @@
+{
+  "id": "m5-l2-p14",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "triangles",
+    "similarity",
+    "midpoint",
+    "perimeter"
+  ],
+  "promptLatex": "Points $D$, $E$, and $F$ are the midpoints of $\\overline{BC}$, $\\overline{CA}$, and $\\overline{AB}$ respectively in triangle $ABC$. If $AB = 9$, $BC = 12$, and $CA = 15$, what is the perimeter of triangle $DEF$?",
+  "choices": null,
+  "answerLatex": "18",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Three midpoints create three midsegments at once, one for each side.",
+    "Each midsegment is parallel to a side and half its length; match them up before adding.",
+    "$DE = AB/2$, $EF = BC/2$, and $DF = CA/2$, so the perimeter is half of $9 + 12 + 15$."
+  ],
+  "solutionLatex": "Joining the midpoints of a triangle creates three midsegments. Each is parallel to one side and half as long as it.\n\nMatching them to the sides they are parallel to: $DE$ joins the midpoints of $BC$ and $CA$, so it is parallel to $BA$ and $DE = \\frac{AB}{2} = \\frac{9}{2}$.\n\nLikewise $EF = \\frac{BC}{2} = 6$ and $DF = \\frac{CA}{2} = \\frac{15}{2}$.\n\nAdding, the perimeter of $\\triangle DEF$ is $\\frac{9 + 12 + 15}{2} = \\frac{36}{2} = 18$.",
+  "techniqueSlugs": [
+    "parallel-line-similarity",
+    "similarity-aa",
+    "missing-length-in-similar-triangles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

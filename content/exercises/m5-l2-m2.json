@@ -1,0 +1,30 @@
+{
+  "id": "m5-l2-m2",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "triangles",
+    "similarity",
+    "area-of-triangles",
+    "perimeter"
+  ],
+  "promptLatex": "Two similar triangles have areas $24$ and $54$. The triangle with area $24$ has perimeter $16$. What is the perimeter of the triangle with area $54$?",
+  "choices": null,
+  "answerLatex": "24",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The areas are given, not the sides, so the ratio you read off is not yet the length ratio.",
+    "Take the square root of the area ratio to recover the length ratio.",
+    "The area ratio is $54/24 = 9/4$, so the side ratio is $3/2$ and the perimeter is $16 \\cdot 3/2$."
+  ],
+  "solutionLatex": "The ratio of the areas is $\\frac{54}{24} = \\frac{9}{4}$. For similar triangles the area ratio is the square of the scale factor, so the scale factor is $\\sqrt{9/4} = 3/2$.\n\nPerimeter is a length, so it scales by the scale factor itself rather than by its square.\n\nThe larger triangle therefore has perimeter $16 \\cdot \\frac{3}{2} = 24$.",
+  "techniqueSlugs": [
+    "area-scaling-from-scale",
+    "similarity-aa"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,32 @@
+{
+  "id": "m5-l2-p12",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "triangles",
+    "congruence",
+    "angle-bisectors",
+    "isosceles-base-angles"
+  ],
+  "promptLatex": "In triangle $ABC$, $AB = AC$, and the segment $AD$ bisects $\\angle BAC$, meeting $\\overline{BC}$ at $D$. If $AD = 5$ and $BD = 12$, what is the perimeter of $\\triangle ABC$?",
+  "choices": null,
+  "answerLatex": "50",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Compare the two halves of the triangle the bisector creates.",
+    "The halves share one side and the bisector makes one more pair of sides equal.",
+    "The triangles $ABD$ and $ACD$ are congruent, so $DC = 12$ and $\\angle ADB = 90^{\\circ}$."
+  ],
+  "solutionLatex": "In $\\triangle ABD$ and $\\triangle ACD$ we have $AB = AC$, the shared side $AD$, and $\\angle BAD = \\angle DAC$ because $AD$ bisects the apex angle.\n\nThat is SAS, so the two triangles are congruent. Corresponding parts are congruent, giving $DC = BD = 12$ and $\\angle ADB = \\angle ADC$.\n\nThose two angles also form a linear pair along $\\overline{BC}$, so they are supplementary; being equal they must each be $90^{\\circ}$. Hence $BD \\perp AD$ and $AB = \\sqrt{12^2 + 5^2} = \\sqrt{169} = 13$.\n\nSo $BC = 24$ and, by the isosceles base angles, $AC = AB = 13$. The perimeter is $13 + 13 + 24 = 50$.",
+  "techniqueSlugs": [
+    "congruence-sas",
+    "angle-bisector-split",
+    "cpctc",
+    "isosceles-base-angles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,36 @@
+{
+  "id": "m5-l2-p4",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "triangles",
+    "similarity",
+    "parallel-lines"
+  ],
+  "promptLatex": "In triangle $ABC$, points $D$ and $E$ lie on $\\overline{AB}$ and $\\overline{BC}$, and $\\overline{DE}$ is parallel to $\\overline{AC}$. If $BD = 3$, $DC = 6$, and $DE = 4$, what is $AC$?",
+  "choices": [
+    "9",
+    "12",
+    "16",
+    "18",
+    "27"
+  ],
+  "answerLatex": "12",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A segment parallel to one side cuts off a smaller triangle with the same shape.",
+    "Find the whole side that contains the segment you were given.",
+    "$BC = 9$, and $BD/BA = 3/9$ also equals $DE/AC = 4/AC$."
+  ],
+  "solutionLatex": "Since $\\overline{DE} \\parallel \\overline{AC}$, the angles at $B$ are shared and the remaining angles are equal as corresponding angles, so $\\triangle BDE \\sim \\triangle BAC$.\n\nThe whole side is $BA = BD + DC = 3 + 6 = 9$. In the similarity, $BD$ pairs with $BA$ and $DE$ pairs with $AC$, so $\\frac{BD}{BA} = \\frac{DE}{AC}$.\n\nThat is $\\frac{3}{9} = \\frac{4}{AC}$, hence $AC = 12$.",
+  "techniqueSlugs": [
+    "similarity-aa",
+    "parallel-line-similarity",
+    "missing-length-in-similar-triangles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

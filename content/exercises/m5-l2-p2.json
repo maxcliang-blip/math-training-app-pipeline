@@ -1,0 +1,36 @@
+{
+  "id": "m5-l2-p2",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "triangles",
+    "similarity",
+    "midpoint"
+  ],
+  "promptLatex": "In triangle $ABC$, points $D$ and $E$ lie on $\\overline{AB}$ and $\\overline{AC}$ with $AD = 3$, $DB = 3$, $AE = 4$, and $EC = 4$. If $DE = 10$, what is $BC$?",
+  "choices": [
+    "5",
+    "10",
+    "15",
+    "20",
+    "25"
+  ],
+  "answerLatex": "20",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Notice that each of the two points splits its side into two equal pieces.",
+    "Compare the small triangle $ADE$ with the whole triangle $ABC$, vertex for vertex.",
+    "$AD/AB = 3/6$, so $DE/BC = 1/2$ and $BC = 20$."
+  ],
+  "solutionLatex": "Since $AD = DB = 3$, the segment $AB$ has length $6$ and $D$ is its midpoint. Likewise $AC = 8$ and $E$ is its midpoint, so $\\overline{DE}$ is a midsegment.\n\nThe midsegment is parallel to the third side and half as long as it, so $DE = \\frac{1}{2} BC$. With $DE = 10$ that gives $BC = 20$.\n\nEquivalently, $\\triangle ADE \\sim \\triangle ABC$ by AA with ratio $AD/AB = 3/6 = 1/2$, and $DE/BC = 1/2$ reproduces the same value.",
+  "techniqueSlugs": [
+    "parallel-line-similarity",
+    "similarity-aa",
+    "missing-length-in-similar-triangles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

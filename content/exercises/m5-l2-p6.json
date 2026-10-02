@@ -1,0 +1,29 @@
+{
+  "id": "m5-l2-p6",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "triangles",
+    "congruence",
+    "cpctc"
+  ],
+  "promptLatex": "Triangles $ABC$ and $DEF$ satisfy $AB = DE$, $BC = EF$, and $\\angle ABC = \\angle DEF$. If $AB = 7$, $BC = 11$, and $AC = 5$, what is the perimeter of $\\triangle DEF$?",
+  "choices": null,
+  "answerLatex": "23",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Two equal sides and the angle between them are exactly the data one congruence criterion asks for.",
+    "Once the triangles are congruent, every other part carries over to the matching vertex.",
+    "The three sides of $\\triangle DEF$ are $7$, $11$, and $5$."
+  ],
+  "solutionLatex": "The two pairs of equal sides $AB = DE$ and $BC = EF$ enclose the equal angles $\\angle ABC = \\angle DEF$, so the triangles are congruent by SAS.\n\nThe correspondence sends $A$ to $D$, $B$ to $E$, and $C$ to $F$, so corresponding parts of congruent triangles are congruent. That transfers $DE = AB = 7$ and $EF = BC = 11$.\n\nThe third side $DF$ corresponds to $AC = 5$. The perimeter of $\\triangle DEF$ is $7 + 11 + 5 = 23$.",
+  "techniqueSlugs": [
+    "congruence-sas",
+    "cpctc"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

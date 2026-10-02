@@ -1,0 +1,29 @@
+{
+  "id": "m5-l2-p5",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "triangles",
+    "similarity",
+    "area-of-triangles"
+  ],
+  "promptLatex": "Triangle $T$ has area $36$. A second triangle is similar to $T$ with every side $3$ times as long. What is the area of the second triangle?",
+  "choices": null,
+  "answerLatex": "324",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Areas of similar figures are not in the same ratio as their sides.",
+    "The area scales with the square of the length ratio.",
+    "$36 \\cdot 3^2 = 36 \\cdot 9 = 324$."
+  ],
+  "solutionLatex": "The two triangles are similar with scale factor $k = 3$, since every side of the second is three times the matching side of the first.\n\nFor similar triangles the area ratio is $k^2$, not $k$, because area is a length squared. Here $k^2 = 9$.\n\nThe second triangle therefore has area $36 \\cdot 9 = 324$.",
+  "techniqueSlugs": [
+    "area-scaling-from-scale",
+    "similarity-aa"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

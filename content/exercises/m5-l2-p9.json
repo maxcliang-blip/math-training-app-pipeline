@@ -1,0 +1,35 @@
+{
+  "id": "m5-l2-p9",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "triangles",
+    "similarity",
+    "sas-triangles"
+  ],
+  "promptLatex": "Triangle $ABC$ has $AB = 4$, $AC = 6$, and $\\angle BAC = 50^{\\circ}$. Triangle $DEF$ has $DE = 6$, $DF = 9$, and $\\angle EDF = 50^{\\circ}$. The ratio $\\frac{BC}{EF}$ is",
+  "choices": [
+    "\\frac{2}{3}",
+    "\\frac{3}{2}",
+    "\\frac{1}{2}",
+    "2",
+    "\\frac{9}{6}"
+  ],
+  "answerLatex": "\\frac{2}{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Both triangles are described by two sides and the angle between them.",
+    "Compare the two pairs of sides that flank the equal angles.",
+    "$4/6 = 6/9 = 2/3$, so the third pair has that same ratio."
+  ],
+  "solutionLatex": "The equal angle $\\angle BAC = \\angle EDF = 50^{\\circ}$ is enclosed by the side pairs $AB, AC$ and $DE, DF$.\n\nThose pairs are already in proportion: $AB/DE = 4/6 = 2/3$ and $AC/DF = 6/9 = 2/3$. Two pairs of sides in proportion with the included angles equal give SAS similarity.\n\nThe remaining sides must share that ratio, so $BC/EF = 2/3$.",
+  "techniqueSlugs": [
+    "similarity-sas",
+    "sides-angles-sides-check"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

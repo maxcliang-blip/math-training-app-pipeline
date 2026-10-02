@@ -1,0 +1,30 @@
+{
+  "id": "m5-l2-p8",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "triangles",
+    "similarity",
+    "area-of-triangles",
+    "perimeter"
+  ],
+  "promptLatex": "Two similar triangles have perimeters $30$ and $50$. If the area of the triangle with perimeter $30$ is $27$, what is the area of the other triangle?",
+  "choices": null,
+  "answerLatex": "75",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Perimeter and area scale by different powers of the same ratio.",
+    "Get the scale factor from the perimeters, then square it before touching the area.",
+    "The scale factor is $5/3$, so the area ratio is $25/9$."
+  ],
+  "solutionLatex": "Perimeter is a length, so the ratio of the perimeters is the scale factor: $k = \\frac{50}{30} = \\frac{5}{3}$.\n\nArea is a length squared, so the ratio of the areas is $k^2 = \\frac{25}{9}$, not $k$.\n\nMultiplying the smaller area by that ratio gives $27 \\cdot \\frac{25}{9} = 75$.",
+  "techniqueSlugs": [
+    "area-scaling-from-scale",
+    "missing-length-in-similar-triangles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

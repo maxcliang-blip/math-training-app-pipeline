@@ -57,6 +57,11 @@ RUN npm ci
 COPY lib/ lib/
 COPY api/ api/
 COPY web/ web/
+# scripts/ because api/test/figures.test.js imports scripts/build-figures.mjs to exercise
+# measureBox, classifyDrift and recordAspectRatios. Without this layer the suite fails with
+# ERR_MODULE_NOT_FOUND inside the image, which is why this image could not be rebuilt from main at
+# all: the build died at `npm test` before it ever reached the runtime stage.
+COPY scripts/ scripts/
 # The suite asserts against the real corpus, so the corpus has to be in this stage. A build that
 # ran the tests against an empty content/ would pass 25 assertions by accident.
 COPY content/ content/
@@ -81,6 +86,16 @@ RUN apt-get update \
  && chown -R node:node /opt/mta/.data
 
 WORKDIR /opt/mta
+
+# Provenance. A staging image that cannot say which commit it was built from cannot be checked
+# against main, and an image that cannot be checked against main drifts silently: the container
+# keeps serving whatever corpus it was baked with while main moves on. These two labels are what
+# scripts/verify-staging-source.sh asserts, so a wrong build source fails a check instead of
+# looking healthy on localhost.
+ARG BUILD_REPO=https://github.com/maxcliang-blip/math-training-app-pipeline.git
+ARG BUILD_COMMIT=unknown
+LABEL org.opencontainers.image.source="${BUILD_REPO}" \
+      org.opencontainers.image.revision="${BUILD_COMMIT}"
 
 COPY --from=build --chown=node:node /repo/node_modules ./node_modules
 COPY --from=build --chown=node:node /repo/package.json ./package.json

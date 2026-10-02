@@ -1,0 +1,30 @@
+{
+  "id": "m5-l2-p11",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "triangles",
+    "similarity",
+    "area-of-triangles"
+  ],
+  "promptLatex": "Triangle $ABC$ is similar to triangle $XYZ$, with $AB$ matching $XY$, $BC$ matching $YZ$, and $CA$ matching $ZX$. The altitude of $\\triangle ABC$ drawn to side $BC$ has length $15$, and the altitude of $\\triangle XYZ$ drawn to side $YZ$ has length $25$. If $AB = 20$, what is $XY$?",
+  "choices": null,
+  "answerLatex": "12",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Altitudes to matching sides of similar triangles are themselves in the scale ratio.",
+    "The scale factor is the ratio of the two altitudes you were handed.",
+    "$XY = 20 \\cdot \\frac{15}{25} = 12$."
+  ],
+  "solutionLatex": "The two altitudes are drawn to matching sides, since $BC$ matches $YZ$.\n\nEvery length in similar figures, including corresponding altitudes, is multiplied by the same scale factor. So $\\triangle ABC$ is to $\\triangle XYZ$ as $15$ is to $25$, and the scale factor from the second triangle back to the first is $\\frac{15}{25} = \\frac{3}{5}$.\n\nApplying that to $AB$ and $XY$ gives $XY = 20 \\cdot \\frac{3}{5} = 12$.",
+  "techniqueSlugs": [
+    "similarity-aa",
+    "missing-length-in-similar-triangles",
+    "area-scaling-from-scale"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

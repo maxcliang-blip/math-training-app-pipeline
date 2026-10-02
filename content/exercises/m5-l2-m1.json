@@ -1,0 +1,31 @@
+{
+  "id": "m5-l2-m1",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "triangles",
+    "similarity",
+    "area-of-triangles",
+    "midpoint"
+  ],
+  "promptLatex": "Triangle $ABC$ has area $48$. Point $D$ is the midpoint of $\\overline{AB}$, and point $E$ lies on $\\overline{AC}$ with $\\overline{DE}$ parallel to $\\overline{BC}$. What is the area of $\\triangle ADE$?",
+  "choices": null,
+  "answerLatex": "12",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A segment parallel to a side cuts off a triangle with the same shape.",
+    "The areas of similar triangles are in the ratio of the squares of the side ratios.",
+    "$48 \\cdot (1/2)^2 = 48 \\cdot 1/4 = 12$."
+  ],
+  "solutionLatex": "Because $\\overline{DE} \\parallel \\overline{BC}$, the triangles $ADE$ and $ABC$ are similar by AA, with $A$ matching $A$, $D$ matching $B$, and $E$ matching $C$.\n\nSince $D$ is the midpoint of $AB$, the ratio of corresponding sides is $AD/AB = 1/2$.\n\nAreas of similar triangles are in the ratio of the squares of the side ratios, so $[ADE]/[ABC] = (1/2)^2 = 1/4$.\n\nThe area of $\\triangle ADE$ is therefore $\\frac{1}{4} \\cdot 48 = 12$.",
+  "techniqueSlugs": [
+    "parallel-line-similarity",
+    "similarity-aa",
+    "area-scaling-from-scale"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

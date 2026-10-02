@@ -1,0 +1,34 @@
+{
+  "id": "m5-l2-p1",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "triangles",
+    "isosceles-base-angles"
+  ],
+  "promptLatex": "In triangle $ABC$, $AB = AC$ and the measure of $\\angle BAC$ is $40^{\\circ}$. What is the measure of $\\angle ABC$, in degrees?",
+  "choices": [
+    "40",
+    "50",
+    "70",
+    "100",
+    "140"
+  ],
+  "answerLatex": "70",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The two equal sides of a triangle sit opposite two equal angles.",
+    "Use the triangle angle sum once you know all three angles.",
+    "The base angles are equal, so each is $(180 - 40)/2 = 70$."
+  ],
+  "solutionLatex": "In $\\triangle ABC$ the equal sides are $AB$ and $AC$, so the angles opposite them are equal, which means $\\angle ABC = \\angle BCA$.\n\nCall that common base angle $x$. The triangle angle sum gives $40 + x + x = 180$, so $2x = 140$ and $x = 70$.",
+  "techniqueSlugs": [
+    "isosceles-base-angles",
+    "triangle-angle-sum"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,29 @@
+{
+  "id": "m5-l2-p10",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "triangles",
+    "similarity",
+    "pythagorean"
+  ],
+  "promptLatex": "In right triangle $ABC$ the right angle is at $C$. The altitude from $C$ meets hypotenuse $\\overline{AB}$ at $D$, where $AD = 4$ and $DB = 9$. What is $AC + BC$?",
+  "choices": null,
+  "answerLatex": "5\\sqrt{13}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Each leg of the big triangle is the geometric mean of the hypotenuse and its own segment.",
+    "Work out the hypotenuse first, then simplify each leg carefully.",
+    "$AC = \\sqrt{4 \\cdot 13} = 2\\sqrt{13}$ and $BC = \\sqrt{9 \\cdot 13} = 3\\sqrt{13}$."
+  ],
+  "solutionLatex": "The hypotenuse is $AB = AD + DB = 4 + 9 = 13$.\n\nThe altitude to the hypotenuse makes $\\triangle ACD$ and $\\triangle CBD$ similar to the whole triangle, so each leg is the geometric mean of the hypotenuse and the segment it sits above.\n\nThat gives $AC = \\sqrt{AD \\cdot AB} = \\sqrt{52} = 2\\sqrt{13}$ and $BC = \\sqrt{DB \\cdot AB} = \\sqrt{117} = 3\\sqrt{13}$.\n\nAdding them, $AC + BC = 5\\sqrt{13}$.",
+  "techniqueSlugs": [
+    "right-triangle-altitude-similarity",
+    "similarity-aa"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

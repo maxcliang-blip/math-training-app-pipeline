@@ -1,0 +1,30 @@
+{
+  "id": "m5-l2-p7",
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "triangles",
+    "similarity",
+    "sas-triangles"
+  ],
+  "promptLatex": "In triangles $ABC$ and $DEF$, $AB = 6$, $BC = 9$, $AC = 12$, $DE = 10$, and $\\angle ABC = \\angle DEF$. What is $DF$?",
+  "choices": null,
+  "answerLatex": "20",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The two known sides sit on either side of the given equal angle.",
+    "Read one ratio off the two known side pairs, then carry it to the third side.",
+    "$AB/DE = 6/10$, so every ratio in the pair is $5/3$ and $DF = 12 \\cdot 5/3$."
+  ],
+  "solutionLatex": "The angle $\\angle ABC$ is enclosed by the sides $AB$ and $BC$, and $\\angle DEF$ is enclosed by $DE$ and $EF$.\n\nFrom the first pair, $AB/DE = 6/10 = 3/5$. The second pair must carry the same ratio, so $9/EF = 3/5$, giving $EF = 15$.\n\nTwo pairs of sides in proportion with the included angles equal give SAS similarity, so the third pair does too: $AC/DF = 3/5$. Therefore $DF = 12 \\cdot \\frac{5}{3} = 20$.",
+  "techniqueSlugs": [
+    "similarity-sas",
+    "sides-angles-sides-check",
+    "missing-length-in-similar-triangles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

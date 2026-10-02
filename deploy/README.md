@@ -5,14 +5,50 @@ repository, and nothing else.
 
 ```bash
 git switch main && git pull --ff-only
-docker build -t math-training-app:staging .
+docker build -t math-training-app:staging \
+  --build-arg BUILD_COMMIT="$(git rev-parse HEAD)" .
 docker rm -f math-staging
 docker run -d --name math-staging \
   --network math-staging-net \
   -p 127.0.0.1:18083:80 \
   math-training-app:staging
+sh scripts/verify-staging-source.sh
 node scripts/verify-staging.mjs http://127.0.0.1:18083
 ```
+
+`BUILD_COMMIT` is not decoration. The image carries it as
+`org.opencontainers.image.revision`, and `verify-staging-source.sh` compares it against
+`origin/main`, so a staging container built from the wrong tree or a stale commit fails a check
+instead of serving a corpus that exists on no branch. Build without it and the check reports the
+image as unprovenanced, which is a failure.
+
+## If plain `docker` says "permission denied ... /var/run/docker.sock"
+
+That is not a missing daemon. The socket is `root:docker` `srw-rw----`, so `docker` works only if
+this session has the `docker` supplementary group. Prefix the command:
+
+```bash
+sg docker -c 'docker info'
+```
+
+An image can therefore be rebuilt from a session whose bare `docker` fails, which is the opposite
+of the conclusion that gets drawn. `verify-staging-source.sh` handles both cases on its own.
+
+## Building from a clean export
+
+`git switch main` in a shared checkout is not enough if that checkout has untracked content: the
+Dockerfile copies `content/` from the build context, so untracked lessons and exercises are baked
+into the image and then served as though they were on `main`. To build exactly what `main` holds:
+
+```bash
+rm -rf /tmp/mta-build && mkdir -p /tmp/mta-build
+git archive main | tar -x -C /tmp/mta-build
+docker build -t math-training-app:staging \
+  --build-arg BUILD_COMMIT="$(git rev-parse main)" /tmp/mta-build
+```
+
+`verify-staging-source.sh` catches this afterwards by counting lesson and exercise files inside the
+image against the same counts in the commit.
 
 `math-staging-tunnel` reaches the container by name over `math-staging-net`, so both the
 container name and the network have to survive the recreate. Drop either and the tunnel
