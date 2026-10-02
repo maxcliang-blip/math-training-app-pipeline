@@ -1,0 +1,34 @@
+{
+  "id": "m7-l4-p2",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "expected-value",
+    "independence"
+  ],
+  "promptLatex": "A fair coin is flipped five times. What is the expected number of flips that show heads?",
+  "choices": [
+    "\\frac{5}{4}",
+    "\\frac{5}{2}",
+    "\\frac{5}{3}",
+    "\\frac{3}{2}",
+    "\\frac{5}{8}"
+  ],
+  "answerLatex": "\\frac{5}{2}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Each individual flip contributes its own chance of a head, and the total is the sum of those contributions.",
+    "There are five flips and each is heads with probability $\\frac{1}{2}$.",
+    "Adding the five contributions gives $5 \\cdot \\frac{1}{2}$."
+  ],
+  "solutionLatex": "Let $I_i$ be $1$ if the $i$th flip is a head and $0$ otherwise, so the number of heads is $\\sum_{i=1}^{5} I_i$. Each flip is a head with probability $\\frac{1}{2}$, so $E[I_i] = \\frac{1}{2}$.\n\nBy linearity of expectation,\n\nE[\\text{heads}] = \\sum_{i=1}^{5} E[I_i] = 5 \\cdot \\frac{1}{2} = \\frac{5}{2}.",
+  "techniqueSlugs": [
+    "indicator-variables",
+    "linearity-of-expectation"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-p9",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "bayes-theorem",
+    "probability"
+  ],
+  "promptLatex": "A drawer holds one fair coin and one coin with two heads, indistinguishable by appearance. A coin is chosen at random and flipped twice. Given that both flips show heads, what is the probability that the coin drawn was the two-headed one?",
+  "choices": [
+    "\\frac{1}{3}",
+    "\\frac{1}{2}",
+    "\\frac{3}{5}",
+    "\\frac{4}{5}",
+    "\\frac{8}{9}"
+  ],
+  "answerLatex": "\\frac{4}{5}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "One flip cannot identify the coin, so both flips have to be counted together.",
+    "The two-headed coin gives two heads with probability $1$ and the fair coin with probability $\\frac{1}{4}$.",
+    "Divide the weight $\\frac{1}{2}$ on the two-headed coin by the total weight $\\frac{1}{2} + \\frac{1}{8}$."
+  ],
+  "solutionLatex": "Each coin was drawn with probability $\\frac{1}{2}$. Two heads from the two-headed coin is certain, giving a weight of $\\frac{1}{2}$. Two heads from the fair coin has probability $\\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$, giving a weight of $\\frac{1}{8}$.\n\nThe total weight on two heads is $\\frac{1}{2} + \\frac{1}{8} = \\frac{5}{8}$.\n\nP(\\text{two-headed} \\mid HH) = \\frac{1/2}{5/8} = \\frac{4}{5}",
+  "techniqueSlugs": [
+    "posterior-normalization",
+    "prior-times-likelihood"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

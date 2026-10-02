@@ -1,0 +1,35 @@
+{
+  "id": "m7-l3-p15",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "bayes-theorem",
+    "combinations",
+    "probability"
+  ],
+  "promptLatex": "A bag holds 4 red, 3 white, and 2 blue balls. Two balls are drawn at random without replacement. Given that at least one of the two balls is red, what is the probability that both are red?",
+  "choices": [
+    "\\frac{1}{6}",
+    "\\frac{3}{13}",
+    "\\frac{1}{4}",
+    "\\frac{2}{11}",
+    "\\frac{3}{11}"
+  ],
+  "answerLatex": "\\frac{3}{13}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The conditioning event leaves only the pairs that contain at least one red ball.",
+    "There are $\\binom{9}{2} = 36$ pairs in total and $\\binom{5}{2} = 10$ of them have no red ball.",
+    "So $26$ pairs contain at least one red ball, and $6$ of those are both red."
+  ],
+  "solutionLatex": "There are $4 + 3 + 2 = 9$ balls, so the two draws form one of $\\binom{9}{2} = 36$ equally likely pairs.\n\nThe pairs with no red ball are chosen from the $3 + 2 = 5$ non-red balls, giving $\\binom{5}{2} = 10$ pairs. So $36 - 10 = 26$ pairs contain at least one red ball.\n\nOf those, $\\binom{4}{2} = 6$ pairs are both red.\n\nP(\\text{both red} \\mid \\text{at least one red}) = \\frac{6}{26} = \\frac{3}{13}",
+  "techniqueSlugs": [
+    "posterior-normalization",
+    "discordant-pair-conditioning"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

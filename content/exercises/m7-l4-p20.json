@@ -1,0 +1,35 @@
+{
+  "id": "m7-l4-p20",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "expected-value",
+    "distributions",
+    "geometric-probability"
+  ],
+  "promptLatex": "A fair six-sided die is rolled repeatedly until a 6 appears. What is the expected number of rolls made, including the roll that shows the 6?",
+  "choices": [
+    "6",
+    "\\frac{36}{5}",
+    "\\frac{6}{5}",
+    "5",
+    "\\frac{5}{6}"
+  ],
+  "answerLatex": "6",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Use the tail sum: the expected count is the sum of the chances of still waiting at each stage.",
+    "The chance of needing at least $k$ rolls is $(\\frac{5}{6})^{k-1}$.",
+    "Adding the geometric series $\\sum_{k \\ge 1} (\\frac{5}{6})^{k-1}$ gives $\\frac{1}{1 - 5/6}$."
+  ],
+  "solutionLatex": "Let $N$ be the number of rolls, counting the successful one. Then $N \\ge k$ exactly when the first $k - 1$ rolls all miss, which has probability $\\left(\\frac{5}{6}\\right)^{k-1}$.\n\nThe tail sum identity gives\n\nE[N] = \\sum_{k=1}^{\\infty} P(N \\ge k) = \\sum_{k=1}^{\\infty} \\left(\\frac{5}{6}\\right)^{k-1} = \\frac{1}{1 - \\frac{5}{6}} = 6.\n\nThe same figure appears directly: the waiting time for a success with probability $\\frac{1}{6}$ is the reciprocal of that probability.",
+  "techniqueSlugs": [
+    "tail-sum-for-distinct-values",
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

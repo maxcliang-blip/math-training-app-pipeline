@@ -1,0 +1,33 @@
+{
+  "id": "m7-l3-p10",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "bayes-theorem",
+    "conditional-probability"
+  ],
+  "promptLatex": "Three tenths of the people in a town are left-handed. A test identifies a person's handedness correctly with probability 0.9 if the person is left-handed and with probability 0.2 if the person is right-handed. A person reports that the test says they are left-handed. What is the probability that the person really is left-handed?",
+  "choices": [
+    "\\frac{9}{10}",
+    "\\frac{27}{41}",
+    "\\frac{1}{4}",
+    "\\frac{3}{4}",
+    "\\frac{9}{14}"
+  ],
+  "answerLatex": "\\frac{27}{41}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Take a large population and count how many left-handed and how many right-handed people the test calls left-handed.",
+    "Out of $1000$ people, $300$ are left-handed and $700$ are right-handed; the test calls $270$ and $140$ of them respectively left-handed.",
+    "So $410$ people are called left-handed and $270$ of them really are."
+  ],
+  "solutionLatex": "Take a population of $1000$ people. Of these, $300$ are left-handed and $700$ are right-handed.\n\nThe test calls $0.9 \\cdot 300 = 270$ of the left-handed people left-handed, and $0.2 \\cdot 700 = 140$ of the right-handed people left-handed.\n\nAltogether $270 + 140 = 410$ people are reported left-handed, of whom $270$ really are.\n\nP(L \\mid +) = \\frac{270}{410} = \\frac{27}{41}",
+  "techniqueSlugs": [
+    "sensitivity-specificity-split"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,33 @@
+{
+  "id": "m7-l3-p24",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "bayes-theorem",
+    "probability"
+  ],
+  "promptLatex": "Three boxes each hold two balls: one box holds two white balls, one box holds two black balls, and one box holds one ball of each colour. A box is chosen at random and a ball is drawn from it. Given that the first ball drawn is white, what is the probability that the box chosen was the all-white box?",
+  "choices": [
+    "\\frac{1}{2}",
+    "\\frac{3}{5}",
+    "\\frac{2}{3}",
+    "\\frac{3}{4}",
+    "\\frac{4}{5}"
+  ],
+  "answerLatex": "\\frac{2}{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The all-white box and the mixed box both produce white balls, so both contribute to the evidence.",
+    "The all-white box has weight $\\frac{1}{3} \\cdot 1 = \\frac{1}{3}$ and the mixed box has weight $\\frac{1}{3} \\cdot \\frac{1}{2} = \\frac{1}{6}$.",
+    "The total is $\\frac{1}{2}$, so the all-white box's share is $\\frac{1/3}{1/2}$."
+  ],
+  "solutionLatex": "Each box is chosen with probability $\\frac{1}{3}$. The chance of drawing white is $1$ from the all-white box, $\\frac{1}{2}$ from the mixed box, and $0$ from the all-black box.\n\nThe weights on a white ball are $\\frac{1}{3} \\cdot 1 = \\frac{1}{3}$ and $\\frac{1}{3} \\cdot \\frac{1}{2} = \\frac{1}{6}$, totalling $\\frac{1}{2}$.\n\nP(\\text{all-white} \\mid \\text{white}) = \\frac{1/3}{1/2} = \\frac{2}{3}",
+  "techniqueSlugs": [
+    "uniform-prior-geometry"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

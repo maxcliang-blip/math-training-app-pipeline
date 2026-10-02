@@ -1,0 +1,34 @@
+{
+  "id": "m7-l4-p26",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "expected-value",
+    "linearity-of-expectation"
+  ],
+  "promptLatex": "A standard 52-card deck is shuffled and dealt one card at a time until the first ace appears. What is the expected number of cards dealt, counting the ace itself?",
+  "choices": [
+    "\\frac{53}{5}",
+    "13",
+    "\\frac{52}{4}",
+    "\\frac{48}{5}",
+    "\\frac{25}{2}"
+  ],
+  "answerLatex": "\\frac{53}{5}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The 48 non-aces fall into the five gaps around the four aces, and by symmetry the gap before the first ace is the same size as the others.",
+    "Those 48 cards split evenly on average, so $\\frac{48}{5}$ non-aces precede the first ace.",
+    "Counting the ace itself adds one, giving $\\frac{48}{5} + 1$."
+  ],
+  "solutionLatex": "A shuffled deck places the four aces among the 52 cards. These split the 48 non-aces into five gaps: before the first ace, between consecutive aces, and after the last ace.\n\nBy symmetry the five gaps carry equal expected shares of the 48 non-aces, so the gap before the first ace holds $\\frac{48}{5} = 9.6$ cards on average.\n\nThe number of cards dealt is that many non-aces plus the ace itself, so\n\nE = \\frac{48}{5} + 1 = \\frac{53}{5}.\n\nDrawing with replacement would give a different answer, since the expected position of the first ace among $52$ independent draws would be $13$.",
+  "techniqueSlugs": [
+    "linearity-of-expectation",
+    "tail-sum-for-distinct-values"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

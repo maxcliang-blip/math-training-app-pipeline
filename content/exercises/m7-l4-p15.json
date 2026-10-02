@@ -1,0 +1,34 @@
+{
+  "id": "m7-l4-p15",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "expected-value",
+    "distributions"
+  ],
+  "promptLatex": "A fair six-sided die is rolled once and the number $X$ showing is recorded. What is the expected value of the reciprocal $\\frac{1}{X}$?",
+  "choices": [
+    "\\frac{49}{120}",
+    "\\frac{2}{7}",
+    "\\frac{7}{2}",
+    "\\frac{1}{3}",
+    "\\frac{49}{36}"
+  ],
+  "answerLatex": "\\frac{49}{120}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The weights stay the face probabilities while the summand becomes the reciprocal of the face.",
+    "The reciprocals sum to $1 + \\frac{1}{2} + \\frac{1}{3} + \\frac{1}{4} + \\frac{1}{5} + \\frac{1}{6} = \\frac{49}{20}$.",
+    "Each face has probability $\\frac{1}{6}$, so the weighted sum is $\\frac{49/20}{6}$."
+  ],
+  "solutionLatex": "The variable takes each value $1$ through $6$ with probability $\\frac{1}{6}$, and the function is $g(x) = \\frac{1}{x}$.\n\nE\\left[\\frac{1}{X}\\right] = \\frac{1}{6}\\left(1 + \\frac{1}{2} + \\frac{1}{3} + \\frac{1}{4} + \\frac{1}{5} + \\frac{1}{6}\\right) = \\frac{1}{6} \\cdot \\frac{49}{20} = \\frac{49}{120}.\n\nThis exceeds the reciprocal of the mean, which is $\\frac{2}{7}$, because the reciprocal puts the most weight on the smallest face.",
+  "techniqueSlugs": [
+    "expectation-of-a-function",
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,35 @@
+{
+  "id": "m7-l3-p18",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "bayes-theorem",
+    "geometric-probability",
+    "coordinates"
+  ],
+  "promptLatex": "A point is chosen uniformly at random inside the unit square with corners $(0,0)$, $(1,0)$, $(1,1)$ and $(0,1)$. Given that the sum of its coordinates exceeds $1$, what is the probability that the x-coordinate exceeds $\\frac{1}{2}$?",
+  "choices": [
+    "\\frac{1}{2}",
+    "\\frac{5}{8}",
+    "\\frac{3}{4}",
+    "\\frac{2}{3}",
+    "\\frac{5}{6}"
+  ],
+  "answerLatex": "\\frac{3}{4}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Both the conditioning region and the subregion inside it are triangles or trapezoids, so the answer is an area ratio.",
+    "The region $x + y > 1$ is a triangle of area $\\frac{1}{2}$.",
+    "Inside it, the part with $x > \\frac{1}{2}$ has area $\\frac{3}{8}$, giving the ratio $\\frac{3/8}{1/2}$."
+  ],
+  "solutionLatex": "Inside the unit square the condition $x + y > 1$ describes the triangle above the diagonal from $(0,1)$ to $(1,0)$, which has area $\\frac{1}{2}$.\n\nWithin that triangle, requiring $x > \\frac{1}{2}$ leaves a trapezoid whose vertical height at position $x$ runs from $y = 1 - x$ up to $y = 1$, so the height is $x$. Its area is\n\n\\int_{1/2}^{1} x \\, dx = \\frac{1}{2}\\left(1 - \\frac{1}{4}\\right) = \\frac{3}{8}\n\nSince the point is uniform, the conditional probability is the area ratio $\\frac{3/8}{1/2} = \\frac{3}{4}$.",
+  "techniqueSlugs": [
+    "uniform-prior-geometry",
+    "law-of-total-probability"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-m2",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "bayes-theorem",
+    "probability"
+  ],
+  "promptLatex": "A fair coin is flipped four times. Given that at least three of the flips showed heads, what is the probability that all four flips showed heads?",
+  "choices": [
+    "\\frac{1}{4}",
+    "\\frac{1}{5}",
+    "\\frac{1}{3}",
+    "\\frac{1}{8}",
+    "\\frac{2}{5}"
+  ],
+  "answerLatex": "\\frac{1}{5}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Both events are counted directly, since four flips give only sixteen equally likely sequences.",
+    "All four heads is $1$ sequence, and exactly three heads is $4$ sequences, for $5$ sequences with at least three heads.",
+    "So the answer is $\\frac{1}{5}$ out of the $5$ sequences that qualify."
+  ],
+  "solutionLatex": "The four flips are independent and fair, so the $16$ sequences of heads and tails are equally likely.\n\nExactly four heads is $1$ sequence. Exactly three heads is $4$ sequences, since any one of the four positions can hold the single tail. So $5$ sequences have at least three heads.\n\nP(\\text{four heads} \\mid \\text{at least three heads}) = \\frac{1}{5}",
+  "techniqueSlugs": [
+    "posterior-normalization",
+    "law-of-total-probability"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,34 @@
+{
+  "id": "m7-l4-p11",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "expected-value",
+    "distributions"
+  ],
+  "promptLatex": "A game pays 5 dollars with probability 1 third, 2 dollars with probability 1 third, and takes away 1 dollar with probability 1 third. What is the expected payoff of one play?",
+  "choices": [
+    "1",
+    "\\frac{4}{3}",
+    "2",
+    "\\frac{8}{3}",
+    "\\frac{5}{2}"
+  ],
+  "answerLatex": "2",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Add each payoff multiplied by the chance of receiving it.",
+    "The three contributions are $\\frac{5}{3}$, $\\frac{2}{3}$ and $-\\frac{1}{3}$.",
+    "Their sum is $\\frac{5 + 2 - 1}{3}$."
+  ],
+  "solutionLatex": "The three outcomes are equally likely, so\n\nE = \\frac{1}{3} \\cdot 5 + \\frac{1}{3} \\cdot 2 + \\frac{1}{3} \\cdot (-1) = \\frac{5 + 2 - 1}{3} = \\frac{6}{3} = 2.\n\nThe most likely single outcome is the payoff of $2$ dollars, and here the mean happens to agree with it. That coincidence is not something to rely on: a losing outcome worth $-1$ still contributes a negative term, and it is the sum of the terms that answers the question.",
+  "techniqueSlugs": [
+    "expected-value-setup",
+    "fair-game-fairness"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

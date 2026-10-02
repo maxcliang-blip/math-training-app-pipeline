@@ -1,0 +1,35 @@
+{
+  "id": "m7-l3-m3",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "bayes-theorem",
+    "probability",
+    "distributions"
+  ],
+  "promptLatex": "A factory makes half its output on line A, which ships 2 percent defective, three tenths on line B, which ships 6 percent defective, and a fifth on line C, which ships 10 percent defective. Two items from the shipment are drawn and both are found to be defective. What is the probability that both came from line C?",
+  "choices": [
+    "\\frac{1}{2}",
+    "\\frac{25}{41}",
+    "\\frac{2}{5}",
+    "\\frac{3}{8}",
+    "\\frac{5}{12}"
+  ],
+  "answerLatex": "\\frac{25}{41}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Weight each line by its share of the output multiplied by the chance of two defects from that line.",
+    "The weights are $\\frac{1}{2} \\cdot (0.02)^2 = 0.0002$, $\\frac{3}{10} \\cdot (0.06)^2 = 0.00108$, and $\\frac{1}{5} \\cdot (0.1)^2 = 0.002$.",
+    "These total $0.00328$, so line C's share is $\\frac{0.002}{0.00328}$."
+  ],
+  "solutionLatex": "Two defective items from the same line have probability equal to the square of that line's defective rate, since the shipment is large and the two draws are independent.\n\nLine A contributes weight $\\frac{1}{2} \\cdot 0.02^2 = \\frac{1}{2} \\cdot 0.0004 = 0.0002$. Line B contributes $\\frac{3}{10} \\cdot 0.06^2 = 0.3 \\cdot 0.0036 = 0.00108$. Line C contributes $\\frac{1}{5} \\cdot 0.1^2 = 0.2 \\cdot 0.01 = 0.002$.\n\nThe total weight on two defects is $0.0002 + 0.00108 + 0.002 = 0.00328$, and line C's share of it is $0.002$.\n\nP(C \\mid \\text{two defects}) = \\frac{0.002}{0.00328} = \\frac{25}{41}",
+  "techniqueSlugs": [
+    "law-of-total-probability",
+    "prior-times-likelihood"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

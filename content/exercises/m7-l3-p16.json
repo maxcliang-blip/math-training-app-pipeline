@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-p16",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "bayes-theorem",
+    "probability"
+  ],
+  "promptLatex": "Three boxes each hold two balls. One box holds two white balls, one box holds two black balls, and one box holds one white and one black ball. A box is chosen at random and one ball is drawn from it. Given that the ball drawn is white, what is the probability that the box chosen was the mixed box?",
+  "choices": [
+    "\\frac{1}{4}",
+    "\\frac{1}{3}",
+    "\\frac{2}{5}",
+    "\\frac{1}{2}",
+    "\\frac{2}{3}"
+  ],
+  "answerLatex": "\\frac{1}{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "All three boxes are equally likely, so the posterior is each box's white-ball share divided by their total.",
+    "The all-white box contributes $1$, the all-black box contributes $0$, and the mixed box contributes $\\frac{1}{2}$.",
+    "The total is $1 + 0 + \\frac{1}{2} = \\frac{3}{2}$, so the mixed box's share is $\\frac{1/2}{3/2}$."
+  ],
+  "solutionLatex": "Each box is chosen with probability $\\frac{1}{3}$. The chance of drawing a white ball is $1$ from the all-white box, $0$ from the all-black box, and $\\frac{1}{2}$ from the mixed box.\n\nThe weights are therefore $\\frac{1}{3}$, $0$, and $\\frac{1}{6}$, with a total of $\\frac{1}{2}$ on drawing white.\n\nP(\\text{mixed} \\mid \\text{white}) = \\frac{1/6}{1/2} = \\frac{1}{3}",
+  "techniqueSlugs": [
+    "uniform-prior-geometry",
+    "posterior-normalization"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
