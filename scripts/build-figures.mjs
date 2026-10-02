@@ -42,17 +42,20 @@ const DEFAULT_OUT = join(REPO, "artifacts", "figures");
 // rather than by inspection.
 export const PIPELINE_VERSION = "asymptote-svg-sanitized@2";
 
-// Content declares a ratio at 3 decimal places, and the authoring check that ties that
-// declaration to the author's own size(W,H) call is exact at that precision. It lives in
-// scripts/preflight-content.mjs (S5.4a) because it is a property of the source text and needs
-// no compiler. The two checks are different and must not be given the same number.
+// Content declares a ratio at 3 decimal places. Both sides of every comparison below are
+// rounded to that precision first, so the declaration's own quantization cannot masquerade as
+// drift in either direction. Shared with the authoring band check in
+// scripts/preflight-content.mjs.
 const RATIO_DECIMALS = 3;
-// S5.5 thresholds, from rendering_conventions 5.4 item 4. These govern the *compiled* box
-// only. The authoring check (S5.4a, declared ratio vs size(w,h)) is exact at RATIO_DECIMALS
-// and lives in scripts/preflight-content.mjs; the two are different checks and must not be
-// given the same number.
+// S5.5 thresholds, from Rendering Conventions S5.4 item 4. These are the only ratio check in
+// the pipeline, and they govern the *compiled* box.
 const RATIO_WARN = 0.02;
 const RATIO_REJECT = 0.05;
+// S9 #8 band, shared with the authoring check in scripts/preflight-content.mjs. A figure outside
+// it renders as a sliver or a letterbox inside the box it reserves, so neither authoring nor the
+// record pass is allowed to bless one.
+const MIN_ASPECT = 0.5;
+const MAX_ASPECT = 3;
 
 // Defence in depth. The primary control is that only Asymptote output for approved figure
 // sources is ever shipped; this removes the active-content vectors that could survive a
@@ -190,15 +193,22 @@ export function validateFigure(figure) {
 
   const width = Number(sizeCall[1]);
   const height = Number(sizeCall[2]);
-  const derived = width / height;
-  const atDeclaredPrecision = Number(derived.toFixed(RATIO_DECIMALS));
 
+  // The declared ratio is content's own assertion about the box this figure renders at, and it is
+  // what S5.4 item 4 compares against the compiled viewBox. It is NOT width/height: Asymptote's
+  // two-argument size() is a ceiling the output is fitted under, so a figure that calls
+  // size(320,240) and draws a 321x37 strip renders at 8.676, and requiring the declaration to
+  // equal 1.333 is what let 60 of the corpus's 65 figures declare a shape they do not render at.
+  //
+  // This function used to reject any figure whose declaration disagreed with that ceiling, which
+  // is S5.4-ratio-matches-size under a second name, and the drift gate below then compared the
+  // compiled box against the ceiling too -- so the gate compared the compiler's output to the
+  // author's guess about their own ceiling rather than to the number the manifest serves and the
+  // renderer reserves space from. Both compared the wrong side. The ceiling is kept, because S5.2
+  // still requires a figure to reserve space it can be laid out against; it is simply not evidence
+  // about the output box.
   if (typeof figure.declaredRatio !== "number") {
     problems.push("asymptoteAspectRatio is mandatory with a figure");
-  } else if (figure.declaredRatio !== atDeclaredPrecision) {
-    problems.push(
-      `asymptoteAspectRatio ${figure.declaredRatio} is not size(${width},${height}) = ${atDeclaredPrecision} at ${RATIO_DECIMALS} decimals`,
-    );
   }
 
   if (typeof figure.alt !== "string" || figure.alt.trim().length < 20) {
@@ -211,7 +221,7 @@ export function validateFigure(figure) {
     problems.push("figure source must not touch the filesystem");
   }
 
-  return { problems, box: { width, height, ratio: atDeclaredPrecision } };
+  return { problems, box: { width, height, ratio: figure.declaredRatio } };
 }
 
 // ---------------------------------------------------------------------------
@@ -262,16 +272,68 @@ export function sanitizeSvg(svg) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n${out}\n`;
 }
 
-function measureBox(svg) {
-  const width = svg.match(/\bwidth\s*=\s*"([\d.]+)(pt|px|mm|cm|in)?"/i);
-  const height = svg.match(/\bheight\s*=\s*"([\d.]+)(pt|px|mm|cm|in)?"/i);
-  const viewBox = svg.match(/\bviewBox\s*=\s*"([\d.\s-]+)"/i);
-  if (width && height) return { width: Number(width[1]), height: Number(height[1]) };
-  if (viewBox) {
-    const [, , w, h] = viewBox[1].trim().split(/\s+/).map(Number);
-    if (w > 0 && h > 0) return { width: w, height: h };
+// Measure the compiled box, for the S5.5 declared-vs-compiled drift check.
+//
+// Only the root <svg> element is read. A previous version matched width/height anywhere in
+// the document, so it could pick up a child's attribute, and it required double quotes and a
+// short fixed unit list, so it silently returned null on real compiler output: every one of the
+// 55 figures reported measuredWidth: null, compiledAspectRatio: null, and because null was not
+// an error the drift check never evaluated a single figure while still reporting zero violations.
+// A measurement that fails to parse and a measurement that finds no drift must not look alike.
+//
+// Returns null only when the root element genuinely declares no usable box.
+export function measureBox(svg) {
+  const root = /<svg\b([^>]*)>/i.exec(svg);
+  if (!root) return null;
+  const attrs = root[1];
+
+  // width/height may carry any CSS unit, be unitless, and may be quoted either way. Units are
+  // dropped rather than converted: S5.5 is a ratio, so every unit cancels and only relative
+  // scale matters.
+  const length = (name) => {
+    const m = new RegExp(`\\b${name}\\s*=\\s*["']?\\s*(-?[\\d.]+)\\s*(?:pt|px|mm|cm|in|em)?\\s*["']?`, "i").exec(attrs);
+    return m ? Number(m[1]) : null;
+  };
+  const width = length("width");
+  const height = length("height");
+  if (width > 0 && height > 0) return { width, height };
+
+  // viewBox="minX minY width height", separators may be spaces or commas.
+  const vb = /\bviewBox\s*=\s*["']([^"']*)["']/i.exec(attrs);
+  if (vb) {
+    const parts = vb[1].trim().split(/[\s,]+/).map(Number);
+    if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) return { width: parts[2], height: parts[3] };
   }
   return null;
+}
+
+// The S5.5 declared-vs-compiled drift gate, as a pure function so that "it can actually fail"
+// is a test and not a claim.
+//
+// WHAT THIS CHECK IS FOR, since it looks at first glance like it can never fire.
+//
+// After a record pass the declaration is the measured box, so declared == compiled and the drift
+// is 0 for a clean corpus. That is not a reason to delete this check, it is the reason it exists.
+// The declaration is a *committed assertion about what the compiler will produce*. Someone edits
+// a figure's source -- one more label, a longer axis, a different radius -- and the rendered box
+// moves with it while the committed declaration does not, because restating it is a separate,
+// deliberate act that requires a real toolchain. This gate is what makes that omission visible.
+// So: clean corpus means declared equals measured, and any non-zero drift means a source edit
+// that was not restated. Roughly what that is worth, from MAX-31's own corpus: 51 of 55 figures
+// were more than 5% away from their declaration while every one of them passed authoring, because
+// the check that used to stand in this place derived the correct ratio from size(W,H) and never
+// looked at the SVG at all.
+//
+// The tolerance is a *cosmetics* threshold, not a physics one. CLS is already 0 in both states
+// because the reserved box is sized from the declared ratio and the SVG is object-fit:contain, so
+// a mismatch never reflows the page -- it only leaves a sunken gutter. At a 480px figure width,
+// 2% is about 7px (imperceptible) and 5% is about 18px (visible). A tighter single threshold,
+// such as the 0.5% this previously used, rejects figures the spec says to warn about and has no
+// layout justification behind it.
+export function classifyDrift(declaredRatio, measuredRatio) {
+  const drift = Math.abs(measuredRatio - declaredRatio) / declaredRatio;
+  const level = drift > RATIO_REJECT ? "reject" : drift > RATIO_WARN ? "warn" : "pass";
+  return { drift, level };
 }
 
 function compileFigure(toolchain, figure, outDir) {
@@ -319,10 +381,44 @@ function compileFigure(toolchain, figure, outDir) {
     writeFileSync(join(outDir, "svg", file), svg);
     return { svg, file, box: measureBox(svg) };
   } catch (err) {
-    return { error: `compile failed: ${(err.stderr || err.message || "").toString().trim().split("\n").slice(-2).join(" ")}` };
+    // The compiler's own last few lines are the symptom; plain_shipout.asy saying "shipout
+    // failed" is the symptom every TeX-side failure wears. What actually failed is in the
+    // work directory, which the finally below deletes, so gather it here while it exists:
+    // the source asy was handed, everything it left behind, and the tail of any log or TeX
+    // file in there. Without this a figure that dies on one run and compiles on the next is
+    // indistinguishable from a flake, and gets re-run instead of diagnosed.
+    return { error: `compile failed: ${describeCompileFailure(err, work, figure)}` };
   } finally {
     rmSync(work, { recursive: true, force: true });
   }
+}
+
+function describeCompileFailure(err, work, figure) {
+  const parts = [];
+  const stderr = (err.stderr || err.message || "").toString().trim();
+  if (stderr) parts.push(stderr.split("\n").filter((l) => l.trim()).slice(-8).join(" | "));
+
+  let left = [];
+  try {
+    left = readdirSync(work).filter((f) => f !== "figure.asy");
+  } catch {
+    // The work directory is gone; nothing more to report than the compiler said.
+  }
+  parts.push(`[${figure.key}] work dir held ${left.join(", ") || "nothing"}`);
+
+  // asy writes one .tex per TeX-rendered label and a combined .log. The latex error is in the
+  // log, and it names the macro — which is the only thing that points at the figure.
+  for (const name of left.filter((f) => /\.log$|\.tex$|\.blg$/.test(f)).slice(0, 4)) {
+    try {
+      const tail = readFileSync(join(work, name), "utf8").trim().split("\n").filter((l) => l.trim()).slice(-12);
+      if (tail.length) parts.push(`${name}: ${tail.join(" | ")}`);
+    } catch {
+      // Unreadable is not worth reporting over the compiler's own words.
+    }
+  }
+
+  parts.push(`source: ${figure.source.split("\n").map((l) => l.trim()).filter(Boolean).join(" ; ")}`);
+  return parts.join("\n      ");
 }
 
 // ---------------------------------------------------------------------------
@@ -365,6 +461,21 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
       continue;
     }
     const measured = result.box;
+    if (!measured) {
+      // Fail closed. A figure whose compiled box cannot be read is not a figure that drifted,
+      // it is a figure nobody measured, and reporting it as "no violation" would let a broken
+      // measurement path pass unnoticed behind a green build. This is the same trap as the
+      // -svg flag that exited 0 while writing EPS: the compiler succeeded, so nothing objected.
+      violations.push({
+        key: figure.key,
+        problems: [
+          `compiled svg for ${figure.key} declares no measurable box, so S5.5 cannot compare it to the ` +
+            `declared ${box.ratio}. This is a measurement failure, not a clean figure: the root <svg> must ` +
+            `carry width and height or a viewBox.`,
+        ],
+      });
+      continue;
+    }
     const sizeCall = figure.source.match(/size\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)/);
     const measurement = {
       key: figure.key,
@@ -379,36 +490,26 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
     let ratioNote = null;
     if (measured && measured.height > 0) {
       measurement.measuredRatio = Number((measured.width / measured.height).toFixed(RATIO_DECIMALS));
-      // S5.5 compiled-box drift, two tiers, exactly as rendering_conventions 5.4 item 4:
-      // over 2% is a warning, over 5% rejects the figure. Both sides are rounded to the
-      // declared precision first, so the declaration's own quantization is not counted as drift.
-      //
-      // The tolerance is a *cosmetics* threshold, not a physics one. CLS is already 0 in both
-      // states because the reserved box is sized from the declared ratio and the SVG is
-      // object-fit:contain, so a mismatch never reflows the page -- it only leaves a sunken
-      // gutter. At a 480px figure width, 2% is about 7px (imperceptible) and 5% is about 18px
-      // (visible). A tighter single threshold, such as the 0.5% this previously used, rejects
-      // figures the spec says to warn about and has no layout justification behind it.
-      const drift = Math.abs(measurement.measuredRatio - box.ratio) / box.ratio;
-      if (drift > RATIO_REJECT) {
+      const verdict = classifyDrift(box.ratio, measurement.measuredRatio);
+      if (verdict.level === "reject") {
         violations.push({
           key: figure.key,
           problems: [
             `compiled box is ${measured.width}x${measured.height} (ratio ${measurement.measuredRatio}) but content declared ` +
-            `${box.ratio}: ${(drift * 100).toFixed(1)}% drift exceeds the ${RATIO_REJECT * 100}% reject threshold (S5.5). ` +
+            `${box.ratio}: ${(verdict.drift * 100).toFixed(1)}% drift exceeds the ${RATIO_REJECT * 100}% reject threshold (S5.5). ` +
             `size(W,H) bounds the output under Asymptote's default keepAspect rather than fixing it, so the ` +
-            `declaration has to be the box the compiler produces. Run \`npm run content:figures -- ` +
-            `--record-aspect-ratios\` against a real toolchain to rewrite it from a measurement.`,
+            `declaration has to be the box the compiler produces. Re-run \`npm run content:figures -- ` +
+            `--record-aspect-ratios\` against a real toolchain to restate it from a measurement.`,
           ],
         });
         measurements.push(measurement);
         continue;
       }
-      if (drift > RATIO_WARN) {
+      if (verdict.level === "warn") {
         warnings.push({
           key: figure.key,
           message: `compiled box is ${measured.width}x${measured.height} (ratio ${measurement.measuredRatio}) against declared ` +
-            `${box.ratio}: ${(drift * 100).toFixed(1)}% drift is over the ${RATIO_WARN * 100}% warn threshold (S5.5)`,
+            `${box.ratio}: ${(verdict.drift * 100).toFixed(1)}% drift is over the ${RATIO_WARN * 100}% warn threshold (S5.5)`,
         });
       }
       ratioNote = measurement.measuredRatio;
@@ -438,47 +539,171 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
 // reading the source predicts: Asymptote's size(W,H) bounds the output under the default
 // keepAspect and does not scale labels, so the real box is a measurement. Run it once against a
 // real toolchain, review the diff, commit it, and the strict S5.5 comparison in buildFigures is
-// what keeps the corpus honest from then on.
+// what keeps the corpus honest from then on: it fires on a source edit that moved the rendered
+// box without the declaration being restated.
+//
+// It refuses a measured box outside the S9 #8 band. Recording an out-of-band figure would turn a
+// figure that has to be redrawn into a "recorded" declaration, which is the same defect wearing a
+// recorded hat. Redraw first, record second.
+//
+// It restates asymptoteAspectRatio and nothing else. It used to rewrite the figure's own
+// size(W,H) to the measured box as well, on the theory that the declaration and the call should
+// agree. They cannot: size(W,H) is a ceiling that binds, so setting it to the measured box makes
+// the compiler rescale the content to fit that ceiling, the measured box moves again, and the next
+// run records a slightly larger one. Measured on the corpus, that loop ran 14 changes, then 7,
+// then 6, then 3, each one a point taller, with no fixed point in sight. A bootstrap whose output
+// depends on how many times you have run it is not a bootstrap. The ceiling stays the author's;
+// the number the drift gate reads is what the compiler produced.
 //
 // The edits are made on the raw text rather than through a JSON round trip because the corpus is
 // prettier-formatted: a round trip expands every inline array and turns a two-number change into
 // a whole-file rewrite that buries the two numbers that actually moved.
+// Rewrite the one asymptoteAspectRatio belonging to each figure object that holds the source we
+// located, rather than the first one in the file.
+//
+// A file-wide search for the ratio is ambiguous whenever two figures declare the same box, which
+// is the normal case: a lesson with three size(320,240) figures has three `1.333` ratios. Refusing
+// to run there is safe but useless, and taking the first match is neither. The source token pins
+// the figure, and JSON.stringify escapes newlines so each field sits on its own line within one
+// object. So: for every occurrence of the source, walk out to the first ratio line reached and
+// stop at the line that closes the object.
+//
+// The ratio is matched by shape, not by the number it is expected to hold. Matching on the value
+// is a trap: JSON writes 1 as `1`, `1.0` or `1e0` depending on what wrote it, prettier preserves
+// whatever was there, and a figure declaring `"asymptoteAspectRatio": 1.0` has the JS value 1. So
+// the token built from the declared value, `"asymptoteAspectRatio": 1`, is a *prefix* of the text
+// on the line, and replacing it turns `1.0` into `1.015.0` -- which is not a number, so the corpus
+// stops being JSON and the next run of anything that reads it dies on a parse error. That is what
+// this pass did to m3-l3 and m3-l4. Match the field, take the number off it, and never assume the
+// two spellings agree.
+// A source can legitimately appear more than once -- a lesson reuses a concept's figure inside its
+// examples -- and those occurrences are the same figure, so they must all be rewritten together.
+function recordFigureRatios(text, sourceToken, newRatio) {
+  const lineStarts = [0];
+  for (let i = 0; i < text.length; i++) if (text[i] === "\n") lineStarts.push(i + 1);
+  const lineOf = (index) => {
+    let lo = 0;
+    let hi = lineStarts.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1;
+      if (lineStarts[mid] <= index) lo = mid;
+      else hi = mid - 1;
+    }
+    return lo;
+  };
+  const endsObject = (line) => /^\s*\}/.test(line);
+  const RATIO_FIELD = /("asymptoteAspectRatio"\s*:\s*)(-?[\d.eE+]+)(?![\d.])/;
+
+  const edits = [];
+  let from = 0;
+  let found = 0;
+  for (;;) {
+    const at = text.indexOf(sourceToken, from);
+    if (at === -1) break;
+    found++;
+    from = at + sourceToken.length;
+
+    const startLine = lineOf(at);
+    for (const step of [1, -1]) {
+      let hit = false;
+      for (let i = startLine + step; i >= 0 && i < lineStarts.length; i += step) {
+        const start = lineStarts[i];
+        const line = text.slice(start, lineStarts[i + 1] ?? text.length);
+        if (RATIO_FIELD.test(line)) {
+          edits.push({ start, end: start + line.length, insert: line.replace(RATIO_FIELD, `$1${newRatio}`) });
+          hit = true;
+          break;
+        }
+        if (endsObject(line)) break;
+      }
+      if (hit) break;
+    }
+  }
+
+  if (!found) return { ok: false, error: "no occurrence of the source token remains in the file" };
+  // Ratio edits are whole lines that sit between source occurrences, so they can overlap the next
+  // source edit's span only if the source and the ratio share a line, which prettier never emits.
+  edits.sort((a, b) => b.start - a.start);
+  let out = text;
+  for (const e of edits) out = out.slice(0, e.start) + e.insert + out.slice(e.end);
+  return { ok: true, text: out, occurrences: found };
+}
+
+// Group by source first. A lesson that reuses a concept's figure inside its examples presents the
+// same asymptoteSource two or more times; those are one figure, they compile to one box, and the
+// declarations have to move together. Recording them one measurement at a time would have the
+// second pass find no source left to edit and mistake that for a corpus it does not understand.
 export function recordAspectRatios(result) {
   const changes = [];
+  const grouped = new Map();
+
+  // Every figure has to come back from the compiler with a box, or this pass is recording a
+  // partial corpus and saying so in a way that reads like completeness. A figure that failed to
+  // compile has no measurement, so it is absent from result.measurements rather than marked, and
+  // skipping it silently is how a figure kept its fictional declaration through a pass that
+  // reported every box recorded.
+  if (Array.isArray(result.figures)) {
+    const measuredKeys = new Set(result.measurements.map((m) => m.key));
+    const unmeasured = result.figures.map((f) => f.key).filter((k) => !measuredKeys.has(k));
+    if (unmeasured.length) {
+      return {
+        ok: false,
+        error: `${unmeasured.length} figure(s) came back from the compiler with no box, so this pass would record ` +
+          `a partial corpus and report success: ${unmeasured.join(", ")}. Fix the compile failures first -- they are in ` +
+          `the figure build's own output above -- then re-run the record pass.`,
+      };
+    }
+  }
 
   for (const m of result.measurements) {
     if (!m.file || !m.measuredWidth || !m.measuredHeight || !m.measuredRatio) continue;
     const width = Math.round(m.measuredWidth);
     const height = Math.round(m.measuredHeight);
-    const newSize = `size(${width},${height})`;
-    if (newSize === m.declaredSize && m.measuredRatio === m.declaredRatio) continue;
+    if (m.measuredRatio === m.declaredRatio) continue;
+    // Refuse to record a box outside the S9 #8 band. A figure that compiles to 321x37 is not a
+    // measurement to be blessed, it is a figure to be redrawn, and writing 8.676 into the corpus
+    // would convert a defect into a "recorded" declaration that then reads as authoritative. The
+    // order this pass is meant to run in is figures first, record second; this makes a bad figure
+    // fail the record pass instead of silently passing through it.
+    if (m.measuredRatio < MIN_ASPECT || m.measuredRatio > MAX_ASPECT) {
+      return {
+        ok: false,
+        error: `${m.key} in ${m.file} compiles to ${width}x${height} (ratio ${m.measuredRatio}), outside the ` +
+          `[${MIN_ASPECT}, ${MAX_ASPECT}] band S9 #8 requires; refusing to record it. Redraw the figure so its ` +
+          `content fills the box its size() call reserves -- extending it vertically -- rather than stretching ` +
+          `the output with keepAspect=false, which distorts every TeX label in it.`,
+      };
+    }
+    // A NUL cannot appear in a file path or in the JSON-escaped source text, so it is a
+    // separator that two distinct (file, source) pairs can never collide on. It is written as
+    // an escape rather than a literal byte: a literal NUL makes this file read as binary to
+    // grep, diff and anything else that sniffs for it, which is how the record pass got
+    // reviewed as a binary diff.
+    const groupKey = `${m.file}\u0000${m.source}`;
+    if (!grouped.has(groupKey)) grouped.set(groupKey, []);
+    grouped.get(groupKey).push({ m });
+  }
 
-    let text = readFileSync(m.file, "utf8");
+  for (const members of grouped.values()) {
+    const { m } = members[0];
+
+    const text = readFileSync(m.file, "utf8");
     const sourceToken = JSON.stringify(m.source).slice(1, -1);
-    const sourceCount = text.split(sourceToken).length - 1;
-    if (sourceCount !== 1) {
-      return { ok: false, error: `cannot locate the source of ${m.key} in ${m.file} (${sourceCount} matches); refusing to guess` };
+    const scoped = recordFigureRatios(text, sourceToken, m.measuredRatio);
+    if (!scoped.ok) {
+      return { ok: false, error: `cannot record ${m.key} in ${m.file}: ${scoped.error}` };
     }
-    const newSource = m.source.replace(/size\s*\(\s*[\d.]+\s*,\s*[\d.]+\s*\)/, newSize);
-    if (newSource === m.source) {
-      return { ok: false, error: `no size(W,H) call found in the source of ${m.key}; refusing to guess` };
-    }
-    text = text.replace(sourceToken, JSON.stringify(newSource).slice(1, -1));
 
-    const ratioToken = `"asymptoteAspectRatio": ${m.declaredRatio}`;
-    const ratioCount = text.split(ratioToken).length - 1;
-    if (ratioCount !== 1) {
-      return { ok: false, error: `cannot locate asymptoteAspectRatio ${m.declaredRatio} uniquely in ${m.file} (${ratioCount} matches); refusing to guess` };
+    writeFileSync(m.file, scoped.text);
+    for (const other of members) {
+      changes.push({
+        figureKey: other.m.key,
+        file: other.m.file.replace(REPO + "/", ""),
+        from: { size: other.m.declaredSize, declaredAspectRatio: other.m.declaredRatio },
+        to: { size: other.m.declaredSize, declaredAspectRatio: m.measuredRatio },
+      });
     }
-    text = text.replace(ratioToken, `"asymptoteAspectRatio": ${m.measuredRatio}`);
-
-    writeFileSync(m.file, text);
-    changes.push({
-      figureKey: m.key,
-      file: m.file.replace(REPO + "/", ""),
-      from: { size: m.declaredSize, declaredAspectRatio: m.declaredRatio },
-      to: { size: newSize, declaredAspectRatio: m.measuredRatio },
-    });
+    changes[changes.length - 1].occurrences = scoped.occurrences;
   }
 
   return { ok: true, changes };
@@ -534,6 +759,13 @@ if (isMain) {
       console.log("  every figure already declares the box the compiler produces");
     }
     console.log("  review the diff and commit it. This mode is a bootstrap, not a gate.");
+
+    // The violations reported below were measured against the declarations this run has just
+    // rewritten, so re-reporting them as a failure would make the bootstrap fail at exactly the
+    // moment it did its job. It already returned early above for anything that genuinely went
+    // wrong: a missing toolchain, an unmeasurable figure, a ratio it could not scope to a figure.
+    // Whether the recorded corpus is now clean is a question for the next ordinary gating run.
+    process.exit(0);
   }
 
   for (const w of result.warnings) console.log(`  [warn] ${w.path || w.key}: ${w.message}`);

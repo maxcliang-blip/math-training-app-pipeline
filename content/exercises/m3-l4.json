@@ -87,7 +87,7 @@
     ],
     "asymptoteSource": "// Two paths from (0,0) to (4,3): one never rises above y = x, the other does.\n// The reflection of a bad path at its first crossing is what counts the bad ones.\nsize(420,340);\npen grid = gray(0.75) + 0.6;\npen diag = black + 1.2;\npen good = rgb(0.10,0.35,0.20) + 2;\npen bad = rgb(0.75,0.15,0.15) + 2;\nreal s = 52;\nfor (int i = 0; i <= 4; ++i) draw((i*s,0)--(i*s,3*s), grid);\nfor (int j = 0; j <= 3; ++j) draw((0,j*s)--(4*s,j*s), grid);\ndraw((0,0)--(3*s,3*s), diag);\ndraw((0,0)--(s,0)--(2*s,0)--(3*s,0)--(4*s,0)--(4*s,s), good);\ndraw((0,0)--(0,s)--(s,s)--(2*s,s)--(3*s,2*s)--(4*s,3*s), bad);\ndot((0,0), black+2.5pt);\ndot((4*s,3*s), black+2.5pt);\nlabel(\"$(0,0)$\", (0,0), SW);\nlabel(\"$(4,3)$\", (4*s,3*s), NE);\nlabel(\"$y = x$\", (3*s,3*s), NE);",
     "asymptoteAlt": "A rectangular grid four units wide and three units tall drawn in light grey, with a black line along the diagonal from the bottom-left corner up to the top of the third column. A dark green staircase path goes all the way right along the bottom row and then up the right side, staying on or below the diagonal. A dark red staircase path goes up the left side, right along the second row, and then climbs steeply to the top-right corner, crossing above the diagonal. Filled dots mark the bottom-left origin and the top-right endpoint, each labeled with its coordinates, and the diagonal is labeled with the equation y equals x.",
-    "asymptoteAspectRatio": 1.235
+    "asymptoteAspectRatio": 1.389
   },
   {
     "id": "m3-l4-p4",
@@ -525,7 +525,7 @@
     ],
     "asymptoteSource": "// Two triangles sharing vertex 1: the graph whose Euler circuits are counted.\nsize(400,300);\npen edge = black + 1.4;\nreal x1 = -60, x2 = 80, y1 = 130, y2 = 60, y3 = -10;\ndraw((0,y1)--(x1,y2)--(x1,y3)--cycle, edge);\ndraw((0,y1)--(x2,y2)--(x2,y3)--cycle, edge);\ndot((0,y1), black+3pt);\ndot((x1,y2), black+3pt);\ndot((x1,y3), black+3pt);\ndot((x2,y2), black+3pt);\ndot((x2,y3), black+3pt);\nlabel(\"$1$\", (0,y1), NE);\nlabel(\"$2$\", (x1,y2), NW);\nlabel(\"$3$\", (x1,y3), SW);\nlabel(\"$4$\", (x2,y2), NE);\nlabel(\"$5$\", (x2,y3), SE);\nlabel(\"two triangles meeting at $1$\", (10,-70), S);",
     "asymptoteAlt": "Two triangles drawn side by side that meet at a single shared vertex near the top center. The shared vertex is a filled dot labeled with the number one. The left triangle has two additional filled dots at its upper left and lower left, labeled two and three, and the right triangle has two filled dots at its upper right and lower right, labeled four and five. A caption below the drawing notes that the two triangles meet at the shared vertex.",
-    "asymptoteAspectRatio": 1.333
+    "asymptoteAspectRatio": 0.701
   },
   {
     "id": "m3-l4-p19",

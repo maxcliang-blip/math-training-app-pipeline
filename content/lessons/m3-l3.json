@@ -31,7 +31,7 @@
           "captionLatex": "Pascal's triangle read as a recurrence table: every entry is the sum of the two directly above it, which is why the binomial coefficients satisfy the same kind of rule that tilings and staircases do.",
           "asymptoteSource": "// Pascal's triangle as a recurrence table. Coordinates are in the same pixel-like\n// range as size(), so labels keep their intended weight in the rendered figure.\nsize(360,300);\npen rule = black + 0.8;\nlabel(\"$1$\", (0,40));\nlabel(\"$1$\", (-35,92));\nlabel(\"$1$\", (35,92));\nlabel(\"$1$\", (-70,144));\nlabel(\"$2$\", (0,144));\nlabel(\"$1$\", (70,144));\nlabel(\"$1$\", (-105,196));\nlabel(\"$3$\", (-35,196));\nlabel(\"$3$\", (35,196));\nlabel(\"$1$\", (105,196));\nlabel(\"$1$\", (-140,248));\nlabel(\"$4$\", (-70,248));\nlabel(\"$6$\", (0,248));\nlabel(\"$4$\", (70,248));\nlabel(\"$1$\", (140,248));\ndraw((-165,20)--(165,20), rule);\nlabel(\"each entry $=$ the two above it\", (0,14), S);",
           "asymptoteAlt": "A five-row triangle of numbers laid out like Pascal's triangle. The top row has a single one. The second row has two ones. The third row has one, two, one. The fourth row has one, three, three, one. The fifth row has one, four, six, four, one. A horizontal rule sits beneath the triangle with a note reading that each entry equals the two entries directly above it.",
-          "asymptoteAspectRatio": 1.2
+          "asymptoteAspectRatio": 1.303
         }
       ],
       "examples": [

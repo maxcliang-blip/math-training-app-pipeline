@@ -31,10 +31,9 @@ const REPO = resolve(HERE, "..");
 const DEFAULT_CONTENT = join(REPO, "content");
 const DEFAULT_REPORT = join(REPO, "artifacts", "content-math-report.json");
 
-// S5.4 states a 2% ratio tolerance at authoring time. The pipeline compares the *derived*
-// figure box, where the true dimensions are known, so it holds content to the declared
-// value at the precision content actually declares (3 decimal places).
-const RATIO_DECIMALS = 3;
+// The pipeline compares the *compiled* box against the declared ratio, on S5.5's 2%/5% tiers
+// (scripts/build-figures.mjs). There is no authoring-time ratio rule left here to hold content
+// to a precision, and nothing in this file rounds a ratio.
 
 // ---------------------------------------------------------------------------
 // Fail-closed environment
@@ -220,33 +219,13 @@ export const MUTATIONS = [
     },
   },
   {
-    id: "figure-ratio-disagrees-with-size",
-    rule: "S5.4-ratio-matches-size",
-    severity: "error",
-    apply(c) {
-      findLessonFigure(c.lessons).asymptoteAspectRatio = 9.9;
-    },
-  },
-  {
-    // The mutation that actually pins S5.4a to exactness. 9.9 is caught by any threshold
-    // whatsoever, so it cannot tell a 2% rule apart from an exact one. This one lands inside
-    // the band the old 2% authoring tolerance accepted (1.31 is 1.75% off size(320,240)=1.3333)
-    // and outside the exact value, so it passes under a tolerance and fails under S5.4a. That
-    // is the whole defect: content could clear authoring review and then fail the figure build,
-    // which compares at the declared precision. If this mutation ever goes MISSED, the rule has
-    // silently degraded back into a tolerance and review-passing content can break CI again.
-    id: "figure-ratio-inside-old-tolerance-band",
-    rule: "S5.4-ratio-matches-size",
-    severity: "error",
-    apply(c) {
-      const fig = findLessonFigure(c.lessons);
-      const m = fig.asymptoteSource.match(/size\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)/);
-      const exact = Number(m[1]) / Number(m[2]);
-      const true_ = exact / 1.0175; // ~1.75% off, inside the retired 2% band, not the exact value
-      fig.asymptoteAspectRatio = Number(true_.toFixed(3));
-    },
-  },
-  {
+    // S5.4-ratio-matches-size used to be asserted here by two mutations, one of them pitched at
+    // the 2% authoring tolerance it supposedly replaced. That rule is gone: it required the
+    // declared ratio to equal size(W,H)/size(W,H), which is false of Asymptote's two-argument
+    // size() -- a ceiling under keepAspect, not the output box -- so it made every figure declare
+    // a shape it did not render at. Its replacement, S5.5 (declared vs the compiled box), needs
+    // a compiler and is proved able to fail by classifyDrift in api/test/figures.test.js, where a
+    // mutation framework cannot reach it.
     id: "figure-size-single-argument",
     rule: "S5.4-ratio-unverifiable",
     severity: "advisory",
@@ -256,12 +235,25 @@ export const MUTATIONS = [
     },
   },
   {
+    // The comment lines go before the size call is removed, and the decoy goes back in
+    // afterwards. That is the point of the ordering. A figure header that names the size
+    // call it is describing gives S5.2-size-required a match in a figure that never calls
+    // it, and the rule then reports itself unable to fail — which is what happened the
+    // moment a header said size(W,H). The mutation has to defeat that: strip the real
+    // call from the code, leave a comment that still spells one out, and the rule must
+    // still fire. A rule that only passes this test because the fixture happens to be
+    // comment-free proves nothing.
     id: "figure-without-size-call",
     rule: "S5.2-size-required",
     severity: "error",
     apply(c) {
       const fig = findLessonFigure(c.lessons);
-      fig.asymptoteSource = fig.asymptoteSource.replace(/\bsize\s*\([^)]*\)/, "");
+      const code = fig.asymptoteSource
+        .split("\n")
+        .filter((l) => !l.trim().startsWith("//"))
+        .join("\n")
+        .replace(/\bsize\s*\([^)]*\)/, "");
+      fig.asymptoteSource = "// size(W,H) bounds the output.\n" + code;
     },
   },
 ];
@@ -410,7 +402,9 @@ if (isMain) {
     script: "scripts/check-content-math.mjs",
     contentRoot: contentRoot.replace(REPO + "/", ""),
     katexPinned: KATEX_PINNED,
-    ratioDecimals: RATIO_DECIMALS,
+    // Name the rule the figure ratio is actually policed by, so a reader who came here looking
+    // for it is sent to the check that exists instead of concluding the gate is missing.
+    figureRatioRule: "S5.5 (declared vs compiled box), scripts/build-figures.mjs",
   };
   writeFileSync(outPath, JSON.stringify(report, null, 2) + "\n");
 
