@@ -10,7 +10,7 @@
 // and still worth showing.
 
 import React, { useEffect, useState } from "react";
-import { createFigureClient, figurePlaceholder } from "../lib/figures.js";
+import { createFigureClient, figurePlaceholder, resolveFigureRatio } from "../lib/figures.js";
 import MathBlock from "./MathBlock.jsx";
 
 let sharedClient = null;
@@ -19,13 +19,20 @@ function client() {
   return sharedClient;
 }
 
+// Vite substitutes import.meta.env at build time; the guard keeps this module importable outside a
+// Vite build, where the ratio drift is still recorded on the element but not warned about.
+const IS_DEV = typeof import.meta.env === "undefined" ? false : Boolean(import.meta.env.DEV);
+
 export default function Figure({ figureKey, alt, captionLatex, declaredAspectRatio }) {
   const [state, setState] = useState(null);
+  const [measured, setMeasured] = useState(null);
 
   useEffect(() => {
     if (!figureKey) return;
     let live = true;
     setState(null);
+    // The previous figure's measurement belongs to the previous figure.
+    setMeasured(null);
     client()
       .getFigure(figureKey)
       .then((result) => {
@@ -35,6 +42,21 @@ export default function Figure({ figureKey, alt, captionLatex, declaredAspectRat
       live = false;
     };
   }, [figureKey]);
+
+  const { reserved, resolved: ratio, drift } = resolveFigureRatio({
+    declaredAspectRatio: state?.declaredAspectRatio ?? declaredAspectRatio,
+    compiledAspectRatio: state?.compiledAspectRatio,
+    measuredAspectRatio: measured
+  });
+
+  const driftKey = drift.map((d) => `${d.kind}:${d.expected}->${d.actual}`).join(" ");
+  useEffect(() => {
+    if (!driftKey || !IS_DEV) return;
+    console.warn(
+      `[figure ${figureKey}] ${driftKey} — the box uses the measured SVG ratio (${measured?.toFixed(3)}). ` +
+        "Fix the authoring record or the compiler, not the stylesheet."
+    );
+  }, [driftKey, figureKey, measured]);
 
   if (!figureKey) return null;
 
@@ -56,7 +78,6 @@ export default function Figure({ figureKey, alt, captionLatex, declaredAspectRat
   // The alt on the payload wins over the prop: it came from the authoring record that owns the
   // figure, so it describes this figure rather than whatever placeholder text the caller passed.
   const altText = state.alt || alt || "Figure";
-  const ratio = state.compiledAspectRatio || state.declaredAspectRatio || declaredAspectRatio;
 
   return (
     <figure className="figure figure--ready">
@@ -64,9 +85,19 @@ export default function Figure({ figureKey, alt, captionLatex, declaredAspectRat
         className="figure__svg"
         src={state.src}
         alt={altText}
-        // Reserve the box before the SVG loads. A figure that reflows the lesson as it arrives is
-        // the "MathBlock cannot" class of bug all over again, just with a picture.
+        // Reserve the box at the manifest's ratio so the lesson does not reflow under the reader as
+        // the SVG arrives, then correct it to the ratio the browser actually measured. Holding the
+        // reserved ratio after the image has loaded is what stretches a diagram that does not match
+        // its own declared shape, so `resolved` deliberately prefers the measurement.
         style={ratio ? { aspectRatio: String(ratio) } : undefined}
+        onLoad={(event) => {
+          const img = event.currentTarget;
+          if (img.naturalWidth && img.naturalHeight) {
+            setMeasured(img.naturalWidth / img.naturalHeight);
+          }
+        }}
+        data-figure-ratio={reserved ? String(reserved) : undefined}
+        data-figure-ratio-drift={driftKey || undefined}
         loading="lazy"
       />
       {state.captionLatex || captionLatex ? (

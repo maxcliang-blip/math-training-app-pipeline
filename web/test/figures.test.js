@@ -13,7 +13,8 @@ import {
   validateFigurePayload,
   isToolchainMissing,
   isSameOriginPath,
-  figurePlaceholder
+  figurePlaceholder,
+  resolveFigureRatio
 } from "../src/lib/figures.js";
 
 const KEY = "m1-linear-equations.figures[0]";
@@ -221,4 +222,57 @@ test("resolves a relative asset url against an origin", () => {
   assert.equal(figureAssetUrl("/a.svg", "https://app.example"), "https://app.example/a.svg");
   assert.equal(figureAssetUrl("https://x/a.svg", "https://app.example"), "https://x/a.svg");
   assert.equal(figureAssetUrl("", "https://app.example"), null);
+});
+
+// --- aspect ratio resolution ----------------------------------------------
+//
+// These exist because the ratio is applied to the <img> box, so a wrong one does not look broken —
+// it draws the figure at the wrong shape. The regression that motivated them: a manifest declaring
+// 2.667 next to an SVG whose intrinsic ratio is 4.505 rendered a number line 41% too tall.
+
+test("reserves the compiled ratio before the SVG has loaded", () => {
+  const r = resolveFigureRatio({ declaredAspectRatio: 1.5, compiledAspectRatio: 1.49 });
+  assert.equal(r.reserved, 1.49, "the compiler's measurement beats the author's declaration");
+  assert.equal(r.resolved, 1.49);
+  assert.deepEqual(r.drift, []);
+});
+
+test("a measured ratio overrides the reserved one rather than stretching the figure", () => {
+  const r = resolveFigureRatio({ declaredAspectRatio: 2.667, measuredAspectRatio: 4.505 });
+  assert.equal(r.reserved, 2.667, "what the manifest claimed");
+  assert.equal(r.resolved, 4.505, "what the browser actually measured");
+});
+
+test("declared and compiled disagreeing is reported, not resolved silently", () => {
+  const r = resolveFigureRatio({ declaredAspectRatio: 3, compiledAspectRatio: 1.5 });
+  assert.deepEqual(r.drift, [{ kind: "declared-vs-compiled", expected: 3, actual: 1.5 }]);
+});
+
+test("a reserved ratio that disagrees with the SVG is reported", () => {
+  const r = resolveFigureRatio({ declaredAspectRatio: 2.667, measuredAspectRatio: 4.505 });
+  assert.deepEqual(r.drift, [{ kind: "reserved-vs-measured", expected: 2.667, actual: 4.505 }]);
+});
+
+test("rounding inside the tolerance is not drift", () => {
+  // The manifest rounds to three decimals, so 1.49 and 1.5 are the same picture.
+  const r = resolveFigureRatio({ declaredAspectRatio: 1.5, compiledAspectRatio: 1.49, measuredAspectRatio: 1.495 });
+  assert.deepEqual(r.drift, []);
+});
+
+test("both drift kinds are reported when both are wrong", () => {
+  const r = resolveFigureRatio({ declaredAspectRatio: 3, compiledAspectRatio: 1.5, measuredAspectRatio: 4 });
+  assert.deepEqual(
+    r.drift.map((d) => d.kind),
+    ["declared-vs-compiled", "reserved-vs-measured"]
+  );
+});
+
+test("missing or nonsense ratios leave the box unconstrained", () => {
+  for (const value of [null, undefined, 0, -2, NaN, Infinity, "2", {}]) {
+    const r = resolveFigureRatio({ declaredAspectRatio: value, compiledAspectRatio: value });
+    assert.equal(r.reserved, null, `${JSON.stringify(value)} must not reserve a box`);
+    assert.equal(r.resolved, null);
+    assert.deepEqual(r.drift, []);
+  }
+  assert.equal(resolveFigureRatio().resolved, null, "no inputs at all is not a crash");
 });
