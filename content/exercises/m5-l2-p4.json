@@ -1,0 +1,30 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p4",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "triangles"
+  ],
+  "promptLatex": "Which of the following three lengths cannot be the side lengths of a triangle?",
+  "choices": [
+    "2, 3, 4",
+    "3, 4, 5",
+    "2, 3, 6",
+    "5, 9, 13",
+    "6, 8, 10"
+  ],
+  "answerLatex": "2, 3, 6",
+  "hintLatex": [
+    "Two of the three lengths are joined end to end to reach the third, and the resulting path has to be able to fold.",
+    "Add the two shorter lengths and compare the total with the longest one.",
+    "For $2$, $3$, and $6$ the two shorter sum to $5$, which is already less than $6$, so no triangle closes."
+  ],
+  "solutionLatex": "Three lengths are the sides of a triangle exactly when each one is shorter than the sum of the other two, which it suffices to check for the longest side.\n\nCheck each set: $2 + 3 = 5 > 4$; $3 + 4 = 7 > 5$; $5 + 9 = 14 > 13$; $6 + 8 = 14 > 10$. All four of those sets pass.\n\nFor $2$, $3$, and $6$, the two shorter lengths total $5 < 6$, so the longest side overshoots what the other two can span and the figure cannot close.",
+  "techniqueSlugs": []
+}

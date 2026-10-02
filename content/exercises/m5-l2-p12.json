@@ -1,0 +1,34 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p12",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "pythagorean",
+    "similarity",
+    "triangles"
+  ],
+  "promptLatex": "In right triangle $ABC$ the right angle is at $C$, with $AC = 6$ and $BC = 8$, so $AB = 10$. The perpendicular from $C$ meets $\\overline{AB}$ at $D$. What is the length of $CD$?",
+  "choices": [
+    "\\frac{24}{5}",
+    "\\frac{20}{3}",
+    "\\frac{48}{10}",
+    "4",
+    "\\frac{9}{2}"
+  ],
+  "answerLatex": "\\frac{24}{5}",
+  "hintLatex": [
+    "The altitude splits the triangle into two smaller triangles that are each similar to the whole one.",
+    "Compare the areas: the altitude divides the triangle into two pieces whose areas sum to the whole, and each piece can also be written using $CD$ as one of its bases.",
+    "The two ways of computing the area give $\\frac{1}{2} \\cdot 6 \\cdot 8 = \\frac{1}{2} \\cdot 10 \\cdot CD$, so $CD = \\frac{24}{5}$."
+  ],
+  "solutionLatex": "Compare the area of $\\triangle ABC$ computed two ways. Using the legs as the base and the altitude to them, the area is $\\frac{1}{2} \\cdot 6 \\cdot 8 = 24$.\n\nUsing $AB$ as the base, the altitude from $C$ is $CD$, so the same area is $\\frac{1}{2} \\cdot 10 \\cdot CD$.\n\nEquating gives $24 = 5 \\cdot CD$, so $CD = \\frac{24}{5}$. This is the identity $h = \\frac{ab}{c}$ that the altitude similarity produces.",
+  "techniqueSlugs": [
+    "right-triangle-altitude-similarity"
+  ]
+}

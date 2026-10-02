@@ -1,0 +1,34 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p1",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "triangles",
+    "isosceles-base-angles"
+  ],
+  "promptLatex": "In triangle $ABC$, $AB = AC$, and the vertex angle measures $m\\angle A = 40^{\\circ}$. What is the measure, in degrees, of $m\\angle B$?",
+  "choices": [
+    "70",
+    "40",
+    "110",
+    "90",
+    "65"
+  ],
+  "answerLatex": "70",
+  "hintLatex": [
+    "The two sides named in the hypothesis are equal, so the angles opposite them are equal too.",
+    "That puts one of the three interior angles at $180^{\\circ} - 40^{\\circ}$, and the angle asked for is half of what is left.",
+    "The two equal angles share the remaining $180^{\\circ} - 40^{\\circ} = 140^{\\circ}$, so each is $70^{\\circ}$."
+  ],
+  "solutionLatex": "Since $AB = AC$, the angles opposite those sides are congruent, so $m\\angle B = m\\angle C$.\n\nThe angle sum gives $m\\angle B + m\\angle C = 180^{\\circ} - 40^{\\circ} = 140^{\\circ}$.\n\nThe two equal angles split that total, so $m\\angle B = 140^{\\circ} / 2 = 70^{\\circ}$.",
+  "techniqueSlugs": [
+    "isosceles-base-angles",
+    "triangle-angle-sum"
+  ]
+}

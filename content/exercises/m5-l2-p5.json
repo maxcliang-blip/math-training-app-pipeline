@@ -1,0 +1,33 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p5",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "congruence",
+    "triangles"
+  ],
+  "promptLatex": "Triangles $ABC$ and $DEF$ satisfy $m\\angle B = m\\angle E$, $m\\angle C = m\\angle F$, and $BC = EF$. Which congruence theorem proves the two triangles congruent?",
+  "choices": [
+    "SSS",
+    "SAS",
+    "ASA",
+    "AAS",
+    "HL"
+  ],
+  "answerLatex": "ASA",
+  "hintLatex": [
+    "Count the kinds of information the hypothesis supplies: how many angle congruences and how many side congruences.",
+    "There are two angle congruences and one side congruence, and the side sits between the two angles.",
+    "Two angles with the included side is the ASA configuration."
+  ],
+  "solutionLatex": "The hypothesis supplies two angle congruences, $m\\angle B = m\\angle E$ and $m\\angle C = m\\angle F$, and one side congruence, $BC = EF$.\n\nThe side named is the one joining the two named angles, so it is the included side.\n\nTwo angles together with their included side is exactly ASA, so the two triangles are congruent.",
+  "techniqueSlugs": [
+    "congruence-asa"
+  ]
+}

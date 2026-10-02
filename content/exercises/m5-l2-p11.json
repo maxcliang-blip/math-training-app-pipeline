@@ -1,0 +1,33 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p11",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "similarity",
+    "area-of-triangles"
+  ],
+  "promptLatex": "Two triangles are similar, and corresponding sides of the two are in the ratio $2 : 3$. If the area of the smaller triangle is $20$, what is the area of the larger triangle?",
+  "choices": [
+    "45",
+    "30",
+    "40",
+    "60",
+    "90"
+  ],
+  "answerLatex": "45",
+  "hintLatex": [
+    "The ratio given is a ratio of lengths, and area does not move by the same number as a length.",
+    "Take the ratio in both directions of the figure to see how it affects area.",
+    "Areas go as the square, so the larger area is $20 \\cdot \\left(\\frac{3}{2}\\right)^{2} = 45$."
+  ],
+  "solutionLatex": "The ratio $2 : 3$ is linear, so the linear scale factor from the smaller triangle to the larger one is $\\frac{3}{2}$.\n\nAreas scale as the square of the linear factor, which here is $\\left(\\frac{3}{2}\\right)^{2} = \\frac{9}{4}$.\n\nSo the area of the larger triangle is $20 \\cdot \\frac{9}{4} = 45$.",
+  "techniqueSlugs": [
+    "area-scaling-from-scale"
+  ]
+}

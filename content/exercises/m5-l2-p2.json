@@ -1,0 +1,34 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p2",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "triangles",
+    "exterior-angle-theorem"
+  ],
+  "promptLatex": "In triangle $ABC$, $m\\angle A = 50^{\\circ}$ and $m\\angle B = 60^{\\circ}$. An exterior angle of the triangle is drawn at vertex $C$. What is its measure, in degrees?",
+  "choices": [
+    "110",
+    "70",
+    "130",
+    "90",
+    "40"
+  ],
+  "answerLatex": "110",
+  "hintLatex": [
+    "An exterior angle is measured along a straight line, so it and the interior angle at that vertex fill $180^{\\circ}$.",
+    "There is also a direct reading: the exterior angle collects the two angles at the other vertices.",
+    "Adding the two remote interior angles gives $50^{\\circ} + 60^{\\circ} = 110^{\\circ}$."
+  ],
+  "solutionLatex": "The exterior angle at $C$ forms a linear pair with $m\\angle C$, and the angle sum gives $m\\angle C = 180^{\\circ} - 50^{\\circ} - 60^{\\circ} = 70^{\\circ}$.\n\nSo the exterior angle is $180^{\\circ} - 70^{\\circ} = 110^{\\circ}$.\n\nThe same value comes from the exterior angle theorem, which says the exterior angle equals the sum of the two remote interior angles: $50^{\\circ} + 60^{\\circ} = 110^{\\circ}$.",
+  "techniqueSlugs": [
+    "exterior-angle-theorem",
+    "triangle-angle-sum"
+  ]
+}

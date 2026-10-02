@@ -1,0 +1,33 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-m1",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "pythagorean",
+    "congruence"
+  ],
+  "promptLatex": "Triangle $ABC$ has a right angle at $C$, with $AC = 9$ and $BC = 12$. Triangle $DEF$ has a right angle at $F$, with $DF = 9$ and $EF = 12$. What is the sum of the lengths $AB$ and $DE$?",
+  "choices": [
+    "30",
+    "21",
+    "24",
+    "15",
+    "36"
+  ],
+  "answerLatex": "30",
+  "hintLatex": [
+    "Each hypotenuse is found the same way, and the two triangles then match on every measurement.",
+    "Apply the Pythagorean theorem to each triangle separately.",
+    "Each hypotenuse is $\\sqrt{9^{2} + 12^{2}} = \\sqrt{225} = 15$, so the sum is $15 + 15 = 30$."
+  ],
+  "solutionLatex": "In $\\triangle ABC$ the Pythagorean theorem gives $AB = \\sqrt{9^{2} + 12^{2}} = \\sqrt{225} = 15$.\n\nIn $\\triangle DEF$ it gives $DE = \\sqrt{9^{2} + 12^{2}} = 15$ as well.\n\nThe two right triangles have equal hypotenuse and an equal leg, so HL congruence also shows they are congruent, which is consistent with the equal hypotenuse lengths. The requested sum is $15 + 15 = 30$.",
+  "techniqueSlugs": [
+    "hypotenuse-leg"
+  ]
+}

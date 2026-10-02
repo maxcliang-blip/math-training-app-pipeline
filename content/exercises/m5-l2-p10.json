@@ -1,0 +1,35 @@
+{
+  "moduleId": "M5",
+  "lessonId": "m5-l2",
+  "answerAlternatives": [],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null,
+  "id": "m5-l2-p10",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "similarity",
+    "parallel-lines",
+    "triangles"
+  ],
+  "promptLatex": "In triangle $ABC$, point $D$ lies on $\\overline{AB}$ and point $E$ lies on $\\overline{AC}$, with $\\overline{DE} \\parallel \\overline{BC}$. If $AD = 6$, $DB = 4$, and $DE = 3$, what is the length of $BC$?",
+  "choices": [
+    "5",
+    "2",
+    "8",
+    "10",
+    "7"
+  ],
+  "answerLatex": "5",
+  "hintLatex": [
+    "A segment drawn parallel to one side cuts off a smaller triangle of the same shape as the whole.",
+    "The fraction along the side is measured from the shared vertex, so add the two given pieces to get the whole side.",
+    "Since $AB = 6 + 4 = 10$, the ratio $\\frac{AD}{AB} = \\frac{DE}{BC}$ gives $\\frac{6}{10} = \\frac{3}{BC}$, so $BC = 5$."
+  ],
+  "solutionLatex": "Because $DE \\parallel BC$, triangles $ADE$ and $ABC$ are similar by AA: they share the angle at $A$, and $m\\angle ADE = m\\angle ABC$ because each is formed with a parallel line.\n\nThe side $AB$ is the whole, so $AB = AD + DB = 6 + 4 = 10$. The shared vertex fixes the correspondence, giving $\\frac{AD}{AB} = \\frac{DE}{BC}$.\n\nSubstituting, $\\frac{6}{10} = \\frac{3}{BC}$, which gives $6 \\cdot BC = 30$ and $BC = 5$.",
+  "techniqueSlugs": [
+    "parallel-line-similarity",
+    "missing-length-in-similar-triangles"
+  ]
+}

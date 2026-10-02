@@ -1,0 +1,278 @@
+{
+  "id": "m5-l2",
+  "moduleId": "M5",
+  "order": 2,
+  "title": "Triangles, Similarity, and Congruence",
+  "topicSlug": "triangles-similarity-congruence",
+  "tiers": [
+    "10",
+    "12"
+  ],
+  "estimatedMinutes": 90,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m5-l1"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Determine when two triangles are congruent and when they are merely similar, apply the congruence tests SSS, SAS, ASA, AAS and HL and the similarity tests AA, SAS and SSS, recognise the invalid SSA configuration and repair it, recover missing lengths and angles from a scale factor, and use the altitude to the hypotenuse together with area scaling to find lengths and areas."
+    },
+    "prerequisites": {
+      "items": [
+        "m5-l1"
+      ],
+      "noteLatex": "The triangle angle sum, the exterior angle theorem, and the vocabulary of parallel lines from the previous lesson are used throughout, together with the Pythagorean theorem."
+    },
+    "concept": {
+      "conceptLatex": "Every triangle in this lesson is fixed by three angles, which sum to $180^{\\circ}$, together with three sides. Congruence asks when two triangles are the same size and the same shape; similarity asks only when they are the same shape, possibly at very different sizes. Deciding which of the two a problem is asking for comes first, because the two demand very different amounts of information about the sides.\n\nEqual angles force equal angles. If two angles of one triangle are congruent to two angles of another, the third angles are congruent too, since both are $180^{\\circ}$ minus the same sum. That single observation is the whole of AA similarity: two angle congruences already suffice and no side information is needed. AAA is never a separate test, because it is just AA with a redundant line added.\n\nAn isosceles triangle has two equal sides, and the angles opposite them are equal, so if the apex angle measures $\\alpha$ then each base angle measures $(180^{\\circ} - \\alpha)/2$. The converse is the standard test: a triangle with two congruent angles has two congruent sides. The exterior angle theorem, that an exterior angle equals the sum of the two remote interior angles, does the same arithmetic in one step instead of two, and applied to an isosceles triangle it shows that each exterior angle is twice the opposite base angle.\n\nCongruence needs more than angles, since equal angles alone leave room for one triangle to be an enlarged copy of the other. SSS congruence, SAS congruence, and ASA congruence each pin a triangle down from three independent measurements, and between them they are enough. AAS congruence also works, because the third angle is recoverable and two angles plus either side already fix the shape and then the size. HL congruence, the hypotenuse-leg test, is the right-triangle version of SSS.\n\nSSA is not a congruence test, and it is the most common error in triangle congruence. Two sides together with a non-included angle do not determine a triangle: with the side opposite that angle held fixed, the other side can pivot to two positions and produce two different triangles from the same three measurements. When one of those positions happens not to exist, the data collapse back to the included-angle case and SSA quietly behaves like SAS, which is exactly why its invalidity is easy to miss. The repair is to turn the non-included angle into an included one, either by recovering the third angle and switching to AAS, or by switching to the law of cosines, which always treats a known angle as included.\n\nSimilarity needs less than congruence. AA similarity is the workhorse. SAS similarity closes the gap when only one angle is known but the two sides flanking it are in proportion, and SSS similarity uses three pairs of proportional sides. The order of the proportions is what separates the similar versions from the congruent ones, so write each ratio as corresponding side over corresponding side and never over the other triangle's side.\n\nA line drawn parallel to one side of a triangle cuts the other two and produces a second triangle similar to the first by AA similarity, because the parallel line reproduces the angle at the third vertex. The two triangles share a vertex, and that shared vertex lies between the small triangle's side and the large one's, which fixes the algebra: the small side over the whole side equals the other small side over the other whole side. Because the two pieces lie on one line, the whole side is their sum, and subtracting to get that sum before writing the proportion is the step that separates a correct solution from a plausible one.\n\nIn a right triangle the altitude to the hypotenuse produces two smaller triangles, each similar to the whole one and hence similar to each other, and three facts fall out at once. Each leg is the geometric mean of the hypotenuse and its own projection, so $a^{2} = cx$ and $b^{2} = cy$. The altitude is the geometric mean of the two projections, so $h^{2} = xy$. And the altitude equals half the product of the legs over half the hypotenuse, so $h = ab/c$. Comparing the area computed with the legs as the base against the area computed with the hypotenuse as the base produces that last identity, and the same family of similar triangles yields the projection formula $BD = \\frac{AB^{2} + BC^{2} - AC^{2}}{2 \\cdot BC}$ for where the altitude lands, without any trigonometry.\n\nSimilar triangles have a single scale factor, but areas do not move by it. Every length in one direction is multiplied by $k$, and every length in the other direction is multiplied by $k$ as well, so an area is multiplied by $k^{2}$. Perimeters are linear and follow $k$; areas are quadratic and follow $k^{2}$. An argument that scales a length and then scales the area by the same number is wrong, and it is the most frequent arithmetic slip in similarity problems.\n\nSymmetry arrives through congruence rather than similarity. Dropping a perpendicular from each end of the shorter base of an isosceles trapezoid to the longer base carves two congruent right triangles off the ends, and the two base angles come out equal as a result. The same construction reads the height off the leg, since each end triangle has the leg as its hypotenuse and the overhang as one of its legs, and the overhang is half the difference of the two bases.",
+      "figures": [
+        {
+          "asymptoteSource": "// The altitude to the hypotenuse splits a right triangle into two triangles, each\n// similar to the whole. Two-argument size() fixes the output box, so the declared\n// ratio 1.286 is exact.\nsize(360,280);\npen l = black + 1.3;\npen g = gray(0.55) + 1;\npair A = (3,4);\npair B = (-3,0);\npair C = (3,0);\npair D = (1.15,2.77);\ndot(A,l);\ndot(B,l);\ndot(C,l);\ndot(D,black+2pt);\ndraw(A--B--C--cycle, l);\ndraw(C--D, g);\ndraw((2.6,0)--(2.6,0.4)--(3,0.4), black+0.9pt);\ndraw(D--(1.32,2.52)--(1.40,2.94), black+0.9pt);\nlabel(\"$A$\", A, NE);\nlabel(\"$B$\", B, SW);\nlabel(\"$C$\", C, SE);\nlabel(\"$D$\", D, NW);\nlabel(\"$CD$\", (2.1,1.5), SE);\nlabel(\"$AB$\", (0.2,2.0), NW);\nlabel(\"each small triangle is similar to $\\\\triangle ABC$\", (0,-1.5), S);\n",
+          "asymptoteAlt": "A right triangle sits with its horizontal leg along the bottom, its vertical leg on the right, and its hypotenuse running from the top of the vertical leg down to the far left end of the horizontal leg. A dashed segment runs from the right-angle corner up to a point on the hypotenuse, and a small square at that point marks the segment perpendicular to the hypotenuse. A small square at the right-angle corner marks that corner as a right angle. The caption notes that each of the two smaller triangles is similar to the original.",
+          "asymptoteAspectRatio": 1.286,
+          "captionLatex": "The altitude to the hypotenuse divides a right triangle into two triangles, each similar to the whole one."
+        },
+        {
+          "asymptoteSource": "// Two triangles of the same shape at different sizes, with the corresponding\n// vertices named. Two-argument size() fixes the output box, so the declared ratio\n// 1.667 is exact.\nsize(400,240);\npen l = black + 1.3;\npair A1 = (0,3.6);\npair B1 = (-2.2,0);\npair C1 = (2.2,0);\npair A2 = (4.8,4.2);\npair B2 = (1.4,0);\npair C2 = (7.0,0);\ndraw(A1--B1--C1--cycle, l);\ndraw(A2--B2--C2--cycle, l);\nlabel(\"$A$\", A1, NE);\nlabel(\"$B$\", B1, SW);\nlabel(\"$C$\", C1, S);\nlabel(\"$D$\", A2, NE);\nlabel(\"$E$\", B2, SW);\nlabel(\"$F$\", C2, S);\nlabel(\"small\", (0,-1.1), S);\nlabel(\"large\", (4.7,-1.1), S);\nlabel(\"corresponding vertices sit in the same order\", (2.6,-2.0), S);\n",
+          "asymptoteAlt": "Two upright triangles of the same shape stand side by side, the left one smaller than the right one. Both have a horizontal base and an apex above, and both lean the same way. The left triangle's three corners are labelled A at the top, B at the bottom left, and C at the bottom right. The right triangle's corners are labelled D at the top, E at the bottom left, and F at the bottom right, showing which corner of one triangle matches which corner of the other.",
+          "asymptoteAspectRatio": 1.667,
+          "captionLatex": "Similar triangles: the same shape at two sizes, with each vertex of one matched to a vertex of the other."
+        },
+        {
+          "asymptoteSource": "// A segment parallel to the base cuts off a smaller triangle of the same shape.\n// Two-argument size() fixes the output box, so the declared ratio 1.067 is exact.\nsize(320,300);\npen l = black + 1.3;\npen p = gray(0.55) + 1.2;\npair A = (1.6,5.0);\npair B = (0,0);\npair C = (5.0,0);\npair D = (0.8,2.5);\npair E = (3.1,2.5);\ndraw(A--B--C--cycle, l);\ndraw(D--E, p);\ndot(A,l);\ndot(B,l);\ndot(C,l);\ndot(D,l);\ndot(E,l);\nlabel(\"$A$\", A, N);\nlabel(\"$B$\", B, SW);\nlabel(\"$C$\", C, SE);\nlabel(\"$D$\", D, W);\nlabel(\"$E$\", E, E);\nlabel(\"$DE \\parallel BC$\", (2.4,1.1), SE);\nlabel(\"$\\\\triangle ADE \\\\sim \\\\triangle ABC$\", (2.5,-0.9), S);\n",
+          "asymptoteAlt": "A large triangle has a horizontal base and its apex above. A shorter horizontal segment crosses the triangle partway up, meeting the left side at a point labelled D and the right side at a point labelled E. The apex is labelled A and the two ends of the base are labelled B on the left and C on the right. A note records that the two horizontal segments are parallel and that the small triangle above the crossing segment is similar to the whole triangle.",
+          "asymptoteAspectRatio": 1.067,
+          "captionLatex": "A segment parallel to the base cuts off a smaller triangle similar to the whole one, with the shared vertex at $A$."
+        },
+        {
+          "asymptoteSource": "// An isosceles trapezoid, with the two end right triangles that read off the\n// height. Two-argument size() fixes the output box, so the declared ratio 1.385\n// is exact.\nsize(360,260);\npen l = black + 1.3;\npen d = gray(0.55) + 1.1;\npair A = (-1.5,3.4);\npair B = (1.5,3.4);\npair C = (3.9,0);\npair D = (-3.9,0);\npair P = (-1.5,0);\npair Q = (1.5,0);\ndraw(A--B--C--D--cycle, l);\ndraw(A--P, d);\ndraw(B--Q, d);\ndraw(P--Q, d);\ndot(A,l);\ndot(B,l);\ndot(C,l);\ndot(D,l);\ndot(P,l);\ndot(Q,l);\nlabel(\"$A$\", A, NW);\nlabel(\"$B$\", B, NE);\nlabel(\"$C$\", C, SE);\nlabel(\"$D$\", D, SW);\nlabel(\"$P$\", P, S);\nlabel(\"$Q$\", Q, S);\nlabel(\"equal legs give equal base angles\", (0,-1.1), S);\nlabel(\"$\\\\angle A = \\\\angle B$\", (0,4.1), N);\n",
+          "asymptoteAlt": "An isosceles trapezoid stands with a short horizontal base on top and a longer horizontal base on the bottom, and its two slanted legs lean outward as they descend. A perpendicular is dropped from the top-left corner to the bottom base and another from the top-right corner, each meeting the bottom base at a labelled foot, and the strip between the two feet is marked as the height. A label above the top base records that the two base angles are equal.",
+          "asymptoteAspectRatio": 1.385,
+          "captionLatex": "Dropping a perpendicular from each end of the shorter base of an isosceles trapezoid carves off two congruent right triangles."
+        }
+      ],
+      "examples": [
+        {
+          "id": "m5-l2-ex-1",
+          "titleLatex": "Worked example: a segment parallel to one side",
+          "bodyLatex": "In $\\triangle ABC$, $D$ lies on $\\overline{AB}$ and $E$ lies on $\\overline{AC}$ with $DE \\parallel BC$. The data are $AD = 6$, $DB = 4$, $DE = 3$.\n\nBecause $DE \\parallel BC$, the angle at $A$ is shared and $m\\angle ADE = m\\angle ABC$, so $\\triangle ADE \\sim \\triangle ABC$ by AA.\n\nThe shared vertex $A$ fixes the correspondence, giving $\\frac{AD}{AB} = \\frac{DE}{BC}$. The denominator $AB$ is the whole side, so it is $AD + DB = 6 + 4 = 10$ and not $4$.\n\nThen $\\frac{6}{10} = \\frac{3}{BC}$, so $6 \\cdot BC = 30$ and $BC = 5$.",
+          "answerLatex": "$BC = 5$"
+        },
+        {
+          "id": "m5-l2-ex-2",
+          "titleLatex": "Worked example: the altitude to the hypotenuse",
+          "bodyLatex": "Right triangle $ABC$ has its right angle at $C$, with $AC = 6$ and $BC = 8$, so $AB = 10$. The altitude $CD$ from $C$ meets $\\overline{AB}$ at $D$.\n\nCompute the area of $\\triangle ABC$ twice. With the legs as base and altitude the area is $\\frac{1}{2} \\cdot 6 \\cdot 8 = 24$.\n\nWith $AB$ as the base the altitude is $CD$, so the same area is $\\frac{1}{2} \\cdot 10 \\cdot CD$. Equating gives $24 = 5CD$, hence $CD = \\frac{24}{5}$.\n\nThis is the identity $h = \\frac{ab}{c}$ that the similarity of $ACD$ and $CBD$ with $ABC$ produces, and it is why $CD$ is not an integer here even though the legs are.",
+          "answerLatex": "$CD = \\frac{24}{5}$"
+        },
+        {
+          "id": "m5-l2-ex-3",
+          "titleLatex": "Worked example: area scaling",
+          "bodyLatex": "Two similar triangles have corresponding sides in the ratio $2 : 3$, and the smaller has area $20$.\n\nThe ratio $2 : 3$ is linear, so the linear scale factor is $\\frac{3}{2}$ from the smaller to the larger.\n\nAreas scale as the square of the linear factor, so the larger area is $20 \\cdot \\left(\\frac{3}{2}\\right)^{2}$.\n\nMultiplying through gives $20 \\cdot \\frac{9}{4} = 45$. Writing $20 \\cdot \\frac{3}{2} = 30$ instead would be scaling an area by a length factor, and that is the error this example exists to rule out.",
+          "answerLatex": "$45$"
+        },
+        {
+          "id": "m5-l2-ex-4",
+          "titleLatex": "Worked example: the length of an angle bisector",
+          "bodyLatex": "In $\\triangle ABC$, $AB = 21$, $AC = 14$, and $BC = 25$, and the bisector of $\\angle A$ meets $\\overline{BC}$ at $D$.\n\nThe angle bisector theorem gives $\\frac{BD}{DC} = \\frac{AB}{AC} = \\frac{21}{14} = \\frac{3}{2}$. Since $BC = 25$, that splits it as $BD = 15$ and $DC = 10$.\n\nStewart's theorem for the cevian $AD$ then gives $AD^{2} = AB \\cdot AC - BD \\cdot DC$, which is the closed form the two known pieces make available.\n\nThat is $AD^{2} = 21 \\cdot 14 - 15 \\cdot 10 = 294 - 150 = 144$, so $AD = 12$.",
+          "answerLatex": "$AD = 12$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "triangle-angle-sum",
+          "name": "Triangle angle sum",
+          "summaryLatex": "\\text{The three interior angles of a triangle sum to } 180^{\\circ}\\text{.}",
+          "bodyLatex": "\\text{For any triangle } \\triangle ABC, \\angle A + \\angle B + \\angle C = 180^{\\circ}\text{. Once two angles are known the third is determined, and two congruent angles force the third angles of both triangles to be congruent.}"
+        },
+        {
+          "slug": "isosceles-base-angles",
+          "name": "Isosceles base angles are congruent",
+          "summaryLatex": "\\text{Equal sides face equal angles, and equal angles face equal sides.}",
+          "bodyLatex": "\\text{If } AB = AC \\text{ then } \\angle B = \\angle C \\text{, so each base angle is } \\frac{180^{\\circ} - \\alpha}{2}\\text{ when the apex angle is } \\alpha\\text{. The converse holds: two congruent angles force the opposite sides to be congruent.}"
+        },
+        {
+          "slug": "exterior-angle-theorem",
+          "name": "Exterior angle theorem",
+          "summaryLatex": "\\text{An exterior angle equals the sum of the two remote interior angles.}",
+          "bodyLatex": "\\text{At each vertex the exterior angle and the interior angle share a side and complete a straight angle. Subtracting the angle sum from } 180^{\\circ} \\text{ leaves exactly the sum of the two remote interior angles.}"
+        },
+        {
+          "slug": "angle-bisector-split",
+          "name": "Angle bisector splits the opposite side in ratio",
+          "summaryLatex": "\\text{An angle bisector divides the opposite side in the ratio of the adjacent sides.}",
+          "bodyLatex": "\\text{If } AD \\text{ bisects } \\angle A \\text{ in } \\triangle ABC \\text{ then } \\frac{BD}{DC} = \\frac{AB}{AC}\\text{. Combined with } BC = BD + DC \\text{ this fixes both pieces, and Stewart's theorem then gives the bisector length directly.}"
+        },
+        {
+          "slug": "perpendicular-line-transfer",
+          "name": "Drop a perpendicular to read a length",
+          "summaryLatex": "\\text{A perpendicular to a base turns a figure into right triangles.}",
+          "bodyLatex": "\\text{Projecting the vertices of a trapezoid or a triangle onto the horizontal axis produces right triangles whose hypotenuses are the slanted sides and whose horizontal legs are the overhangs, so the height follows from the Pythagorean theorem.}"
+        },
+        {
+          "slug": "sides-angles-sides-check",
+          "name": "Check whether a side is included",
+          "summaryLatex": "\\text{A congruence test is only valid when its angle sits between its named sides.}",
+          "bodyLatex": "\\text{SAS needs the included angle. Two sides with a non-included angle give SSA, which does not determine a triangle, so a problem must be converted to AAS or to the law of cosines before congruence follows.}"
+        },
+        {
+          "slug": "congruence-sss",
+          "name": "SSS congruence",
+          "summaryLatex": "\\text{Three pairs of congruent sides force congruent triangles.}",
+          "bodyLatex": "\\text{If } AB = DE, BC = EF \\text{ and } CA = FD \\text{ then } \\triangle ABC = \\triangle DEF\\text{.}"
+        },
+        {
+          "slug": "congruence-sas",
+          "name": "SAS congruence",
+          "summaryLatex": "\\text{Two sides and the angle between them force congruent triangles.}",
+          "bodyLatex": "\\text{If } AB = DE, AC = DF \\text{ and } \\angle A = \\angle D \\text{ then } \\triangle ABC = \\triangle DEF\\text{, since the angle is wedged between the two named sides.}"
+        },
+        {
+          "slug": "congruence-asa",
+          "name": "ASA congruence",
+          "summaryLatex": "\\text{Two angles and the included side force congruent triangles.}",
+          "bodyLatex": "\\text{If } \\angle B = \\angle E, \\angle C = \\angle F \\text{ and } BC = EF \\text{ then the side named is the one joining the two named angles, so } \\triangle ABC = \\triangle DEF\\text{.}"
+        },
+        {
+          "slug": "congruence-aas",
+          "name": "AAS congruence",
+          "summaryLatex": "\\text{Two angles and a non-included side force congruent triangles.}",
+          "bodyLatex": "\\text{The third angle is recoverable from the angle sum, which turns AAS into ASA. The reasoning takes two steps where ASA takes one, which is why ASA is preferred when both are available.}"
+        },
+        {
+          "slug": "cpctc",
+          "name": "Corresponding parts of congruent triangles",
+          "summaryLatex": "\\text{Once triangles are congruent, every corresponding part is equal.}",
+          "bodyLatex": "\\text{Sides, angles, areas, perimeters, medians, and altitudes of congruent triangles are equal in pairs. This is the step that transfers a fact found on one triangle to the other.}"
+        },
+        {
+          "slug": "hypotenuse-leg",
+          "name": "HL congruence",
+          "summaryLatex": "\\text{A right triangle is determined by its hypotenuse and one leg.}",
+          "bodyLatex": "\\text{This is the right-triangle case of SSS. A right triangle with hypotenuse } c \\text{ and leg } a \\text{ has } b = \\sqrt{c^{2} - a^{2}} \\text{, so the third side is forced and the triangles are congruent.}"
+        },
+        {
+          "slug": "similarity-aa",
+          "name": "AA similarity",
+          "summaryLatex": "\\text{Two angle congruences are enough for similarity, with no side information.}",
+          "bodyLatex": "\\text{The third angles are congruent by the angle sum, so AAA holds and the triangles are similar. Proportions taken corresponding side over corresponding side then recover any missing length or angle.}"
+        },
+        {
+          "slug": "similarity-sas",
+          "name": "SAS similarity",
+          "summaryLatex": "\\text{One angle congruence plus proportional flanking sides gives similarity.}",
+          "bodyLatex": "\\text{If } \\angle A = \\angle D \\text{ and } \\frac{AB}{DE} = \\frac{AC}{DF} \\text{ then } \\triangle ABC \\sim \\triangle DEF\\text{. The ratio } k \\text{ then multiplies every length, and } k^{2} \\text{ every area.}"
+        },
+        {
+          "slug": "parallel-line-similarity",
+          "name": "Parallel lines give similar triangles",
+          "summaryLatex": "\\text{A line parallel to one side cuts off a triangle similar to the whole.}",
+          "bodyLatex": "\\text{The parallel line reproduces the angle at the third vertex, so AA applies. The shared vertex lies between the small side and the whole side, so the proportion is small over whole, and the whole side is the sum of the two pieces on the line.}"
+        },
+        {
+          "slug": "missing-length-in-similar-triangles",
+          "name": "Recovering a missing length",
+          "summaryLatex": "\\text{One known pair of corresponding sides fixes the scale factor, and the rest follow.}",
+          "bodyLatex": "\\text{Compute } k \\text{ as larger over smaller from the one pair both triangles supply, then multiply each remaining corresponding side of the small triangle by } k \\text{.}"
+        },
+        {
+          "slug": "right-triangle-altitude-similarity",
+          "name": "The altitude to the hypotenuse",
+          "summaryLatex": "\\text{The altitude to the hypotenuse creates two triangles similar to the whole one.}",
+          "bodyLatex": "\\text{From that similarity } a^{2} = cx \\text{ and } b^{2} = cy \\text{ for the projections } x, y \\text{ with } x + y = c\\text{, and } h^{2} = xy \\text{. Comparing areas gives } h = \\frac{ab}{c}\\text{, and the same family yields } BD = \\frac{AB^{2} + BC^{2} - AC^{2}}{2 \\cdot BC}\\text{.}"
+        },
+        {
+          "slug": "power-of-a-point",
+          "name": "Power of a point inside a circle",
+          "summaryLatex": "\\text{The two segments of any chord through an interior point have a constant product.}",
+          "bodyLatex": "\\text{For a point } P \\text{ inside a circle of centre } O \\text{ and radius } r, \\text{every chord through } P \\text{is cut into segments whose product is } r^{2} - OP^{2}\\text{. In the special case where the chord is perpendicular to } OP \\text{, that chord is bisected, so a half-chord of length } h \\text{ satisfies } h^{2} = r^{2} - OP^{2}\\text{, and the full chord is } 2h\\text{.}"
+        },
+        {
+          "slug": "area-scaling-from-scale",
+          "name": "Areas scale as the square of the linear factor",
+          "summaryLatex": "\\text{Linear quantities follow } k \\text{; areas follow } k^{2}\\text{.}",
+          "bodyLatex": "\\text{Every length in one direction scales by } k \\text{ and every length in the other direction scales by } k \\text{, so an area is multiplied by } k^{2}\\text{. Scaling an area by } k \\text{ alone is the standard slip.}"
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "treating-ssa-as-congruence",
+          "titleLatex": "Using SSA as a congruence test",
+          "wrongLatex": "AB = DE \\text{ and } BC = EF \\text{ and } \\angle B = \\angle E \\text{ so } \\triangle ABC = \\triangle DEF\\text{.}",
+          "whyLatex": "\\text{The angle given is not between the two named sides, so the configuration is SSA. Holding the side opposite the given angle fixed, the other side can pivot to two positions, and each position gives a triangle with the same three measurements but a different third side.}",
+          "fixLatex": "\\text{Rather than invoking SAS, recover the third angle from the angle sum and use AAS, or switch to the law of cosines, which treats the known angle as included.}"
+        },
+        {
+          "slug": "scaling-area-by-the-linear-factor",
+          "titleLatex": "Scaling an area by the linear factor",
+          "wrongLatex": "\\text{The scale factor is } \\frac{3}{2}\\text{, so the area is multiplied by } \\frac{3}{2}\\text{.}",
+          "whyLatex": "\\text{Similar triangles have one scale factor for lengths, and areas are not lengths. Scaling every length in both directions multiplies the area by the factor squared, so a factor of } \\frac{3}{2} \\text{ moves areas by } \\frac{9}{4}\\text{.}",
+          "fixLatex": "\\text{Square the factor before touching any area, perimeter, or other measure that scales differently from a length.}"
+        },
+        {
+          "slug": "confusing-similar-with-congruent",
+          "titleLatex": "Reading congruence out of a shape match",
+          "wrongLatex": "\\triangle ABC \\sim \\triangle DEF \\text{ and } AB = DE \\text{, so } \\triangle ABC = \\triangle DEF\\text{.}",
+          "whyLatex": "\\text{Similarity says the triangles have the same shape, not the same size. One pair of equal corresponding sides does set the scale factor to } 1 \\text{, but only after the similarity itself has been established; without it, equal angles and one equal side leave the scale free.}",
+          "fixLatex": "\\text{Prove the similarity first, then state that a single pair of equal corresponding sides makes the scale factor } 1 \\text{, and only then claim congruence.}"
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m5-l2-p1",
+        "m5-l2-p2",
+        "m5-l2-p3",
+        "m5-l2-p4",
+        "m5-l2-p5",
+        "m5-l2-p6",
+        "m5-l2-p7",
+        "m5-l2-p8",
+        "m5-l2-p9",
+        "m5-l2-p10",
+        "m5-l2-p11",
+        "m5-l2-p12",
+        "m5-l2-p13",
+        "m5-l2-p14",
+        "m5-l2-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m5-l2-p1",
+        "m5-l2-p2",
+        "m5-l2-p3",
+        "m5-l2-p4",
+        "m5-l2-p5",
+        "m5-l2-p6",
+        "m5-l2-p7",
+        "m5-l2-p8",
+        "m5-l2-p9",
+        "m5-l2-p10",
+        "m5-l2-p11",
+        "m5-l2-p12",
+        "m5-l2-p13",
+        "m5-l2-p14",
+        "m5-l2-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m5-l2-m1",
+        "m5-l2-m2",
+        "m5-l2-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "triangles",
+    "congruence",
+    "similarity",
+    "pythagorean",
+    "parallel-lines"
+  ]
+}
