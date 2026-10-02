@@ -6,7 +6,8 @@
     "tier": "10",
     "difficulty": 1,
     "tags": [
-      "combinations"
+      "combinations",
+      "lattice-paths"
     ],
     "promptLatex": "How many lattice paths go from $(0,0)$ to $(4,3)$ if each step moves one unit right or one unit up?",
     "choices": [
@@ -38,7 +39,8 @@
     "tier": "10",
     "difficulty": 1,
     "tags": [
-      "combinations"
+      "combinations",
+      "lattice-paths"
     ],
     "promptLatex": "How many lattice paths go from $(0,0)$ to $(5,5)$ if each step moves one unit right or one unit up?",
     "choices": null,
@@ -65,7 +67,9 @@
     "difficulty": 2,
     "tags": [
       "combinations",
-      "inclusion-exclusion"
+      "inclusion-exclusion",
+      "lattice-paths",
+      "reflection-argument"
     ],
     "promptLatex": "How many lattice paths go from $(0,0)$ to $(6,4)$, using only steps one unit right or one unit up, and never rising above the line $y = x$?",
     "choices": null,
@@ -93,7 +97,8 @@
     "difficulty": 2,
     "tags": [
       "combinations",
-      "inclusion-exclusion"
+      "inclusion-exclusion",
+      "lattice-paths"
     ],
     "promptLatex": "How many lattice paths go from $(0,0)$ to $(3,2)$, using only steps one unit right or one unit up, if the path is not allowed to pass through the point $(1,1)$?",
     "choices": null,
@@ -120,7 +125,10 @@
     "tier": "12",
     "difficulty": 2,
     "tags": [
-      "combinations"
+      "combinations",
+      "lattice-paths",
+      "reflection-argument",
+      "catalan-count"
     ],
     "promptLatex": "How many lattice paths go from $(0,0)$ to $(5,5)$, using only steps one unit right or one unit up, if the path must stay on or below the line $y = x$?",
     "choices": null,
@@ -147,7 +155,10 @@
     "tier": "12",
     "difficulty": 2,
     "tags": [
-      "combinations"
+      "combinations",
+      "lattice-paths",
+      "reflection-argument",
+      "catalan-count"
     ],
     "promptLatex": "How many lattice paths go from $(0,0)$ to $(6,6)$, using only steps one unit right or one unit up, if the path must stay on or below the line $y = x$?",
     "choices": null,
@@ -174,7 +185,10 @@
     "tier": "12",
     "difficulty": 2,
     "tags": [
-      "combinations"
+      "combinations",
+      "catalan-count",
+      "ballot-count",
+      "reflection-argument"
     ],
     "promptLatex": "In how many ways can a sequence of $8$ symbols be formed from five plus signs and three minus signs if every initial segment of the sequence must contain at least as many plus signs as minus signs?",
     "choices": null,
@@ -201,7 +215,9 @@
     "tier": "12",
     "difficulty": 3,
     "tags": [
-      "combinations"
+      "combinations",
+      "lattice-paths",
+      "catalan-count"
     ],
     "promptLatex": "Into how many regions can a convex polygon with $10$ sides be divided by drawing non-crossing diagonals from one of its vertices?",
     "choices": null,
@@ -228,7 +244,9 @@
     "difficulty": 2,
     "tags": [
       "fundamental-counting",
-      "combinations"
+      "combinations",
+      "trees",
+      "cayley-formula"
     ],
     "promptLatex": "In how many ways can $6$ distinct labeled towns be connected by roads so that every town can be reached from every other town and no two towns are connected by more than one direct road?",
     "choices": [
@@ -261,7 +279,10 @@
     "difficulty": 3,
     "tags": [
       "fundamental-counting",
-      "permutations"
+      "permutations",
+      "trees",
+      "prufer-code",
+      "cayley-formula"
     ],
     "promptLatex": "In how many ways can $5$ distinct labeled towns be connected by roads so that every town can be reached from every other one and town $1$ is connected by a road to exactly one other town?",
     "choices": null,
@@ -287,7 +308,9 @@
     "tier": "12",
     "difficulty": 3,
     "tags": [
-      "fundamental-counting"
+      "fundamental-counting",
+      "trees",
+      "spanning-trees"
     ],
     "promptLatex": "Two groups of three vertices each are joined so that every vertex of the first group is joined to every vertex of the second group, and there are no other edges. How many spanning trees does the resulting graph have?",
     "choices": null,
@@ -313,7 +336,9 @@
     "tier": "12",
     "difficulty": 3,
     "tags": [
-      "fundamental-counting"
+      "fundamental-counting",
+      "trees",
+      "spanning-trees"
     ],
     "promptLatex": "A graph has a cycle on eight vertices, with an edge between consecutive vertices of the cycle and no other edges. How many spanning trees does this graph have?",
     "choices": null,
@@ -339,7 +364,9 @@
     "tier": "12",
     "difficulty": 2,
     "tags": [
-      "fundamental-counting"
+      "fundamental-counting",
+      "trees",
+      "spanning-trees"
     ],
     "promptLatex": "A graph has a cycle on seven vertices, with an edge between consecutive vertices of the cycle and no other edges. How many spanning trees does this graph have?",
     "choices": null,
@@ -366,7 +393,8 @@
     "difficulty": 3,
     "tags": [
       "fundamental-counting",
-      "permutations"
+      "permutations",
+      "graph-trails"
     ],
     "promptLatex": "Every pair of the five members of a club is friends. In how many ways can a person choose a sequence of four club members $x_1, x_2, x_3, x_4$ such that $x_{i+1}$ is a friend of $x_i$ for $i = 1, 2, 3$, with repetitions allowed?",
     "choices": null,
@@ -393,7 +421,8 @@
     "difficulty": 3,
     "tags": [
       "fundamental-counting",
-      "permutations"
+      "permutations",
+      "graph-trails"
     ],
     "promptLatex": "Every pair of the five members of a club is friends. In how many ways can a person choose a sequence of four club members $x_1, x_2, x_3, x_4$ such that $x_{i+1}$ is a friend of $x_i$ for $i = 1, 2, 3$ and no member is chosen twice?",
     "choices": null,
@@ -420,7 +449,10 @@
     "difficulty": 3,
     "tags": [
       "fundamental-counting",
-      "combinations"
+      "combinations",
+      "trees",
+      "prufer-code",
+      "cayley-formula"
     ],
     "promptLatex": "In how many ways can $7$ distinct labeled towns be connected by roads so that every town can be reached from every other one and exactly three towns are connected to exactly one road?",
     "choices": null,
@@ -446,7 +478,9 @@
     "tier": "A",
     "difficulty": 3,
     "tags": [
-      "fundamental-counting"
+      "fundamental-counting",
+      "trees",
+      "spanning-trees"
     ],
     "promptLatex": "A graph consists of a cycle on five vertices together with a sixth vertex joined by an edge to each of the five cycle vertices. How many spanning trees does this graph have?",
     "choices": null,
@@ -472,7 +506,9 @@
     "tier": "A",
     "difficulty": 3,
     "tags": [
-      "fundamental-counting"
+      "fundamental-counting",
+      "graph-trails",
+      "euler-circuit-count"
     ],
     "promptLatex": "The graph shown consists of two triangles that share a single vertex, which is labeled $1$; the other vertices are labeled $2, 3, 4, 5$. In how many ways can someone start at vertex $1$ and traverse every edge of the graph exactly once, returning to vertex $1$?",
     "choices": null,
@@ -499,7 +535,9 @@
     "difficulty": 3,
     "tags": [
       "combinations",
-      "permutations"
+      "permutations",
+      "graph-trails",
+      "hamiltonian-count"
     ],
     "promptLatex": "Every pair of the six members of a club is friends. In how many ways can the members be seated around a round table so that every two neighbors of the table are friends?",
     "choices": [
@@ -532,7 +570,9 @@
     "difficulty": 3,
     "tags": [
       "combinations",
-      "permutations"
+      "permutations",
+      "graph-trails",
+      "hamiltonian-count"
     ],
     "promptLatex": "Every pair of the six members of a club is friends. In how many ways can the members line up in a row so that each person except the two at the ends has a friend on both sides?",
     "choices": null,
@@ -558,7 +598,9 @@
     "tier": "A",
     "difficulty": 3,
     "tags": [
-      "combinations"
+      "combinations",
+      "graph-trails",
+      "hamiltonian-count"
     ],
     "promptLatex": "Every pair of the six members of a club is friends. A round of four friends is a set of four members together with a cyclic order in which each person sits next to two of the others. How many such rounds are there, where two rounds with the same four members and the same circular order count as one round?",
     "choices": null,
@@ -585,7 +627,10 @@
     "difficulty": 4,
     "tags": [
       "combinations",
-      "inclusion-exclusion"
+      "inclusion-exclusion",
+      "lattice-paths",
+      "reflection-argument",
+      "ballot-count"
     ],
     "promptLatex": "How many lattice paths go from $(0,0)$ to $(8,5)$, using only steps one unit right or one unit up, and never rising above the line $y = x$?",
     "choices": null,
@@ -612,7 +657,9 @@
     "tier": "A",
     "difficulty": 4,
     "tags": [
-      "combinations"
+      "combinations",
+      "ballot-count",
+      "reflection-argument"
     ],
     "promptLatex": "A fair coin is flipped $11$ times, giving $8$ heads and $3$ tails. In how many of the possible flip sequences is the number of heads in every initial segment at least as large as the number of tails in that segment?",
     "choices": null,
@@ -640,7 +687,10 @@
     "difficulty": 4,
     "tags": [
       "fundamental-counting",
-      "combinations"
+      "combinations",
+      "trees",
+      "prufer-code",
+      "cayley-formula"
     ],
     "promptLatex": "In how many ways can $8$ distinct labeled towns be connected by roads so that every town can be reached from every other one and exactly two towns are connected to exactly one road?",
     "choices": null,
@@ -693,7 +743,10 @@
     "difficulty": 4,
     "tags": [
       "fundamental-counting",
-      "combinations"
+      "combinations",
+      "trees",
+      "cayley-formula",
+      "prufer-code"
     ],
     "promptLatex": "In how many ways can $6$ distinct labeled towns be connected by roads so that every town can be reached from every other one and towns $1$ and $2$ are joined by a road?",
     "choices": null,
