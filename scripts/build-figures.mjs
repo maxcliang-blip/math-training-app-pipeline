@@ -243,14 +243,37 @@ export function sanitizeSvg(svg) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n${out}\n`;
 }
 
-function measureBox(svg) {
-  const width = svg.match(/\bwidth\s*=\s*"([\d.]+)(pt|px|mm|cm|in)?"/i);
-  const height = svg.match(/\bheight\s*=\s*"([\d.]+)(pt|px|mm|cm|in)?"/i);
-  const viewBox = svg.match(/\bviewBox\s*=\s*"([\d.\s-]+)"/i);
-  if (width && height) return { width: Number(width[1]), height: Number(height[1]) };
-  if (viewBox) {
-    const [, , w, h] = viewBox[1].trim().split(/\s+/).map(Number);
-    if (w > 0 && h > 0) return { width: w, height: h };
+// Measure the compiled box, for the S5.5 declared-vs-compiled drift check.
+//
+// Only the root <svg> element is read. A previous version matched width/height anywhere in
+// the document, so it could pick up a child's attribute, and it required double quotes and a
+// short fixed unit list, so it silently returned null on real compiler output: every one of the
+// 55 figures reported measuredWidth: null, compiledAspectRatio: null, and because null was not
+// an error the drift check never evaluated a single figure while still reporting zero violations.
+// A measurement that fails to parse and a measurement that finds no drift must not look alike.
+//
+// Returns null only when the root element genuinely declares no usable box.
+export function measureBox(svg) {
+  const root = /<svg\b([^>]*)>/i.exec(svg);
+  if (!root) return null;
+  const attrs = root[1];
+
+  // width/height may carry any CSS unit, be unitless, and may be quoted either way. Units are
+  // dropped rather than converted: S5.5 is a ratio, so every unit cancels and only relative
+  // scale matters.
+  const length = (name) => {
+    const m = new RegExp(`\\b${name}\\s*=\\s*["']?\\s*(-?[\\d.]+)\\s*(?:pt|px|mm|cm|in|em)?\\s*["']?`, "i").exec(attrs);
+    return m ? Number(m[1]) : null;
+  };
+  const width = length("width");
+  const height = length("height");
+  if (width > 0 && height > 0) return { width, height };
+
+  // viewBox="minX minY width height", separators may be spaces or commas.
+  const vb = /\bviewBox\s*=\s*["']([^"']*)["']/i.exec(attrs);
+  if (vb) {
+    const parts = vb[1].trim().split(/[\s,]+/).map(Number);
+    if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) return { width: parts[2], height: parts[3] };
   }
   return null;
 }
@@ -338,6 +361,21 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
       continue;
     }
     const measured = result.box;
+    if (!measured) {
+      // Fail closed. A figure whose compiled box cannot be read is not a figure that drifted,
+      // it is a figure nobody measured, and reporting it as "no violation" would let a broken
+      // measurement path pass unnoticed behind a green build. This is the same trap as the
+      // -svg flag that exited 0 while writing EPS: the compiler succeeded, so nothing objected.
+      violations.push({
+        key: figure.key,
+        problems: [
+          `compiled svg for ${figure.key} declares no measurable box, so S5.5 cannot compare it to the ` +
+            `declared ${box.ratio}. This is a measurement failure, not a clean figure: the root <svg> must ` +
+            `carry width and height or a viewBox.`,
+        ],
+      });
+      continue;
+    }
     const sizeCall = figure.source.match(/size\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)/);
     const measurement = {
       key: figure.key,

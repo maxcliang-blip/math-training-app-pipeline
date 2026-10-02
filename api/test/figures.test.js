@@ -131,3 +131,41 @@ test("toFigurePayload whitelists rather than passing an entry through", () => {
   assert.equal("somethingNew" in payload, false);
   assert.equal(toFigurePayload(null), null);
 });
+
+test("measureBox reads the compiled box off the root svg element", async () => {
+  const { measureBox } = await import("../../scripts/build-figures.mjs");
+
+  // Asymptote emits a unit-suffixed, double-quoted root element. This is the shape that used to
+  // return null, which left every corpus figure reporting measuredWidth: null.
+  assert.deepEqual(
+    measureBox('<svg width="283.46pt" height="141.73pt" viewBox="0 0 283 141" version="1.1">'),
+    { width: 283.46, height: 141.73 },
+  );
+
+  // dvisvgm --eps, single quotes and no units.
+  assert.deepEqual(measureBox("<svg width='320' height='240'>"), { width: 320, height: 240 });
+
+  // viewBox-only, comma separated, which the width/height pair cannot rescue.
+  assert.deepEqual(measureBox('<svg viewBox="0,0,100,50">'), { width: 100, height: 50 });
+
+  // viewBox is the fallback, not the first choice: width/height win when both are present.
+  assert.deepEqual(measureBox('<svg width="200" height="100" viewBox="0 0 400 400">'), {
+    width: 200,
+    height: 100,
+  });
+});
+
+test("measureBox reports no box rather than guessing one", async () => {
+  const { measureBox } = await import("../../scripts/build-figures.mjs");
+
+  // A root element with neither a usable size nor a viewBox is unmeasurable. It must return null
+  // so the build can fail closed; a guessed 0x0 would read as zero drift and pass silently.
+  assert.equal(measureBox('<svg version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), null);
+  assert.equal(measureBox('<svg width="0" height="0"></svg>'), null);
+  assert.equal(measureBox('<svg width="100%"></svg>'), null);
+  assert.equal(measureBox("not an svg at all"), null);
+
+  // Only the root element counts. A child's width attribute must never be mistaken for the
+  // figure's box, which is what an unanchored document-wide match used to risk.
+  assert.equal(measureBox('<svg><rect width="500" height="400"/></svg>'), null);
+});
