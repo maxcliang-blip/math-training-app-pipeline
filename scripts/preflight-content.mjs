@@ -464,9 +464,14 @@ function checkAsymptote(source, alt, ratio, path) {
   const lines = source.split("\n").filter((l) => l.trim() && !l.trim().startsWith("//"));
   check("error", "S5.2-line-budget", path, lines.length <= 40,
     `figure source is ${lines.length} lines, budget is 40 (S5.2)`);
-  check("error", "S5.2-size-required", path, /\bsize\s*\(/.test(source),
+  // The rules below read the figure's code, not its header. A source that says
+  // size(W,H) in a comment and never calls it has no reserved space, and a rule that
+  // matched the comment would call that a figure: it is exactly how this header was able
+  // to defeat the S5.2 self-test while every figure it described was unmeasurable.
+  const code = lines.join("\n");
+  check("error", "S5.2-size-required", path, /\bsize\s*\(/.test(code),
     "figure source must call size(...) so the pipeline knows its dimensions (S5.2)");
-  const sizeCall = source.match(/size\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)/);
+  const sizeCall = code.match(/size\s*\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*\)/);
   if (sizeCall && typeof ratio === "number") {
     // S5.4 authoring rule: exact at the declared precision, not a percentage tolerance.
     // Both sides come from integers written in the same record, so this is a transcription
@@ -480,21 +485,22 @@ function checkAsymptote(source, alt, ratio, path) {
       `asymptoteAspectRatio ${ratio} is not size(${sizeCall[1]},${sizeCall[2]}) = ${atPrecision} ` +
       `(${declared.toFixed(4)} rounded to ${RATIO_DECIMALS} decimals); S5.4a is exact at the declared precision`);
     check("advisory", "S5.2-size-arity", path, true,
-      "two-argument size() is what makes the declared ratio exact; size(300) alone leaves the ratio to the natural bounding box");
+      "a two-argument size call is what lets S5.4a tie the declaration to the source; neither form fixes the " +
+      "output box, and size(300) alone leaves the real ratio to the compiler (S5.5)");
   } else if (!sizeCall) {
     fail("advisory", "S5.4-ratio-unverifiable", path,
       "single-argument size(): the real aspect ratio is not knowable until compile, so S5.4a cannot be checked at authoring time and only S5.5 applies");
   }
-  check("error", "S5.2-no-file-io", path, !/\b(input|include|write|open)\s*\(/.test(source),
+  check("error", "S5.2-no-file-io", path, !/\b(input|include|write|open)\s*\(/.test(code),
     "figure source must not do file IO (S5.2)");
-  check("error", "S5.2-no-interactivity", path, !/\banimate|add\s*\(\s*\)/.test(source),
+  check("error", "S5.2-no-interactivity", path, !/\banimate|add\s*\(\s*\)/.test(code),
     "figure source must not be interactive or animated (S5.2)");
   check("error", "S5.2-no-external-import", path,
     !/^\s*import\s+(?!geometry\b|math\b|graph\b|graph3\b|three\b|patterns\b|stats\b|OIJ\b|OIM\b)/m.test(source),
     "only the standard Asymptote modules are allowed (S5.2)");
   check("error", "S5.2-no-answer-in-figure", path, !/\$[-\d.]+\$/.test(alt),
     "alt text must not restate a numeric answer (S5.2)");
-  const primitives = (source.match(/\b(draw|dot|label|filldraw|fill|clip|path)\s*\(/g) || []).length;
+  const primitives = (code.match(/\b(draw|dot|label|filldraw|fill|clip|path)\s*\(/g) || []).length;
   check("advisory", "S5.2-primitive-budget", path, primitives <= 20,
     `figure uses ${primitives} drawing primitives, budget is 20 (S5.2)`);
   return true;

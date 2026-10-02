@@ -256,12 +256,25 @@ export const MUTATIONS = [
     },
   },
   {
+    // The comment lines go before the size call is removed, and the decoy goes back in
+    // afterwards. That is the point of the ordering. A figure header that names the size
+    // call it is describing gives S5.2-size-required a match in a figure that never calls
+    // it, and the rule then reports itself unable to fail — which is what happened the
+    // moment a header said size(W,H). The mutation has to defeat that: strip the real
+    // call from the code, leave a comment that still spells one out, and the rule must
+    // still fire. A rule that only passes this test because the fixture happens to be
+    // comment-free proves nothing.
     id: "figure-without-size-call",
     rule: "S5.2-size-required",
     severity: "error",
     apply(c) {
       const fig = findLessonFigure(c.lessons);
-      fig.asymptoteSource = fig.asymptoteSource.replace(/\bsize\s*\([^)]*\)/, "");
+      const code = fig.asymptoteSource
+        .split("\n")
+        .filter((l) => !l.trim().startsWith("//"))
+        .join("\n")
+        .replace(/\bsize\s*\([^)]*\)/, "");
+      fig.asymptoteSource = "// size(W,H) bounds the output.\n" + code;
     },
   },
 ];
