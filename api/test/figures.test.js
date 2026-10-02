@@ -327,6 +327,45 @@ test("a figure reused by a lesson's examples is recorded once, across both occur
   rmSync(dir, { recursive: true, force: true });
 });
 
+test("recording a ratio written as 1.0 leaves valid JSON behind", async () => {
+  const { recordAspectRatios } = await import("../../scripts/build-figures.mjs");
+  const dir = mkdtempSync(join(tmpdir(), "record-spelling-"));
+  const file = join(dir, "m3-l4.json");
+  const source = "// a path on five dots\nsize(400,400);\nfor (int i = 0; i < 5; ++i) dot((i,0));";
+  writeFileSync(
+    file,
+    [
+      "{",
+      '  "figures": [',
+      '    {',
+      `      "asymptoteSource": ${JSON.stringify(source)},`,
+      '      "asymptoteAlt": "five dots in a row joined by four segments",',
+      // Prettier preserves the spelling it was given, so this file says 1.0 where the parsed
+      // value is 1. A pass that rebuilt its search token from the parsed value would match the
+      // "1" and leave the ".0" behind.
+      '      "asymptoteAspectRatio": 1.0',
+      "    }",
+      "  ]",
+      "}",
+      "",
+    ].join("\n"),
+  );
+
+  const recorded = recordAspectRatios({
+    measurements: [
+      { key: "k", file, source, declaredSize: "size(400,400)", declaredRatio: 1, measuredWidth: 406, measuredHeight: 400, measuredRatio: 1.015 },
+    ],
+  });
+
+  assert.equal(recorded.ok, true, JSON.stringify(recorded));
+  // The failure this pins is not a wrong number, it is a corpus that no longer parses.
+  const after = JSON.parse(readFileSync(file, "utf8"));
+  assert.equal(after.figures[0].asymptoteAspectRatio, 1.015);
+  assert.match(readFileSync(file, "utf8"), /"asymptoteAspectRatio": 1\.015\s*\n/);
+
+  rmSync(dir, { recursive: true, force: true });
+});
+
 test("the record pass reaches a fixed point instead of walking the corpus", async () => {
   const { recordAspectRatios } = await import("../../scripts/build-figures.mjs");
   const dir = mkdtempSync(join(tmpdir(), "record-fixed-point-"));

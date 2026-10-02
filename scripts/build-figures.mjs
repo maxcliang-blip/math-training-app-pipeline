@@ -568,9 +568,17 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
 // object. So: for every occurrence of the source, walk out to the first ratio line reached and
 // stop at the line that closes the object.
 //
+// The ratio is matched by shape, not by the number it is expected to hold. Matching on the value
+// is a trap: JSON writes 1 as `1`, `1.0` or `1e0` depending on what wrote it, prettier preserves
+// whatever was there, and a figure declaring `"asymptoteAspectRatio": 1.0` has the JS value 1. So
+// the token built from the declared value, `"asymptoteAspectRatio": 1`, is a *prefix* of the text
+// on the line, and replacing it turns `1.0` into `1.015.0` -- which is not a number, so the corpus
+// stops being JSON and the next run of anything that reads it dies on a parse error. That is what
+// this pass did to m3-l3 and m3-l4. Match the field, take the number off it, and never assume the
+// two spellings agree.
 // A source can legitimately appear more than once -- a lesson reuses a concept's figure inside its
 // examples -- and those occurrences are the same figure, so they must all be rewritten together.
-function recordFigureRatios(text, sourceToken, ratioToken, newRatio) {
+function recordFigureRatios(text, sourceToken, newRatio) {
   const lineStarts = [0];
   for (let i = 0; i < text.length; i++) if (text[i] === "\n") lineStarts.push(i + 1);
   const lineOf = (index) => {
@@ -584,6 +592,7 @@ function recordFigureRatios(text, sourceToken, ratioToken, newRatio) {
     return lo;
   };
   const endsObject = (line) => /^\s*\}/.test(line);
+  const RATIO_FIELD = /("asymptoteAspectRatio"\s*:\s*)(-?[\d.eE+]+)(?![\d.])/;
 
   const edits = [];
   let from = 0;
@@ -600,8 +609,8 @@ function recordFigureRatios(text, sourceToken, ratioToken, newRatio) {
       for (let i = startLine + step; i >= 0 && i < lineStarts.length; i += step) {
         const start = lineStarts[i];
         const line = text.slice(start, lineStarts[i + 1] ?? text.length);
-        if (line.includes(ratioToken)) {
-          edits.push({ start, end: start + line.length, insert: line.replace(ratioToken, `"asymptoteAspectRatio": ${newRatio}`) });
+        if (RATIO_FIELD.test(line)) {
+          edits.push({ start, end: start + line.length, insert: line.replace(RATIO_FIELD, `$1${newRatio}`) });
           hit = true;
           break;
         }
@@ -680,8 +689,7 @@ export function recordAspectRatios(result) {
 
     const text = readFileSync(m.file, "utf8");
     const sourceToken = JSON.stringify(m.source).slice(1, -1);
-    const ratioToken = `"asymptoteAspectRatio": ${m.declaredRatio}`;
-    const scoped = recordFigureRatios(text, sourceToken, ratioToken, m.measuredRatio);
+    const scoped = recordFigureRatios(text, sourceToken, m.measuredRatio);
     if (!scoped.ok) {
       return { ok: false, error: `cannot record ${m.key} in ${m.file}: ${scoped.error}` };
     }
