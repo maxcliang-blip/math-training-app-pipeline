@@ -1,0 +1,28 @@
+{
+  "id": "m7-l1-m3",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "probability",
+    "combinations"
+  ],
+  "promptLatex": "Two cards are drawn at random without replacement from a standard $52$-card deck. The probability that they are both aces or both face cards is $\\frac{m}{n}$ in lowest terms. Find $m + n$.",
+  "choices": null,
+  "answerLatex": "233",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The two cases are disjoint, so add their counts before dividing.",
+    "There are $\\binom{4}{2} = 6$ pairs of aces and $\\binom{12}{2} = 66$ pairs of face cards, out of $\\binom{52}{2} = 1326$ pairs.",
+    "Reduce $\\frac{72}{1326}$ and add numerator and denominator."
+  ],
+  "solutionLatex": "Drawing two cards without replacement gives a uniformly random pair, so there are $\\binom{52}{2} = 1326$ pairs in the sample space.\n\nAces are the four cards of rank $1$, so pairs of aces number $\\binom{4}{2} = 6$. Face cards are the jacks, queens and kings, of which there are $12$, so pairs of face cards number $\\binom{12}{2} = 66$. The two families are disjoint, since no ace is a face card.\n\nTherefore $P = \\frac{6 + 66}{1326} = \\frac{72}{1326} = \\frac{12}{221}$, and $m + n = 12 + 221 = 233$.",
+  "techniqueSlugs": [
+    "probability-as-fraction",
+    "inclusion-exclusion-for-events"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,33 @@
+{
+  "id": "m7-l2-p15",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "expected-value",
+    "random-variables"
+  ],
+  "promptLatex": "A fair six-sided die is rolled once. A game pays $6$ dollars if the result is a $6$ and pays nothing otherwise. What is the expected payout of the game?",
+  "choices": [
+    "1",
+    "6",
+    "\\frac{1}{6}",
+    "\\frac{5}{6}",
+    "2"
+  ],
+  "answerLatex": "1",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The expected value is the weighted average of the possible payouts.",
+    "The payout is $6$ with probability $\\frac{1}{6}$ and $0$ with probability $\\frac{5}{6}$.",
+    "So the expectation is $6 \\cdot \\frac{1}{6} + 0 \\cdot \\frac{5}{6} = 1$."
+  ],
+  "solutionLatex": "Let $X$ be the payout. It takes the value $6$ when a $6$ is rolled and $0$ otherwise, so $P(X = 6) = \\frac{1}{6}$ and $P(X = 0) = \\frac{5}{6}$.\n\nThe expected value is the weighted average\n\n$\\mathbb{E}[X] = 6 \\cdot \\frac{1}{6} + 0 \\cdot \\frac{5}{6} = 1$.\n\nThe expectation equals $1$ dollar even though the payout is never $1$, which is the point of an expectation: it is a long-run average, not a possible result.",
+  "techniqueSlugs": [
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

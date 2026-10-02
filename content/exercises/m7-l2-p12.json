@@ -1,0 +1,34 @@
+{
+  "id": "m7-l2-p12",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "bayes-theorem",
+    "conditional-probability"
+  ],
+  "promptLatex": "Urn $A$ holds $2$ red and $1$ blue ball, and urn $B$ holds $1$ red and $2$ blue balls. One of the two urns is chosen at random and a ball is drawn from it. Given that the ball drawn is red, what is the probability that urn $A$ was the urn chosen?",
+  "choices": [
+    "\\frac{1}{3}",
+    "\\frac{1}{2}",
+    "\\frac{2}{3}",
+    "\\frac{3}{4}",
+    "\\frac{2}{5}"
+  ],
+  "answerLatex": "\\frac{2}{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "There are two ways to draw a red ball, one from each urn, and they are disjoint.",
+    "So the probability of a red ball overall is $\\frac{1}{2} \\cdot \\frac{2}{3} + \\frac{1}{2} \\cdot \\frac{1}{3} = \\frac{1}{2}$.",
+    "Of the red draws, $\\frac{1}{3}$ of them came from urn $A$, so the answer is $\\frac{1/3}{1/2} = \\frac{2}{3}$."
+  ],
+  "solutionLatex": "Each urn is chosen with probability $\\frac{1}{2}$. From urn $A$ a red ball has probability $\\frac{2}{3}$ and from urn $B$ it has probability $\\frac{1}{3}$.\n\nThe two routes to a red ball are disjoint, so the total probability law gives $P(\\text{red}) = \\frac{1}{2} \\cdot \\frac{2}{3} + \\frac{1}{2} \\cdot \\frac{1}{3} = \\frac{1}{3} + \\frac{1}{6} = \\frac{1}{2}$.\n\nBayes' theorem now reverses the conditioning:\n\n$P(A \\mid \\text{red}) = \\frac{P(\\text{red} \\mid A) \\cdot P(A)}{P(\\text{red})} = \\frac{\\frac{2}{3} \\cdot \\frac{1}{2}}{\\frac{1}{2}} = \\frac{2}{3}$.",
+  "techniqueSlugs": [
+    "bayes-reversal",
+    "law-of-total-probability"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

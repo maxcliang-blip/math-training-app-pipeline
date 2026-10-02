@@ -1,0 +1,34 @@
+{
+  "id": "m7-l2-m1",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "conditional-probability",
+    "symmetry"
+  ],
+  "promptLatex": "A bag holds $5$ red marbles and $5$ blue marbles. Two marbles are drawn one at a time without replacement. What is the probability that the two marbles drawn are the same colour?",
+  "choices": [
+    "\\frac{4}{9}",
+    "\\frac{1}{2}",
+    "\\frac{2}{5}",
+    "\\frac{9}{25}",
+    "\\frac{1}{3}"
+  ],
+  "answerLatex": "\\frac{4}{9}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Split by the colour of the first draw, then chain the second.",
+    "The chain is $\\frac{5}{10} \\cdot \\frac{4}{9} + \\frac{5}{10} \\cdot \\frac{4}{9}$.",
+    "Each term is $\\frac{2}{9}$, so the total is $\\frac{4}{9}$."
+  ],
+  "solutionLatex": "The two marbles match if they are both red or both blue, and these cases are disjoint.\n\nBoth red has probability $\\frac{5}{10} \\cdot \\frac{4}{9} = \\frac{20}{90}$, since after a red first draw $4$ of the $9$ remaining marbles are red. Both blue has the same probability by symmetry.\n\nTherefore $P = \\frac{20}{90} + \\frac{20}{90} = \\frac{40}{90} = \\frac{4}{9}$. This is smaller than $\\left(\\frac{1}{2}\\right)^2 = \\frac{1}{4}$ would suggest for replacement, because without replacement the second draw is pushed toward the opposite colour.",
+  "techniqueSlugs": [
+    "chain-rule-of-probability",
+    "symmetry-argument"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

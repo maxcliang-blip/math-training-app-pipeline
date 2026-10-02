@@ -1,0 +1,34 @@
+{
+  "id": "m7-l1-p12",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "12",
+  "difficulty": 2,
+  "tags": [
+    "probability",
+    "symmetry"
+  ],
+  "promptLatex": "Five different books, including one algebra book, are placed in a row in a random order. What is the probability that the algebra book is in the leftmost position?",
+  "choices": [
+    "\\frac{1}{5}",
+    "\\frac{1}{4}",
+    "\\frac{1}{6}",
+    "\\frac{2}{5}",
+    "\\frac{1}{10}"
+  ],
+  "answerLatex": "\\frac{1}{5}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Every position in the row is reached by the same number of arrangements.",
+    "There are $5!$ arrangements in total, and once the algebra book is fixed at the left there are $4!$ ways to place the rest.",
+    "So the probability is $\\frac{4!}{5!} = \\frac{1}{5}$."
+  ],
+  "solutionLatex": "The sample space is the set of orderings of the five books, of which there are $5! = 120$, all equally likely.\n\nIf the algebra book is fixed in the leftmost position, the remaining four books may be arranged in $4! = 24$ ways.\n\nTherefore $P = \\frac{4!}{5!} = \\frac{24}{120} = \\frac{1}{5}$.",
+  "techniqueSlugs": [
+    "factorial-counting",
+    "probability-as-fraction"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

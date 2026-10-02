@@ -1,0 +1,30 @@
+{
+  "id": "m7-l2-p18",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "expected-value",
+    "independence"
+  ],
+  "promptLatex": "A fair six-sided die is rolled twice. What is the expected value of the product of the two results?",
+  "choices": null,
+  "answerLatex": "\\frac{49}{4}",
+  "answerAlternatives": [
+    "49/4"
+  ],
+  "hintLatex": [
+    "Check whether the two results are independent, since the product formula needs independence.",
+    "Each roll has expectation $\\frac{1+2+3+4+5+6}{6} = \\frac{7}{2}$, and the rolls are independent.",
+    "So the expectation of the product is $\\frac{7}{2} \\cdot \\frac{7}{2} = \\frac{49}{4}$."
+  ],
+  "solutionLatex": "Let $X$ and $Y$ be the two results. Each has expected value $\\mathbb{E}[X] = \\frac{1+2+3+4+5+6}{6} = \\frac{21}{6} = \\frac{7}{2}$.\n\nThe two rolls are independent, and for independent random variables $\\mathbb{E}[XY] = \\mathbb{E}[X]\\,\\mathbb{E}[Y]$.\n\nTherefore $\\mathbb{E}[XY] = \\frac{7}{2} \\cdot \\frac{7}{2} = \\frac{49}{4}$. Linearity of expectation alone would not justify this: it applies to sums, and the product rule requires independence, which was checked above.",
+  "techniqueSlugs": [
+    "linearity-of-expectation",
+    "independence-check"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

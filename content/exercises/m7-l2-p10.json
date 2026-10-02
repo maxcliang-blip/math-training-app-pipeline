@@ -1,0 +1,34 @@
+{
+  "id": "m7-l2-p10",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "conditional-probability",
+    "independence"
+  ],
+  "promptLatex": "A fair coin is flipped four times. It is known that the first two flips both show heads. What is the probability that all four flips show heads?",
+  "choices": [
+    "\\frac{1}{2}",
+    "\\frac{1}{3}",
+    "\\frac{1}{4}",
+    "\\frac{1}{8}",
+    "\\frac{1}{16}"
+  ],
+  "answerLatex": "\\frac{1}{4}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The third and fourth flips are still fresh coin flips, whatever the first two did.",
+    "Each of the remaining two flips is heads with probability $\\frac{1}{2}$, and they are independent of each other.",
+    "So the probability is $\\frac{1}{2} \\cdot \\frac{1}{2} = \\frac{1}{4}$."
+  ],
+  "solutionLatex": "Conditioning on the first two flips being heads leaves the third and fourth flips unaffected: they are still fair and still independent of one another.\n\nThe probability that the third flip is heads is $\\frac{1}{2}$ and the probability that the fourth flip is heads is $\\frac{1}{2}$, so the probability that both are heads is $\\frac{1}{2} \\cdot \\frac{1}{2}$.\n\nTherefore $P(\\text{four heads} \\mid \\text{first two heads}) = \\frac{1}{4}$. The answer is not $\\frac{1}{16}$, because that would be the probability of the whole four-flip event rather than the conditional one.",
+  "techniqueSlugs": [
+    "conditional-probability-formula",
+    "independence-check"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,33 @@
+{
+  "id": "m7-l1-p16",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "probability",
+    "geometric-probability"
+  ],
+  "promptLatex": "A point is chosen at random from inside a rectangle of width $10$ and height $6$. What is the probability that its distance from the left side of the rectangle is between $2$ and $5$?",
+  "choices": [
+    "\\frac{1}{5}",
+    "\\frac{1}{4}",
+    "\\frac{3}{10}",
+    "\\frac{2}{5}",
+    "\\frac{1}{2}"
+  ],
+  "answerLatex": "\\frac{3}{10}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Inside a rectangle the probability of a strip is the ratio of the widths.",
+    "The favourable strip is $5 - 2 = 3$ units wide out of a total width of $10$, and its height runs the full $6$ units.",
+    "So the probability is $\\frac{3}{10}$."
+  ],
+  "solutionLatex": "A uniformly chosen point makes the probability the ratio of areas.\n\nThe favourable region is a vertical strip of width $5 - 2 = 3$ and height $6$, of area $18$. The rectangle has area $10 \\cdot 6 = 60$.\n\nTherefore $P = \\frac{18}{60} = \\frac{3}{10}$.",
+  "techniqueSlugs": [
+    "geometric-probability-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

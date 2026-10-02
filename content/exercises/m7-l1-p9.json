@@ -1,0 +1,34 @@
+{
+  "id": "m7-l1-p9",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "probability",
+    "word-problem"
+  ],
+  "promptLatex": "One letter is chosen at random from the word MATHEMATICS. What is the probability that the letter chosen is a vowel?",
+  "choices": [
+    "\\frac{3}{11}",
+    "\\frac{4}{11}",
+    "\\frac{5}{11}",
+    "\\frac{2}{5}",
+    "\\frac{7}{11}"
+  ],
+  "answerLatex": "\\frac{4}{11}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Count positions, not distinct letters: choosing the second $A$ is a different outcome from choosing the first.",
+    "MATHEMATICS has $11$ letters, and the vowels among them are $A$, $E$, $A$ and $I$.",
+    "That gives $4$ vowels out of $11$ letters."
+  ],
+  "solutionLatex": "The sample space is the $11$ letter positions in the word MATHEMATICS, all equally likely, since a letter is chosen at random from the word.\n\nThe vowels in those positions are $A$, $E$, $A$ and $I$, so there are $4$ of them. Note that the repeated $A$ counts twice, because each position is a separate outcome.\n\nTherefore $P = \\frac{4}{11}$.",
+  "techniqueSlugs": [
+    "counting-outcome-space",
+    "probability-as-fraction"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

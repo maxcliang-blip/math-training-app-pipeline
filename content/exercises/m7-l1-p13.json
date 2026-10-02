@@ -1,0 +1,33 @@
+{
+  "id": "m7-l1-p13",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "probability",
+    "permutations"
+  ],
+  "promptLatex": "The digits $1$ through $6$ are written on six cards, and the cards are laid out in a row in a uniformly random order. What is the probability that the cards showing $1$ and $2$ are next to each other?",
+  "choices": [
+    "\\frac{1}{6}",
+    "\\frac{1}{5}",
+    "\\frac{1}{4}",
+    "\\frac{1}{3}",
+    "\\frac{2}{5}"
+  ],
+  "answerLatex": "\\frac{1}{3}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Treat the two cards as one object so that they cannot be separated.",
+    "There are $6!$ layouts in total. With $1$ and $2$ treated as a single block there are $5!$ positions for the block, and $2$ internal orders for the pair.",
+    "So the probability is $\\frac{2 \\cdot 5!}{6!} = \\frac{240}{720} = \\frac{1}{3}$."
+  ],
+  "solutionLatex": "The sample space is the $6! = 720$ orderings of the six cards, all equally likely.\n\nFor the cards $1$ and $2$ to be adjacent, glue them into a single block. There are then $5$ objects to arrange, giving $5!$ orders, and the block can read $12$ or $21$, giving $2$ internal arrangements. So the favourable count is $2 \\cdot 5! = 240$.\n\nTherefore $P = \\frac{240}{720} = \\frac{1}{3}$.",
+  "techniqueSlugs": [
+    "factorial-counting"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

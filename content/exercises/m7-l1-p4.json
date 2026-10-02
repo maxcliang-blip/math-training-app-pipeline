@@ -1,0 +1,34 @@
+{
+  "id": "m7-l1-p4",
+  "moduleId": "M7",
+  "lessonId": "m7-l1",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "probability",
+    "complementary-counting"
+  ],
+  "promptLatex": "Two fair six-sided dice are rolled. What is the probability that the sum of the two results is not $7$?",
+  "choices": [
+    "\\frac{1}{6}",
+    "\\frac{5}{12}",
+    "\\frac{1}{2}",
+    "\\frac{5}{6}",
+    "\\frac{11}{12}"
+  ],
+  "answerLatex": "\\frac{5}{6}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Counting the outcomes that produce a sum of $7$ is much easier than counting all the others.",
+    "The pairs summing to $7$ are $(1,6), (2,5), (3,4), (4,3), (5,2)$ and $(6,1)$.",
+    "So the probability asked for is $1 - \\frac{6}{36} = \\frac{5}{6}$."
+  ],
+  "solutionLatex": "The sample space is the $36$ ordered pairs of faces, all equally likely.\n\nExactly $6$ pairs sum to $7$, namely $(1,6), (2,5), (3,4), (4,3), (5,2)$ and $(6,1)$, so $P(\\text{sum is } 7) = \\frac{6}{36} = \\frac{1}{6}$.\n\nThe complement rule gives\n\n$P(\\text{sum is not } 7) = 1 - \\frac{1}{6} = \\frac{5}{6}$.",
+  "techniqueSlugs": [
+    "complementary-count",
+    "counting-outcome-space"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

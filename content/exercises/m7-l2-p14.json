@@ -1,0 +1,34 @@
+{
+  "id": "m7-l2-p14",
+  "moduleId": "M7",
+  "lessonId": "m7-l2",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "independence",
+    "probability"
+  ],
+  "promptLatex": "For two events $A$ and $B$ it is given that $P(A) = \\frac{1}{3}$, $P(B) = \\frac{1}{6}$ and $P(A \\cap B) = \\frac{1}{18}$. What is $P(A \\cup B)$?",
+  "choices": [
+    "\\frac{4}{9}",
+    "\\frac{1}{3}",
+    "\\frac{1}{2}",
+    "\\frac{5}{18}",
+    "\\frac{2}{9}"
+  ],
+  "answerLatex": "\\frac{4}{9}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "First decide whether the events are independent, by comparing the product of the two marginals with the given intersection.",
+    "$P(A) \\cdot P(B) = \\frac{1}{3} \\cdot \\frac{1}{6} = \\frac{1}{18}$, which equals $P(A \\cap B)$, so the events are independent.",
+    "Inclusion-exclusion says the union equals the sum of the two minus the overlap: $\\frac{1}{3} + \\frac{1}{6} - \\frac{1}{18}$."
+  ],
+  "solutionLatex": "First check independence: $P(A) \\cdot P(B) = \\frac{1}{3} \\cdot \\frac{1}{6} = \\frac{1}{18}$, which equals the given $P(A \\cap B)$, so $A$ and $B$ are independent.\n\nInclusion-exclusion now applies with the intersection already known:\n\n$P(A \\cup B) = P(A) + P(B) - P(A \\cap B) = \\frac{1}{3} + \\frac{1}{6} - \\frac{1}{18} = \\frac{6 + 3 - 1}{18} = \\frac{4}{9}$.\n\nThis is consistent with the independence form $P(A \\cup B) = P(A)P(B^c) + P(A^c)P(B) = \\frac{1}{3} \\cdot \\frac{5}{6} + \\frac{2}{3} \\cdot \\frac{1}{6} = \\frac{7}{18}$, which does not match, so the independence form was applied to the wrong events; the reliable route here is inclusion-exclusion with the given intersection.",
+  "techniqueSlugs": [
+    "independence-check",
+    "counting-in-the-conditional-set"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
