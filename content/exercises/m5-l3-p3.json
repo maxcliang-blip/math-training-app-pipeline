@@ -1,0 +1,35 @@
+{
+  "id": "m5-l3-p3",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "circles",
+    "inscribed-angles",
+    "triangles"
+  ],
+  "promptLatex": "The segment $\\overline{AB}$ is a diameter of a circle, and $C$ is any other point on that circle. What is the measure of $\\angle ACB$, in degrees?",
+  "choices": [
+    "45",
+    "60",
+    "90",
+    "120",
+    "180"
+  ],
+  "answerLatex": "90",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Find the arc that $\\overline{AB}$ cuts off.",
+    "A diameter cuts the circle into two equal halves.",
+    "The arc measures $180^{\\circ}$, and the inscribed angle on it is half of that."
+  ],
+  "solutionLatex": "Since $\\overline{AB}$ is a diameter, the arc from $A$ to $B$ that does not contain $C$ is a semicircle and measures $180^{\\circ}$.\n\nThe angle $\\angle ACB$ is inscribed, so it is half of the arc it intercepts.\n\nTherefore $\\angle ACB = \\frac{1}{2} \\cdot 180^{\\circ} = 90^{\\circ}$. This is why an angle standing on a semicircle is always a right angle, whatever the position of $C$.",
+  "techniqueSlugs": [
+    "angle-in-a-semicircle",
+    "inscribed-angle-half-arc"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

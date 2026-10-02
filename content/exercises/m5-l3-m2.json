@@ -1,0 +1,31 @@
+{
+  "id": "m5-l3-m2",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "circles",
+    "power-of-a-point",
+    "tangents",
+    "pythagorean"
+  ],
+  "promptLatex": "A circle with centre $O$ has radius $5$, and a point $P$ lies $13$ units from $O$. A secant from $P$ meets the circle at $A$ and then $B$, and a tangent from $P$ touches the circle at $T$. If $PA = 9$, what is $PB$, in units?",
+  "choices": null,
+  "answerLatex": "16",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The radius to the point of tangency is perpendicular to the tangent.",
+    "The tangent length squared equals the product of the two segments cut off by the secant.",
+    "$PT = \\sqrt{13^{2} - 5^{2}} = 12$, and $PB = \\frac{12^{2}}{9} = 16$."
+  ],
+  "solutionLatex": "At the point of tangency the radius $OT$ is perpendicular to the tangent $PT$, so triangle $OPT$ is right-angled at $T$ with hypotenuse $OP = 13$ and leg $OT = 5$.\n\nThe Pythagorean theorem gives $PT^{2} = 13^{2} - 5^{2} = 169 - 25 = 144$, so $PT = 12$.\n\nThe tangent and the secant come from the same external point, so $PT^{2} = PA \\cdot PB$. That gives $144 = 9 \\cdot PB$, hence $PB = 16$. The inside piece is $16 - 9 = 7$, which is shorter than the diameter $10$, as any chord must be.",
+  "techniqueSlugs": [
+    "power-of-a-point",
+    "tangent-radius-perpendicular",
+    "tangent-secant-power"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

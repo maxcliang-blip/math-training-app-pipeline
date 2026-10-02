@@ -1,0 +1,28 @@
+{
+  "id": "m5-l3-p14",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "circles",
+    "tangents",
+    "pythagorean"
+  ],
+  "promptLatex": "Two externally tangent circles have radii $4$ and $9$. A common external tangent touches the smaller circle at $P$ and the larger circle at $Q$. What is the length $PQ$, in units?",
+  "choices": null,
+  "answerLatex": "12",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Drop a perpendicular from each centre to the common tangent.",
+    "Compare the two radii with a perpendicular dropped from the smaller centre onto the larger radius.",
+    "The distance between the centres is $4 + 9 = 13$, so $PQ^{2} = 13^{2} - 5^{2} = 144$."
+  ],
+  "solutionLatex": "Let $O_1$ and $O_2$ be the centres of the smaller and larger circles. The radii $O_1P$ and $O_2Q$ are both perpendicular to the tangent line, because a tangent meets the radius to its point of contact at a right angle. They are therefore parallel, and the gap between them along that perpendicular direction is $O_2Q - O_1P = 9 - 4 = 5$.\n\nShift the segment $O_1Q$ across so that its top end meets $O_2$. The result is a right triangle whose hypotenuse is $O_1O_2$, whose vertical leg is $5$, and whose horizontal leg is $PQ$.\n\nBecause the circles are externally tangent, $O_1O_2 = 4 + 9 = 13$. So $PQ^{2} = 13^{2} - 5^{2} = 169 - 25 = 144$, giving $PQ = 12$.",
+  "techniqueSlugs": [
+    "tangent-radius-perpendicular"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

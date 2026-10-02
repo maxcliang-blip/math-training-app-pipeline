@@ -171,6 +171,20 @@ const TAG_TOPIC = [
   // combination, so the two obvious queries -- every lattice-path exercise, every
   // spanning-tree exercise -- had no answer at all.
   "lattice-paths", "trees", "spanning-trees", "graph-trails",
+  // Module 5, lessons 3 and 4 (MAX-24). M5 shipped "circles", "arcs", "chords", "tangents",
+  // "central-angles", "inscribed-angles" and "cyclic-quadrilaterals" back when the pilot
+  // declared them, but the two lessons that actually teach them did not exist until now, and
+  // four things had no word at all: the external-point product (every tangent-secant and
+  // two-secant problem was filed as a bare "circles" exercise), the chord-chord product
+  // inside the circle, and the whole area-and-volume half the module summary promised. The
+  // rest are the faces of a solid, which no topic named.
+  //
+  // "power-of-a-point" and "intersecting-chords" stay separate on purpose. One is measured
+  // from a point outside the circle and pairs an outside length with a whole length; the
+  // other is measured from a point inside and pairs the two halves of one chord. Same
+  // underlying invariant, opposite pairings, and the pairing is the whole of the arithmetic.
+  "power-of-a-point", "intersecting-chords", "trapezoids", "circle-area", "arc-length",
+  "volume", "surface-area", "composite-solids", "inradius",
 ];
 
 const TAG_TECHNIQUE = [
@@ -250,6 +264,29 @@ const TAG_TECHNIQUE = [
   // labeled trees and naming the encoding are different techniques.
   "reflection-argument", "catalan-count", "ballot-count", "cayley-formula", "prufer-code",
   "euler-circuit-count", "hamiltonian-count", "characteristic-roots", "recurrence-from-splitting",
+  // Module 5, lesson 3 (MAX-24): how a circle argument is actually built. Everything below is
+  // a *move* -- convert an inscribed angle into an arc, decide whether a vertex is inside or
+  // outside before choosing a rule, then pair the right two lengths. "radius-perpendicular-to-chord",
+  // "equal-chords-equal-arcs", "tangent-radius-perpendicular", "tangent-length-equal",
+  // "tangent-secant-power", "two-secants-power", "inscribed-angle-is-half-the-central",
+  // "cyclic-quadrilateral-opposite-angles" and "arc-addition" were already declared under
+  // Module 5 and are reused here rather than restated.
+  //
+  // The two arc-angle moves are deliberately distinct because the *sign* is the move:
+  // "intersecting-chords-angle" adds the two intercepted arcs and "external-secant-angle"
+  // subtracts them, and a learner who has only one of them will apply the wrong one.
+  "intersecting-chords-angle", "external-secant-angle", "angles-in-the-same-segment",
+  "angle-in-a-semicircle", "radius-bisects-both-arcs", "intersecting-chords-product",
+  "exterior-angle-of-a-cyclic-quadrilateral", "arc-measure-as-central-angle", "power-of-a-point",
+  // Module 5, lesson 4 (MAX-24): how an area or volume argument is actually built. The circle
+  // and sector moves ("radius-times-angle", "sector-area-formula"), the similarity move
+  // ("area-scaling-from-scale"), the decomposition move ("polygon-rectangle-decomposition"),
+  // the apothem move ("apothem-perimeter"), Heron ("heron-area") and the triangle-inequality
+  // material are already declared and are reused.
+  "triangle-area-from-base-height", "rhombus-diagonal-area", "trapezoid-midsegment-area",
+  "regular-polygon-triangulation", "apothem-area", "circle-area-formula",
+  "arc-length-from-central-angle", "prism-and-cylinder-volume", "pyramid-and-cone-volume",
+  "sphere-volume-and-area", "surface-area-lateral-plus-base", "inradius-from-area",
 ];
 
 // Rule for the next module: add its topics and its techniques to the two lists above. Do not

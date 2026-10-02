@@ -1,0 +1,29 @@
+{
+  "id": "m5-l3-p10",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "circles",
+    "power-of-a-point",
+    "chords"
+  ],
+  "promptLatex": "From a point $P$ outside a circle, one secant meets the circle first at $A$ and then at $B$, with $PA = 4$ and $PB = 20$. A second secant from the same point meets the circle first at $C$, with $PC = 5$. What is $CD$, the length of the chord cut off by the second secant, in units?",
+  "choices": null,
+  "answerLatex": "11",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Every secant drawn from one external point reproduces the same product.",
+    "Pair each outside length with the whole length of its own secant.",
+    "$4 \\cdot 20 = 5 \\cdot PD$ gives $PD = 16$, and $CD = 16 - 5 = 11$."
+  ],
+  "solutionLatex": "Let the second secant reach the circle again at $D$, so $PD$ is the whole length of that secant and $CD$ is its inside piece.\n\nTwo secants from the same external point give equal products of outside part and whole length, so $PA \\cdot PB = PC \\cdot PD$.\n\nSubstituting, $4 \\cdot 20 = 5 \\cdot PD$, which gives $PD = 16$. The inside piece is what is left of that whole length once the outside part $PC = 5$ is removed, so $CD = 16 - 5 = 11$.",
+  "techniqueSlugs": [
+    "power-of-a-point",
+    "two-secants-power"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,28 @@
+{
+  "id": "m5-l3-p7",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "circles",
+    "tangents",
+    "pythagorean"
+  ],
+  "promptLatex": "A point $P$ lies $13$ units from the centre $O$ of a circle of radius $5$, and a segment from $P$ touches the circle at $T$. What is the length $PT$, in units?",
+  "choices": null,
+  "answerLatex": "12",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A tangent meets the radius drawn to the point of contact at a right angle.",
+    "That right angle makes $OP$ the hypotenuse of a right triangle with legs $OT$ and $PT$.",
+    "$PT = \\sqrt{13^{2} - 5^{2}} = \\sqrt{169 - 25} = \\sqrt{144} = 12$."
+  ],
+  "solutionLatex": "Let $O$ be the centre and $T$ the point where the segment from $P$ touches the circle.\n\nThe radius $OT$ is perpendicular to the tangent at $T$, so triangle $OPT$ has a right angle at $T$, with hypotenuse $OP = 13$ and leg $OT = 5$.\n\nThe Pythagorean theorem gives $PT^{2} = OP^{2} - OT^{2} = 169 - 25 = 144$, and since a length is positive, $PT = 12$.",
+  "techniqueSlugs": [
+    "tangent-radius-perpendicular"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

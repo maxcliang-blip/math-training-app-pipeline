@@ -1,0 +1,31 @@
+{
+  "id": "m5-l3-p15",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "circles",
+    "tangents",
+    "chords",
+    "similarity"
+  ],
+  "promptLatex": "A circle has radius $10$, and a chord of the circle lies $5$ units from the centre. Tangents at the two ends of that chord meet at a point $T$. What is the distance from the centre of the circle to $T$, in units?",
+  "choices": null,
+  "answerLatex": "20",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The line from the centre to the midpoint of the chord is also the line to $T$.",
+    "The radius to a point of tangency is perpendicular to the tangent.",
+    "Right triangles $OMP$ and $OPT$ share the angle at $O$, so $OM \\cdot OT = OP^{2} = 100$."
+  ],
+  "solutionLatex": "Let $O$ be the centre, $M$ the midpoint of the chord, and $P$ one of its endpoints. Since $OM$ is perpendicular to the chord, the centre lies on the perpendicular bisector of the chord. The tangents at $P$ and at the other endpoint are symmetric about that same line, so their intersection $T$ lies on line $OM$ as well, on the far side of $M$ from $O$.\n\nAt $P$ the radius $OP$ is perpendicular to the tangent $PT$, so triangle $OPT$ has a right angle at $P$. Triangle $OMP$ has a right angle at $M$, and the two triangles share the angle at $O$, since $OM$ and $OT$ lie on one line and $OP$ is common to both. They are therefore similar.\n\nMatching corresponding sides gives $\\frac{OM}{OP} = \\frac{OP}{OT}$, so $OM \\cdot OT = OP^{2} = 10^{2} = 100$. With $OM = 5$, that gives $OT = \\frac{100}{5} = 20$.",
+  "techniqueSlugs": [
+    "tangent-radius-perpendicular",
+    "similarity-aa",
+    "radius-perpendicular-to-chord"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,29 @@
+{
+  "id": "m5-l3-p4",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "circles",
+    "chords",
+    "inscribed-angles"
+  ],
+  "promptLatex": "Points $A$, $B$, $C$, and $D$ lie on a circle, with $C$ and $D$ both lying on the same arc running from $A$ to $B$. If $\\angle ACB = 37^{\\circ}$, what is the measure of $\\angle ADB$, in degrees?",
+  "choices": null,
+  "answerLatex": "37",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Two inscribed angles on the same chord, from the same side of it, are equal.",
+    "Both angles have endpoints $A$ and $B$.",
+    "The two angles are in the same segment, so they have the same measure."
+  ],
+  "solutionLatex": "Both $\\angle ACB$ and $\\angle ADB$ are inscribed angles whose two endpoints are $A$ and $B$, so each intercepts the same arc $AB$ — the one lying on the other side of the chord.\n\nInscribed angles standing on the same chord from the same side are equal. The two vertices $C$ and $D$ lie on the same arc, so they are on the same side of the chord.\n\nHence $\\angle ADB = \\angle ACB = 37^{\\circ}$.",
+  "techniqueSlugs": [
+    "angles-in-the-same-segment",
+    "inscribed-angle-half-arc"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

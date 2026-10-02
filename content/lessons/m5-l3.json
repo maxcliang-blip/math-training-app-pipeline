@@ -1,0 +1,287 @@
+{
+  "id": "m5-l3",
+  "moduleId": "M5",
+  "order": 3,
+  "title": "Circles, Arcs, and Power of a Point",
+  "topicSlug": "circles-arcs-power-of-a-point",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 80,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m5-l1",
+    "m5-l2"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Move between the two measures that live on a circle, arc measure and angle measure, and use the inscribed angle theorem, the cyclic quadrilateral theorem, the radius-to-chord bisector, tangent-radius perpendicularity, and the power of a point to find missing angles, chords, tangent segments, and lengths along secants in AMC-10, AMC-12, and AIME configurations."
+    },
+    "prerequisites": {
+      "items": [
+        "m5-l1",
+        "m5-l2"
+      ],
+      "noteLatex": "The triangle angle sum, the parallel-line angle pairs, and the isosceles base angle fact from $m5$-$l1$ are used on nearly every page here, and the congruent-triangle transfers from $m5$-$l2$ are what let a radius be shown to bisect a chord. The Pythagorean theorem from Module 1 turns each right triangle below into a length."
+    },
+    "concept": {
+      "conceptLatex": "Two different things get measured on a circle, and confusing them is the single most common error in this topic. A **central angle** has its vertex at the centre $O$, and it measures the same number of degrees as the **arc** it cuts off: $\\angle AOB$ and the minor arc $AB$ have the same measure, and the two arcs between $A$ and $B$ together make $360^{\\circ}$. An arc cut off by a diameter is a **semicircle** and measures $180^{\\circ}$.\n\nAn **inscribed angle** has its vertex on the circle. It measures half the arc it intercepts, so $\\angle ACB = \\frac{1}{2} m\\widehat{AB}$ whenever $C$ lies on the major arc $AB$. The arc that matters is the one across from the vertex, namely the arc that does **not** contain $C$. Two consequences arrive together: inscribed angles standing on the same chord from the same side of it are equal, and an inscribed angle whose chord is a diameter measures $90^{\\circ}$.\n\nWhen all four vertices of a quadrilateral lie on one circle it is **cyclic**, and its opposite angles are supplementary, because $\\angle ABC$ and $\\angle ADC$ between them intercept both full arcs running from $A$ to $C$. Equivalently, the exterior angle at a vertex of a cyclic quadrilateral equals the interior angle at the opposite vertex, so one four-angle chase becomes two independent chases.\n\nTwo chords that meet **inside** the circle at $P$ form an angle equal to half the **sum** of the arcs intercepted by that angle and by its vertical angle. Two secants that meet **outside** the circle form an angle equal to half the **difference** of the intercepted arcs, and a tangent meeting a chord at a point on the circle gives half the intercepted arc. Add or subtract is decided entirely by where the vertex sits, and that is the decision to make before reaching for any formula.\n\nA radius drawn perpendicular to a chord bisects the chord and bisects both arcs it cuts off, which follows from SSS congruence of the two triangles the radius creates. Hence equal chords cut off equal arcs, equal arcs cut off equal chords, and a diameter meeting a chord at right angles leaves the two arcs the same size. These are the facts that turn a chord of known length $AB$ and known distance $OM$ into the radius $r$, and back again.\n\nA tangent meets the radius drawn to its point of contact at a right angle, and the two tangent segments from one external point are equal. The statement that unifies everything external is the **power of a point**: for an external point $P$ the number $PO^{2} - r^{2}$ is the same however it is measured. Two secants give $PA \\cdot PB$, a tangent and a secant give $PT^{2}$, two tangents give $PT^{2}$ again, and for a point inside the circle two chords give $PA \\cdot PB = PC \\cdot PD$.",
+      "figures": [
+        {
+          "id": "m5-l3-fig-1",
+          "captionLatex": "The same arc is measured two ways: the central angle $\\angle AOB$ at the centre and the inscribed angle $\\angle ACB$ at the circumference, which is exactly half of it.",
+          "asymptoteSource": "import graph;\nsize(280,220);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair A = dir(90);\npair B = dir(210);\npair C = dir(330);\ndot(A); dot(B); dot(C); dot((0,0));\ndraw(A--B); draw(A--C);\ndraw((0,0)--A, dashed); draw((0,0)--B, dashed);\nlabel(\"$A$\", A, N); label(\"$B$\", B, SW); label(\"$C$\", C, SE);\nlabel(\"$O$\", (0,0), SE);\nlabel(\"$\\\\angle AOB$\", (0.55,0.35), NE);\nlabel(\"$\\\\angle ACB$\", C, S);",
+          "asymptoteAlt": "A circle carries a central angle drawn from the centre out to two points on the circumference with dashed radii, and an inscribed angle at a third point on the circumference whose two arms reach the same two points. The angle at the circumference is drawn at the bottom of the circle and the angle at the centre is drawn between the two dashed radii.",
+          "asymptoteAspectRatio": 1.273
+        },
+        {
+          "id": "m5-l3-fig-2",
+          "captionLatex": "A tangent meets the radius drawn to its point of contact at a right angle, so the radius, the tangent segment, and the line back to the centre form a right triangle and the tangent segment is easy to recover.",
+          "asymptoteSource": "import graph;\nsize(280,220);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair T = dir(50);\npair P = 3.3*dir(50);\ndot((0,0)); dot(T); dot(P);\ndraw(T--P);\ndraw((0,0)--T, dashed);\ndraw(T+dir(140)*0.42 -- T+dir(140)*0.42 + dir(50)*0.42 -- T+dir(50)*0.42);\nlabel(\"$O$\", (0,0), S);\nlabel(\"$T$\", T, NW);\nlabel(\"$P$\", P, E);\nlabel(\"$r$\", T/2, SW);\nlabel(\"$PT$\", (T+P)/2, NE);\nlabel(\"$OP$\", P/2, SE);",
+          "asymptoteAlt": "A circle with its centre marked, a radius drawn out to a point on the circumference, and a straight segment from that point continuing outward to an external point. A small square marks the right angle where the radius meets the segment, showing that the radius and the segment are perpendicular.",
+          "asymptoteAspectRatio": 1.273
+        },
+        {
+          "id": "m5-l3-fig-3",
+          "captionLatex": "One external point, one tangent and two secants: the tangent counts as a chord with both ends at the same point, and all three products of the two intercepted lengths are equal.",
+          "asymptoteSource": "import graph;\nsize(300,230);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair P = P(3.4,0.6);\npair A = P(1.412,1.419);\npair B = P(0,2);\npair C = P(1.951,0.439);\npair D = P(-2,0);\npair T = P(0.858,1.807);\ndot(P); dot(A); dot(B); dot(C); dot(D); dot(T);\ndraw(P--A--B);\ndraw(P--C--D);\ndraw(P--T);\nlabel(\"$P$\", P, E);\nlabel(\"$A$\", A, NE); label(\"$B$\", B, N);\nlabel(\"$C$\", C, SE); label(\"$D$\", D, SW);\nlabel(\"$T$\", T, W);",
+          "asymptoteAlt": "A circle with a single point outside it on the right. Three straight lines run from that point into the circle: one touches the circle at a single point near the top and stops, while the other two pass through the circle, cutting it at a near point and a far point. Each line is labelled with its near and far points.",
+          "asymptoteAspectRatio": 1.304
+        },
+        {
+          "id": "m5-l3-fig-4",
+          "captionLatex": "A radius drawn perpendicular to a chord cuts the chord into two equal halves, and the perpendicular from the centre to a chord is the shortest distance from the centre to any point of the chord.",
+          "asymptoteSource": "import graph;\nsize(280,230);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair A = (-1.833,0.8);\npair B = (1.833,0.8);\npair M = (0,0.8);\ndraw(A--B);\ndraw((0,0)--M--(0,2), dashed);\ndot((0,0)); dot(A); dot(B); dot(M); dot((0,2));\nlabel(\"$O$\", (0,0), SW);\nlabel(\"$A$\", A, W); label(\"$B$\", B, E);\nlabel(\"$M$\", M, NE);\nlabel(\"$P$\", (0,2), N);",
+          "asymptoteAlt": "A circle with a horizontal chord across its upper half. A dashed line runs from the centre of the circle, through the midpoint of the chord marked with a dot, and onward to the top of the circle marked with a second dot. The foot of the dashed line on the chord is labelled as the midpoint.",
+          "asymptoteAspectRatio": 1.217
+        }
+      ],
+      "examples": [
+        {
+          "id": "m5-l3-ex-1",
+          "titleLatex": "Worked example: an inscribed angle is half of its intercepted arc",
+          "bodyLatex": "In circle $O$ the central angle $\\angle AOB$ measures $100^{\\circ}$, and $C$ is a point on the major arc $AB$.\n\nThe angle $\\angle ACB$ intercepts the arc $AB$ that does not contain $C$, which is the minor arc, and that arc measures the same $100^{\\circ}$ as the central angle standing on it. An inscribed angle is half of its intercepted arc, so $\\angle ACB = \\frac{1}{2} \\cdot 100^{\\circ} = 50^{\\circ}$.\n\nReading $\\angle ACB = 100^{\\circ}$ instead would be the slip: that number is the central angle, not the angle at the circumference.",
+          "answerLatex": "$50^{\\circ}$"
+        },
+        {
+          "id": "m5-l3-ex-2",
+          "titleLatex": "Worked example: a cyclic quadrilateral from both directions",
+          "bodyLatex": "Let $ABCD$ be inscribed in a circle with $\\angle ABC = 60^{\\circ}$.\n\nOpposite angles of a cyclic quadrilateral are supplementary, because between them they intercept both full arcs from $A$ to $C$. That gives $\\angle ADC = 180^{\\circ} - 60^{\\circ} = 120^{\\circ}$.\n\nNow extend $AD$ past $D$ to a point $E$. The exterior angle $\\angle EDC$ equals the interior angle at the opposite vertex, which is $\\angle ABC = 60^{\\circ}$, and since $\\angle EDC$ and $\\angle ADC$ are a linear pair this is the same $180^{\\circ} - 120^{\\circ}$ from the other side.",
+          "answerLatex": "$120^{\\circ}$"
+        },
+        {
+          "id": "m5-l3-ex-3",
+          "titleLatex": "Worked example: a chord, its distance, and the radius",
+          "bodyLatex": "A chord of a circle measures $24$ units and the perpendicular distance from the centre to that chord measures $5$ units.\n\nDrop the radius from the centre to the midpoint of the chord. It is perpendicular to the chord and bisects it, so each half of the chord is $12$ units, and the radius, that distance of $5$, and that half-chord form a right triangle.\n\nBy the Pythagorean theorem the radius is $\\sqrt{5^{2} + 12^{2}} = \\sqrt{25 + 144} = \\sqrt{169} = 13$ units.",
+          "answerLatex": "$13$"
+        },
+        {
+          "id": "m5-l3-ex-4",
+          "titleLatex": "Worked example: power of a point, once and then everywhere",
+          "bodyLatex": "From a point $P$ outside a circle, a tangent $PT$ and a secant meeting the circle at $A$ and then $B$ are drawn. The data are $PT = 12$ and $PA = 9$.\n\nThe tangent and the secant come from the same point, so $PT^{2} = PA \\cdot PB$. That gives $144 = 9 \\cdot PB$, hence $PB = 16$, and the inside segment is $AB = PB - PA = 7$.\n\nAny other line through $P$ reproduces the same product, which is the reason the relation is called the power of the point: it is one number, $PO^{2} - r^{2}$, that every line through $P$ recovers.",
+          "answerLatex": "$16$"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "arc-measure-as-central-angle",
+          "name": "Arc measure equals the standing central angle",
+          "summaryLatex": "\\text{An arc measures the same number of degrees as the central angle that cuts it off.}",
+          "bodyLatex": "\\text{With } O \\text{ the centre, } m\\widehat{AB} = m\\angle AOB, \\text{ and the two arcs between } A \\text{ and } B \\text{ add to } 360^{\\circ}."
+        },
+        {
+          "slug": "inscribed-angle-half-arc",
+          "name": "Inscribed angle is half the intercepted arc",
+          "summaryLatex": "\\text{An inscribed angle measures half the arc it intercepts.}",
+          "bodyLatex": "\\text{If } \\angle ACB \\text{ is inscribed, then } m\\angle ACB = \\frac{1}{2} m\\widehat{AB}, \\text{ where } \\widehat{AB} \\text{ is the arc not containing } C."
+        },
+        {
+          "slug": "angles-in-the-same-segment",
+          "name": "Angles in the same segment",
+          "summaryLatex": "\\text{Inscribed angles standing on the same chord from the same side are equal.}",
+          "bodyLatex": "\\text{With } C \\text{ and } D \\text{ on the same arc cut off by } \\overline{AB}, \\text{ one has } m\\angle ACB = m\\angle ADB."
+        },
+        {
+          "slug": "angle-in-a-semicircle",
+          "name": "An angle on a diameter is a right angle",
+          "summaryLatex": "\\text{An inscribed angle whose chord is a diameter measures } 90^{\\circ}.",
+          "bodyLatex": "\\text{With } \\overline{AB} \\text{ a diameter and } C \\text{ on the circle, } \\angle ACB = \\frac{1}{2} \\cdot 180^{\\circ} = 90^{\\circ}."
+        },
+        {
+          "slug": "cyclic-quadrilateral-opposite-angles",
+          "name": "Opposite angles of a cyclic quadrilateral",
+          "summaryLatex": "\\text{A quadrilateral inscribed in a circle has supplementary opposite angles.}",
+          "bodyLatex": "\\text{With } A,B,C,D \\text{ on the circle in order, } m\\angle ABC + m\\angle ADC = 180^{\\circ}, \\text{ and likewise for the other pair.}"
+        },
+        {
+          "slug": "exterior-angle-of-a-cyclic-quadrilateral",
+          "name": "Exterior angle at a vertex of a cyclic quadrilateral",
+          "summaryLatex": "\\text{The exterior angle at one vertex equals the interior angle at the opposite vertex.}",
+          "bodyLatex": "\\text{With } AD \\text{ extended past } D \\text{ to } E, \\text{ one has } m\\angle EDC = m\\angle ABC."
+        },
+        {
+          "slug": "intersecting-chords-angle",
+          "name": "Angle formed by two chords meeting inside",
+          "summaryLatex": "\\text{Chords meeting inside the circle give an angle equal to half the sum of the two intercepted arcs.}",
+          "bodyLatex": "\\text{With } \\overline{AB} \\text{ and } \\overline{CD} \\text{ meeting at } P \\text{ inside, } m\\angle APC = \\frac{1}{2}\\left( m\\widehat{AC} + m\\widehat{BD} \\right)."
+        },
+        {
+          "slug": "external-secant-angle",
+          "name": "Angle formed by two secants meeting outside",
+          "summaryLatex": "\\text{Secants meeting outside the circle give an angle equal to half the difference of the intercepted arcs.}",
+          "bodyLatex": "\\text{With } P \\text{ outside, } m\\angle P = \\frac{1}{2}\\left( \\text{far arc} - \\text{near arc} \\right), \\text{ so subtract rather than add.}"
+        },
+        {
+          "slug": "radius-perpendicular-to-chord",
+          "name": "A radius perpendicular to a chord bisects it",
+          "summaryLatex": "\\text{The perpendicular from the centre to a chord cuts the chord in half.}",
+          "bodyLatex": "\\text{With } OM \\perp AB \\text{ at } M, \\text{ SSS congruence gives } AM = MB \\text{ and } r^{2} = OM^{2} + AM^{2}."
+        },
+        {
+          "slug": "radius-bisects-both-arcs",
+          "name": "A diameter perpendicular to a chord bisects both arcs",
+          "summaryLatex": "\\text{The line through the centre perpendicular to a chord bisects the chord and both of its arcs.}",
+          "bodyLatex": "\\text{The two triangles the radius creates are congruent, so the arcs on either side of it are equal as well.}"
+        },
+        {
+          "slug": "equal-chords-equal-arcs",
+          "name": "Equal chords cut off equal arcs",
+          "summaryLatex": "\\text{Chords of equal length cut off equal arcs, and equal arcs cut off equal chords.}",
+          "bodyLatex": "\\text{Each pair is congruent by SSS, which is what lets a chord length be traded for an arc measure.}"
+        },
+        {
+          "slug": "tangent-radius-perpendicular",
+          "name": "A tangent is perpendicular to the radius at contact",
+          "summaryLatex": "\\text{The radius drawn to a point of tangency meets the tangent at a right angle.}",
+          "bodyLatex": "\\text{With } PT \\text{ tangent at } T, \\text{ one has } OT \\perp PT \\text{ and } PT = \\sqrt{OP^{2} - r^{2}}."
+        },
+        {
+          "slug": "tangent-length-equal",
+          "name": "Tangents from one point are equal",
+          "summaryLatex": "\\text{The two tangent segments drawn from a single external point have equal lengths.}",
+          "bodyLatex": "\\text{With } PT \\text{ and } PU \\text{ tangent, right triangles } OPT \\text{ and } OPU \\text{ are congruent, so } PT = PU."
+        },
+        {
+          "slug": "tangent-secant-power",
+          "name": "Tangent and secant from one point",
+          "summaryLatex": "\\text{The tangent length squared equals the product of the whole secant and its outside part.}",
+          "bodyLatex": "\\text{With } P \\text{ outside, } PT^{2} = PA \\cdot PB, \\text{ where } B \\text{ is the far intersection and } PA \\text{ the outside part.}"
+        },
+        {
+          "slug": "two-secants-power",
+          "name": "Two secants from one point",
+          "summaryLatex": "\\text{The product of the outside part and the whole length is the same for every secant from a point.}",
+          "bodyLatex": "\\text{With } PA \\cdot PB = PC \\cdot PD, \\text{ each product pairing an outside length with a whole secant length.}"
+        },
+        {
+          "slug": "power-of-a-point",
+          "name": "Power of a point",
+          "summaryLatex": "\\text{Every line through one point of a circle reproduces the same product of two lengths.}",
+          "bodyLatex": "\\text{For a point } P \\text{ outside the circle the number } PO^{2} - r^{2} \\text{ is measured as } PA \\cdot PB \\text{ by a secant and as } PT^{2} \\text{ by a tangent, so all such products agree.}"
+        },
+        {
+          "slug": "arc-addition",
+          "name": "Arcs add around the circle",
+          "summaryLatex": "\\text{The arcs of a circle measured once all the way round add to } 360^{\\circ}.",
+          "bodyLatex": "\\text{Fixing the arcs that inscribed angles intercept leaves the remaining arc, and that last arc is usually the one the question wants.}"
+        },
+        {
+          "slug": "similarity-aa",
+          "name": "AA similarity, reused on circles",
+          "summaryLatex": "\\text{Two right triangles sharing an acute angle are similar, and the matching sides give a product relation.}",
+          "bodyLatex": "\\text{With } M \\text{ the midpoint of a chord and } P \\text{ an endpoint, triangles } OMP \\text{ and } OPT \\text{ are similar, so } OM \\cdot OT = OP^{2}."
+        },
+        {
+          "slug": "intersecting-chords-product",
+          "name": "Two chords meeting inside the circle",
+          "summaryLatex": "\\text{Chords meeting at an interior point give equal products of the two halves.}",
+          "bodyLatex": "\\text{With } \\overline{AB} \\text{ and } \\overline{CD} \\text{ meeting at } P \\text{ inside, } PA \\cdot PB = PC \\cdot PD."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "intercepted-arc-contains-the-vertex",
+          "titleLatex": "Using the arc that contains the vertex",
+          "wrongLatex": "$m\\angle ACB = \\frac{1}{2} m\\widehat{ACB}$",
+          "whyLatex": "\\text{The arc an inscribed angle intercepts is the one across from the vertex. The arc that runs through the vertex is the complement, so halving it produces an angle larger than } 90^{\\circ} \\text{ whenever the vertex sits on the minor arc.}",
+          "fixLatex": "\\text{Name the two endpoints of the angle first, then take the arc between them that does not pass through the vertex, and halve that.}"
+        },
+        {
+          "slug": "adding-intercepted-arcs-outside",
+          "titleLatex": "Adding the intercepted arcs of an external angle",
+          "wrongLatex": "$m\\angle P = \\frac{1}{2}\\left( 200 + 80 \\right) = 140$",
+          "whyLatex": "\\text{The sum rule belongs to a vertex inside the circle. A vertex outside the circle intercepts one arc behind the other, so the far arc is subtracted from the near one.}",
+          "fixLatex": "\\text{Decide where the vertex sits before choosing a rule. Inside the circle the arcs add; outside the circle they subtract.}"
+        },
+        {
+          "slug": "tangent-times-secant",
+          "titleLatex": "Writing tangent times secant instead of tangent squared",
+          "wrongLatex": "$PT \\cdot PA = PB$",
+          "whyLatex": "\\text{A tangent touches the circle at a single point, which counts twice, so the tangent segment enters the product twice. Mixing one copy with a secant produces a relation that is dimensionally a length and holds for no configuration in general.}",
+          "fixLatex": "\\text{Write } PT^{2} = PA \\cdot PB, \\text{ and check the pairings: whole secant with outside part.}"
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m5-l3-p1",
+        "m5-l3-p2",
+        "m5-l3-p3",
+        "m5-l3-p4",
+        "m5-l3-p5",
+        "m5-l3-p6",
+        "m5-l3-p7",
+        "m5-l3-p8",
+        "m5-l3-p9",
+        "m5-l3-p10",
+        "m5-l3-p11",
+        "m5-l3-p12",
+        "m5-l3-p13",
+        "m5-l3-p14",
+        "m5-l3-p15"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m5-l3-p1",
+        "m5-l3-p2",
+        "m5-l3-p3",
+        "m5-l3-p4",
+        "m5-l3-p5",
+        "m5-l3-p6",
+        "m5-l3-p7",
+        "m5-l3-p8",
+        "m5-l3-p9",
+        "m5-l3-p10",
+        "m5-l3-p11",
+        "m5-l3-p12",
+        "m5-l3-p13",
+        "m5-l3-p14",
+        "m5-l3-p15"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m5-l3-m1",
+        "m5-l3-m2",
+        "m5-l3-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "circles",
+    "arcs",
+    "chords",
+    "tangents",
+    "inscribed-angles",
+    "cyclic-quadrilaterals",
+    "power-of-a-point"
+  ]
+}

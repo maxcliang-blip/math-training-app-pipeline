@@ -1,0 +1,34 @@
+{
+  "id": "m5-l3-p1",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "circles",
+    "arcs",
+    "central-angles"
+  ],
+  "promptLatex": "In a circle with centre $O$, the central angle $\\angle AOB$ measures $74^{\\circ}$. What is the measure of the major arc $AB$, in degrees?",
+  "choices": [
+    "74",
+    "106",
+    "148",
+    "286",
+    "292"
+  ],
+  "answerLatex": "286",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "An arc measures the same number of degrees as the central angle that cuts it off.",
+    "The two arcs between the same pair of points together make one full turn.",
+    "The minor arc is $74^{\\circ}$, so the major arc is $360 - 74 = 286$."
+  ],
+  "solutionLatex": "The minor arc $AB$ is the one the central angle $\\angle AOB = 74^{\\circ}$ cuts off, and an arc and its standing central angle have the same measure.\n\nThat gives the minor arc as $74^{\\circ}$. The other arc from $A$ back to $B$ is the major arc, and the two together make a full turn.\n\nSo the major arc measures $360^{\\circ} - 74^{\\circ} = 286^{\\circ}$.",
+  "techniqueSlugs": [
+    "arc-measure-as-central-angle"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

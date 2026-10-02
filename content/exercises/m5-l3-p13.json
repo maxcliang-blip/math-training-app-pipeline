@@ -1,0 +1,30 @@
+{
+  "id": "m5-l3-p13",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "circles",
+    "arcs",
+    "inscribed-angles",
+    "angle-chasing"
+  ],
+  "promptLatex": "Points $A$, $B$, $C$, and $D$ lie on a circle in that order, with $\\angle BAC = 40^{\\circ}$, $\\angle BCA = 35^{\\circ}$, and $\\angle ABD = 30^{\\circ}$. What is the measure of $\\angle CAD$, in degrees?",
+  "choices": null,
+  "answerLatex": "75",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Convert each inscribed angle into the arc it cuts off, then use the fact that the arcs around a circle make a full turn.",
+    "The angle you want stands on the arc from $C$ to $D$ that does not contain $A$.",
+    "The arcs measure $70$, $80$, and $60$, so arc $CD$ is $150$ and half of it is $75$."
+  ],
+  "solutionLatex": "Each inscribed angle is half of the arc it intercepts, so the three given angles fix three arcs. $\\angle BCA = 35^{\\circ}$ stands on arc $AB$, so arc $AB = 70^{\\circ}$. $\\angle BAC = 40^{\\circ}$ stands on arc $BC$, so arc $BC = 80^{\\circ}$. $\\angle ABD = 30^{\\circ}$ stands on arc $AD$ — the arc from $A$ to $D$ that does not pass through $B$ — so arc $AD = 60^{\\circ}$.\n\nThe four arcs around the circle make a full turn, so arc $CD = 360^{\\circ} - 70^{\\circ} - 80^{\\circ} - 60^{\\circ} = 150^{\\circ}$.\n\nFinally $\\angle CAD$ is inscribed and intercepts exactly that arc $CD$, so $\\angle CAD = \\frac{1}{2} \\cdot 150^{\\circ} = 75^{\\circ}$.",
+  "techniqueSlugs": [
+    "inscribed-angle-half-arc",
+    "arc-addition"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

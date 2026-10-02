@@ -1,0 +1,31 @@
+{
+  "id": "m5-l3-m3",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "circles",
+    "quadrilaterals",
+    "chords",
+    "area-of-triangles",
+    "intersecting-chords"
+  ],
+  "promptLatex": "A quadrilateral is inscribed in a circle, and its two diagonals meet at right angles at $E$. If $AE = 6$, $BE = 8$, and $CE = 9$, what is the area of triangle $AED$, in square units?",
+  "choices": null,
+  "answerLatex": "16",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Chords meeting inside the circle give equal products of the two halves.",
+    "The diagonals cross at $E$, so pair the pieces of one diagonal with the pieces of the other.",
+    "$DE = \\frac{6 \\cdot 8}{9} = \\frac{16}{3}$, and the area is $\\frac{1}{2} \\cdot 6 \\cdot \\frac{16}{3} = 16$."
+  ],
+  "solutionLatex": "Let the diagonals of the quadrilateral be $\\overline{AB}$ and $\\overline{CD}$, meeting at $E$. Two chords meeting inside the circle give equal products of their two pieces, so $AE \\cdot EB = CE \\cdot ED$.\n\nThat is $6 \\cdot 8 = 9 \\cdot ED$, which gives $ED = \\frac{48}{9} = \\frac{16}{3}$.\n\nThe diagonals cross at right angles, so $\\angle AED = 90^{\\circ}$ and triangle $AED$ is a right triangle with legs $AE = 6$ and $ED = \\frac{16}{3}$. Its area is therefore $\\frac{1}{2} \\cdot 6 \\cdot \\frac{16}{3} = 16$.",
+  "techniqueSlugs": [
+    "intersecting-chords-product",
+    "radius-perpendicular-to-chord"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

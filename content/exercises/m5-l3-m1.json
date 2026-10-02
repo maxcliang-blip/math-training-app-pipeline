@@ -1,0 +1,29 @@
+{
+  "id": "m5-l3-m1",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "circles",
+    "power-of-a-point",
+    "tangents"
+  ],
+  "promptLatex": "From a point $P$ outside a circle, $PT$ is tangent at $T$ and a secant meets the circle at $A$ and then $B$, with $A$ between $P$ and $B$. If $PT = 15$ and $PB = 45$, what is $AB$, in units?",
+  "choices": null,
+  "answerLatex": "40",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A tangent and a secant from one point are tied together by a single product.",
+    "The secant side of the relation wants the whole length and the outside part.",
+    "$PA = \\frac{15^{2}}{45} = 5$, and $AB = 45 - 5 = 40$."
+  ],
+  "solutionLatex": "The tangent $PT$ and the secant $PAB$ come from the same external point, so the square of the tangent length equals the product of the whole secant and its outside part: $PT^{2} = PA \\cdot PB$.\n\nSubstituting the data gives $15^{2} = PA \\cdot 45$, so $PA = \\frac{225}{45} = 5$.\n\nThe question asks for the inside piece $AB$, and the whole secant is that piece plus the outside part, so $AB = PB - PA = 45 - 5 = 40$.",
+  "techniqueSlugs": [
+    "power-of-a-point",
+    "tangent-secant-power"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

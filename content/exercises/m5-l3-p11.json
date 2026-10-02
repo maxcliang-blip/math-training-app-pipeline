@@ -1,0 +1,29 @@
+{
+  "id": "m5-l3-p11",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "circles",
+    "power-of-a-point",
+    "tangents"
+  ],
+  "promptLatex": "A tangent $PT$ and a secant through the same point $P$ meet a circle at $A$ and then $B$, with $A$ nearer to $P$. If $PT = 12$ and $PA = 9$, what is $PB$, in units?",
+  "choices": null,
+  "answerLatex": "16",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The tangent length enters twice, because its point of contact counts as a double intersection.",
+    "Write the relation for a tangent and a secant drawn from one point.",
+    "$12^{2} = 9 \\cdot PB$, so $PB = \\frac{144}{9} = 16$."
+  ],
+  "solutionLatex": "The tangent $PT$ and the secant $PAB$ both start at the same external point $P$, so the tangent–secant relation applies: the square of the tangent length equals the product of the whole secant and its outside part.\n\nHere the whole secant is $PB$ and the outside part is $PA$, so $PT^{2} = PA \\cdot PB$.\n\nThat gives $12^{2} = 9 \\cdot PB$, hence $PB = \\frac{144}{9} = 16$. As a check, the inside piece is $16 - 9 = 7$, which is a chord shorter than the diameter, as it must be.",
+  "techniqueSlugs": [
+    "power-of-a-point",
+    "tangent-secant-power"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
