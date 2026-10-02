@@ -1,10 +1,11 @@
 import { test, before, after } from "node:test";
 import assert from "node:assert";
-import { mkdtempSync, rmSync, readFileSync, existsSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { createApp } from "../src/app.js";
+import { loadContentStore } from "../src/content.js";
 import { FigureStore } from "../src/figures.js";
 import { FIGURE_PAYLOAD_FIELDS } from "../../lib/figure-contract.mjs";
 
@@ -485,4 +486,37 @@ test("the corpus warnings are reachable, so a dangling reference is not only a s
   assert.ok(Array.isArray(body.warnings));
   assert.equal(typeof body.stats.exercises, "number");
   for (const warning of body.warnings) assert.equal(typeof warning, "string");
+});
+
+test("a corpus that does have a gap puts that gap on the warnings route", async () => {
+  // The warnings route test above asserts the endpoint contract over whatever corpus is shipped.
+  // This one proves the route is a real report rather than an empty array by construction: a
+  // corpus with a dangling prerequisite and an unresolved practice id has to show both, and the
+  // lesson still serves with the id that does not resolve, because the loader reports gaps rather
+  // than patching them out.
+  const root = mkdtempSync(join(tmpdir(), "math-api-dangling-"));
+  const gapDataDir = mkdtempSync(join(tmpdir(), "math-api-dangling-data-"));
+  mkdirSync(join(root, "lessons"), { recursive: true });
+  writeFileSync(join(root, "lessons", "l1.json"), JSON.stringify({
+    id: "l1", moduleId: "M1", order: 1, title: "T",
+    prerequisites: ["l0"],
+    sections: { practice: { exerciseIds: ["e-missing"] } },
+  }));
+  const gapped = createApp({ dataDir: gapDataDir, content: loadContentStore(root) }).listen(0);
+  try {
+    await new Promise((resolve) => gapped.once("listening", resolve));
+    const at = `http://127.0.0.1:${gapped.address().port}`;
+    const res = await fetch(`${at}/api/content/warnings`);
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.ok(body.warnings.some((w) => w.includes("prerequisite l0")), `expected the dangling prerequisite on the route, got ${body.warnings}`);
+    assert.ok(body.warnings.some((w) => w.includes("e-missing")), `expected the unresolved practice id on the route, got ${body.warnings}`);
+    const lesson = await (await fetch(`${at}/api/lessons/l1`)).json();
+    assert.deepEqual(lesson.prerequisites, ["l0"]);
+    assert.deepEqual(lesson.sections.practiceIds, ["e-missing"]);
+  } finally {
+    await new Promise((resolve) => gapped.close(resolve));
+    rmSync(root, { recursive: true, force: true });
+    rmSync(gapDataDir, { recursive: true, force: true });
+  }
 });
