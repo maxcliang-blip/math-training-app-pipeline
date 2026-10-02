@@ -1,0 +1,166 @@
+/* Only what the rendering layer needs to be legible. The design system is MAX-2's output and
+   lives wherever it was landed; this file styles the states MathBlock and Figure can be in, and
+   the three states a content response can put the page in. */
+
+:root {
+  --ink: #16181d;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --warn-bg: #fffbeb;
+  --warn-ink: #92400e;
+  --err-bg: #fef2f2;
+  --err-ink: #991b1b;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 6rem;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.status {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.status--warn {
+  color: var(--warn-ink);
+  background: var(--warn-bg);
+  border: 1px solid #fde68a;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.status--error {
+  color: var(--err-ink);
+  background: var(--err-bg);
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Math ------------------------------------------------------------------ */
+
+.math-block {
+  overflow-x: auto;
+}
+
+/* A display block centred on its own line, with room for the fraction rules and the vertical
+   extent that inline layout would otherwise clip. */
+.math-block__display {
+  display: block;
+  margin: 0.9rem 0;
+  text-align: center;
+}
+
+/* An expression that would not parse. Shown as monospace source rather than hidden, because a
+   silently missing expression reads to a learner as "the app dropped a step" and sends them to
+   report a bug nobody can see. The dashed edge is the visual half of that decision. */
+.math-block__failed {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.9em;
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  border: 1px dashed #f59e0b;
+  border-radius: 3px;
+  padding: 0 0.2em;
+  white-space: pre-wrap;
+}
+
+.wrong {
+  color: var(--err-ink);
+}
+
+/* Figures --------------------------------------------------------------- */
+
+.figure {
+  margin: 1.25rem 0;
+}
+
+.figure--pending,
+.figure--unavailable {
+  min-height: 3rem;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.figure__placeholder {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.figure__svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.figure__caption {
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* Reader ---------------------------------------------------------------- */
+
+.lesson__crumbs,
+.exercise__tier {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0.25rem 0;
+}
+
+.lesson-section {
+  border-top: 1px solid var(--line);
+  padding-top: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.modules,
+.lessons,
+.exercise__choices {
+  padding-left: 1.25rem;
+}
+
+.modules button,
+.lessons button {
+  background: none;
+  border: none;
+  color: var(--ink);
+  padding: 0;
+  text-align: left;
+  text-decoration: underline;
+}
+
+.exercise {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin: 0.9rem 0;
+}
+
+details summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
