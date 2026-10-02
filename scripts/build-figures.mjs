@@ -193,15 +193,22 @@ export function validateFigure(figure) {
 
   const width = Number(sizeCall[1]);
   const height = Number(sizeCall[2]);
-  const derived = width / height;
-  const atDeclaredPrecision = Number(derived.toFixed(RATIO_DECIMALS));
 
+  // The declared ratio is content's own assertion about the box this figure renders at, and it is
+  // what S5.4 item 4 compares against the compiled viewBox. It is NOT width/height: Asymptote's
+  // two-argument size() is a ceiling the output is fitted under, so a figure that calls
+  // size(320,240) and draws a 321x37 strip renders at 8.676, and requiring the declaration to
+  // equal 1.333 is what let 60 of the corpus's 65 figures declare a shape they do not render at.
+  //
+  // This function used to reject any figure whose declaration disagreed with that ceiling, which
+  // is S5.4-ratio-matches-size under a second name, and the drift gate below then compared the
+  // compiled box against the ceiling too -- so the gate compared the compiler's output to the
+  // author's guess about their own ceiling rather than to the number the manifest serves and the
+  // renderer reserves space from. Both compared the wrong side. The ceiling is kept, because S5.2
+  // still requires a figure to reserve space it can be laid out against; it is simply not evidence
+  // about the output box.
   if (typeof figure.declaredRatio !== "number") {
     problems.push("asymptoteAspectRatio is mandatory with a figure");
-  } else if (figure.declaredRatio !== atDeclaredPrecision) {
-    problems.push(
-      `asymptoteAspectRatio ${figure.declaredRatio} is not size(${width},${height}) = ${atDeclaredPrecision} at ${RATIO_DECIMALS} decimals`,
-    );
   }
 
   if (typeof figure.alt !== "string" || figure.alt.trim().length < 20) {
@@ -214,7 +221,7 @@ export function validateFigure(figure) {
     problems.push("figure source must not touch the filesystem");
   }
 
-  return { problems, box: { width, height, ratio: atDeclaredPrecision } };
+  return { problems, box: { width, height, ratio: figure.declaredRatio } };
 }
 
 // ---------------------------------------------------------------------------
@@ -539,6 +546,15 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
 // figure that has to be redrawn into a "recorded" declaration, which is the same defect wearing a
 // recorded hat. Redraw first, record second.
 //
+// It restates asymptoteAspectRatio and nothing else. It used to rewrite the figure's own
+// size(W,H) to the measured box as well, on the theory that the declaration and the call should
+// agree. They cannot: size(W,H) is a ceiling that binds, so setting it to the measured box makes
+// the compiler rescale the content to fit that ceiling, the measured box moves again, and the next
+// run records a slightly larger one. Measured on the corpus, that loop ran 14 changes, then 7,
+// then 6, then 3, each one a point taller, with no fixed point in sight. A bootstrap whose output
+// depends on how many times you have run it is not a bootstrap. The ceiling stays the author's;
+// the number the drift gate reads is what the compiler produced.
+//
 // The edits are made on the raw text rather than through a JSON round trip because the corpus is
 // prettier-formatted: a round trip expands every inline array and turns a two-number change into
 // a whole-file rewrite that buries the two numbers that actually moved.
@@ -554,8 +570,7 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
 //
 // A source can legitimately appear more than once -- a lesson reuses a concept's figure inside its
 // examples -- and those occurrences are the same figure, so they must all be rewritten together.
-// The source token is replaced for every occurrence for the same reason.
-function recordFigureRatios(text, sourceToken, ratioToken, newSourceToken, newRatio) {
+function recordFigureRatios(text, sourceToken, ratioToken, newRatio) {
   const lineStarts = [0];
   for (let i = 0; i < text.length; i++) if (text[i] === "\n") lineStarts.push(i + 1);
   const lineOf = (index) => {
@@ -578,7 +593,6 @@ function recordFigureRatios(text, sourceToken, ratioToken, newSourceToken, newRa
     if (at === -1) break;
     found++;
     from = at + sourceToken.length;
-    edits.push({ start: at, end: at + sourceToken.length, insert: newSourceToken });
 
     const startLine = lineOf(at);
     for (const step of [1, -1]) {
@@ -636,8 +650,7 @@ export function recordAspectRatios(result) {
     if (!m.file || !m.measuredWidth || !m.measuredHeight || !m.measuredRatio) continue;
     const width = Math.round(m.measuredWidth);
     const height = Math.round(m.measuredHeight);
-    const newSize = `size(${width},${height})`;
-    if (newSize === m.declaredSize && m.measuredRatio === m.declaredRatio) continue;
+    if (m.measuredRatio === m.declaredRatio) continue;
     // Refuse to record a box outside the S9 #8 band. A figure that compiles to 321x37 is not a
     // measurement to be blessed, it is a figure to be redrawn, and writing 8.676 into the corpus
     // would convert a defect into a "recorded" declaration that then reads as authoritative. The
@@ -659,27 +672,16 @@ export function recordAspectRatios(result) {
     // reviewed as a binary diff.
     const groupKey = `${m.file}\u0000${m.source}`;
     if (!grouped.has(groupKey)) grouped.set(groupKey, []);
-    grouped.get(groupKey).push({ m, newSize });
+    grouped.get(groupKey).push({ m });
   }
 
   for (const members of grouped.values()) {
-    const { m, newSize } = members[0];
+    const { m } = members[0];
 
-    let text = readFileSync(m.file, "utf8");
+    const text = readFileSync(m.file, "utf8");
     const sourceToken = JSON.stringify(m.source).slice(1, -1);
-    const newSource = m.source.replace(/size\s*\(\s*[\d.]+\s*,\s*[\d.]+\s*\)/, newSize);
-    if (newSource === m.source) {
-      return { ok: false, error: `no size(W,H) call found in the source of ${m.key}; refusing to guess` };
-    }
-
     const ratioToken = `"asymptoteAspectRatio": ${m.declaredRatio}`;
-    const scoped = recordFigureRatios(
-      text,
-      sourceToken,
-      ratioToken,
-      JSON.stringify(newSource).slice(1, -1),
-      m.measuredRatio,
-    );
+    const scoped = recordFigureRatios(text, sourceToken, ratioToken, m.measuredRatio);
     if (!scoped.ok) {
       return { ok: false, error: `cannot record ${m.key} in ${m.file}: ${scoped.error}` };
     }
@@ -690,7 +692,7 @@ export function recordAspectRatios(result) {
         figureKey: other.m.key,
         file: other.m.file.replace(REPO + "/", ""),
         from: { size: other.m.declaredSize, declaredAspectRatio: other.m.declaredRatio },
-        to: { size: newSize, declaredAspectRatio: m.measuredRatio },
+        to: { size: other.m.declaredSize, declaredAspectRatio: m.measuredRatio },
       });
     }
     changes[changes.length - 1].occurrences = scoped.occurrences;

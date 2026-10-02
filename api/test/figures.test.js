@@ -267,11 +267,14 @@ test("recording a ratio edits the figure whose source was located, not the first
 
   const after = JSON.parse(readFileSync(file, "utf8"));
   const [a, b] = after.sections[0].figures;
-  // Each figure keeps its own source and gains its own measured box.
-  assert.equal(a.asymptoteSource, "size(300,240);\ndraw((0,0)--(1,1));");
+  // Each figure gets its own measured ratio.
   assert.equal(a.asymptoteAspectRatio, 1.25);
-  assert.equal(b.asymptoteSource, "size(480,240);\ndraw((0,0)--(2,1));");
   assert.equal(b.asymptoteAspectRatio, 2);
+  // Neither figure's size(W,H) is touched: it is a ceiling that binds, so writing the measured
+  // box into it would make the compiler rescale and move the measurement again. See
+  // "A bootstrap whose output depends on how many times you have run it is not a bootstrap."
+  assert.equal(a.asymptoteSource, "size(320,240);\ndraw((0,0)--(1,1));");
+  assert.equal(b.asymptoteSource, "size(320,240);\ndraw((0,0)--(2,1));");
 
   rmSync(dir, { recursive: true, force: true });
 });
@@ -317,8 +320,52 @@ test("a figure reused by a lesson's examples is recorded once, across both occur
   const after = JSON.parse(readFileSync(file, "utf8"));
   assert.equal(after.sections[0].figures[0].asymptoteAspectRatio, 2);
   assert.equal(after.sections[0].examples[1].asymptoteAspectRatio, 2);
-  assert.ok(after.sections[0].figures[0].asymptoteSource.includes("size(400,200)"));
-  assert.ok(after.sections[0].examples[1].asymptoteSource.includes("size(400,200)"));
+  // The shared source is left exactly as the author wrote it, once, in both places.
+  assert.ok(after.sections[0].figures[0].asymptoteSource.includes("size(300,200)"));
+  assert.ok(after.sections[0].examples[1].asymptoteSource.includes("size(300,200)"));
+
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test("the record pass reaches a fixed point instead of walking the corpus", async () => {
+  const { recordAspectRatios } = await import("../../scripts/build-figures.mjs");
+  const dir = mkdtempSync(join(tmpdir(), "record-fixed-point-"));
+  const file = join(dir, "m3-l1.json");
+  const source = "// a grid of dots\nsize(300,200);\ndraw((0,0)--(3,1));";
+  writeFileSync(
+    file,
+    JSON.stringify({ sections: [{ figures: [{ asymptoteSource: source, asymptoteAlt: "a grid of dots in a wide frame", asymptoteAspectRatio: 1.5 }] }] }, null, 2) + "\n",
+  );
+
+  // A record pass whose output depends on how many times you have run it cannot be reviewed or
+  // re-run safely. The loop it used to be in: size(W,H) is a ceiling, so writing the measured box
+  // into it makes the compiler rescale the content, the measurement moves up, and the next pass
+  // records a slightly taller box. On the corpus that ran 14 changes, then 7, then 6, then 3, each
+  // a point taller. Restating only asymptoteAspectRatio leaves the compiler's input alone, so the
+  // second pass has nothing to do.
+  const measurement = () => [
+    {
+      key: "m3-l1.sections.concept.figures[0]",
+      file,
+      source,
+      declaredSize: "size(300,200)",
+      declaredRatio: JSON.parse(readFileSync(file, "utf8")).sections[0].figures[0].asymptoteAspectRatio,
+      measuredWidth: 421,
+      measuredHeight: 311,
+      measuredRatio: 1.354,
+    },
+  ];
+
+  const first = recordAspectRatios({ measurements: measurement() });
+  assert.equal(first.ok, true, JSON.stringify(first));
+  assert.equal(first.changes.length, 1);
+
+  const second = recordAspectRatios({ measurements: measurement() });
+  assert.equal(second.ok, true, JSON.stringify(second));
+  assert.deepEqual(second.changes, [], "a second pass over an already-recorded corpus must be a no-op");
+
+  const third = recordAspectRatios({ measurements: measurement() });
+  assert.deepEqual(third.changes, [], "and it must stay a no-op, not drift one point per run");
 
   rmSync(dir, { recursive: true, force: true });
 });
