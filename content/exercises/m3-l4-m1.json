@@ -1,0 +1,26 @@
+{
+  "id": "m3-l4-m1",
+  "moduleId": "M3",
+  "lessonId": "m3-l4",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "combinations"
+  ],
+  "promptLatex": "Into how many regions can a convex polygon with $12$ sides be divided by drawing non-crossing diagonals from one of its vertices?",
+  "choices": null,
+  "answerLatex": "16796",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A triangulation of a convex $(n+2)$-gon is counted by a Catalan number.",
+    "Identify the count with the number of lattice paths that stay on one side of a diagonal.",
+    "Use $\\frac{1}{11}\\binom{20}{10}$ with $n = 10$."
+  ],
+  "solutionLatex": "Fix one vertex of the dodecagon. Each of the other eleven vertices lies either before or after the fixed vertex in the circular order, and a triangulation is determined by the resulting pattern: the pattern must begin and end on the same side. This is exactly the encoding of lattice paths from $(0,0)$ to $(10,10)$ that stay on one side of the diagonal, so the count is the Catalan number\n\n$\\frac{1}{n+1}\\binom{2n}{n}$ with $n = 10$, namely $\\frac{1}{11}\\binom{20}{10} = \\frac{184756}{11} = 16796$.\n\nThe triangulation count for a $(n+2)$-gon is $C_n$, so for $n = 10$ sides beyond the fixed vertex's antipode the answer is $C_{10}$.",
+  "techniqueSlugs": [
+    "catalan-count"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

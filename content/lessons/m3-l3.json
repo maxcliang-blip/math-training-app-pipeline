@@ -1,0 +1,215 @@
+{
+  "id": "m3-l3",
+  "moduleId": "M3",
+  "order": 3,
+  "title": "Recurrences: Deriving and Solving Them from Counting Problems",
+  "topicSlug": "recurrences",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 60,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m3-l1",
+    "m3-l2"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Turn a counting problem into a recurrence by splitting its objects on the first or last piece, state base cases correctly, iterate the recurrence to the index a contest asks for, and read a closed form off the characteristic roots when the index is too large to tabulate."
+    },
+    "prerequisites": {
+      "items": [],
+      "noteLatex": "Requires the multiplication principle and binomial coefficients from the permutations and combinations lesson, and the two-state idea behind inclusion-exclusion from the lesson before it. No generating functions are needed: every result in this lesson is reachable by splitting the objects and adding."
+    },
+    "concept": {
+      "conceptLatex": "Many counting problems have no closed formula, but almost all of them have a rule. A recurrence is that rule: an equation that determines $a_n$, the number of objects of size $n$, from the values at smaller sizes. If the objects can be separated into $k$ disjoint kinds, each of which is counted by an earlier term, then $a_n$ is a linear combination of those earlier terms. This is the shape of nearly every AIME counting problem of the form \"let $a_n$ be the number of ways to ... find $a_{10}$\".\n\nThe whole method is one sentence: look at the last piece (or the first piece) of a typical object and see what is left. A tiling of a $2 \\times n$ board either ends in one vertical domino, leaving a $2 \\times (n-1)$ board, or ends in two horizontal dominoes, leaving a $2 \\times (n-2)$, so $a_n = a_{n-1} + a_{n-2}$. The rule is not guessed; it is read off the geometry.\n\nTwo things must be right, and they are checked separately. The cases must partition the objects: every counted object falls in exactly one case, and no object falls in two. And the base cases must match the actual counting, including the empty case. The empty object is usually a genuine object, so $a_0 = 1$ is common and $a_0 = 0$ is a bug. A third habit matters at AIME speed: compute the table once, carefully, and read every answer from it. Nothing in a contest rewards re-deriving $a_7$.\n\nWhen the split point is not fixed, the recurrence is a sum rather than a fixed combination. Parenthesizing a product of $n+1$ factors splits at the outermost matched pair, which may be at $k$ different positions, giving $a_n = \\sum_{k=0}^{n-1} a_k a_{n-1-k}$; these are the Catalan numbers. Derangements obey $D_n = (n-1)(D_{n-1} + D_{n-2})$, and Pascal's rule $\\binom{n}{k} = \\binom{n-1}{k-1} + \\binom{n-1}{k}$ is the same idea applied to subsets. A recurrence is a counting argument in disguise, which is why the answer can always be defended.\n\nIterating handles every index up to about fifteen. Beyond that, use the characteristic equation. For $a_n = p a_{n-1} + q a_{n-2}$ with constant coefficients, substitute $a_n = r^n$ to get $r^2 - p r - q = 0$. Each root contributes a term $A r^n$, and the two initial conditions determine the two constants. So $a_n = 3a_{n-1} - 2a_{n-2}$ with $a_1 = 5$, $a_2 = 11$ has roots $1$ and $2$, giving $a_n = 3 \\cdot 2^n - 1$, and $a_{30} = 3221225471$ without a table of thirty entries. Integer roots are the ones worth solving; irrational roots are a signal to go back to iterating.\n\nA closing habit: a recurrence derived from a count can always be checked against the definition on small cases. Compute $a_1, a_2, a_3$ by hand from the original wording and confirm the recurrence reproduces them. A disagreement at $a_3$ localizes the error immediately, and it is nearly always a base case or an overlapping case rather than arithmetic.",
+      "figures": [
+        {
+          "id": "m3-l3-fig-1",
+          "captionLatex": "Pascal's triangle read as a recurrence table: every entry is the sum of the two directly above it, which is why the binomial coefficients satisfy the same kind of rule that tilings and staircases do.",
+          "asymptoteSource": "// Pascal's triangle as a recurrence table. Coordinates are in the same pixel-like\n// range as size(), so labels keep their intended weight in the rendered figure.\nsize(360,300);\npen rule = black + 0.8;\nlabel(\"$1$\", (0,40));\nlabel(\"$1$\", (-35,92));\nlabel(\"$1$\", (35,92));\nlabel(\"$1$\", (-70,144));\nlabel(\"$2$\", (0,144));\nlabel(\"$1$\", (70,144));\nlabel(\"$1$\", (-105,196));\nlabel(\"$3$\", (-35,196));\nlabel(\"$3$\", (35,196));\nlabel(\"$1$\", (105,196));\nlabel(\"$1$\", (-140,248));\nlabel(\"$4$\", (-70,248));\nlabel(\"$6$\", (0,248));\nlabel(\"$4$\", (70,248));\nlabel(\"$1$\", (140,248));\ndraw((-165,20)--(165,20), rule);\nlabel(\"each entry $=$ the two above it\", (0,14), S);",
+          "asymptoteAlt": "A five-row triangle of numbers laid out like Pascal's triangle. The top row has a single one. The second row has two ones. The third row has one, two, one. The fourth row has one, three, three, one. The fifth row has one, four, six, four, one. A horizontal rule sits beneath the triangle with a note reading that each entry equals the two entries directly above it.",
+          "asymptoteAspectRatio": 1.2
+        }
+      ],
+      "examples": [
+        {
+          "id": "m3-l3-ex-1",
+          "titleLatex": "Worked example: deriving the recurrence before iterating it",
+          "bodyLatex": "Let $a_n$ be the number of ways to tile a $2 \\times n$ board with $1 \\times 2$ dominoes, which may lie flat or stand up.\n\nSplit on the rightmost column. If a single domino stands in that column, the rest is a $2 \\times (n-1)$ board: $a_{n-1}$ ways. If the rightmost column is covered by two flat dominoes, each of which also covers the next column to the left, the rest is a $2 \\times (n-2)$ board: $a_{n-2}$ ways. The two cases are disjoint and exhaustive, so\n\n$a_n = a_{n-1} + a_{n-2}$, with $a_0 = 1$ (the empty board) and $a_1 = 1$ (one standing domino).\n\nTabulating: $1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89$. So $a_{10} = 89$.",
+          "answerLatex": "89"
+        },
+        {
+          "id": "m3-l3-ex-2",
+          "titleLatex": "Worked example: two states instead of one",
+          "bodyLatex": "Let $a_n$ be the number of strings of length $n$ over $\\{0,1,2\\}$ that contain an even number of zeros.\n\nTrack the parity, because appending a $1$ or a $2$ leaves the parity alone and appending a $0$ flips it. If $b_n$ counts the odd-zero strings, then $a_n + b_n = 3^n$, and\n\n$a_n = 2a_{n-1} + b_{n-1} = a_{n-1} + 3^{n-1}$.\n\nStarting from $a_0 = 1$ and summing, $a_n = 1 + (1 + 3 + \\cdots + 3^{n-1}) = \\frac{3^n + 1}{2}$. For $n = 10$ that is $\\frac{59049 + 1}{2} = 29525$.",
+          "answerLatex": "29525"
+        },
+        {
+          "id": "m3-l3-ex-3",
+          "titleLatex": "Worked example: the split point runs over a range",
+          "bodyLatex": "Let $c_n$ be the number of ways to fully parenthesize a product of $n+1$ factors. Split on the position of the outermost matching pair of parentheses: if it encloses the first $k+1$ factors, the inside is counted by $c_k$ and the rest by $c_{n-1-k}$, and $k$ ranges over $0, 1, \\ldots, n-1$.\n\n$c_n = \\sum_{k=0}^{n-1} c_k c_{n-1-k}$, with $c_0 = 1$.\n\nThe first values are $1, 1, 2, 5, 14, 42, \\ldots$, the Catalan numbers. So a product of five factors has $c_4 = 14$ parenthesizations.",
+          "answerLatex": "14"
+        },
+        {
+          "id": "m3-l3-ex-4",
+          "titleLatex": "Worked example: characteristic roots instead of a long table",
+          "bodyLatex": "Suppose $a_n = 3a_{n-1} - 2a_{n-2}$ with $a_1 = 5$ and $a_2 = 11$. Trying $a_n = r^n$ gives $r^2 - 3r + 2 = 0$, so $r = 1$ or $r = 2$.\n\nWrite $a_n = A \\cdot 1^n + B \\cdot 2^n$. From $A + 2B = 5$ and $A + 4B = 11$ we get $B = 3$ and $A = -1$, so $a_n = 3 \\cdot 2^n - 1$. Checking $a_3 = 3 \\cdot 8 - 1 = 23$ against the recurrence, $3 \\cdot 11 - 2 \\cdot 5 = 23$, confirms the form. Now $a_{20} = 3 \\cdot 2^{20} - 1 = 3145727$ with no table at all.",
+          "answerLatex": "3145727"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "first-piece-decomposition",
+          "name": "Split on the first piece",
+          "summaryLatex": "Condition on what the first (or leftmost, or initial) element is; each case becomes a smaller instance of the same problem.",
+          "bodyLatex": "Choose the end of the object that makes the remainder look like the original problem again. For a word problem about strings, the first symbol; for a tiling, the leftmost column; for a permutation, the position of one distinguished letter. Write the recurrence as $a_n = \\sum_j (\text{count for case } j)$, and check that the cases do not overlap: a string cannot both start with $01$ and start with $10$, so those are two cases, not one case counted twice. The left end is the better choice when the right end can be read in two ways (as in the $2 \\times n$ domino board, where the rightmost column can be one standing or two flat dominoes)."
+        },
+        {
+          "slug": "last-piece-decomposition",
+          "name": "Split on the last piece",
+          "summaryLatex": "Condition on the final element, which usually leaves a smaller board, string, or seating.",
+          "bodyLatex": "The mirror image of splitting first, and the more common choice in contest problems because the leftover piece is geometrically obvious: the last stair, the last column of a board, the last square of a run. The rule of thumb is that whatever remains after removing the last piece must be an object the same problem counts. If removing the last piece leaves something of a different shape, switch to the first piece or introduce a second sequence, as in the two-state even-parity argument."
+        },
+        {
+          "slug": "two-state-recurrence",
+          "name": "Introduce a second sequence when the remainder has changed shape",
+          "summaryLatex": "If splitting leaves an object the original $a_n$ does not count, count that object too and close the system.",
+          "bodyLatex": "The signal that one sequence is not enough is a remainder that the original definition excludes. A string of length $n$ ending in $0$ does not end with two consecutive ones, so the even- and odd-parity sequences must be tracked together: $a_n = 2a_{n-1} + b_{n-1}$ and $b_n = 2b_{n-1} + a_{n-1}$, with $a_n + b_n = 3^n$ closing the system in one step. Always write down the meaning of each new sequence in words; a second sequence with no stated meaning is where derivations go wrong."
+        },
+        {
+          "slug": "iterate-the-recurrence",
+          "name": "Build the table once and read every answer from it",
+          "summaryLatex": "For indices up to about fifteen, tabulate $a_0, a_1, \\ldots$ in order; most mistakes are indexing mistakes.",
+          "bodyLatex": "Write the terms in a row, keep the base cases visible, and never re-derive a term you already have. If the problem says $a_1 = 1$ and $a_2 = 2$, then $a_3 = 3$ is the third entry, not the fourth; writing indices above the terms removes the ambiguity. Cross-check by computing the first three terms directly from the original wording of the problem before trusting the table."
+        },
+        {
+          "slug": "characteristic-roots",
+          "name": "Solve a constant-coefficient recurrence from its characteristic equation",
+          "summaryLatex": "Substitute $a_n = r^n$ to get a polynomial in $r$; each root contributes $A r^n$.",
+          "bodyLatex": "For $a_n = p a_{n-1} + q a_{n-2}$ the characteristic equation is $r^2 - p r - q = 0$. With integer roots the constants $A, B$ in $a_n = A r_1^n + B r_2^n$ come from two linear equations, one per initial condition. Repeated roots need $A r^n + B n r^n$. This is worth doing when the index is large (say $n \\ge 15$) or when only the last few digits are wanted; for small indices, iterating is faster and cannot be misapplied."
+        },
+        {
+          "slug": "convolution-recurrence",
+          "name": "When the split point is not fixed, the recurrence is a sum",
+          "summaryLatex": "A family of splits indexed by $k$ gives $a_n = \\sum_k a_k a_{n-1-k}$.",
+          "bodyLatex": "Parenthesizations split at the outermost matched pair; set partitions split on the block containing a distinguished element; tilings of a rectangle split on a vertical seam. In each case the split index runs over a range and the two halves are independent, so the count is a convolution. Catalan numbers, Bell numbers, and set partitions by block size all arise this way."
+        },
+        {
+          "slug": "derangement-recurrence",
+          "name": "Use the derangement recurrence and its identity form",
+          "summaryLatex": "$D_n = (n-1)(D_{n-1} + D_{n-2})$ counts permutations with no fixed point; $D_n = n D_{n-1} + (-1)^n$ is the same count in a one-step form.",
+          "bodyLatex": "Derive the two-term version by looking at where person 1 goes: if it goes to seat $j$, then either person $j$ sits in seat 1 (removing both leaves a derangement of $n-2$) or person $j$ does not (the configuration collapses to a derangement of $n-1$ with $j$ now fixed to the vacated seat). With $D_1 = 0$ and $D_2 = 1$ this iterates to $D_5 = 44$. The one-step form $D_n = nD_{n-1} + (-1)^n$ follows from inclusion-exclusion and is the one to remember when only the final digit pattern matters."
+        },
+        {
+          "slug": "partition-before-recursing",
+          "name": "Make the cases partition the objects before iterating",
+          "summaryLatex": "Every counted object belongs to exactly one case; verify that, then the recurrence is a proof, not a guess.",
+          "bodyLatex": "A recurrence is an addition of disjoint counts. If two cases can hold simultaneously, some objects are counted twice and the sequence is too large; if they can miss an object, the sequence is too small. A quick test: take a small case ($n = 3$ or $n = 4$) and enumerate the objects by hand. If the hand count and the recurrence disagree, the cases are the problem, and no amount of careful arithmetic will fix it."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "overlapping-cases",
+          "titleLatex": "Two cases that are not disjoint inflate every term",
+          "wrongLatex": "$a_n = 2a_{n-1}$",
+          "whyLatex": "For a $2 \\times n$ board tiled with dominoes, it is tempting to say the leftmost column holds either a standing domino ($a_{n-1}$) or a flat domino ($a_{n-1}$). But a flat domino in the leftmost column must be matched by a second flat domino in the next column, so the second case is really a $2 \\times (n-2)$ board, not a $2 \\times (n-1)$ one. The true values are $1, 2, 3, 5, 8$ for $n = 0$ to $4$; the wrong recurrence gives $1, 2, 4, 8, 16$, and the error is already a factor of two at $n = 2$.",
+          "fixLatex": "After writing the cases, check two properties: no object satisfies two of them, and every object satisfies one of them. The fastest test is to recount $n = 2$ or $n = 3$ by hand and compare with the first few terms of the recurrence."
+        },
+        {
+          "slug": "empty-case-baseline",
+          "titleLatex": "Setting the empty case to zero instead of one",
+          "wrongLatex": "$a_0 = 0$",
+          "whyLatex": "The empty board, the empty string, and the empty subset are all real objects, each counted once. With $a_0 = 0$ the tiling sequence starts $0, 1, 1, 2, 3, 5$ instead of $1, 1, 2, 3, 5, 8$, and every later term is wrong, usually by a term that is hard to spot. The same slip appears when the recurrence is only stated for $n \\ge 2$ but the question asks about $n = 1$.",
+          "fixLatex": "Decide what the zero-sized object is before writing base cases, and count it explicitly. If removing the last piece can leave nothing behind, the empty object must be worth one. Then verify $a_1$ and $a_2$ directly from the problem statement."
+        },
+        {
+          "slug": "ordered-versus-unordered",
+          "titleLatex": "Applying the compositions recurrence to an unordered count",
+          "wrongLatex": "$a_n = a_{n-1} + a_{n-2} + a_{n-3}$ for the number of ways to write $n$ as a sum of $1$s, $2$s, and $3$s",
+          "whyLatex": "That recurrence counts ordered compositions: $1+2+9$ and $9+2+1$ are different. If the problem asks how many ways $12$ can be written as a sum of $1$s, $2$s, and $3$s with order ignored, the answer is the number of triples $(a,b,c)$ with $a + 2b + 3c = 12$, which is $7 + 5 + 4 + 2 + 1 = 19$, not $927$.",
+          "fixLatex": "Ask whether reordering the parts changes the object. Ordered means a composition and a recurrence by last part; unordered means a partition and a count of solutions to a linear equation. The same split separates words from subsets of a set."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m3-l3-p1",
+        "m3-l3-p2",
+        "m3-l3-p3",
+        "m3-l3-p4",
+        "m3-l3-p5",
+        "m3-l3-p6",
+        "m3-l3-p7",
+        "m3-l3-p8",
+        "m3-l3-p9",
+        "m3-l3-p10",
+        "m3-l3-p11",
+        "m3-l3-p12",
+        "m3-l3-p13",
+        "m3-l3-p14",
+        "m3-l3-p15",
+        "m3-l3-p16",
+        "m3-l3-p17",
+        "m3-l3-p18",
+        "m3-l3-p19",
+        "m3-l3-p20",
+        "m3-l3-p21",
+        "m3-l3-p22",
+        "m3-l3-p23",
+        "m3-l3-p24",
+        "m3-l3-p25",
+        "m3-l3-p26"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m3-l3-p1",
+        "m3-l3-p2",
+        "m3-l3-p3",
+        "m3-l3-p4",
+        "m3-l3-p5",
+        "m3-l3-p6",
+        "m3-l3-p7",
+        "m3-l3-p8",
+        "m3-l3-p9",
+        "m3-l3-p10",
+        "m3-l3-p11",
+        "m3-l3-p12",
+        "m3-l3-p13",
+        "m3-l3-p14",
+        "m3-l3-p15",
+        "m3-l3-p16",
+        "m3-l3-p17",
+        "m3-l3-p18",
+        "m3-l3-p19",
+        "m3-l3-p20",
+        "m3-l3-p21",
+        "m3-l3-p22",
+        "m3-l3-p23",
+        "m3-l3-p24",
+        "m3-l3-p25",
+        "m3-l3-p26"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m3-l3-m1",
+        "m3-l3-m2",
+        "m3-l3-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "recurrences",
+    "sequences",
+    "fundamental-counting"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "m3-l3-m1",
+  "moduleId": "M3",
+  "lessonId": "m3-l3",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "recurrences",
+    "combinations"
+  ],
+  "promptLatex": "An ordered sum of $1$s, $2$s, and $3$s is called a composition of $n$ into those parts. Let $a_n$ be the number of compositions of $n$ using only the parts $1$, $2$, and $3$, where different orders of the same parts count separately. Find $a_{15}$.",
+  "choices": null,
+  "answerLatex": "5768",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Every composition ends in exactly one of the three parts.",
+    "Deleting that final part leaves a composition of $n-1$, $n-2$, or $n-3$.",
+    "Count $a_0$, $a_1$, and $a_2$ by hand first, since the recurrence needs all three."
+  ],
+  "solutionLatex": "Split on the final part, which is $1$, $2$, or $3$. Deleting it leaves a composition of $n-1$, $n-2$, or $n-3$, and each shorter composition extends in exactly one way per part, so\n\n$a_n = a_{n-1} + a_{n-2} + a_{n-3}$.\n\nThe base cases are $a_0 = 1$ (the empty composition), $a_1 = 1$, and $a_2 = 2$ (namely $1+1$ and $2$). Continuing: $a_3 = 4$, $a_4 = 7$, $a_5 = 13$, $a_6 = 24$, $a_7 = 44$, $a_8 = 81$, $a_9 = 149$, $a_{10} = 274$, $a_{11} = 504$, $a_{12} = 927$, $a_{13} = 1705$, $a_{14} = 3136$, and\n\n$a_{15} = 3136 + 1705 + 927 = 5768$.",
+  "techniqueSlugs": [
+    "last-piece-decomposition",
+    "iterate-the-recurrence"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
