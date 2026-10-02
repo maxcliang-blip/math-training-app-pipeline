@@ -24,9 +24,7 @@
     "The expected net gain is $2 - 2 = 0$ dollars."
   ],
   "solutionLatex": "Let $G$ be the net gain. Winning gives $G = 10 - 2 = 8$ dollars with probability $\\frac{1}{5}$, and losing gives $G = 0 - 2 = -2$ dollars with probability $\\frac{4}{5}$.\n\nTherefore\n\n$\\mathbb{E}[G] = 8 \\cdot \\frac{1}{5} + (-2) \\cdot \\frac{4}{5} = \\frac{8}{5} - \\frac{8}{5} = 0$.\n\nThe game is fair, so a player neither gains nor loses on average, even though every individual outcome is either $+8$ or $-2$ dollars.",
-  "techniqueSlugs": [
-    "expected-value-setup"
-  ],
+  "techniqueSlugs": [],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

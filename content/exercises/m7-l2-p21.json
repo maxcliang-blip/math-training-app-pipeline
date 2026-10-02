@@ -19,8 +19,7 @@
   ],
   "solutionLatex": "Work with a group of $100$ people. Of these, $10$ have the disease and $90$ do not.\n\nAmong the $10$ sick people the test is positive for $10 \\cdot 0.95 = 9.5$. Among the $90$ healthy people it is positive for $90 \\cdot 0.10 = 9$. These groups are disjoint, so $18.5$ people test positive in total.\n\nOf those, the ones who actually have the disease number $9.5$. Bayes' theorem gives $P(\\text{disease} \\mid \\text{positive}) = \\frac{9.5}{18.5} = \\frac{95}{185} = \\frac{19}{181}$. Since $19$ and $181$ share no factor, $m + n = 19 + 181 = 200$. The test is very accurate and the disease is fairly common, which is why the answer here is not tiny; the same test with the disease affecting one person in a thousand would give a far smaller value.",
   "techniqueSlugs": [
-    "bayes-reversal",
-    "law-of-total-probability"
+    "bayes-reversal"
   ],
   "asymptoteSource": null,
   "asymptoteAlt": null,

@@ -20,9 +20,7 @@
     "The expectation is $1 \\cdot \\frac{1}{2} + 2 \\cdot \\frac{1}{3} + 3 \\cdot \\frac{1}{6} = \\frac{5}{3}$."
   ],
   "solutionLatex": "The probabilities $\\frac{1}{2}, \\frac{1}{3}, \\frac{1}{6}$ sum to $1$, so the distribution is complete.\n\nThe expected value is the weighted average\n\n$\\mathbb{E}[X] = 1 \\cdot \\frac{1}{2} + 2 \\cdot \\frac{1}{3} + 3 \\cdot \\frac{1}{6} = \\frac{3}{6} + \\frac{4}{6} + \\frac{3}{6} = \\frac{10}{6} = \\frac{5}{3}$.\n\nThe value $\\frac{5}{3}$ is not one of the possible values of $X$, which is normal for an expectation.",
-  "techniqueSlugs": [
-    "expected-value-setup"
-  ],
+  "techniqueSlugs": [],
   "asymptoteSource": null,
   "asymptoteAlt": null,
   "asymptoteAspectRatio": null

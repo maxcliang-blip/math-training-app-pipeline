@@ -19,8 +19,7 @@
   ],
   "solutionLatex": "Consider $100$ items. $60$ come from $M_1$ and $40$ from $M_2$.\n\nThe number of defective items from $M_1$ is $60 \\cdot 0.02 = 1.2$, and the number from $M_2$ is $40 \\cdot 0.05 = 2$. Defective items from the two machines are disjoint families, so $3.2$ items in the batch are defective.\n\nBayes' theorem gives $P(M_1 \\mid \\text{defective}) = \\frac{1.2}{3.2} = \\frac{12}{32} = \\frac{3}{8}$, which is in lowest terms, so $m + n = 3 + 8 = 11$. Even though $M_1$ makes the larger share of the output, its lower defect rate means less than half of the defective items come from it.",
   "techniqueSlugs": [
-    "bayes-reversal",
-    "law-of-total-probability"
+    "bayes-reversal"
   ],
   "asymptoteSource": null,
   "asymptoteAlt": null,

@@ -102,30 +102,6 @@
           "bodyLatex": "Read the problem twice. Write the condition you were given on the right of the bar, and note that Bayes' theorem needs it that way round. Then compute the denominator $P(B)$ with the total probability law over all the ways $B$ can happen, which for a diagnosis means every cause of a positive test. The answer collapses to $\\frac{P(B \\mid A)P(A)}{P(B \\mid A)P(A) + P(B \\mid A^c)P(A^c)}$ whenever $B$ has exactly two causes, and that form is worth memorising."
         },
         {
-          "slug": "law-of-total-probability",
-          "name": "Split on a partition and add",
-          "summaryLatex": "$P(B) = P(A) \\, P(B \\mid A) + P(A^c) \\, P(B \\mid A^c)$.",
-          "bodyLatex": "Use this whenever $B$ can arise from several mutually exclusive routes and the overall chance of $B$ is needed, typically as the denominator of Bayes' theorem. The partition must be exhaustive, so $A$ and $A^c$ together cover everything, and the terms are added because the routes are disjoint. As a consistency check, the result must lie between the smallest and largest conditional probability appearing in it."
-        },
-        {
-          "slug": "expected-value-setup",
-          "name": "Compute an expectation as a weighted average",
-          "summaryLatex": "$\\mathbb{E}[X] = \\sum_x x \\, P(X = x)$.",
-          "bodyLatex": "Tabulate the values of $X$ and the probability of each, then take the weighted average. The probabilities must sum to $1$, and that is the check worth doing first because an incomplete distribution is the usual cause of a wrong mean. The answer need not be a value $X$ can take, and it is not the most likely value."
-        },
-        {
-          "slug": "linearity-of-expectation",
-          "name": "Add expectations, independence or not",
-          "summaryLatex": "$\\mathbb{E}[X + Y] = \\mathbb{E}[X] + \\mathbb{E}[Y]$ with no independence hypothesis.",
-          "bodyLatex": "Whenever the quantity asked for is a sum of pieces, sum the individual expectations instead of computing the distribution of the sum. This works for any number of summands and never requires joint probabilities. It does not extend to products unless the factors are independent, and it says nothing about a ratio, so a problem asking for $\\mathbb{E}[X/Y]$ needs a different route."
-        },
-        {
-          "slug": "indicator-variables",
-          "name": "Count a quantity with indicators and sum the probabilities",
-          "summaryLatex": "$\\mathbb{E}[\\text{count}] = \\sum P(\\text{each object is counted})$.",
-          "bodyLatex": "For each object that could be counted, define $I$ to be $1$ if it is counted and $0$ otherwise. The total count is the sum of the $I$, so its expectation is the sum of the probabilities. This removes the casework entirely, and it works whether or not the objects are drawn with replacement: the probability that a given object is counted is the same on each draw."
-        },
-        {
           "slug": "complementary-count",
           "name": "Take the complement when the condition is awkward",
           "summaryLatex": "$P(E) = 1 - P(E^c)$, and inside a conditioned space the two still add to $1$.",

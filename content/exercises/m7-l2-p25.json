@@ -21,8 +21,7 @@
   ],
   "solutionLatex": "A single fair die has expected value $\\frac{1+2+3+4+5+6}{6} = \\frac{7}{2}$, so Al's result has expectation $\\frac{7}{2}$.\n\nBea's two results each have expectation $\\frac{7}{2}$, so by linearity of expectation Bea's total has expectation $\\frac{7}{2} + \\frac{7}{2} = 7$.\n\nApplying linearity once more to the sum of Al's result and Bea's total,\n\n$\\mathbb{E}[\\text{sum}] = \\frac{7}{2} + 7 = \\frac{21}{2}$. No independence hypothesis is needed at either step, because linearity of expectation never requires one.",
   "techniqueSlugs": [
-    "linearity-of-expectation",
-    "expected-value-setup"
+    "symmetry-argument"
   ],
   "asymptoteSource": null,
   "asymptoteAlt": null,
