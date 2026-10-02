@@ -1,0 +1,35 @@
+{
+  "id": "m7-l3-p1",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "probability",
+    "conditional-probability",
+    "bayes-theorem"
+  ],
+  "promptLatex": "Urn A holds 3 red and 2 blue balls, and urn B holds 1 red and 4 blue balls. One of the two urns is chosen at random and a single ball is drawn from it. Given that the ball drawn is red, what is the probability that urn A was the one chosen?",
+  "choices": [
+    "\\frac{1}{2}",
+    "\\frac{2}{5}",
+    "\\frac{3}{4}",
+    "\\frac{4}{5}",
+    "\\frac{3}{5}"
+  ],
+  "answerLatex": "\\frac{3}{4}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The urns were equally likely before the draw, so a red ball from one urn and a red ball from the other are not equal contributions.",
+    "The weight on urn A is $\\frac{1}{2} \\cdot \\frac{3}{5} = \\frac{3}{10}$ and on urn B it is $\\frac{1}{2} \\cdot \\frac{1}{5} = \\frac{1}{10}$.",
+    "Divide the weight on urn A by the total weight, which is $\\frac{2}{5}$."
+  ],
+  "solutionLatex": "Each urn was chosen with probability $\\frac{1}{2}$. From urn A the chance of drawing a red ball is $\\frac{3}{5}$, and from urn B it is $\\frac{1}{5}$.\n\nSo the weight on the pair (urn A and a red ball) is $\\frac{1}{2} \\cdot \\frac{3}{5} = \\frac{3}{10}$, and the weight on (urn B and a red ball) is $\\frac{1}{2} \\cdot \\frac{1}{5} = \\frac{1}{10}$. The total weight on a red ball is $\\frac{3}{10} + \\frac{1}{10} = \\frac{2}{5}$.\n\nP(A \\mid \\text{red}) = \\frac{3/10}{2/5} = \\frac{3}{4}",
+  "techniqueSlugs": [
+    "law-of-total-probability",
+    "posterior-normalization"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-p14",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "bayes-theorem",
+    "probability",
+    "distributions"
+  ],
+  "promptLatex": "A factory makes 50 percent of its output on line A, 30 percent on line B, and 20 percent on line C. The defective rates on the three lines are 1 percent, 4 percent, and 9 percent respectively. An item taken at random from the output is found to be defective. What is the probability that it came from line C?",
+  "choices": [
+    "\\frac{9}{35}",
+    "\\frac{18}{35}",
+    "\\frac{2}{7}",
+    "\\frac{1}{5}",
+    "\\frac{9}{50}"
+  ],
+  "answerLatex": "\\frac{18}{35}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Each line contributes its share of the output multiplied by its own defective rate.",
+    "In a batch of $1000$ items the defective counts are $5$, $12$, and $18$ from the three lines.",
+    "So $35$ items in all are defective and $18$ of them came from line C."
+  ],
+  "solutionLatex": "Take a batch of $1000$ items. Line A makes $500$, line B makes $300$, and line C makes $200$.\n\nThe defective items are $0.01 \\cdot 500 = 5$ from line A, $0.04 \\cdot 300 = 12$ from line B, and $0.09 \\cdot 200 = 18$ from line C. In total $5 + 12 + 18 = 35$ items are defective.\n\nP(C \\mid \\text{defective}) = \\frac{18}{35}",
+  "techniqueSlugs": [
+    "law-of-total-probability"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,33 @@
+{
+  "id": "m7-l4-p5",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "expected-value",
+    "independence"
+  ],
+  "promptLatex": "A fair six-sided die is rolled twice. What is the expected value of the sum of the two rolls?",
+  "choices": [
+    "6",
+    "\\frac{13}{2}",
+    "7",
+    "\\frac{15}{2}",
+    "\\frac{25}{3}"
+  ],
+  "answerLatex": "7",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Linearity of expectation lets the two rolls be treated separately, whether or not they interact.",
+    "Each roll has expected value $\\frac{7}{2}$.",
+    "The expected sum is $\\frac{7}{2} + \\frac{7}{2}$."
+  ],
+  "solutionLatex": "Let $X$ and $Y$ be the two rolls. Each is a fair die, so $E[X] = E[Y] = \\frac{7}{2}$.\n\nBy linearity of expectation,\n\nE[X + Y] = E[X] + E[Y] = \\frac{7}{2} + \\frac{7}{2} = 7.\n\nThe $36$ outcomes do not have to be enumerated, since linearity of expectation asks nothing about how the two rolls are related.",
+  "techniqueSlugs": [
+    "linearity-of-expectation"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-p25",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "bayes-theorem",
+    "complementary-counting",
+    "probability"
+  ],
+  "promptLatex": "Ten percent of the items coming off a production line are defective. Two items are taken at random from a large shipment. Given that at least one of them is defective, what is the probability that both are defective?",
+  "choices": [
+    "\\frac{1}{91}",
+    "\\frac{1}{55}",
+    "\\frac{1}{38}",
+    "\\frac{1}{19}",
+    "\\frac{1}{20}"
+  ],
+  "answerLatex": "\\frac{1}{19}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Compute the probability of the condition and the probability of the stronger event, then divide.",
+    "Both items being defective has probability $\\left(\\frac{1}{10}\\right)^2 = \\frac{1}{100}$.",
+    "At least one being defective is the complement of both being sound, namely $1 - \\left(\\frac{9}{10}\\right)^2 = \\frac{19}{100}$."
+  ],
+  "solutionLatex": "Each item is defective with probability $\\frac{1}{10}$ and sound with probability $\\frac{9}{10}$, and the shipment is large enough that the two items behave independently.\n\nBoth items being defective has probability $\\left(\\frac{1}{10}\\right)^2 = \\frac{1}{100}$. At least one being defective is the complement of both being sound, so its probability is\n\n1 - \\left(\\frac{9}{10}\\right)^2 = 1 - \\frac{81}{100} = \\frac{19}{100}\n\nThe conditional probability is then\n\n\\frac{1/100}{19/100} = \\frac{1}{19}",
+  "techniqueSlugs": [
+    "posterior-normalization"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

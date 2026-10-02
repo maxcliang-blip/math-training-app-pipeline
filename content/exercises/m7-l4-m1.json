@@ -1,0 +1,35 @@
+{
+  "id": "m7-l4-m1",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "expected-value",
+    "distributions",
+    "independence"
+  ],
+  "promptLatex": "A fair six-sided die is rolled once, giving $X$, and $Y$ is defined to be 1 if $X$ is even and 0 if $X$ is odd. What is the expected value of $X + Y$?",
+  "choices": [
+    "4",
+    "\\frac{7}{2}",
+    "\\frac{9}{2}",
+    "\\frac{17}{4}",
+    "\\frac{15}{4}"
+  ],
+  "answerLatex": "4",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Linearity of expectation needs only the two separate means, not how $X$ and $Y$ are related.",
+    "The mean of $X$ is $\\frac{7}{2}$ and the mean of $Y$ is $\\frac{1}{2}$ because half the faces are even.",
+    "Adding the two means gives $\\frac{7}{2} + \\frac{1}{2}$."
+  ],
+  "solutionLatex": "The mean of the roll is $E[X] = \\frac{1+2+3+4+5+6}{6} = \\frac{7}{2}$.\n\nThree of the six faces are even, so $E[Y] = \\frac{3}{6} = \\frac{1}{2}$.\n\nThe two variables are strongly dependent, since knowing $X$ determines $Y$, and linearity of expectation is unaffected:\n\nE[X + Y] = E[X] + E[Y] = \\frac{7}{2} + \\frac{1}{2} = 4.",
+  "techniqueSlugs": [
+    "linearity-of-expectation",
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

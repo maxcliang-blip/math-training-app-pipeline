@@ -1,0 +1,35 @@
+{
+  "id": "m7-l4-p14",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "expected-value",
+    "independence",
+    "permutations"
+  ],
+  "promptLatex": "Five letters are placed into five addressed envelopes uniformly at random. What is the expected number of letters that arrive in their own envelope?",
+  "choices": [
+    "1",
+    "\\frac{5}{6}",
+    "\\frac{6}{5}",
+    "2",
+    "0"
+  ],
+  "answerLatex": "1",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Treat each letter separately with an indicator that records whether it lands correctly.",
+    "Each of the five letters has probability $\\frac{1}{5}$ of landing in its own envelope.",
+    "The expected number correctly placed is $5 \\cdot \\frac{1}{5}$."
+  ],
+  "solutionLatex": "For the $i$th letter let $I_i$ be $1$ if it reaches its own envelope and $0$ otherwise, so the number correctly placed is $\\sum_{i=1}^{5} I_i$. Each letter is equally likely to land in any of the $5$ envelopes, so $E[I_i] = \\frac{1}{5}$.\n\nE[\\text{correct}] = \\sum_{i=1}^{5} E[I_i] = 5 \\cdot \\frac{1}{5} = 1.\n\nThe placements are thoroughly dependent, since one letter's envelope is unavailable to the rest, and linearity is unaffected by that.",
+  "techniqueSlugs": [
+    "indicator-variables",
+    "linearity-of-expectation"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

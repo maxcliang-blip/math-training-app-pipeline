@@ -1,0 +1,35 @@
+{
+  "id": "m7-l4-m2",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "expected-value",
+    "permutations",
+    "distributions"
+  ],
+  "promptLatex": "Four letters are placed into four addressed envelopes uniformly at random, and $X$ is the number that arrive in their own envelope. What is the expected value of $X^2$?",
+  "choices": [
+    "2",
+    "\\frac{9}{4}",
+    "\\frac{5}{2}",
+    "\\frac{11}{4}",
+    "1"
+  ],
+  "answerLatex": "2",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The second moment needs the distribution of $X$, which can be built from the counts of permutations.",
+    "Of the $24$ placements, $9$ have no letter correct, $8$ have one, $6$ have two and $1$ has all four.",
+    "So $E[X^2] = 8(1^2) + 6(2^2) + 1(4^2)$ over $24$."
+  ],
+  "solutionLatex": "There are $4! = 24$ equally likely placements.\n\nNo letter correct: the derangements number $9$. Exactly one correct: choose which letter in $4$ ways and derange the remaining $3$, giving $4 \\cdot 2 = 8$. Exactly two correct: the other two envelopes must be swapped, giving $\\binom{4}{2} = 6$. All four correct: $1$. The counts sum to $9 + 8 + 6 + 1 = 24$.\n\nOnly the last three contribute to the second moment, so\n\nE[X^2] = \\frac{0 \\cdot 9 + 1^2 \\cdot 8 + 2^2 \\cdot 6 + 4^2 \\cdot 1}{24} = \\frac{8 + 24 + 16}{24} = \\frac{48}{24} = 2.\n\nThe mean is $1$, so the variance is $2 - 1 = 1$: correct placements are far more variable than the mean suggests.",
+  "techniqueSlugs": [
+    "expectation-of-a-function",
+    "variance-from-moments"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

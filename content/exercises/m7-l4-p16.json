@@ -1,0 +1,34 @@
+{
+  "id": "m7-l4-p16",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "expected-value",
+    "distributions"
+  ],
+  "promptLatex": "Two cards are drawn at random without replacement from a standard 52-card deck, and a card is worth its number with ace, jack, queen and king all worth 10. What is the expected value of the total of the two cards?",
+  "choices": [
+    "\\frac{168}{13}",
+    "\\frac{84}{13}",
+    "\\frac{25}{2}",
+    "\\frac{74}{13}",
+    "7"
+  ],
+  "answerLatex": "\\frac{168}{13}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The two cards are dependent, but linearity of expectation holds regardless.",
+    "A single card has expected value $\\frac{336}{52} = \\frac{84}{13}$.",
+    "The expected total is twice that."
+  ],
+  "solutionLatex": "For a single card the values $2$ through $9$ contribute $4(2 + 3 + \\cdots + 9) = 176$, the tens contribute $40$, and the twelve face cards contribute $120$, so\n\nE[X] = \\frac{176 + 40 + 120}{52} = \\frac{336}{52} = \\frac{84}{13}.\n\nDrawing without replacement makes the two cards dependent, but linearity of expectation requires no independence:\n\nE[X + Y] = E[X] + E[Y] = 2 \\cdot \\frac{84}{13} = \\frac{168}{13}.",
+  "techniqueSlugs": [
+    "linearity-of-expectation",
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

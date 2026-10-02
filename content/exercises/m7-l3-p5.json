@@ -1,0 +1,35 @@
+{
+  "id": "m7-l3-p5",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "probability",
+    "distributions",
+    "bayes-theorem"
+  ],
+  "promptLatex": "An item is produced on line A 30 percent of the time and on line B 70 percent of the time. Line A produces defective items at a rate of 2 percent and line B at a rate of 5 percent. An item sampled at random is found to be defective. What is the probability it came from line B?",
+  "choices": [
+    "\\frac{5}{7}",
+    "\\frac{35}{41}",
+    "\\frac{2}{5}",
+    "\\frac{7}{12}",
+    "\\frac{1}{2}"
+  ],
+  "answerLatex": "\\frac{35}{41}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The defective items from each line must be compared as shares of all the defective items.",
+    "Out of $1000$ items line A contributes $300$, of which $6$ are defective, and line B contributes $700$, of which $35$ are defective.",
+    "So $41$ items in all are defective and $35$ of them came from line B."
+  ],
+  "solutionLatex": "Take a batch of $1000$ items. Line A makes $300$ of them and line B makes $700$.\n\nLine A's defective rate is $2$ percent, so $0.02 \\cdot 300 = 6$ of its items are defective. Line B's rate is $5$ percent, so $0.05 \\cdot 700 = 35$ are defective.\n\nIn total $6 + 35 = 41$ items are defective, and $35$ of them came from line B.\n\nP(B \\mid \\text{defective}) = \\frac{35}{41}",
+  "techniqueSlugs": [
+    "law-of-total-probability",
+    "prior-times-likelihood"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

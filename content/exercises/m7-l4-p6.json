@@ -1,0 +1,34 @@
+{
+  "id": "m7-l4-p6",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "expected-value",
+    "distributions"
+  ],
+  "promptLatex": "A fair six-sided die is rolled once and the number showing is recorded as $X$. What is the expected value of $X^2$?",
+  "choices": [
+    "\\frac{91}{6}",
+    "\\frac{49}{4}",
+    "\\frac{49}{6}",
+    "\\frac{35}{6}",
+    "\\frac{91}{12}"
+  ],
+  "answerLatex": "\\frac{91}{6}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The weight on each face stays the probability of that face; only the summand becomes the square.",
+    "The squares of the faces sum to $1 + 4 + 9 + 16 + 25 + 36 = 91$.",
+    "Each face has probability $\\frac{1}{6}$, so the weighted sum is $\\frac{91}{6}$."
+  ],
+  "solutionLatex": "The face values are $1,2,3,4,5,6$, each with probability $\\frac{1}{6}$, and the function is $g(x) = x^2$.\n\nE[X^2] = \\frac{1^2 + 2^2 + 3^2 + 4^2 + 5^2 + 6^2}{6} = \\frac{1 + 4 + 9 + 16 + 25 + 36}{6} = \\frac{91}{6}.\n\nThis is not $(\\frac{7}{2})^2 = \\frac{49}{4}$, because squaring is not a linear function of $X$ and the largest face dominates the sum.",
+  "techniqueSlugs": [
+    "expectation-of-a-function",
+    "expected-value-setup"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

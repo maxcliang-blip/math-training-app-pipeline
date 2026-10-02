@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-m1",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "bayes-theorem",
+    "probability"
+  ],
+  "promptLatex": "Half of a shipment of components comes from supplier A, whose items are 10 percent defective, and half from supplier B, whose items are 40 percent defective. Two items are drawn at random from the shipment and exactly one of them is found to be defective. What is the probability that both items came from supplier B?",
+  "choices": [
+    "\\frac{3}{25}",
+    "\\frac{8}{25}",
+    "\\frac{1}{2}",
+    "\\frac{2}{5}",
+    "\\frac{14}{25}"
+  ],
+  "answerLatex": "\\frac{8}{25}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The condition restricts the sample space to pairs, so the pairs have to be grouped by where they came from.",
+    "Two A items with exactly one defect have weight $\\frac{1}{4} \\cdot 2(0.1)(0.9) = 0.045$, two B items $\\frac{1}{4} \\cdot 2(0.4)(0.6) = 0.12$, and a mixed pair $\\frac{1}{2} \\cdot (0.1 \\cdot 0.6 + 0.9 \\cdot 0.4) = 0.21$.",
+    "The three weights total $0.375$, so the share from two B items is $\\frac{0.12}{0.375}$."
+  ],
+  "solutionLatex": "The shipment is large, so the two draws are independent. There are three kinds of pair.\n\nTwo items from A, with probability $\\frac{1}{4}$: the chance of exactly one defect is $2 \\cdot 0.1 \\cdot 0.9 = 0.18$, giving weight $0.045$.\n\nTwo items from B, with probability $\\frac{1}{4}$: the chance of exactly one defect is $2 \\cdot 0.4 \\cdot 0.6 = 0.48$, giving weight $0.12$.\n\nOne from each, with probability $\\frac{1}{2}$: the A item is defective and the B item sound in $0.1 \\cdot 0.6 = 0.06$ of cases, and the reverse in $0.9 \\cdot 0.4 = 0.36$, giving weight $\\frac{1}{2} \\cdot 0.42 = 0.21$.\n\nThe total weight on exactly one defect is $0.045 + 0.12 + 0.21 = 0.375$, and the weight from two B items is $0.12$.\n\nP(BB \\mid \\text{one defect}) = \\frac{0.12}{0.375} = \\frac{8}{25}",
+  "techniqueSlugs": [
+    "discordant-pair-conditioning",
+    "law-of-total-probability"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

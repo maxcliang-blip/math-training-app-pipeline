@@ -1,0 +1,33 @@
+{
+  "id": "m7-l4-p4",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "expected-value"
+  ],
+  "promptLatex": "A lottery ticket costs 2 dollars. It pays 10 dollars with probability 1 in 20 and nothing otherwise. What is the expected net gain or loss from buying one ticket?",
+  "choices": [
+    "-\\frac{3}{2}",
+    "-\\frac{1}{2}",
+    "\\frac{1}{2}",
+    "\\frac{8}{5}",
+    "-\\frac{9}{10}"
+  ],
+  "answerLatex": "-\\frac{3}{2}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The net outcome of a win is the payout minus the ticket, not the payout.",
+    "The win gives a net of $10 - 2 = 8$ with probability $\\frac{1}{20}$.",
+    "The loss gives a net of $-2$ with probability $\\frac{19}{20}$."
+  ],
+  "solutionLatex": "Buying the ticket costs $2$ in every case. On a win the net gain is $10 - 2 = 8$, which happens with probability $\\frac{1}{20}$, and on a loss the net gain is $-2$, which happens with probability $\\frac{19}{20}$.\n\nE[\\text{net}] = \\frac{1}{20} \\cdot 8 + \\frac{19}{20} \\cdot (-2) = \\frac{8 - 38}{20} = -\\frac{30}{20} = -\\frac{3}{2}\n\nThe ticket loses a dollar fifty on average per play, so the ticket is worth less than its price.",
+  "techniqueSlugs": [
+    "expected-value-setup",
+    "fair-game-fairness"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

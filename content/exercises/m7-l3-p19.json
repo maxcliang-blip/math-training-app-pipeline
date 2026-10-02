@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-p19",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "bayes-theorem",
+    "complementary-counting",
+    "probability"
+  ],
+  "promptLatex": "A marksman hits the target with probability 1 half on every shot, independently. Given that he hit the target at least once in his first three shots, what is the probability that he hit it on all three?",
+  "choices": [
+    "\\frac{1}{8}",
+    "\\frac{1}{7}",
+    "\\frac{1}{6}",
+    "\\frac{1}{4}",
+    "\\frac{2}{7}"
+  ],
+  "answerLatex": "\\frac{1}{7}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Both events are easiest to compute as complements of a run of misses.",
+    "Hitting all three has probability $\\left(\\frac{1}{2}\\right)^3 = \\frac{1}{8}$.",
+    "Missing all three also has probability $\\frac{1}{8}$, so at least one hit has probability $\\frac{7}{8}$."
+  ],
+  "solutionLatex": "The three shots are independent with hit probability $\\frac{1}{2}$, so hitting all three has probability $\\left(\\frac{1}{2}\\right)^3 = \\frac{1}{8}$.\n\nMissing all three has the same probability $\\frac{1}{8}$, so hitting at least once has probability $1 - \\frac{1}{8} = \\frac{7}{8}$.\n\nThe conditional probability of hitting all three given at least one hit is\n\n\\frac{1/8}{7/8} = \\frac{1}{7}",
+  "techniqueSlugs": [
+    "posterior-normalization"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

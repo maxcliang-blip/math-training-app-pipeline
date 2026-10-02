@@ -1,0 +1,237 @@
+{
+  "id": "m7-l3",
+  "moduleId": "M7",
+  "order": 3,
+  "title": "Bayes' Theorem and Posterior Reasoning",
+  "topicSlug": "bayes-theorem-posterior-reasoning",
+  "tiers": [
+    "10",
+    "12",
+    "A"
+  ],
+  "estimatedMinutes": 75,
+  "lockMode": "soft",
+  "prerequisites": [
+    "m7-l1",
+    "m7-l2"
+  ],
+  "sections": {
+    "objective": {
+      "objectiveLatex": "Reverse a conditional probability using Bayes' theorem, rebuild the probability of the evidence from an exhaustive list of causes, update a set of beliefs when an observation arrives, and carry that update forward to a second observation or a second item. Recognise the settings where a uniform prior makes the posterior an area ratio, and settings where the evidence is a statement about a pair of trials rather than a single outcome."
+    },
+    "prerequisites": {
+      "items": [
+        "m7-l1",
+        "m7-l2"
+      ],
+      "noteLatex": "This lesson reverses what the previous one set up. You will need $P(A \\cap B) = P(A) P(B \\mid A)$ as an identity rather than a rule of thumb, and you will need to be comfortable summing over a partition of the sample space. If computing $P(A \\cap B)$ still feels like a choice between two answers rather than a single expression, go back to the conditional probability lesson first."
+    },
+    "concept": {
+      "conceptLatex": "Conditional probability tells you what one event says about another. Bayes' theorem turns that around: it tells you what an observation says about the world that produced it. The reversal is not free. It is available only because the conditioning direction is a property of the experiment, while the reverse direction also depends on how common the condition was, and that second fact has to be supplied.\n\nStart with the total probability of the evidence. Suppose a situation has several possible causes $C_1, \\dots, C_k$ that are mutually exclusive and exhaustive, and you have observed some evidence $E$. Then\n\nP(E) = \\sum_{i=1}^{k} P(E \\mid C_i)\\, P(C_i)\n\nEach term is the share of all outcomes in which cause $C_i$ produced the evidence. Dividing the single term you care about by the whole gives Bayes' theorem,\n\nP(C_i \\mid E) = \\frac{P(E \\mid C_i)\\, P(C_i)}{\\sum_{j=1}^{k} P(E \\mid C_j)\\, P(C_j)}\n\nThe numerator is the likelihood. The factor $P(C_i)$ is the prior, what you believed before the evidence arrived. The quotient is the posterior, what you believe afterwards. Every problem in this lesson is one of three jobs: compute $P(E)$, compute one prior times likelihood, or divide.\n\nTreating the raw terms as shares makes the arithmetic easier. The weights $w_i = P(E \\mid C_i) P(C_i)$ already sum to $P(E)$, so the posterior is just one weight over the total. Any cause with weight zero drops out entirely, however likely it was beforehand, which is what makes a cause that cannot produce the evidence harmless rather than troublesome.\n\nThe odds form is the one worth memorizing. Dividing the theorem by its own complement,\n\n\\frac{P(C \\mid E)}{P(C^c \\mid E)} = \\frac{P(C)}{P(C^c)} \\cdot \\frac{P(E \\mid C)}{P(E \\mid C^c)}\n\nPosterior odds are prior odds multiplied by the likelihood ratio. A test with a likelihood ratio of five makes the odds five times as good and leaves everything else alone. Working in odds also keeps a small prior from being rounded to zero, which is the arithmetic that makes base rates feel as if they were being ignored when in fact they are setting the scale.\n\nFor a diagnostic test, write the two directions down separately before using either. The sensitivity $P(+ \\mid D)$ and the false positive rate $P(+ \\mid D^c)$ belong to the machine; the prevalence $P(D)$ belongs to the population. A test that is ninety-nine percent accurate, applied to a disease affecting one person in a thousand, produces a positive result that means disease far less often than ninety-nine percent, because the false positives are drawn from a much larger pool.\n\nOnce the posterior is computed it becomes the new prior, and a second observation is predicted by feeding those weights back through the ordinary rules. Nothing about the mechanism changes between the first and the second observation. Only the weights do.\n\nTwo structural cautions close the lesson. If you are told about a pair of trials, such as exactly one of two items being defective, the condition defines a restricted sample space whose elements are pairs, so the cases must be enumerated and weighted as pairs. And in a uniformly chosen geometric setting the posterior is an area ratio, so draw the conditioning region, draw the subregion, and divide. In both cases the formula is unchanged. Only the bookkeeping changes.",
+      "figures": [
+        {
+          "id": "m7-l3-fig-1",
+          "captionLatex": "A probability tree for two competing causes: each cause branches once into the evidence and its complement, and the two paths through the evidence together make up the total probability of the evidence.",
+          "asymptoteSource": "// Probability tree whose two causes each split into the evidence and its complement.\n// Two-argument size() fixes the output box, so the declared ratio is exact.\nsize(420,380);\npen t = gray(0.55) + 1;\npen n = black + 1.4;\npair o = (0,0);\npair a = (3.6,1.7);\npair b = (3.6,-1.7);\ndot(o, n);\ndraw(o--a, t);\ndraw(o--b, t);\nlabel(\"start\", o, W);\nlabel(\"cause A\", a, N);\nlabel(\"cause B\", b, S);\npair a1 = (7.4,2.9);\npair a2 = (7.4,0.5);\npair b1 = (7.4,-0.5);\npair b2 = (7.4,-2.9);\ndraw(a--a1, t);\ndraw(a--a2, t);\ndraw(b--b1, t);\ndraw(b--b2, t);\ndot(a1, n);\nlabel(\"E\", a1, N);\ndot(a2, n);\nlabel(\"no E\", a2, SE);\ndot(b1, n);\nlabel(\"E\", b1, NW);\ndot(b2, n);\nlabel(\"no E\", b2, SW);\nlabel(\"P(A and E)\", (5.4,2.2), NE);\nlabel(\"P(B and E)\", (5.4,-2.2), SE);\n",
+          "asymptoteAlt": "A tree diagram. A start node on the left splits into two branches labelled cause A above and cause B below. Each of those splits again into a branch marked E and a branch marked no E, so four leaves in total. The upper path through the evidence is labelled P of A and E and the lower path through the evidence is labelled P of B and E.",
+          "asymptoteAspectRatio": 1.105
+        },
+        {
+          "id": "m7-l3-fig-2",
+          "captionLatex": "The odds ladder: each positive test multiplies the odds on the left by its likelihood ratio to give the odds on the right, and no probability anywhere in the chain is ever added to.",
+          "asymptoteSource": "// Odds ladder: each rung multiplies the previous rung's odds by a likelihood ratio.\n// Two-argument size() fixes the output box, so the declared ratio is exact.\nsize(400,300);\npen t = gray(0.5) + 1;\npen n = black + 1.4;\npair c0 = (1.2,0);\npair c1 = (4.2,0);\npair c2 = (7.2,0);\ndot(c0, n);\ndot(c1, n);\ndot(c2, n);\nlabel(\"prior\", c0, S);\nlabel(\"one test\", c1, S);\nlabel(\"two tests\", c2, S);\ndraw(c0--c1, t);\ndraw(c1--c2, t);\nlabel(\"x 3\", (2.7,0.5), N);\nlabel(\"x 2\", (5.7,0.5), N);\ndraw((1.2,1.3)--(1.2,1.9), n);\ndraw((4.2,1.3)--(4.2,1.9), n);\ndraw((7.2,1.3)--(7.2,1.9), n);\nlabel(\"odds\", (1.2,1.3), S);\nlabel(\"odds\", (4.2,1.3), S);\nlabel(\"odds\", (7.2,1.3), S);\nlabel(\"likelihood ratios act on odds, never on probability\", (4.2,-1.7), S);\n",
+          "asymptoteAlt": "A horizontal ladder with three rungs labelled prior, one test and two tests. An arrow marked times three joins the prior rung to the first test rung and an arrow marked times two joins the first test rung to the second, with a small vertical tick and the word odds above each rung and a caption underneath saying that likelihood ratios act on odds and never on probability.",
+          "asymptoteAspectRatio": 1.333
+        }
+      ],
+      "examples": [
+        {
+          "id": "m7-l3-ex-1",
+          "titleLatex": "Worked example: an urn chosen at random",
+          "bodyLatex": "Urn $A$ holds $3$ red and $2$ blue balls, and urn $B$ holds $1$ red and $4$ blue balls. One urn is chosen at random and one ball is drawn from it. Given that the ball is red, what is the probability that the urn was $A$?\n\nFrom $A$ the chance of red is $\\frac{3}{5}$ and from $B$ it is $\\frac{1}{5}$. The prior on each urn is $\\frac{1}{2}$, so the weights are $\\frac{1}{2} \\cdot \\frac{3}{5} = \\frac{3}{10}$ for $A$ and $\\frac{1}{2} \\cdot \\frac{1}{5} = \\frac{1}{10}$ for $B$, totalling $\\frac{2}{5}$.\n\nP(A \\mid \\text{red}) = \\frac{3/10}{2/5} = \\frac{3}{4}\n\nThe prior was even and the evidence is not: a red ball is three times as likely from $A$ as from $B$, so the posterior odds improve by a factor of three.",
+          "answerLatex": "\\frac{3}{4}"
+        },
+        {
+          "id": "m7-l3-ex-2",
+          "titleLatex": "Worked example: reversing a diagnostic test",
+          "bodyLatex": "A disease affects $1$ percent of a population. A test detects $99$ percent of cases and reports a positive result for $5$ percent of healthy people. A person tests positive. What is the probability that the person has the disease?\n\nIn a group of $10000$ people, $100$ are sick and $9900$ are not. Of the $100$ sick, $99$ test positive. Of the $9900$ healthy, $0.05 \\cdot 9900 = 495$ test positive. So $594$ people test positive and only $99$ of them are sick.\n\nP(D \\mid +) = \\frac{99}{594} = \\frac{1}{6}\n\nThe machine is ninety-nine percent accurate and the answer is one in six, because accuracy and the probability that a positive means disease are different questions.",
+          "answerLatex": "\\frac{1}{6}"
+        },
+        {
+          "id": "m7-l3-ex-3",
+          "titleLatex": "Worked example: updating twice",
+          "bodyLatex": "A drawer holds fair coins and coins with two heads, in equal numbers. A coin is drawn at random and flipped twice, and both flips show heads. What is the probability that the coin drawn had two heads?\n\nThe two-headed coin gives two heads with probability $1$ and the fair coin with probability $\\frac{1}{4}$, so the weights are $\\frac{1}{2}$ and $\\frac{1}{8}$, totalling $\\frac{5}{8}$.\n\nP(\\text{two-headed} \\mid HH) = \\frac{1/2}{5/8} = \\frac{4}{5}\n\nThe first head alone would have moved the posterior only to $\\frac{1}{3}$. The second head is what carries it to $\\frac{4}{5}$.",
+          "answerLatex": "\\frac{4}{5}"
+        },
+        {
+          "id": "m7-l3-ex-4",
+          "titleLatex": "Worked example: conditioning on a geometric region",
+          "bodyLatex": "A point is chosen uniformly at random inside the unit square. Given that its coordinates satisfy $x + y > 1$, what is the probability that $x > \\frac{1}{2}$?\n\nThe conditioning region is the triangle above the diagonal, of area $\\frac{1}{2}$. Inside it, the part with $x > \\frac{1}{2}$ is a trapezoid whose height at position $x$ runs from $y = 1 - x$ to $y = 1$, so the height is $x$.\n\n\\text{area} = \\int_{1/2}^{1} x\\, dx = \\frac{1}{2}\\left(1 - \\frac{1}{4}\\right) = \\frac{3}{8}\n\nSo the posterior is the area ratio $\\frac{3/8}{1/2} = \\frac{3}{4}$.",
+          "answerLatex": "\\frac{3}{4}"
+        }
+      ]
+    },
+    "techniques": {
+      "items": [
+        {
+          "slug": "law-of-total-probability",
+          "name": "Rebuild the evidence from every cause",
+          "summaryLatex": "Write the observed outcome as a sum over all the ways it can happen.",
+          "bodyLatex": "If the causes $C_1, \\dots, C_k$ are mutually exclusive and exhaustive, then for any event $E$\n\nP(E) = \\sum_{i=1}^{k} P(E \\mid C_i)\\, P(C_i)\n\nEvery contest probability that reverses a conditional has this sum hiding inside it, because the reversal denominator is nothing but the total probability of the evidence. Build the sum first, then take the single term you want over the whole."
+        },
+        {
+          "slug": "prior-times-likelihood",
+          "name": "Name the numerator before computing anything",
+          "summaryLatex": "The quantity you want is one term of the total probability.",
+          "bodyLatex": "Bayes' theorem is\n\nP(C_i \\mid E) = \\frac{P(E \\mid C_i)\\, P(C_i)}{\\sum_{j=1}^{k} P(E \\mid C_j)\\, P(C_j)}\n\nThe numerator pairs one cause with the evidence it produces and weights it by how common that cause was before the evidence arrived. Writing the numerator down first, as a prior times a likelihood, keeps the two halves of the problem from being swapped."
+        },
+        {
+          "slug": "posterior-normalization",
+          "name": "Turn raw weights into shares",
+          "summaryLatex": "Divide one weight by the sum of all weights.",
+          "bodyLatex": "Give each cause a raw weight $w_i = P(E \\mid C_i) P(C_i)$ and notice that the weights sum to $P(E)$, the probability of the evidence. The posterior is the share: $P(C_i \\mid E) = w_i / \\sum_j w_j$. This is why a cause with zero likelihood contributes nothing to the answer no matter how likely it was beforehand, and why the whole computation is a division by the one number that was already the subject of the problem."
+        },
+        {
+          "slug": "odds-form-of-bayes",
+          "name": "Work in odds so the ratio stands alone",
+          "summaryLatex": "Posterior odds are prior odds multiplied by the likelihood ratio.",
+          "bodyLatex": "Dividing the theorem by its own complement gives the cleanest form:\n\n\\frac{P(C \\mid E)}{P(C^c \\mid E)} = \\frac{P(C)}{P(C^c)} \\cdot \\frac{P(E \\mid C)}{P(E \\mid C^c)}\n\nA positive test multiplies the prior odds by the likelihood ratio and touches nothing else. This is the form to reach for when the numbers are percentages, because it never requires computing $P(E)$ at all."
+        },
+        {
+          "slug": "sensitivity-specificity-split",
+          "name": "Keep the two test directions apart",
+          "summaryLatex": "Write both conditional directions before using either of them.",
+          "bodyLatex": "For a diagnostic test the sensitivity $P(+ \\mid D)$ and the false positive rate $P(+ \\mid D^c)$ are properties of the machine, while the prevalence $P(D)$ is a property of the population. Mixing them up is the single most common error in this topic. Both directions are needed: $P(D \\mid -)$ pairs the sensitivity with the specificity, and $P(D \\mid +)$ pairs the sensitivity with the false positive rate."
+        },
+        {
+          "slug": "base-rate-anchor",
+          "name": "Anchor a large ratio on the prior",
+          "summaryLatex": "A big likelihood ratio multiplies odds, and odds cannot rescue a tiny prior.",
+          "bodyLatex": "Multiply the prior odds by the likelihood ratio instead of adding a bonus to a prior probability. A likelihood ratio of $9$ does not turn a prior of $\\frac{1}{100}$ into something likely; it turns prior odds of $\\frac{1}{99}$ into posterior odds of $\\frac{9}{99} = \\frac{1}{11}$. Rounding a small prior to zero is precisely the error this avoids."
+        },
+        {
+          "slug": "posterior-predictive",
+          "name": "Roll the posterior forward to the next trial",
+          "summaryLatex": "Feed the updated weights back through the ordinary rules.",
+          "bodyLatex": "After the evidence is absorbed, the posterior is the new prior. To predict a second observation, replace every probability in the ordinary formula by its posterior version:\n\nP(E_2 \\mid E_1) = \\sum_i P(E_2 \\mid C_i)\\, P(C_i \\mid E_1)\n\nThis is the step most often skipped, and skipping it silently assumes the first observation carried no information about which cause produced it."
+        },
+        {
+          "slug": "discordant-pair-conditioning",
+          "name": "Condition on the shape of the evidence",
+          "summaryLatex": "When you are told what happened rather than what was observed, the sample space is not the original one.",
+          "bodyLatex": "Information such as \\emph{exactly one of these two items is defective} defines a restricted sample space whose elements are pairs rather than single items. To use it, enumerate the cases the condition allows, weight each case by the probability of the case itself, then weight it by the probability of the condition. Every case the condition excludes contributes nothing and must not appear in the total."
+        },
+        {
+          "slug": "uniform-prior-geometry",
+          "name": "Use the shape of the prior when it is uniform",
+          "summaryLatex": "With equally likely hypotheses the posterior is a volume ratio.",
+          "bodyLatex": "When the causes are equally likely, $P(C_i \\mid E) = P(E \\mid C_i) / \\sum_j P(E \\mid C_j)$, and each $P(E \\mid C_i)$ is often a length, an area, or a count in the same units. In a uniformly chosen geometric setting this makes the posterior an area ratio: draw the conditioning region, draw the subregion you want, and divide the areas. Continuous or discrete, the computation is the same one."
+        },
+        {
+          "slug": "tree-branch-weights",
+          "name": "Build the tree from the leaves",
+          "summaryLatex": "Multiply down each path, then add the paths that match the evidence.",
+          "bodyLatex": "A probability tree stores conditional probabilities on its edges, and the probability of a path is the product along it. Two rules finish the job. A path matching the evidence contributes exactly its product, and the sum over those paths is $P(E)$. When a host or an experimenter chooses which branch is revealed, the edge probabilities themselves depend on the information given, and that dependence is the entire problem."
+        }
+      ]
+    },
+    "pitfalls": {
+      "items": [
+        {
+          "slug": "reversing-without-the-prior",
+          "titleLatex": "Reading the conditional backwards",
+          "wrongLatex": "$0.99$",
+          "whyLatex": "The stated figure is $P(+ \\mid D)$, the chance of a positive result when the disease is present. The question asks for $P(D \\mid +)$, the chance of disease when the result is positive. These differ by the base rate: a rare disease produces more false positives than true positives simply because there are so many healthy people to test, and nothing about the machine's accuracy changes between the two directions.",
+          "fixLatex": "Decide which direction you were given and which you were asked for, and mark both on the page. If they differ, write the prior down before anything else, since the reversal is only computable once the prior is in hand."
+        },
+        {
+          "slug": "normalizing-over-the-wrong-total",
+          "titleLatex": "Normalizing over the wrong collection of causes",
+          "wrongLatex": "$\\frac{1}{3}$",
+          "whyLatex": "When the denominator of a Bayes computation is built by hand it is easy to keep only the causes that fit a comfortable story, or to list all the causes and forget that each carries its own prior weight. A cause whose weight is zero contributes nothing, but a cause with prior probability one half must contribute half of the total, and dropping it rescales the answer.",
+          "fixLatex": "Write the causes as an exhaustive, mutually exclusive list and give each a weight of prior times likelihood before dividing anything. Those weights are supposed to sum to the probability of the evidence, so a total that looks too small is a signal that a cause is missing."
+        },
+        {
+          "slug": "dropping-the-condition-on-later-trials",
+          "titleLatex": "Predicting the second trial from the first",
+          "wrongLatex": "$\\frac{2}{5}$",
+          "whyLatex": "After the evidence is absorbed the posterior is the correct prior for the next trial, and the ordinary unconditional probability is not. If the first observation told you which urn the ball came from, the second draw is governed by that urn's composition rather than by the mixture's. Reporting the average of the two compositions is the same mistake as reporting the prior after the evidence arrived.",
+          "fixLatex": "Once the posterior is computed, substitute it for the prior everywhere in the ordinary formula, and keep the sum over all the causes weighted by their new values."
+        }
+      ]
+    },
+    "practice": {
+      "exerciseIds": [
+        "m7-l3-p1",
+        "m7-l3-p2",
+        "m7-l3-p3",
+        "m7-l3-p4",
+        "m7-l3-p5",
+        "m7-l3-p6",
+        "m7-l3-p7",
+        "m7-l3-p8",
+        "m7-l3-p9",
+        "m7-l3-p10",
+        "m7-l3-p11",
+        "m7-l3-p12",
+        "m7-l3-p13",
+        "m7-l3-p14",
+        "m7-l3-p15",
+        "m7-l3-p16",
+        "m7-l3-p17",
+        "m7-l3-p18",
+        "m7-l3-p19",
+        "m7-l3-p20",
+        "m7-l3-p21",
+        "m7-l3-p22",
+        "m7-l3-p23",
+        "m7-l3-p24",
+        "m7-l3-p25",
+        "m7-l3-p26"
+      ]
+    },
+    "solutions": {
+      "exerciseIds": [
+        "m7-l3-p1",
+        "m7-l3-p2",
+        "m7-l3-p3",
+        "m7-l3-p4",
+        "m7-l3-p5",
+        "m7-l3-p6",
+        "m7-l3-p7",
+        "m7-l3-p8",
+        "m7-l3-p9",
+        "m7-l3-p10",
+        "m7-l3-p11",
+        "m7-l3-p12",
+        "m7-l3-p13",
+        "m7-l3-p14",
+        "m7-l3-p15",
+        "m7-l3-p16",
+        "m7-l3-p17",
+        "m7-l3-p18",
+        "m7-l3-p19",
+        "m7-l3-p20",
+        "m7-l3-p21",
+        "m7-l3-p22",
+        "m7-l3-p23",
+        "m7-l3-p24",
+        "m7-l3-p25",
+        "m7-l3-p26"
+      ]
+    },
+    "mastery": {
+      "exerciseIds": [
+        "m7-l3-m1",
+        "m7-l3-m2",
+        "m7-l3-m3"
+      ],
+      "passThreshold": 2
+    }
+  },
+  "tags": [
+    "bayes-theorem",
+    "conditional-probability",
+    "probability"
+  ]
+}

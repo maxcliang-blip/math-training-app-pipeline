@@ -1,0 +1,34 @@
+{
+  "id": "m7-l3-p11",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "bayes-theorem",
+    "conditional-probability"
+  ],
+  "promptLatex": "A rare disease affects about 1 person in 1000. A new screening test detects 99.9 percent of cases, and among people without the disease it reports a positive result for 0.5 percent of them. A person screens positive. What is the probability that the person has the disease?",
+  "choices": [
+    "\\frac{1}{2}",
+    "\\frac{1}{6}",
+    "\\frac{1}{3}",
+    "\\frac{999}{1498}",
+    "\\frac{1}{20}"
+  ],
+  "answerLatex": "\\frac{1}{6}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The false positives come from a far larger group than the true positives, so the two counts have to be compared.",
+    "In a population of $100000$ there are $100$ with the disease and $99900$ without; the positives number $99.9$ and $0.005 \\cdot 99900 = 499.5$.",
+    "So there are $599.4$ positive results, of which $99.9$ are true, a ratio of about one to six."
+  ],
+  "solutionLatex": "Take a population of $100000$ people. The disease affects $\\frac{1}{1000}$ of them, so $100$ are sick and $99900$ are healthy.\n\nThe test finds $99.9$ percent of the sick, which is $0.999 \\cdot 100 = 99.9$ true positives. It misreports $\\frac{1}{2}$ percent of the healthy, which is $0.005 \\cdot 99900 = 499.5$ false positives.\n\nThe total number of positive results is $99.9 + 499.5 = 599.4$, of which $99.9$ come from the sick.\n\nP(D \\mid +) = \\frac{99.9}{599.4} = \\frac{1}{6}",
+  "techniqueSlugs": [
+    "base-rate-anchor",
+    "sensitivity-specificity-split"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

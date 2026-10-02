@@ -1,0 +1,33 @@
+{
+  "id": "m7-l3-p4",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "bayes-theorem",
+    "conditional-probability"
+  ],
+  "promptLatex": "A disease affects half of a population. A test detects 99 percent of cases and reports a positive result for 5 percent of the people who do not have the disease. A person from this population tests negative. What is the probability that the person has the disease?",
+  "choices": [
+    "\\frac{1}{96}",
+    "\\frac{1}{100}",
+    "\\frac{1}{95}",
+    "\\frac{1}{2}",
+    "\\frac{95}{96}"
+  ],
+  "answerLatex": "\\frac{1}{96}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A negative result for a sick person is a missed case, so the figure needed is $1 - 0.99$ rather than $0.99$.",
+    "In a population of $1000$ there are $500$ sick and $500$ healthy; $5$ of the sick test negative and $475$ of the healthy test negative.",
+    "So $480$ people test negative and only $5$ of them are sick."
+  ],
+  "solutionLatex": "Take a population of $1000$. Half of it, $500$ people, has the disease, and $500$ does not.\n\nOf the sick people the test misses $1$ percent, so $0.01 \\cdot 500 = 5$ test negative. Of the healthy people $95$ percent test negative, so $0.95 \\cdot 500 = 475$ test negative.\n\nAltogether $5 + 475 = 480$ people test negative, of whom $5$ are sick.\n\nP(D \\mid -) = \\frac{5}{480} = \\frac{1}{96}",
+  "techniqueSlugs": [
+    "sensitivity-specificity-split"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

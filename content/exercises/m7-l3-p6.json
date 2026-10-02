@@ -1,0 +1,33 @@
+{
+  "id": "m7-l3-p6",
+  "moduleId": "M7",
+  "lessonId": "m7-l3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "bayes-theorem",
+    "conditional-probability"
+  ],
+  "promptLatex": "In a certain town, 1 person in 4 is a member of a particular club. An event is attended by club members three times as often as by nonmembers. What is the probability that a randomly chosen attendee of the event is a club member?",
+  "choices": [
+    "\\frac{1}{2}",
+    "\\frac{3}{8}",
+    "\\frac{5}{9}",
+    "\\frac{2}{3}",
+    "\\frac{9}{16}"
+  ],
+  "answerLatex": "\\frac{1}{2}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Express the prior as odds rather than as a probability, because the given ratio is a multiplier.",
+    "The prior odds are $\\frac{1/4}{3/4} = \\frac{1}{3}$ and the multiplier is $3$.",
+    "Posterior odds are $\\frac{1}{3} \\cdot 3 = 1$, which is an even split."
+  ],
+  "solutionLatex": "Among all people the club has prior odds $\\frac{1/4}{3/4} = \\frac{1}{3}$, that is three nonmembers for every member.\n\nAttendance multiplies those odds by $3$, since a member attends three times as often. The posterior odds are therefore $\\frac{1}{3} \\cdot 3 = 1$, meaning one member for every nonmember among those who attend.\n\nOdds of $1$ correspond to equal shares, so\n\nP(\\text{member} \\mid \\text{attends}) = \\frac{1}{2}",
+  "techniqueSlugs": [
+    "odds-form-of-bayes"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

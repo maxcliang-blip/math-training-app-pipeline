@@ -1,0 +1,35 @@
+{
+  "id": "m7-l4-m3",
+  "moduleId": "M7",
+  "lessonId": "m7-l4",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "expected-value",
+    "independence",
+    "distributions"
+  ],
+  "promptLatex": "A fair six-sided die is rolled twice and the product of the two rolls is recorded. What is the expected value of that product?",
+  "choices": [
+    "\\frac{49}{4}",
+    "\\frac{49}{12}",
+    "4",
+    "\\frac{25}{4}",
+    "\\frac{35}{6}"
+  ],
+  "answerLatex": "\\frac{49}{4}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Linearity handles sums but not products, so the two means cannot simply be multiplied without justification.",
+    "Here the two rolls are independent, so the expected product is the product of the two means.",
+    "Each mean is $\\frac{7}{2}$, so the answer is $(\\frac{7}{2})^2$."
+  ],
+  "solutionLatex": "Linearity of expectation applies to sums, not to products, so $E[XY] = E[X]E[Y]$ is not available by default. Here it holds because the two rolls are independent: conditioning on the first roll leaves the second unchanged, so the conditional mean of the product is $X \\cdot E[Y]$, and taking the outer mean gives $E[X] E[Y]$.\n\nEach roll has mean $\\frac{7}{2}$, so\n\nE[XY] = E[X] E[Y] = \\frac{7}{2} \\cdot \\frac{7}{2} = \\frac{49}{4}.\n\nThis is a large value for a product of two averages of about three and a half, which is exactly what independence buys.",
+  "techniqueSlugs": [
+    "linearity-of-expectation",
+    "expectation-of-a-function"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
