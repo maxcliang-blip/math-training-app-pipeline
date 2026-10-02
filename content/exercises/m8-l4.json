@@ -1,0 +1,543 @@
+[
+  {
+    "id": "m8-l4-p1",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "complex-numbers",
+      "polar-form"
+    ],
+    "promptLatex": "Write the complex number $6\\left(\\cos 210^\\circ + \\mathrm{i}\\sin 210^\\circ\\right)$ in the form $a + b\\mathrm{i}$, giving both coefficients.",
+    "choices": null,
+    "answerLatex": "-3\\sqrt{3} - 3\\mathrm{i}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The angle $210^\\circ$ sits in the third quadrant, and the polar form already tells you which quadrant the point occupies.",
+      "Reduce $210^\\circ$ to a reference angle of $30^\\circ$, then remember that the cosine and the sine are both negative in the third quadrant.",
+      "Substituting $\\cos 210^\\circ = -\\frac{\\sqrt{3}}{2}$ and $\\sin 210^\\circ = -\\frac{1}{2}$ and multiplying each part by the modulus $6$ gives the two coordinates."
+    ],
+    "solutionLatex": "The polar form is $r(\\cos\\theta + \\mathrm{i}\\sin\\theta)$ with $r = 6$ and $\\theta = 210^\\circ$, so the real part is $6\\cos 210^\\circ$ and the imaginary part is $6\\sin 210^\\circ$.\n\n$210^\\circ = 180^\\circ + 30^\\circ$, so both parts pick up the sign change that the third quadrant carries:\n\n$\\cos 210^\\circ = -\\cos 30^\\circ = -\\frac{\\sqrt{3}}{2}$ and $\\sin 210^\\circ = -\\sin 30^\\circ = -\\frac{1}{2}$\n\nMultiplying through by $6$:\n\n$6\\left(-\\frac{\\sqrt{3}}{2}\\right) + 6\\left(-\\frac{1}{2}\\right)\\mathrm{i} = -3\\sqrt{3} - 3\\mathrm{i}$\n\nThe modulus check confirms it: $\\sqrt{\\left(3\\sqrt{3}\\right)^2 + 3^2} = \\sqrt{27 + 9} = \\sqrt{36} = 6$, the radius the polar form started with.",
+    "techniqueSlugs": [
+      "polar-rectangular-conversion",
+      "argument-quadrant-fix"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p2",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 1,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "What is the modulus of the complex number $3 - 4\\mathrm{i}$?",
+    "choices": [
+      "3",
+      "4",
+      "5",
+      "7",
+      "13"
+    ],
+    "answerLatex": "5",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The modulus is the distance from the origin, so it depends only on the two coordinates and not on any sign convention.",
+      "Square each coordinate and add, then take the square root of the total.",
+      "The squares are $9$ and $16$, and $\\sqrt{9 + 16} = \\sqrt{25} = 5$."
+    ],
+    "solutionLatex": "The modulus of $a + b\\mathrm{i}$ is $\\sqrt{a^2 + b^2}$, which is the ordinary distance from the origin to the point $(a, b)$.\n\nHere $a = 3$ and $b = -4$, so $|z| = \\sqrt{3^2 + (-4)^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5$.\n\nThe sign of $b$ drops out because the coordinate is squared, which is why the modulus of $3 - 4\\mathrm{i}$ and of $3 + 4\\mathrm{i}$ are the same even though the two points are reflections across the real axis.",
+    "techniqueSlugs": [
+      "modulus-and-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p3",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "complex-numbers",
+      "polar-form"
+    ],
+    "promptLatex": "Write $-1 + \\mathrm{i}$ in polar form, giving the argument in degrees between $0^\\circ$ and $360^\\circ$.",
+    "choices": [
+      "\\sqrt{2}(\\cos 45^\\circ + \\mathrm{i}\\sin 45^\\circ)",
+      "\\sqrt{2}(\\cos 135^\\circ + \\mathrm{i}\\sin 135^\\circ)",
+      "\\sqrt{2}(\\cos 225^\\circ + \\mathrm{i}\\sin 225^\\circ)",
+      "\\sqrt{2}(\\cos 315^\\circ + \\mathrm{i}\\sin 315^\\circ)",
+      "2(\\cos 135^\\circ + \\mathrm{i}\\sin 135^\\circ)"
+    ],
+    "answerLatex": "\\sqrt{2}(\\cos 135^\\circ + \\mathrm{i}\\sin 135^\\circ)",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The real part is negative and the imaginary part positive, so the point is in the second quadrant.",
+      "The modulus is $\\sqrt{2}$, and the reference angle is $45^\\circ$ because the two coordinates have equal size.",
+      "An angle in the second quadrant is $180^\\circ$ minus the reference angle, so $\\theta = 180^\\circ - 45^\\circ = 135^\\circ$."
+    ],
+    "solutionLatex": "The polar form needs a modulus and an argument.\n\nThe modulus is $\\sqrt{(-1)^2 + 1^2} = \\sqrt{2}$.\n\nFor the argument, the signs place the point in the second quadrant. The reference angle satisfies $\\tan\\phi = \\frac{1}{1}$, so $\\phi = 45^\\circ$, and a second-quadrant angle is $180^\\circ - \\phi$:\n\n$\\theta = 180^\\circ - 45^\\circ = 135^\\circ$\n\nHence $-1 + \\mathrm{i} = \\sqrt{2}(\\cos 135^\\circ + \\mathrm{i}\\sin 135^\\circ)$.\n\nA reader who takes the reference angle as the argument gets $45^\\circ$, which describes $1 + \\mathrm{i}$. The modulus is identical for both, which is exactly why the quadrant has to be fixed before the angle is written down.",
+    "techniqueSlugs": [
+      "polar-rectangular-conversion",
+      "argument-quadrant-fix",
+      "modulus-and-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p4",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "complex-numbers",
+      "complex-powers"
+    ],
+    "promptLatex": "Evaluate $z^{12}$ where $z = \\cos 30^\\circ + \\mathrm{i}\\sin 30^\\circ$, giving the answer exactly.",
+    "choices": [
+      "1",
+      "-1",
+      "\\mathrm{i}",
+      "-\\mathrm{i}",
+      "2"
+    ],
+    "answerLatex": "1",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The number being raised has modulus $1$, so only its argument is at stake.",
+      "A twelfth power multiplies the argument by $12$ and leaves the modulus alone.",
+      "$12 \\cdot 30^\\circ = 360^\\circ$, which is one whole turn and therefore the angle $0^\\circ$."
+    ],
+    "solutionLatex": "De Moivre's theorem says $(\\cos\\theta + \\mathrm{i}\\sin\\theta)^n = \\cos n\\theta + \\mathrm{i}\\sin n\\theta$.\n\nThe modulus here is $1$, so the answer is $\\cos 12\\theta + \\mathrm{i}\\sin 12\\theta$ with $\\theta = 30^\\circ$.\n\n$12 \\cdot 30^\\circ = 360^\\circ$, and one full turn brings the point back to $(1, 0)$:\n\n$\\cos 360^\\circ = 1$ and $\\sin 360^\\circ = 0$, so the value is $1$.\n\nThe number has modulus $1$, so every one of its powers has modulus $1$, and $1$ is the only point on the unit circle with imaginary part $0$ and positive real part. That agrees with the reduction, and it is a useful check whenever the reduced angle lands on a full turn.",
+    "techniqueSlugs": [
+      "de-moivre-power",
+      "angle-multiplication-reduction"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p5",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "complex-numbers",
+      "complex-powers"
+    ],
+    "promptLatex": "Compute $(1 + \\mathrm{i})^{8}$, giving the answer in the form $a + b\\mathrm{i}$.",
+    "choices": [
+      "8",
+      "16",
+      "-16",
+      "16\\mathrm{i}",
+      "8\\sqrt{2}"
+    ],
+    "answerLatex": "16",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Put the base in polar form first, and read the modulus and the argument off the two coordinates.",
+      "The modulus is $\\sqrt{2}$ and the argument is $45^\\circ$, so the eighth power has modulus $(\\sqrt{2})^8$ and argument $8 \\cdot 45^\\circ$.",
+      "$8 \\cdot 45^\\circ = 360^\\circ$ is a whole turn, and $(\\sqrt{2})^8 = 2^4 = 16$."
+    ],
+    "solutionLatex": "In polar form $1 + \\mathrm{i} = \\sqrt{2}(\\cos 45^\\circ + \\mathrm{i}\\sin 45^\\circ)$: the modulus is $\\sqrt{1 + 1} = \\sqrt{2}$ and the point $(1, 1)$ is in the first quadrant on the line $y = x$, so the argument is $45^\\circ$.\n\nDe Moivre's theorem gives $(1 + \\mathrm{i})^{8} = (\\sqrt{2})^{8}(\\cos 360^\\circ + \\mathrm{i}\\sin 360^\\circ)$.\n\nThe modulus is $(\\sqrt{2})^{8} = 2^{4} = 16$ and the angle is one full turn, so\n\n$(1 + \\mathrm{i})^{8} = 16$.\n\nPowers in stages confirm it, which is the cheaper route for this exponent: $(1 + \\mathrm{i})^2 = 1 + 2\\mathrm{i} + \\mathrm{i}^2 = 2\\mathrm{i}$, then $(1 + \\mathrm{i})^{4} = (2\\mathrm{i})^2 = -4$, and then $(1 + \\mathrm{i})^{8} = (-4)^2 = 16$.",
+    "techniqueSlugs": [
+      "de-moivre-power",
+      "angle-multiplication-reduction",
+      "modulus-and-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p6",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "complex-numbers",
+      "complex-powers"
+    ],
+    "promptLatex": "Compute the sixth power of $\\sqrt{3} + \\mathrm{i}$ exactly.",
+    "choices": [
+      "64",
+      "-64",
+      "32",
+      "-32",
+      "64\\mathrm{i}"
+    ],
+    "answerLatex": "-64",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Both coordinates are positive, so the argument is the first-quadrant angle with tangent $\\frac{1}{\\sqrt{3}}$.",
+      "That angle is $30^\\circ$ and the modulus is $2$, so the sixth power has modulus $2^{6}$ and argument $6 \\cdot 30^\\circ$.",
+      "$6 \\cdot 30^\\circ = 180^\\circ$, and the cosine of $180^\\circ$ is $-1$ while its sine is $0$."
+    ],
+    "solutionLatex": "The modulus is $\\sqrt{3 + 1} = 2$, and the point $(\\sqrt{3}, 1)$ is in the first quadrant with $\\tan\\theta = \\frac{1}{\\sqrt{3}}$, so the argument is $30^\\circ$:\n\n$\\sqrt{3} + \\mathrm{i} = 2(\\cos 30^\\circ + \\mathrm{i}\\sin 30^\\circ)$\n\nDe Moivre's theorem then gives $\\left(\\sqrt{3} + \\mathrm{i}\\right)^{6} = 2^{6}(\\cos 180^\\circ + \\mathrm{i}\\sin 180^\\circ)$.\n\n$2^{6} = 64$, $\\cos 180^\\circ = -1$, and $\\sin 180^\\circ = 0$, so the value is $-64$.\n\nDirect expansion checks it at this exponent: $\\left(\\sqrt{3} + \\mathrm{i}\\right)^{2} = 3 + 2\\sqrt{3}\\mathrm{i} - 1 = 2 + 2\\sqrt{3}\\mathrm{i}$, and $\\left(\\sqrt{3} + \\mathrm{i}\\right)^{3} = (2 + 2\\sqrt{3}\\mathrm{i})(\\sqrt{3} + \\mathrm{i}) = 2\\sqrt{3} + 2\\mathrm{i} + 6\\mathrm{i} - 2\\sqrt{3} = 8\\mathrm{i}$, so the sixth power is $(8\\mathrm{i})^2 = -64$.",
+    "techniqueSlugs": [
+      "de-moivre-power",
+      "angle-multiplication-reduction",
+      "modulus-and-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p7",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "complex-numbers",
+      "complex-powers"
+    ],
+    "promptLatex": "Let $z = \\sqrt{3}\\left(\\cos 150^\\circ + \\mathrm{i}\\sin 150^\\circ\\right)$. What is the value of $z^{6}$, computed exactly?",
+    "choices": [
+      "27",
+      "-27",
+      "27\\mathrm{i}",
+      "-27\\mathrm{i}",
+      "81"
+    ],
+    "answerLatex": "-27",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The polar form is given, so the modulus is $\\sqrt{3}$ and the argument is $150^\\circ$ with no conversion to do.",
+      "A sixth power raises the modulus to the sixth and multiplies the argument by $6$.",
+      "$(\\sqrt{3})^{6} = 27$, and $6 \\cdot 150^\\circ = 900^\\circ$ reduces by two full turns to $180^\\circ$."
+    ],
+    "solutionLatex": "Because the polar form is supplied, the modulus is $\\sqrt{3}$ and the argument is $150^\\circ$.\n\nDe Moivre's theorem gives\n\n$z^{6} = (\\sqrt{3})^{6}(\\cos 900^\\circ + \\mathrm{i}\\sin 900^\\circ)$\n\nThe modulus is $(\\sqrt{3})^{6} = (3^{1/2})^{6} = 3^{3} = 27$. The angle reduces by two full turns, since $900^\\circ - 720^\\circ = 180^\\circ$.\n\nSo $z^{6} = 27(\\cos 180^\\circ + \\mathrm{i}\\sin 180^\\circ) = 27(-1 + 0\\mathrm{i}) = -27$.\n\nThe reduction keeps the sign rather than flipping it: $900^\\circ$ and $180^\\circ$ have the same cosine because they differ by a whole number of full turns, so the answer is negative. A reader who reduces $900^\\circ$ to $180^\\circ$ and then treats the odd multiple of a half turn as positive has made exactly that slip.",
+    "techniqueSlugs": [
+      "de-moivre-power",
+      "angle-multiplication-reduction"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p8",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "Find the modulus of the complex number $z = (3 + 4\\mathrm{i})(1 - \\mathrm{i})$, without expanding it.",
+    "choices": null,
+    "answerLatex": "5\\sqrt{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The modulus of a product is the product of the moduli, so the two factors can be handled separately.",
+      "$|3 + 4\\mathrm{i}|$ comes from the $3$-$4$-$5$ right triangle, and $|1 - \\mathrm{i}|$ is the diagonal of a unit square.",
+      "Multiplying $5$ by $\\sqrt{2}$ gives the modulus of $z$."
+    ],
+    "solutionLatex": "Multiplying moduli is enough here, because $|z_1 z_2| = |z_1||z_2|$.\n\n$|3 + 4\\mathrm{i}| = \\sqrt{9 + 16} = 5$ and $|1 - \\mathrm{i}| = \\sqrt{1 + 1} = \\sqrt{2}$, so $|z| = 5\\sqrt{2}$.\n\nExpanding directly confirms it: $(3 + 4\\mathrm{i})(1 - \\mathrm{i}) = 3 - 3\\mathrm{i} + 4\\mathrm{i} - 4\\mathrm{i}^2 = 3 + \\mathrm{i} + 4 = 7 + \\mathrm{i}$, and $\\sqrt{49 + 1} = \\sqrt{50} = 5\\sqrt{2}$ as required. Expanding was not needed, and for a longer product it would be the expensive route.",
+    "techniqueSlugs": [
+      "conjugate-and-modulus",
+      "modulus-and-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p9",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "complex-numbers",
+      "angles"
+    ],
+    "promptLatex": "The complex number $-1 - \\mathrm{i}$ has an argument of how many degrees, measured counterclockwise from the positive real axis?",
+    "choices": null,
+    "answerLatex": "225",
+    "answerAlternatives": [],
+    "answerAngle": "deg",
+    "hintLatex": [
+      "Both coordinates are negative, so the point lies in the third quadrant.",
+      "The reference angle is $45^\\circ$ because the two coordinates have equal size, and a third-quadrant angle is $180^\\circ$ plus the reference angle.",
+      "$180^\\circ + 45^\\circ = 225^\\circ$."
+    ],
+    "solutionLatex": "The argument is the counterclockwise angle from the positive real axis to the ray through the point $(-1, -1)$.\n\nBoth coordinates are negative, so the point is in the third quadrant. The reference angle measured from the negative real axis is $45^\\circ$, since the point lies on the line $y = x$.\n\nA third-quadrant argument is $180^\\circ$ plus the reference angle:\n\n$\\theta = 180^\\circ + 45^\\circ = 225^\\circ$\n\nThe reference angle $45^\\circ$ on its own describes $1 + \\mathrm{i}$, the reflection of this point across the real axis, so the quadrant is not a detail here. In radians the same angle is $\\frac{5\\pi}{4}$.",
+    "techniqueSlugs": [
+      "argument-quadrant-fix",
+      "modulus-and-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p10",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 2,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "What is the sum of all five fifth roots of unity?",
+    "choices": null,
+    "answerLatex": "0",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The fifth roots of unity are the solutions of $z^5 = 1$, spread around the unit circle at equal spacing.",
+      "Write the sum as a geometric series whose ratio $\\zeta$ is a fifth root of unity other than $1$, so $\\zeta^5 = 1$.",
+      "Multiplying the sum by $1 - \\zeta$ gives $1 - \\zeta^5 = 0$, and $1 - \\zeta$ is not $0$, so the sum is $0$."
+    ],
+    "solutionLatex": "Write $\\zeta$ for $\\cos\\frac{2\\pi}{5} + \\mathrm{i}\\sin\\frac{2\\pi}{5}$, so that $\\zeta^5 = 1$ and $\\zeta \neq 1$. The five fifth roots of unity are $1, \\zeta, \\zeta^2, \\zeta^3$, and $\\zeta^4$.\n\nThe geometric-series identity gives\n\n$(1 - \\zeta)(1 + \\zeta + \\zeta^2 + \\zeta^3 + \\zeta^4) = 1 - \\zeta^{5}$\n\nThe right-hand side is $0$ because $\\zeta^5 = 1$, and $1 - \\zeta \neq 0$ because $\\zeta \neq 1$, so\n\n$1 + \\zeta + \\zeta^2 + \\zeta^3 + \\zeta^4 = 0$\n\nGeometrically the five points are equally spaced around the unit circle, and their rotation vectors close head to tail, so the same total is forced by symmetry. Note that the sum is $0$ and not $1$ even though $1$ is one of the five.",
+    "techniqueSlugs": [
+      "root-of-unity-sums",
+      "regular-polygon-vertices"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p11",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "complex-numbers",
+      "special-angles"
+    ],
+    "promptLatex": "What is the sum of the real parts of the five fifth roots of unity?",
+    "choices": null,
+    "answerLatex": "0",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The real part of a complex number is unchanged by summing, so this is the real part of the sum of the five roots.",
+      "The five fifth roots of unity add to $0$, which is itself a real number.",
+      "The real part of $0$ is $0$."
+    ],
+    "solutionLatex": "Real parts commute with a finite sum: the real part of $\\sum_{k=0}^{4}\\zeta^{k}$ equals the sum of the real parts of the five roots.\n\nThe five fifth roots of unity are $1, \\zeta, \\zeta^2, \\zeta^3$, and $\\zeta^4$ with $\\zeta^5 = 1$ and $\\zeta \neq 1$, and the geometric-series identity gives\n\n$(1 - \\zeta)\\sum_{k=0}^{4}\\zeta^{k} = 1 - \\zeta^{5} = 0$\n\nDividing by $1 - \\zeta \neq 0$ yields $\\sum_{k=0}^{4}\\zeta^{k} = 0$, whose real part is $0$.\n\nSo the sum of the real parts is $0$. The imaginary parts sum to $0$ for the same reason, which is consistent with the picture of five evenly spaced points: no direction is favoured, and the horizontal and vertical offsets each cancel.",
+    "techniqueSlugs": [
+      "root-of-unity-sums",
+      "regular-polygon-vertices"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p12",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "complex-numbers",
+      "complex-powers"
+    ],
+    "promptLatex": "Expand the fifth power of $1 + \\mathrm{i}$ in the form $a + b\\mathrm{i}$.",
+    "choices": null,
+    "answerLatex": "-4 - 4\\mathrm{i}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Work to the next power of two first and then step up, so that only one power needs expanding directly.",
+      "$(1 + \\mathrm{i})^{4}$ is a short expansion, and the fifth power is that result times $1 + \\mathrm{i}$.",
+      "Multiplying $-4$ by $1 + \\mathrm{i}$ gives $-4 - 4\\mathrm{i}$."
+    ],
+    "solutionLatex": "Squaring twice keeps the direct expansion to a single binomial:\n\n$(1 + \\mathrm{i})^{2} = 1 + 2\\mathrm{i} + \\mathrm{i}^{2} = 1 + 2\\mathrm{i} - 1 = 2\\mathrm{i}$\n\nand therefore $(1 + \\mathrm{i})^{4} = (2\\mathrm{i})^{2} = 4\\mathrm{i}^{2} = -4$.\n\nOne more factor gives the fifth power:\n\n$(1 + \\mathrm{i})^{5} = (1 + \\mathrm{i})^{4}(1 + \\mathrm{i}) = (-4)(1 + \\mathrm{i}) = -4 - 4\\mathrm{i}$\n\nDe Moivre's theorem agrees: the modulus is $\\sqrt{2}$ and the argument is $45^\\circ$, so the fifth power has modulus $(\\sqrt{2})^{5} = 4\\sqrt{2}$ and argument $225^\\circ$, and $4\\sqrt{2}(\\cos 225^\\circ + \\mathrm{i}\\sin 225^\\circ) = 4\\sqrt{2}\\left(-\\frac{\\sqrt{2}}{2} - \\frac{\\sqrt{2}}{2}\\mathrm{i}\\right) = -4 - 4\\mathrm{i}$.",
+    "techniqueSlugs": [
+      "de-moivre-power",
+      "angle-multiplication-reduction"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p13",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "complex-numbers",
+      "angles"
+    ],
+    "promptLatex": "How many of the ten solutions of $z^{10} = -1$ lie strictly in the second quadrant?",
+    "choices": null,
+    "answerLatex": "2",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A negative real number has argument $180^\\circ$, and the ten roots are spread at equal spacing around the unit circle.",
+      "The roots have modulus $1$ and arguments $\\frac{180^\\circ + 360^\\circ k}{10}$ for $k = 0, 1, \\ldots, 9$.",
+      "Listing the arguments and keeping only those strictly between $90^\\circ$ and $180^\\circ$ gives the count."
+    ],
+    "solutionLatex": "The ten solutions all have modulus $1$, and their arguments are the tenth roots of the argument $180^\\circ$ of $-1$:\n\n$\\theta_{k} = \\frac{180^\\circ + 360^\\circ k}{10} = 18^\\circ + 36^\\circ k$, for $k = 0, 1, \\ldots, 9$\n\nThe ten arguments are therefore $18^\\circ$, $54^\\circ$, $90^\\circ$, $126^\\circ$, $162^\\circ$, $198^\\circ$, $234^\\circ$, $270^\\circ$, $306^\\circ$, and $342^\\circ$.\n\nThe second quadrant is the open interval from $90^\\circ$ to $180^\\circ$, so exactly $126^\\circ$ and $162^\\circ$ qualify. The point at $90^\\circ$ sits on the boundary and is excluded by the word strictly.\n\nThe count is $2$.",
+    "techniqueSlugs": [
+      "nth-root-extraction",
+      "argument-quadrant-fix",
+      "regular-polygon-vertices"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p14",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "Find the modulus of the quotient $\\frac{3 + 4\\mathrm{i}}{1 - 2\\mathrm{i}}$, without dividing out.",
+    "choices": null,
+    "answerLatex": "\\sqrt{5}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The modulus of a quotient is the quotient of the moduli, so no division of complex numbers is required.",
+      "The numerator has modulus $5$ and the denominator has modulus $\\sqrt{1 + 4} = \\sqrt{5}$.",
+      "Dividing gives $\\frac{5}{\\sqrt{5}} = \\sqrt{5}$."
+    ],
+    "solutionLatex": "A quotient divides moduli: $\\left|\\frac{z_1}{z_2}\\right| = \\frac{|z_1|}{|z_2|}$, since the quotient is the product of $z_1$ with the reciprocal of $z_2$ and $|1/z_2| = 1/|z_2|$.\n\nThe numerator has modulus $\\sqrt{9 + 16} = 5$ and the denominator has modulus $\\sqrt{1 + 4} = \\sqrt{5}$, so\n\n$\\left|\\frac{3 + 4\\mathrm{i}}{1 - 2\\mathrm{i}}\\right| = \\frac{5}{\\sqrt{5}} = \\sqrt{5}$\n\nMultiplying out to check: $\\frac{3 + 4\\mathrm{i}}{1 - 2\\mathrm{i}} = \\frac{(3 + 4\\mathrm{i})(1 + 2\\mathrm{i})}{5} = \\frac{3 + 6\\mathrm{i} + 4\\mathrm{i} + 8\\mathrm{i}^{2}}{5} = \\frac{-5 + 10\\mathrm{i}}{5} = -1 + 2\\mathrm{i}$, whose modulus is $\\sqrt{1 + 4} = \\sqrt{5}$.",
+    "techniqueSlugs": [
+      "conjugate-and-modulus",
+      "modulus-and-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-p15",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "A",
+    "difficulty": 3,
+    "tags": [
+      "complex-numbers",
+      "regular-polygons"
+    ],
+    "promptLatex": "How many of the twenty-fourth roots of unity lie strictly inside the second quadrant?",
+    "choices": null,
+    "answerLatex": "5",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "The twenty-fourth roots of unity are the vertices of a regular twenty-four-gon on the unit circle, spaced one twenty-fourth of a turn apart.",
+      "Their arguments are $\\frac{360^\\circ k}{24} = 15^\\circ k$ for $k = 0, 1, \\ldots, 23$, so the ones in the second quadrant are the multiples of $15^\\circ$ strictly between $90^\\circ$ and $180^\\circ$.",
+      "Dividing by $15^\\circ$ turns the condition into $6 < k < 12$, which has five integer solutions."
+    ],
+    "solutionLatex": "The twenty-fourth roots of unity all have modulus $1$, and consecutive ones differ by a rotation of $\\frac{360^\\circ}{24} = 15^\\circ$, so their arguments are $15^\\circ k$ for $k = 0, 1, \\ldots, 23$.\n\nThe second quadrant is the open interval from $90^\\circ$ to $180^\\circ$, and dividing by $15^\\circ$ turns that into $6 < k < 12$.\n\nThe integers in that range are $7$, $8$, $9$, $10$, and $11$, corresponding to arguments $105^\\circ$, $120^\\circ$, $135^\\circ$, $150^\\circ$, and $165^\\circ$.\n\nSo the count is $5$. The two boundary arguments $90^\\circ$ and $180^\\circ$ are roots of unity as well, at $k = 6$ and $k = 12$, but the word strictly removes both.",
+    "techniqueSlugs": [
+      "regular-polygon-vertices",
+      "nth-root-extraction",
+      "argument-quadrant-fix"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-m1",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "complex-numbers",
+      "complex-powers"
+    ],
+    "promptLatex": "The number $z = 3\\left(\\cos 150^\\circ + \\mathrm{i}\\sin 150^\\circ\\right)$ satisfies $z^{6} = a + b\\mathrm{i}$. What is $a - b$?",
+    "choices": null,
+    "answerLatex": "-729",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Both the modulus and the argument are given, so the power can be read off directly rather than converted first.",
+      "The modulus becomes $3^{6}$ and the argument becomes $6 \\cdot 150^\\circ = 900^\\circ$.",
+      "$900^\\circ$ reduces to $180^\\circ$, where the sine vanishes and the cosine is $-1$."
+    ],
+    "solutionLatex": "The polar form is supplied, so the modulus is $3$ and the argument is $150^\\circ$. De Moivre's theorem gives\n\n$z^{6} = 3^{6}(\\cos 900^\\circ + \\mathrm{i}\\sin 900^\\circ)$\n\nThe modulus is $3^{6} = 729$. The angle reduces by two full turns, since $900^\\circ - 720^\\circ = 180^\\circ$, and there $\\cos 180^\\circ = -1$ and $\\sin 180^\\circ = 0$.\n\nSo $z^{6} = -729 + 0\\mathrm{i}$, which gives $a = -729$ and $b = 0$.\n\nTherefore $a - b = -729 - 0 = -729$. Working in stages is a useful check: $3^{3} = 27$ at argument $450^\\circ$, which reduces to $90^\\circ$, so $z^{3} = 27\\mathrm{i}$ and $z^{6} = (27\\mathrm{i})^{2} = -729$, agreeing.",
+    "techniqueSlugs": [
+      "de-moivre-power",
+      "angle-multiplication-reduction"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-m2",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "complex-numbers",
+      "special-angles"
+    ],
+    "promptLatex": "Find the exact value of the sum $\\sum_{k=0}^{11}\\cos^{2}\\left(\\frac{k\\pi}{6}\\right)$.",
+    "choices": null,
+    "answerLatex": "6",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A square of a cosine is half of a constant plus a double angle, which converts the sum into one that cancels.",
+      "$\\cos^{2}x = \\frac{1}{2} + \\frac{1}{2}\\cos 2x$, so the sum splits into a constant part and a cosine sum at angles $k\\pi/3$.",
+      "The doubled angles are the twelfth roots of unity, whose sines and cosines each sum to $0$."
+    ],
+    "solutionLatex": "Use the double-angle identity $\\cos 2x = 2\\cos^{2}x - 1$ in the form $\\cos^{2}x = \\frac{1}{2} + \\frac{1}{2}\\cos 2x$:\n\n$\\sum_{k=0}^{11}\\cos^{2}\\left(\\frac{k\\pi}{6}\\right) = \\frac{12}{2} + \\frac{1}{2}\\sum_{k=0}^{11}\\cos\\left(\\frac{k\\pi}{3}\\right) = 6 + \\frac{1}{2}\\sum_{k=0}^{11}\\cos\\left(\\frac{k\\pi}{3}\\right)$\n\nThe remaining sum is the real part of $\\sum_{k=0}^{11}\\omega^{k}$ with $\\omega = \\cos\\frac{\\pi}{3} + \\mathrm{i}\\sin\\frac{\\pi}{3}$, a twelfth root of unity other than $1$, so\n\n$(1 - \\omega)\\sum_{k=0}^{11}\\omega^{k} = 1 - \\omega^{12} = 0$\n\nSince $1 - \\omega \neq 0$ the sum is $0$, and a sum of $0$ has real part $0$. Therefore the value is $6$.\n\nThis is the general trap: twelve equally spaced points sum to $0$, but the squares of their cosines do not, because the squaring is exactly what turns a root of unity into a second root of unity.",
+    "techniqueSlugs": [
+      "root-of-unity-sums",
+      "de-moivre-power",
+      "regular-polygon-vertices"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m8-l4-m3",
+    "moduleId": "M8",
+    "lessonId": "m8-l4",
+    "tier": "A",
+    "difficulty": 5,
+    "tags": [
+      "complex-numbers"
+    ],
+    "promptLatex": "Let $\\omega = -\\frac{1}{2} + \\frac{\\sqrt{3}}{2}\\mathrm{i}$, the cube root of unity with positive imaginary part. Express $\\frac{1}{1 - \\omega}$ in the form $a + b\\mathrm{i}$.",
+    "choices": null,
+    "answerLatex": "\\frac{1}{2} + \\frac{\\sqrt{3}}{6}\\mathrm{i}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "A reciprocal is a conjugate divided by a modulus squared, so the modulus is the part to compute first.",
+      "$1 - \\omega = \\frac{3}{2} - \\frac{\\sqrt{3}}{2}\\mathrm{i}$, whose modulus squared is $\\frac{9}{4} + \\frac{3}{4} = 3$.",
+      "Dividing the conjugate $\\frac{3}{2} + \\frac{\\sqrt{3}}{2}\\mathrm{i}$ by $3$ gives the answer."
+    ],
+    "solutionLatex": "The reciprocal of a complex number is its conjugate divided by its squared modulus, so the modulus is the part to compute.\n\n$1 - \\omega = 1 + \\frac{1}{2} - \\frac{\\sqrt{3}}{2}\\mathrm{i} = \\frac{3}{2} - \\frac{\\sqrt{3}}{2}\\mathrm{i}$, and\n\n$|1 - \\omega|^{2} = \\left(\\frac{3}{2}\\right)^{2} + \\left(\\frac{\\sqrt{3}}{2}\\right)^{2} = \\frac{9}{4} + \\frac{3}{4} = 3$\n\nDividing the conjugate by $3$:\n\n$\\frac{1}{1 - \\omega} = \\frac{\\frac{3}{2} + \\frac{\\sqrt{3}}{2}\\mathrm{i}}{3} = \\frac{1}{2} + \\frac{\\sqrt{3}}{6}\\mathrm{i}$\n\nThe modulus is worth checking, and it is instructive: $|1 - \\omega| = \\sqrt{3}$, so the answer has modulus $\\frac{1}{\\sqrt{3}}$, and $\\sqrt{\\frac{1}{4} + \\frac{3}{36}} = \\sqrt{\\frac{1}{3}} = \\frac{1}{\\sqrt{3}}$ as it must. The argument is $-30^\\circ$, the mirror of the $30^\\circ$ that $1 - \\omega$ makes with the real axis.",
+    "techniqueSlugs": [
+      "conjugate-and-modulus",
+      "modulus-and-argument"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  }
+]
