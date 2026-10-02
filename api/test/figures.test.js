@@ -219,3 +219,50 @@ test("recording a ratio edits the figure whose source was located, not the first
 
   rmSync(dir, { recursive: true, force: true });
 });
+
+test("a figure reused by a lesson's examples is recorded once, across both occurrences", async () => {
+  const { recordAspectRatios } = await import("../../scripts/build-figures.mjs");
+  const dir = mkdtempSync(join(tmpdir(), "record-reuse-"));
+  const file = join(dir, "m8-l3.json");
+
+  // A lesson reuses a concept's figure inside its examples, so the same asymptoteSource appears
+  // under both figures[] and examples[]. Those are one figure compiled once; recording has to move
+  // both declarations together, and must not treat the second pass finding nothing as an error.
+  const source = "// a circle inscribed in a triangle\nsize(300,200);\npair O=(0,0);\ndraw(circle(O,1));";
+  writeFileSync(
+    file,
+    JSON.stringify(
+      {
+        sections: [
+          {
+            figures: [{ asymptoteSource: source, asymptoteAlt: "a circle drawn inside a triangular frame", asymptoteAspectRatio: 1.5 }],
+            examples: [
+              { label: "first" },
+              { asymptoteSource: source, asymptoteAlt: "a circle drawn inside a triangular frame", asymptoteAspectRatio: 1.5 },
+            ],
+          },
+        ],
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+
+  const recorded = recordAspectRatios({
+    measurements: [
+      { key: "m8-l3.sections.concept.figures[0]", file, source, declaredSize: "size(300,200)", declaredRatio: 1.5, measuredWidth: 400, measuredHeight: 200, measuredRatio: 2 },
+      { key: "m8-l3.sections.concept.examples[1]", file, source, declaredSize: "size(300,200)", declaredRatio: 1.5, measuredWidth: 400, measuredHeight: 200, measuredRatio: 2 },
+    ],
+  });
+
+  assert.equal(recorded.ok, true, JSON.stringify(recorded));
+  assert.equal(recorded.changes.length, 2);
+
+  const after = JSON.parse(readFileSync(file, "utf8"));
+  assert.equal(after.sections[0].figures[0].asymptoteAspectRatio, 2);
+  assert.equal(after.sections[0].examples[1].asymptoteAspectRatio, 2);
+  assert.ok(after.sections[0].figures[0].asymptoteSource.includes("size(400,200)"));
+  assert.ok(after.sections[0].examples[1].asymptoteSource.includes("size(400,200)"));
+
+  rmSync(dir, { recursive: true, force: true });
+});

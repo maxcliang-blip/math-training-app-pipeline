@@ -454,45 +454,77 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
 // The edits are made on the raw text rather than through a JSON round trip because the corpus is
 // prettier-formatted: a round trip expands every inline array and turns a two-number change into
 // a whole-file rewrite that buries the two numbers that actually moved.
-// Rewrite the one asymptoteAspectRatio that belongs to the figure whose asymptoteSource we just
+// Rewrite the one asymptoteAspectRatio belonging to each figure object that holds the source we
 // located, rather than the first one in the file.
 //
 // A file-wide search for the ratio is ambiguous whenever two figures declare the same box, which
-// is common: a lesson with three size(320,240) figures has three `1.333` ratios. Refusing to run
-// there is safe but useless, and picking the first match is neither. The source token is unique,
-// and JSON.stringify escapes newlines, so the figure's fields all sit on their own lines within
-// one object. So: walk out from the source line, take the first ratio line reached, and stop at
-// the line that closes the object. An object boundary before the ratio means the two really are in
-// different objects, which is reported rather than guessed at.
-function replaceRatioInFigureObject(text, sourceToken, ratioToken, newRatio) {
-  const sourceIndex = text.indexOf(sourceToken);
-  if (sourceIndex === -1) return { ok: false, error: "the source token vanished from the file" };
-
+// is the normal case: a lesson with three size(320,240) figures has three `1.333` ratios. Refusing
+// to run there is safe but useless, and taking the first match is neither. The source token pins
+// the figure, and JSON.stringify escapes newlines so each field sits on its own line within one
+// object. So: for every occurrence of the source, walk out to the first ratio line reached and
+// stop at the line that closes the object.
+//
+// A source can legitimately appear more than once -- a lesson reuses a concept's figure inside its
+// examples -- and those occurrences are the same figure, so they must all be rewritten together.
+// The source token is replaced for every occurrence for the same reason.
+function recordFigureRatios(text, sourceToken, ratioToken, newSourceToken, newRatio) {
   const lineStarts = [0];
   for (let i = 0; i < text.length; i++) if (text[i] === "\n") lineStarts.push(i + 1);
-
-  let sourceLine = 0;
-  while (sourceLine + 1 < lineStarts.length && lineStarts[sourceLine + 1] <= sourceIndex) sourceLine++;
-
+  const lineOf = (index) => {
+    let lo = 0;
+    let hi = lineStarts.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1;
+      if (lineStarts[mid] <= index) lo = mid;
+      else hi = mid - 1;
+    }
+    return lo;
+  };
   const endsObject = (line) => /^\s*\}/.test(line);
 
-  for (const step of [1, -1]) {
-    for (let i = sourceLine + step; i >= 0 && i < lineStarts.length; i += step) {
-      const start = lineStarts[i];
-      const line = text.slice(start, lineStarts[i + 1] ?? text.length);
-      if (line.includes(ratioToken)) {
-        const replaced =
-          text.slice(0, start) + line.replace(ratioToken, `"asymptoteAspectRatio": ${newRatio}`) + text.slice(start + line.length);
-        return { ok: true, text: replaced };
+  const edits = [];
+  let from = 0;
+  let found = 0;
+  for (;;) {
+    const at = text.indexOf(sourceToken, from);
+    if (at === -1) break;
+    found++;
+    from = at + sourceToken.length;
+    edits.push({ start: at, end: at + sourceToken.length, insert: newSourceToken });
+
+    const startLine = lineOf(at);
+    for (const step of [1, -1]) {
+      let hit = false;
+      for (let i = startLine + step; i >= 0 && i < lineStarts.length; i += step) {
+        const start = lineStarts[i];
+        const line = text.slice(start, lineStarts[i + 1] ?? text.length);
+        if (line.includes(ratioToken)) {
+          edits.push({ start, end: start + line.length, insert: line.replace(ratioToken, `"asymptoteAspectRatio": ${newRatio}`) });
+          hit = true;
+          break;
+        }
+        if (endsObject(line)) break;
       }
-      if (endsObject(line)) break;
+      if (hit) break;
     }
   }
-  return { ok: false, error: `the figure object closes before ${ratioToken} appears` };
+
+  if (!found) return { ok: false, error: "no occurrence of the source token remains in the file" };
+  // Ratio edits are whole lines that sit between source occurrences, so they can overlap the next
+  // source edit's span only if the source and the ratio share a line, which prettier never emits.
+  edits.sort((a, b) => b.start - a.start);
+  let out = text;
+  for (const e of edits) out = out.slice(0, e.start) + e.insert + out.slice(e.end);
+  return { ok: true, text: out, occurrences: found };
 }
 
+// Group by source first. A lesson that reuses a concept's figure inside its examples presents the
+// same asymptoteSource two or more times; those are one figure, they compile to one box, and the
+// declarations have to move together. Recording them one measurement at a time would have the
+// second pass find no source left to edit and mistake that for a corpus it does not understand.
 export function recordAspectRatios(result) {
   const changes = [];
+  const grouped = new Map();
 
   for (const m of result.measurements) {
     if (!m.file || !m.measuredWidth || !m.measuredHeight || !m.measuredRatio) continue;
@@ -500,33 +532,43 @@ export function recordAspectRatios(result) {
     const height = Math.round(m.measuredHeight);
     const newSize = `size(${width},${height})`;
     if (newSize === m.declaredSize && m.measuredRatio === m.declaredRatio) continue;
+    const groupKey = `${m.file} ${m.source}`;
+    if (!grouped.has(groupKey)) grouped.set(groupKey, []);
+    grouped.get(groupKey).push({ m, newSize });
+  }
+
+  for (const members of grouped.values()) {
+    const { m, newSize } = members[0];
 
     let text = readFileSync(m.file, "utf8");
     const sourceToken = JSON.stringify(m.source).slice(1, -1);
-    const sourceCount = text.split(sourceToken).length - 1;
-    if (sourceCount !== 1) {
-      return { ok: false, error: `cannot locate the source of ${m.key} in ${m.file} (${sourceCount} matches); refusing to guess` };
-    }
     const newSource = m.source.replace(/size\s*\(\s*[\d.]+\s*,\s*[\d.]+\s*\)/, newSize);
     if (newSource === m.source) {
       return { ok: false, error: `no size(W,H) call found in the source of ${m.key}; refusing to guess` };
     }
-    // Both edits are anchored on the file as it was read. Replacing the source first would
-    // invalidate the source token the ratio edit is scoped by.
-    const ratioToken = `"asymptoteAspectRatio": ${m.declaredRatio}`;
-    const scoped = replaceRatioInFigureObject(text, sourceToken, ratioToken, m.measuredRatio);
-    if (!scoped.ok) {
-      return { ok: false, error: `cannot locate ${ratioToken} for ${m.key} in ${m.file}: ${scoped.error}` };
-    }
-    text = scoped.text.replace(sourceToken, JSON.stringify(newSource).slice(1, -1));
 
-    writeFileSync(m.file, text);
-    changes.push({
-      figureKey: m.key,
-      file: m.file.replace(REPO + "/", ""),
-      from: { size: m.declaredSize, declaredAspectRatio: m.declaredRatio },
-      to: { size: newSize, declaredAspectRatio: m.measuredRatio },
-    });
+    const ratioToken = `"asymptoteAspectRatio": ${m.declaredRatio}`;
+    const scoped = recordFigureRatios(
+      text,
+      sourceToken,
+      ratioToken,
+      JSON.stringify(newSource).slice(1, -1),
+      m.measuredRatio,
+    );
+    if (!scoped.ok) {
+      return { ok: false, error: `cannot record ${m.key} in ${m.file}: ${scoped.error}` };
+    }
+
+    writeFileSync(m.file, scoped.text);
+    for (const other of members) {
+      changes.push({
+        figureKey: other.m.key,
+        file: other.m.file.replace(REPO + "/", ""),
+        from: { size: other.m.declaredSize, declaredAspectRatio: other.m.declaredRatio },
+        to: { size: newSize, declaredAspectRatio: m.measuredRatio },
+      });
+    }
+    changes[changes.length - 1].occurrences = scoped.occurrences;
   }
 
   return { ok: true, changes };
