@@ -1,0 +1,30 @@
+{
+  "id": "m5-l1-p11",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "angles",
+    "transversals",
+    "parallel-lines",
+    "angle-chase-setup"
+  ],
+  "promptLatex": "Two parallel lines are cut by a transversal. The four angles at the first intersection measure $a$, $b$, $c$, and $d$ degrees in order, and $a = 45$. What is the measure, in degrees, of $b + c + d$?",
+  "choices": null,
+  "answerLatex": "315",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "You do not need the individual values, only the total of the four angles at an intersection.",
+    "A full turn is $360^{\\circ}$, so $a + b + c + d = 360$.",
+    "Therefore $b + c + d = 360 - 45 = 315$."
+  ],
+  "solutionLatex": "The four angles at one intersection together make a full turn, so $a + b + c + d = 360$.\n\nWith $a = 45$, subtract it from both sides: $b + c + d = 360 - 45 = 315$.\n\nNo individual angle is needed; the total of the other three follows from the full turn alone.",
+  "techniqueSlugs": [
+    "vertical-angles",
+    "linear-pair-supplementary"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

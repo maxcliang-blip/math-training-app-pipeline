@@ -1,0 +1,29 @@
+{
+  "id": "m5-l1-p13",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "polygons",
+    "regular-polygons",
+    "interior-angles",
+    "polygon-interior-angle-sum"
+  ],
+  "promptLatex": "Each interior angle of a regular polygon measures $156^{\\circ}$. How many sides does the polygon have?",
+  "choices": null,
+  "answerLatex": "15",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "In a regular polygon all $n$ interior angles are equal, so each one is the total divided by $n$.",
+    "The total is $(n-2) \\cdot 180$ degrees, so each angle measures $\\frac{180(n-2)}{n}$ degrees.",
+    "Setting that equal to $156$ gives $180n - 360 = 156n$, so $24n = 360$ and $n = 15$."
+  ],
+  "solutionLatex": "A regular polygon has $n$ equal interior angles, so each one measures $\\frac{180(n-2)}{n}$ degrees.\n\nSet that equal to $156$: $\\frac{180(n-2)}{n} = 156$.\n\n$180n - 360 = 156n$\n\n$24n = 360$\n\n$n = 15$.\n\nCheck: a regular $15$-gon has interior angle $\\frac{180 \\cdot 13}{15} = \\frac{2340}{15} = 156$ degrees.",
+  "techniqueSlugs": [
+    "polygon-angle-sum"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,30 @@
+{
+  "id": "m5-l1-p15",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "angles",
+    "triangles",
+    "triangle-angle-sum",
+    "angle-chase-setup"
+  ],
+  "promptLatex": "In triangle $XYZ$, the angles at $X$ and $Z$ measure $x$ and $y$ degrees, and the angle at $Y$ measures $x + y$ degrees. The exterior angle at $X$ measures $2x$ degrees. What is the value of $y$?",
+  "choices": null,
+  "answerLatex": "30",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "An exterior angle and the interior angle it was extended from form a straight line.",
+    "That gives $2x + x = 180$, so $x = 60$.",
+    "The triangle then has angles $60$, $y$, and $60 + y$, so $120 + 2y = 180$ and $y = 30$."
+  ],
+  "solutionLatex": "The exterior angle at $X$ and the interior angle at $X$ together form a straight line, so $2x + x = 180$.\n\n$3x = 180$, so $x = 60$.\n\nThe interior angle at $X$ is therefore $60$ degrees, and the interior angle at $Y$ is $60 + y$ degrees.\n\nThe angles of the triangle sum to $180^{\\circ}$:\n\n$60 + y + (60 + y) = 180$\n\n$120 + 2y = 180$, so $2y = 60$ and $y = 30$.\n\nCheck: the three angles are $60$, $90$, and $30$, which sum to $180$, and the exterior angle at $X$ is $120 = 2 \\cdot 60$.",
+  "techniqueSlugs": [
+    "triangle-angle-sum",
+    "linear-pair-supplementary"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

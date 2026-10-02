@@ -400,5 +400,91 @@
     "asymptoteSource": null,
     "asymptoteAlt": null,
     "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m9-l3-p13",
+    "moduleId": "M9",
+    "lessonId": "m9-l3",
+    "tier": "12",
+    "difficulty": 3,
+    "tags": [
+      "proof",
+      "induction",
+      "sequences"
+    ],
+    "promptLatex": "Use induction to prove that for every integer $n \\ge 1$, the sum $1 + 3 + 5 + \\cdots + (2n-1) = n^{2}$.",
+    "choices": null,
+    "answerLatex": "1+3+5+\\cdots+(2n-1)=n^{2}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Base case $n=1$: $1 = 1^{2}$. Inductive step: assume the first $k$ odd integers sum to $k^{2}$ and prove the sum of the first $k+1$ does too.",
+      "The first $k+1$ odd integers are the first $k$ odd integers plus $2(k+1) - 1 = 2k + 1$.",
+      "So the new sum is $k^{2} + 2k + 1 = (k+1)^{2}$, which is the desired form with $n = k+1$."
+    ],
+    "solutionLatex": "Base case $n=1$: the sum is just $1$, and $1 = 1^{2}$, so the claim holds.\n\nInductive step: assume for some $k \\ge 1$ that $1 + 3 + 5 + \\cdots + (2k-1) = k^{2}$.\n\nThen $1 + 3 + 5 + \\cdots + (2k-1) + (2k+1) = k^{2} + (2k + 1) = k^{2} + 2k + 1 = (k+1)^{2}$.\n\nSince $2(k+1) - 1 = 2k + 1$, the left side is the sum of the first $k+1$ odd integers. Thus the claim holds for $k+1$, completing the induction and proving $1 + 3 + 5 + \\cdots + (2n-1) = n^{2}$ for all $n \\ge 1$.",
+    "techniqueSlugs": [
+      "mathematical-induction",
+      "induction-base-variants"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m9-l3-p14",
+    "moduleId": "M9",
+    "lessonId": "m9-l3",
+    "tier": "A",
+    "difficulty": 4,
+    "tags": [
+      "proof",
+      "strong-induction",
+      "divisibility"
+    ],
+    "promptLatex": "Use strong induction to prove that for every integer $n \\ge 2$, the number $n!$ is divisible by $2^{\\lfloor n/2 \\rfloor}$.",
+    "choices": null,
+    "answerLatex": "2^{\\lfloor n/2 \\rfloor} \\mid n!",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Base case $n=2$: $2!$ equals $2$, and $2^{\\lfloor 2/2 \\rfloor}$ also equals $2$. Strong inductive step: assume $2^{\\lfloor k/2 \\rfloor} \\mid k!$ for all $k$ with $2 \\le k \\le n$, and prove the claim for $n+1$.",
+      "Case one, $n$ odd: then $\\lfloor (n+1)/2 \\rfloor = \\frac{n-1}{2} + 1$, so the hypothesis at $n-1$ already gives the stronger result. Case two, $n$ even: then $\\lfloor (n+1)/2 \\rfloor = \\lfloor (n-1)/2 \\rfloor + 1$, so the even factor $n$ supplies the extra $2$."
+    ],
+    "solutionLatex": "Base case $n=2$: $2! = 2$ and $2^{\\lfloor 2/2 \\rfloor} = 2$, so the claim holds.\n\nStrong inductive step: assume $2^{\\lfloor k/2 \\rfloor}$ divides $k!$ for every $k$ with $2 \\le k \\le n$. We prove the claim for $n+1$, that is, for $2^{\\lfloor (n+1)/2 \\rfloor} \\mid (n+1)!$.\n\nCase one, $n$ odd. Then $\\lfloor (n+1)/2 \\rfloor = \\frac{n+1}{2}$ and $\\lfloor (n-1)/2 \\rfloor = \\frac{n-1}{2}$, so $\\frac{n+1}{2} = \\frac{n-1}{2} + 1$. By the hypothesis at $n-1$, $2^{\\frac{n-1}{2}} \\mid (n-1)!$, and since $2^{\\frac{n+1}{2}}$ is a larger power of $2$, it also divides $(n-1)!$, hence $(n+1)!$.\n\nCase two, $n$ even. Then $\\lfloor (n+1)/2 \\rfloor = \\frac{n}{2}$ and $\\lfloor (n-1)/2 \\rfloor = \\frac{n}{2} - 1$. By the hypothesis at $n-1$, $2^{\\frac{n}{2}-1} \\mid (n-1)!$. Since $n$ is even it contributes at least one factor of $2$, so $2 \\cdot 2^{\\frac{n}{2}-1} = 2^{\\frac{n}{2}}$ divides $n \\cdot (n-1)! = (n+1)!$.\n\nBoth cases give the claim for $n+1$, so the strong induction is complete.",
+    "techniqueSlugs": [
+      "strong-induction",
+      "induction-base-variants"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
+  },
+  {
+    "id": "m9-l3-p15",
+    "moduleId": "M9",
+    "lessonId": "m9-l3",
+    "tier": "A+",
+    "difficulty": 4,
+    "tags": [
+      "proof",
+      "induction",
+      "telescoping",
+      "fractions"
+    ],
+    "promptLatex": "Use induction to prove that for every integer $n \\ge 1$, the sum $\\frac{1}{1 \\cdot 3} + \\frac{1}{3 \\cdot 5} + \\frac{1}{5 \\cdot 7} + \\cdots + \\frac{1}{(2n-1)(2n+1)}$ equals $\\frac{n}{2n+1}$.",
+    "choices": null,
+    "answerLatex": "\\frac{1}{1\\cdot 3}+\\cdots+\\frac{1}{(2n-1)(2n+1)}=\\frac{n}{2n+1}",
+    "answerAlternatives": [],
+    "hintLatex": [
+      "Base case $n=1$: $\\frac{1}{1 \\cdot 3} = \\frac{1}{3}$. Inductive step: assume the sum of the first $k$ terms is $\\frac{k}{2k+1}$ and add the $(k+1)$-st term $\\frac{1}{(2k+1)(2k+3)}$.",
+      "Put both parts over the common denominator $(2k+1)(2k+3)$.",
+      "The numerator is $k(2k+3) + 1 = 2k^{2} + 3k + 1 = (2k+1)(k+1)$, so the whole sum collapses to $\\frac{k+1}{2k+3}$."
+    ],
+    "solutionLatex": "Base case $n=1$: the sum is $\\frac{1}{1 \\cdot 3} = \\frac{1}{3} = \\frac{1}{2 \\cdot 1 + 1}$, which is the claimed value $\\frac{n}{2n+1}$.\n\nInductive step: assume that for some $k \\ge 1$ the sum of the first $k$ terms equals $\\frac{k}{2k+1}$.\n\nAdding the $(k+1)$-st term $\\frac{1}{(2k+1)(2k+3)}$ and using a common denominator:\n\n$\\frac{k}{2k+1} + \\frac{1}{(2k+1)(2k+3)} = \\frac{k(2k+3) + 1}{(2k+1)(2k+3)}$\n\nThe numerator factors: $k(2k+3) + 1 = 2k^{2} + 3k + 1 = (2k+1)(k+1)$.\n\nSo the sum is $\\frac{(2k+1)(k+1)}{(2k+1)(2k+3)} = \\frac{k+1}{2k+3} = \\frac{k+1}{2(k+1)+1}$, which is the claimed value with $n = k+1$.\n\nThis completes the induction and proves the identity for all $n \\ge 1$.",
+    "techniqueSlugs": [
+      "mathematical-induction"
+    ],
+    "asymptoteSource": null,
+    "asymptoteAlt": null,
+    "asymptoteAspectRatio": null
   }
 ]

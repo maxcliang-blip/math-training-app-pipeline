@@ -1,0 +1,28 @@
+{
+  "id": "m5-l1-p10",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "polygons",
+    "interior-angles",
+    "polygon-interior-angle-sum"
+  ],
+  "promptLatex": "A convex polygon has interior angles whose measures sum to $2160$ degrees. How many sides does it have?",
+  "choices": null,
+  "answerLatex": "14",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The interior angle sum of a convex polygon depends only on the number of sides.",
+    "For $n$ sides the sum is $(n - 2) \\cdot 180$ degrees.",
+    "$180(n-2) = 2160$ gives $n - 2 = 12$, so $n = 14$."
+  ],
+  "solutionLatex": "Drawing diagonals from a single vertex triangulates a convex $n$-gon into $n - 2$ triangles, and each contributes $180^{\\circ}$.\n\nSo the interior angle sum is $(n - 2) \\cdot 180$ degrees.\n\n$180(n - 2) = 2160$\n\n$n - 2 = 12$, so $n = 14$.\n\nThe polygon has $14$ sides.",
+  "techniqueSlugs": [
+    "polygon-angle-sum"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

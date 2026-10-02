@@ -1,0 +1,33 @@
+{
+  "id": "m1-l1-p10",
+  "moduleId": "M1",
+  "lessonId": "m1-l1",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "linear-equations",
+    "word-problem"
+  ],
+  "promptLatex": "A recipe calls for $2$ cups of flour for every $5$ cups of water. If a batch uses $84$ cups in total, how many cups of that batch are water?",
+  "choices": [
+    "36",
+    "48",
+    "60",
+    "72",
+    "84"
+  ],
+  "answerLatex": "60",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The ratio $2:5$ fixes the share of the total that water accounts for.",
+    "Write the two parts of the ratio as a fraction of the whole ratio, then multiply that fraction by $84$.",
+    "The whole ratio is $2 + 5 = 7$ parts, and water is $5$ of them, so water is $\\frac{5}{7} \\cdot 84 = 60$."
+  ],
+  "solutionLatex": "The ratio $2:5$ has $2 + 5 = 7$ parts in total, and $5$ of those parts are water.\n\nWater accounts for $\\frac{5}{7}$ of the batch.\n\n$\\frac{5}{7} \\cdot 84 = 60$\n\nSo $60$ cups of the batch are water.",
+  "techniqueSlugs": [
+    "balance-equations"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

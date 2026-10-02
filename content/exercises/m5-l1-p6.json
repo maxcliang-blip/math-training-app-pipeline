@@ -1,0 +1,35 @@
+{
+  "id": "m5-l1-p6",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "angles",
+    "transversals",
+    "parallel-lines",
+    "corresponding-angles"
+  ],
+  "promptLatex": "Two parallel lines are cut by a transversal. An angle at the first intersection measures $128^{\\circ}$. What is the measure, in degrees, of the angle at the second intersection in the same relative position?",
+  "choices": [
+    "52",
+    "128",
+    "90",
+    "142",
+    "180"
+  ],
+  "answerLatex": "128",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Two angles in the same relative position at the two intersections are the pair you want.",
+    "That pair is called corresponding angles.",
+    "Because the lines are parallel, corresponding angles are congruent, so the angle also measures $128$."
+  ],
+  "solutionLatex": "Angles in the same relative position at the two intersections are corresponding angles.\n\nThe two lines are parallel, and parallel lines make corresponding angles congruent.\n\nSo the angle at the second intersection also measures $128$.",
+  "techniqueSlugs": [
+    "corresponding-angles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

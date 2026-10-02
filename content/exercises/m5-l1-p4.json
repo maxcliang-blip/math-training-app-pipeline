@@ -1,0 +1,32 @@
+{
+  "id": "m5-l1-p4",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "angles"
+  ],
+  "promptLatex": "Two lines intersect, forming four angles. One of them measures $63^{\\circ}$. What is the measure, in degrees, of the angle directly opposite it?",
+  "choices": [
+    "63",
+    "27",
+    "117",
+    "90",
+    "126"
+  ],
+  "answerLatex": "63",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The angle directly opposite shares only its vertex with the given one, with no ray in between.",
+    "Those two angles are vertical angles.",
+    "Vertical angles are congruent, so the opposite angle also measures $63$."
+  ],
+  "solutionLatex": "Two angles that share only a vertex, with no ray lying between them, are vertical angles.\n\nThe angle given and the angle directly opposite are exactly such a pair.\n\nVertical angles are congruent, so the opposite angle also measures $63$.",
+  "techniqueSlugs": [
+    "vertical-angles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

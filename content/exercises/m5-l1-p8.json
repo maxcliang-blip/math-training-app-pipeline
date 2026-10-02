@@ -1,0 +1,29 @@
+{
+  "id": "m5-l1-p8",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "angles",
+    "transversals",
+    "parallel-lines",
+    "angle-chase-setup"
+  ],
+  "promptLatex": "Two parallel lines are cut by a transversal. The acute angle at the upper intersection measures $2x$ degrees, and the obtuse angle at the lower intersection on the same side of the transversal measures $x + 90$ degrees. What is the value of $x$?",
+  "choices": null,
+  "answerLatex": "30",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Both given angles sit between the parallel lines, so they form one of the named interior pairs.",
+    "Angles on the same side of the transversal and between the parallels are consecutive interior angles.",
+    "Consecutive interior angles are supplementary, so $(2x) + (x + 90) = 180$, giving $x = 30$."
+  ],
+  "solutionLatex": "Both angles given lie inside the region between the parallel lines and on the same side of the transversal, so they are consecutive interior angles.\n\nConsecutive interior angles between parallel lines are supplementary.\n\n$2x + (x + 90) = 180$\n\n$3x + 90 = 180$\n\n$3x = 90$, so $x = 30$.\n\nCheck: the acute angle is $60$ and the obtuse angle is $120$, and $60 + 120 = 180$.",
+  "techniqueSlugs": [
+    "consecutive-interior-supplementary"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

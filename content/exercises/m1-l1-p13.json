@@ -1,0 +1,27 @@
+{
+  "id": "m1-l1-p13",
+  "moduleId": "M1",
+  "lessonId": "m1-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "absolute-value",
+    "case-split"
+  ],
+  "promptLatex": "The equation $|3x - 4| = 2x + 5$ has solutions $x = a$ and $x = b$ with $a < b$. What is $a + b$?",
+  "choices": null,
+  "answerLatex": "\\frac{44}{5}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "An absolute value equation splits into two linear equations, one for each sign inside the bars.",
+    "Solve $3x - 4 = 2x + 5$ and $-(3x - 4) = 2x + 5$ separately, then keep only the roots that check.",
+    "The first case gives $x = 9$ and the second gives $x = -\\frac{1}{5}$, and both satisfy the original equation."
+  ],
+  "solutionLatex": "Split $|3x - 4|$ into its two cases.\n\nCase one: $3x - 4 = 2x + 5$, so $x = 9$. Checking: $|27 - 4| = 23$ and $2 \\cdot 9 + 5 = 23$, so this root is genuine.\n\nCase two: $-(3x - 4) = 2x + 5$, so $-3x + 4 = 2x + 5$, so $-1 = 5x$ and $x = -\\frac{1}{5}$. Checking: $\\left|-\\frac{3}{5} - 4\\right| = \\frac{23}{5}$ and $2 \\left(-\\frac{1}{5}\\right) + 5 = \\frac{23}{5}$, so this root is genuine too.\n\nWith $a = -\\frac{1}{5}$ and $b = 9$, the sum is $-\\frac{1}{5} + 9 = \\frac{44}{5}$.",
+  "techniqueSlugs": [
+    "absolute-value-two-cases"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

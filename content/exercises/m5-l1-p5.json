@@ -1,0 +1,32 @@
+{
+  "id": "m5-l1-p5",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "angles"
+  ],
+  "promptLatex": "A straight angle of $180^{\\circ}$ is split by a ray into two angles measuring $x$ and $2x$ degrees. What is $x$?",
+  "choices": [
+    "30",
+    "45",
+    "60",
+    "90",
+    "120"
+  ],
+  "answerLatex": "60",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The two pieces have to add up to the whole straight angle.",
+    "Write that as an equation in $x$.",
+    "$x + 2x = 180$, so $3x = 180$ and $x = 60$."
+  ],
+  "solutionLatex": "The ray splits the straight angle into pieces of $x$ and $2x$ degrees.\n\nThe pieces together make the whole $180^{\\circ}$, so $x + 2x = 180$.\n\nThat gives $3x = 180$, so $x = 60$.",
+  "techniqueSlugs": [
+    "linear-pair-supplementary"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

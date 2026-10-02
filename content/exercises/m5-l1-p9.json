@@ -1,0 +1,28 @@
+{
+  "id": "m5-l1-p9",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "angles",
+    "triangles",
+    "triangle-angle-sum"
+  ],
+  "promptLatex": "In triangle $ABC$, the angles measure $x$, $2x + 10$, and $3x - 10$ degrees at $A$, $B$, and $C$ respectively. What is the value of $x$?",
+  "choices": null,
+  "answerLatex": "30",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The three angles belong to one triangle, so their total is fixed.",
+    "The interior angles of a triangle sum to $180^{\\circ}$.",
+    "$(x) + (2x + 10) + (3x - 10) = 180$ gives $6x = 180$, so $x = 30$."
+  ],
+  "solutionLatex": "The three angles of a triangle have a fixed total of $180^{\\circ}$.\n\n$x + (2x + 10) + (3x - 10) = 180$\n\n$6x + 10 - 10 = 180$\n\n$6x = 180$, so $x = 30$.\n\nCheck: the three angles are $30$, $70$, and $80$, and $30 + 70 + 80 = 180$.",
+  "techniqueSlugs": [
+    "triangle-angle-sum"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

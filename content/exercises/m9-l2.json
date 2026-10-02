@@ -658,20 +658,23 @@
     "tags": [
       "proof",
       "extremal",
-      "extremal"
+      "invariants"
     ],
-    "promptLatex": "Determine all positive integers n for which the set {1, 2, ..., 2n} can be partitioned into n pairs such that the sum of each pair is a perfect square.",
+    "promptLatex": "Determine all positive integers $n$ for which the integers from $1$ to $2n$ can be partitioned into $n$ pairs such that all $n$ pairs have the same sum, and that common sum is a perfect square.",
     "choices": null,
-    "answerLatex": "n is even",
-    "answerAlternatives": [],
-    "hintLatex": [
-      "The total sum of {1, ..., 2n} is n(2n+1). For n pairs, each pair must sum to 2n+1 on average",
-      "Check small values of n to see which work",
-      "Consider the pairing (j, 2n+1-j)"
+    "answerLatex": "2m^{2} + 2m",
+    "answerAlternatives": [
+      "2m(m+1)",
+      "\\frac{(2m+1)^{2}-1}{2}"
     ],
-    "solutionLatex": "The total sum of {1, 2, ..., 2n} is T = 2n(2n+1)/2 = n(2n+1). If the set is partitioned into n pairs with equal sums, each pair must sum to T/n = 2n+1. So we need to partition {1, ..., 2n} into n pairs each summing to 2n+1. The pairs {j, 2n+1-j} for j = 1, ..., n each sum to 2n+1 and are disjoint and cover the set. This works for any positive integer n. Now we need each pair sum 2n+1 to be a perfect square. So 2n+1 = k^2 for some integer k, which means n = (k^2 - 1)/2. For n to be a positive integer, k must be odd and k \\ge 3. Thus n = (3^2-1)/2 = 4, n = (5^2-1)/2 = 12, n = (7^2-1)/2 = 24, and in general n = ((2m+1)^2 - 1)/2 = 2m^2 + 2m for m \\ge 1. The answer is: n = 2m^2 + 2m for positive integers m.",
+    "hintLatex": [
+      "Start from the total of all $2n$ numbers, which is fixed once $n$ is fixed.",
+      "The total is $n(2n+1)$, and if all $n$ pair sums are equal then each one must be $\\frac{n(2n+1)}{n} = 2n+1$.",
+      "So the question reduces to when $2n+1$ is a perfect square, and then check that the pairing $j$ with $2n+1-j$ really works."
+    ],
+    "solutionLatex": "Let the common sum of all $n$ pairs be $s$.\n\nThe integers from $1$ to $2n$ have total $1 + 2 + \\cdots + 2n = \\frac{2n(2n+1)}{2} = n(2n+1)$.\n\nThe partition has $n$ pairs, each of sum $s$, so $ns = n(2n+1)$. Dividing by $n \\ne 0$ gives $s = 2n + 1$.\n\nNecessity: $s$ must be a perfect square, so $2n + 1 = k^{2}$ for some integer $k \\ge 3$ that is odd, because $2n + 1$ is odd. Hence $n = \\frac{k^{2}-1}{2}$. Writing $k = 2m + 1$ with $m \\ge 1$ gives $n = \\frac{(2m+1)^{2}-1}{2} = \\frac{4m^{2}+4m}{2} = 2m^{2} + 2m$.\n\nSufficiency: suppose $n = 2m^{2} + 2m$ with $m \\ge 1$, so $2n + 1 = (2m+1)^{2}$ is a perfect square. Pair each $j$ with $2n + 1 - j$ for $j = 1, 2, \\ldots, n$. Every pair sums to $2n + 1$, no two pairs share an entry because $j \\mapsto 2n + 1 - j$ is an involution with no fixed point on $1, \\ldots, 2n$, and every integer from $1$ to $2n$ appears exactly once.\n\nSo the partition exists exactly when $n = 2m^{2} + 2m$ for a positive integer $m$, that is, $n = 4, 12, 24, 40, \\ldots$.",
     "techniqueSlugs": [
-      "coloring-invariant"
+      "extremal-and-partial-sums"
     ],
     "asymptoteSource": null,
     "asymptoteAlt": null,

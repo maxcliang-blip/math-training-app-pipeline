@@ -1,0 +1,29 @@
+{
+  "id": "m5-l1-p12",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "angles",
+    "transversals",
+    "parallel-lines",
+    "co-interior-angles"
+  ],
+  "promptLatex": "A transversal meets two parallel lines $m$ and $n$. The angle it makes with line $m$ measures $3x + 20$ degrees, and the angle it makes with line $n$ on the same side and inside the two lines measures $x + 80$ degrees. What is the value of $x$?",
+  "choices": null,
+  "answerLatex": "20",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Both angles lie between $m$ and $n$ and on the same side of the transversal.",
+    "That is exactly the pair of consecutive interior angles.",
+    "$(3x + 20) + (x + 80) = 180$ gives $4x = 80$, so $x = 20$."
+  ],
+  "solutionLatex": "Both angles given are inside the region between the parallel lines and on the same side of the transversal, so they are consecutive interior angles.\n\nConsecutive interior angles between parallel lines are supplementary.\n\n$(3x + 20) + (x + 80) = 180$\n\n$4x + 100 = 180$\n\n$4x = 80$, so $x = 20$.\n\nCheck: the two angles are $80$ and $100$, and $80 + 100 = 180$.",
+  "techniqueSlugs": [
+    "consecutive-interior-supplementary"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

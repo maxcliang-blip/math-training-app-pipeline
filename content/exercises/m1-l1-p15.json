@@ -1,0 +1,28 @@
+{
+  "id": "m1-l1-p15",
+  "moduleId": "M1",
+  "lessonId": "m1-l1",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "fractions",
+    "domain",
+    "factoring"
+  ],
+  "promptLatex": "Solve the equation $\\frac{x}{x-2} + \\frac{x+3}{x} = \\frac{-6}{x(x-2)}$ for the value of $x$.",
+  "choices": null,
+  "answerLatex": "-\\frac{1}{2}",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The denominators restrict what $x$ may be before any algebra happens, and a root that lands on a forbidden value has to be discarded.",
+    "Because $x = 0$ and $x = 2$ make a denominator zero, clearing denominators will produce a root you must throw away.",
+    "After clearing, the equation becomes $x^{2} + (x+3)(x-2) = -6$, that is $2x^{2} + x = 0$, that is $x(2x+1) = 0$."
+  ],
+  "solutionLatex": "The right-hand side has denominator $x(x-2)$, so the equation is defined only when $x \\ne 0$ and $x \\ne 2$.\n\nMultiply through by $x(x-2)$, which is nonzero on the domain and therefore preserves the solution set.\n\n$x \\cdot x + (x+3)(x-2) = -6$\n\n$x^{2} + x^{2} + x - 6 = -6$\n\n$2x^{2} + x = 0$, that is, $x(2x + 1) = 0$.\n\nThe two algebraic roots are $x = 0$ and $x = -\\frac{1}{2}$. The root $x = 0$ is excluded by the domain, so the only solution is $x = -\\frac{1}{2}$.\n\nSubstituting confirms it: $\\frac{-1/2}{-1/2-2} + \\frac{-1/2+3}{-1/2} = \\frac{1}{5} - 5 = -\\frac{24}{5}$, and $\\frac{-6}{(-1/2)(-5/2)} = -\\frac{24}{5}$.",
+  "techniqueSlugs": [
+    "domain-check-denominator"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

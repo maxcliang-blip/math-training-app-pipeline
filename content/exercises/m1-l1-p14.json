@@ -1,0 +1,29 @@
+{
+  "id": "m1-l1-p14",
+  "moduleId": "M1",
+  "lessonId": "m1-l1",
+  "tier": "12",
+  "difficulty": 4,
+  "tags": [
+    "absolute-value",
+    "inequalities",
+    "counting-integers"
+  ],
+  "promptLatex": "How many integers $x$ satisfy both $|x - 3| \\le 5$ and $|2x - 1| \\ge 4$?",
+  "choices": null,
+  "answerLatex": "7",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Each absolute value inequality becomes a double bound, one for each sign inside the bars.",
+    "The first gives $-2 \\le x \\le 8$, and the second gives $x \\ge \\frac{5}{2}$ or $x \\le -\\frac{3}{2}$.",
+    "Restricting each branch to the first bound leaves the integers $-2, 3, 4, 5, 6, 7, 8$."
+  ],
+  "solutionLatex": "The first inequality is a double bound: $-5 \\le x - 3 \\le 5$, so $-2 \\le x \\le 8$.\n\nThe second is a union, not a double bound: $2x - 1 \\ge 4$ or $2x - 1 \\le -4$, so $x \\ge \\frac{5}{2}$ or $x \\le -\\frac{3}{2}$.\n\nFor integers the second inequality means $x \\ge 3$ or $x \\le -2$.\n\nIntersecting with $-2 \\le x \\le 8$ leaves the single integer $-2$ from the lower branch, plus $3, 4, 5, 6, 7, 8$ from the upper branch.\n\nThat is $1 + 6 = 7$ integers.",
+  "techniqueSlugs": [
+    "abs-inequality-double-bound",
+    "count-integer-solutions"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

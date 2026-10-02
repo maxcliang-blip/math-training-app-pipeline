@@ -1,0 +1,30 @@
+{
+  "id": "m5-l1-p14",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "A",
+  "difficulty": 4,
+  "tags": [
+    "polygons",
+    "regular-polygons",
+    "interior-angles",
+    "isosceles-base-angles"
+  ],
+  "promptLatex": "In a regular hexagon $ABCDEF$, the diagonal $AC$ is drawn. What is the measure, in degrees, of the obtuse angle formed by the lines $AC$ and $BC$?",
+  "choices": null,
+  "answerLatex": "150",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The interior angle of a regular hexagon is the same at every vertex.",
+    "Triangle $ABC$ is isosceles because $AB$ and $BC$ are both sides of the hexagon, so its two base angles are equal.",
+    "The apex angle at $B$ is $120$ degrees, so each base angle is $30$ degrees, and the obtuse one is its supplement."
+  ],
+  "solutionLatex": "A regular hexagon has interior angle $\\frac{180(6-2)}{6} = \\frac{720}{6} = 120$ degrees, so $\\angle ABC = 120$ degrees.\n\nSince $AB$ and $BC$ are both sides of the hexagon, $AB = BC$ and triangle $ABC$ is isosceles, so its two base angles $\\angle BAC$ and $\\angle BCA$ are equal.\n\nTheir sum is $180 - 120 = 60$ degrees, so each is $30$ degrees. That is the acute angle between the lines $AC$ and $BC$.\n\nTwo lines meeting at $30$ degrees also meet at $180 - 30 = 150$ degrees, and the obtuse one is $150$.",
+  "techniqueSlugs": [
+    "polygon-angle-sum",
+    "triangle-angle-sum"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,33 @@
+{
+  "id": "m1-l1-p11",
+  "moduleId": "M1",
+  "lessonId": "m1-l1",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "inequalities",
+    "fractions"
+  ],
+  "promptLatex": "Solve the inequality $-\\frac{2}{3}(x-6) \\ge 4$ for the value of $x$.",
+  "choices": [
+    "x\\le 0",
+    "x\\ge 0",
+    "x\\le -6",
+    "x\\ge -6",
+    "x\\le 12"
+  ],
+  "answerLatex": "x\\le 0",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The coefficient of $(x-6)$ is negative, and that decides how the comparison behaves when you clear it.",
+    "Divide both sides by $-\\frac{2}{3}$, keeping in mind that dividing by a negative number reverses the inequality.",
+    "That gives $x - 6 \\le 4 \\cdot \\left(-\\frac{3}{2}\\right) = -6$, so $x \\le 0$."
+  ],
+  "solutionLatex": "Start from $-\\frac{2}{3}(x-6) \\ge 4$.\n\nDivide both sides by $-\\frac{2}{3}$, which is negative, so the inequality reverses.\n\n$x - 6 \\le 4 \\cdot \\left(-\\frac{3}{2}\\right) = -6$\n\n$x \\le 0$\n\nSo the solution set is the interval $\\left(-\\infty, 0\\right]$, which matches the first choice.",
+  "techniqueSlugs": [
+    "sign-flip-negative"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

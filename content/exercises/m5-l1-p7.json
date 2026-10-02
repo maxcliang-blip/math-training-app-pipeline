@@ -1,0 +1,29 @@
+{
+  "id": "m5-l1-p7",
+  "moduleId": "M5",
+  "lessonId": "m5-l1",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "angles",
+    "transversals",
+    "parallel-lines",
+    "parallel-line-angle-transfer"
+  ],
+  "promptLatex": "Two parallel lines are cut by a transversal. One exterior angle measures $52^{\\circ}$. What is the measure, in degrees, of the alternate exterior angle?",
+  "choices": null,
+  "answerLatex": "52",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Exterior means outside the region between the parallel lines, so this angle is not an interior angle.",
+    "The alternate exterior angle is on the far side of the transversal from the given one.",
+    "Alternate exterior angles formed by parallel lines are congruent, so it measures $52$."
+  ],
+  "solutionLatex": "The angle given lies outside the two parallel lines, and the angle in question also lies outside them, on the opposite side of the transversal.\n\nThat is exactly the definition of alternate exterior angles.\n\nBecause the lines are parallel, alternate exterior angles are congruent, so the required angle also measures $52$.",
+  "techniqueSlugs": [
+    "alternate-exterior-angles"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
