@@ -651,6 +651,13 @@ if (isMain) {
       console.log("  every figure already declares the box the compiler produces");
     }
     console.log("  review the diff and commit it. This mode is a bootstrap, not a gate.");
+
+    // The violations reported below were measured against the declarations this run has just
+    // rewritten, so re-reporting them as a failure would make the bootstrap fail at exactly the
+    // moment it did its job. It already returned early above for anything that genuinely went
+    // wrong: a missing toolchain, an unmeasurable figure, a ratio it could not scope to a figure.
+    // Whether the recorded corpus is now clean is a question for the next ordinary gating run.
+    process.exit(0);
   }
 
   for (const w of result.warnings) console.log(`  [warn] ${w.path || w.key}: ${w.message}`);
