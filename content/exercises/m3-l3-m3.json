@@ -1,0 +1,28 @@
+{
+  "id": "m3-l3-m3",
+  "moduleId": "M3",
+  "lessonId": "m3-l3",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "permutations",
+    "recurrences"
+  ],
+  "promptLatex": "Let $D_n$ be the number of derangements of $n$ objects, that is, permutations in which no object stays in its original position. What are the last three digits of $D_{12}$?",
+  "choices": null,
+  "answerLatex": "841",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Everything can be done modulo $1000$, which keeps the arithmetic small.",
+    "Either iterate the two-term recurrence or use the one-step form $D_n = n D_{n-1} + (-1)^n$.",
+    "Reduce at every step; the last three digits of a sum depend only on the last three digits of the summands."
+  ],
+  "solutionLatex": "Since the recurrence uses only addition and multiplication, reducing modulo $1000$ at every step gives the last three digits exactly. Using $D_n = n D_{n-1} + (-1)^n$ from $D_1 = 0$:\n\n$D_2 \\equiv 1$, $D_3 \\equiv 3 \\cdot 1 - 1 = 2$, $D_4 \\equiv 4 \\cdot 2 + 1 = 9$, $D_5 \\equiv 5 \\cdot 9 - 1 = 44$, $D_6 \\equiv 6 \\cdot 44 + 1 = 265$, $D_7 \\equiv 7 \\cdot 265 - 1 = 1854 \\equiv 854$, $D_8 \\equiv 8 \\cdot 854 + 1 = 6833 \\equiv 833$, $D_9 \\equiv 9 \\cdot 833 - 1 = 7496 \\equiv 496$, $D_{10} \\equiv 10 \\cdot 496 + 1 = 4961 \\equiv 961$, $D_{11} \\equiv 11 \\cdot 961 - 1 = 10570 \\equiv 570$, $D_{12} \\equiv 12 \\cdot 570 + 1 = 6841 \\equiv 841$.\n\nSo the last three digits of $D_{12}$ are $841$. As a check, the exact values are $D_{10} = 1334961$, $D_{11} = 14684570$, and $D_{12} = 176214841$.",
+  "techniqueSlugs": [
+    "derangement-recurrence",
+    "iterate-the-recurrence"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

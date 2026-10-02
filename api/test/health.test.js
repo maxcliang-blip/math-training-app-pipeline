@@ -34,8 +34,8 @@ test("health is 200 with the corpus counts and the figure pipeline state", async
   assert.equal(res.status, 200);
   const body = await res.json();
   assert.equal(body.ok, true);
-  assert.equal(body.content.lessons, 29);
-  assert.equal(body.content.exercises, 532);
+  assert.equal(body.content.lessons, 31);
+  assert.equal(body.content.exercises, 590);
   // The figure pipeline is reported rather than assumed, so a deploy can tell "the service is up"
   // from "the service is up and the figures are broken".
   assert.equal(typeof body.figures.usable, "boolean");
