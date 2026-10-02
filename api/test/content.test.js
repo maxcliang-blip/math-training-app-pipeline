@@ -1,5 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 import { ContentStore, loadContentStore, loadModuleMeta, toExerciseResponse, toLessonResponse, DEFAULT_CONTENT_ROOT } from "../src/content.js";
 import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure-contract.mjs";
@@ -27,7 +30,14 @@ test("a lesson route reports ids for practice, mastery and solutions, and the pr
   assert.ok(Array.isArray(lesson.sections.practiceIds));
   assert.ok(lesson.sections.practiceIds.length > 0);
   assert.ok(Array.isArray(lesson.sections.masteryIds));
-  assert.ok(Array.isArray(lesson.sections.solutionIds));
+  // Length, not just Array.isArray: "solutions" does not strip to "solution", so a derived
+  // section name made this list empty on every lesson while the two beside it stayed healthy.
+  assert.ok(lesson.sections.solutionIds.length > 0, "lesson route reports no solutions");
+  for (const id of lesson.sections.solutionIds) {
+    const ex = store.exercises.get(id);
+    assert.ok(ex, `solution ${id} does not resolve`);
+    assert.equal(ex.lessonId, lesson.id, `solution ${id} belongs to ${ex.lessonId}`);
+  }
   // The pass threshold drives "Mastery check passed" in lesson spec S4, so it must not be lost
   // by flattening the section into an id list.
   assert.equal(typeof lesson.sections.mastery.passThreshold, "number");
@@ -167,7 +177,7 @@ test("raw LaTeX in, raw LaTeX out - the exercise route never pre-renders", () =>
   }
 });
 
-test("GET /api/modules has the shape IA §7 specifies, with an honest null for a missing catalogue", () => {
+test("GET /api/modules has the shape IA §7 specifies, catalogue or no catalogue", () => {
   const { modules, missingTitle } = store.listModules();
   assert.ok(modules.length >= 8);
   const m1 = modules.find((m) => m.code === "M1");
@@ -176,13 +186,36 @@ test("GET /api/modules has the shape IA §7 specifies, with an honest null for a
   assert.equal(typeof m1.lessonCount, "number");
   assert.equal(typeof m1.exerciseCount, "number");
   assert.ok(Array.isArray(m1.tiers));
-  // No content/modules.json is committed, so every title is null rather than guessed from a
-  // lesson, and the gap is named instead of hidden.
-  assert.equal(m1.title, null);
-  assert.ok(missingTitle.includes("M1"));
+
+  // Title resolution depends on whether content/modules.json exists, which is a content
+  // decision landing independently of this branch. Both outcomes are asserted, and neither one
+  // is a failure: a title is either resolved from the catalogue or reported as missing, and
+  // missingTitle lists exactly the ones that are not resolved.
+  const { present } = loadModuleMeta(DEFAULT_CONTENT_ROOT);
+  if (present) {
+    assert.equal(typeof m1.title, "string");
+    assert.equal(m1.title.length > 0, true);
+    assert.deepEqual(missingTitle, []);
+  } else {
+    // Without a catalogue a title is null rather than guessed from a lesson, because the
+    // catalogue and the corpus can disagree about which module is which.
+    assert.equal(m1.title, null);
+    assert.ok(missingTitle.includes("M1"));
+  }
+
   // Module order is numeric, so M2 sorts before M10 rather than after it.
   const codes = modules.map((m) => m.code);
   assert.deepEqual(codes, [...codes].sort((a, b) => Number(a.slice(1)) - Number(b.slice(1))));
+
+  // A module with no lessons yet still declares its tiers, and a tier badge that renders as
+  // nothing is not something a test suite notices by itself. Every catalogue module reports the
+  // tiers it declares, and `tiers` agrees with `declaredTiers` whenever the corpus is empty.
+  for (const m of modules) {
+    if (m.declaredTiers.length) {
+      assert.ok(m.tiers.length > 0, `${m.code} reports no tiers at all`);
+      if (m.lessonCount === 0) assert.deepEqual(m.tiers, m.declaredTiers, `${m.code} has no lessons, so its tiers are the declared ones`);
+    }
+  }
 });
 
 test("a batched exercise fetch is one call, capped, and reports ids it could not resolve", () => {
@@ -191,6 +224,36 @@ test("a batched exercise fetch is one call, capped, and reports ids it could not
   const byLesson = store.queryExercises({ lessonId: "m1-l2" });
   assert.ok(byLesson.length >= 15);
   assert.ok(byLesson.every((e) => e.lessonId === "m1-l2"));
+});
+
+test("every filter a query carries narrows the batch, not just lessonId and ids", () => {
+  // These filters used to be built by the route and then dropped on the floor, so
+  // `?moduleId=M3` answered with the whole corpus sorted by id - which looks like a result.
+  const total = store.queryExercises({}).length;
+  const byModule = store.queryExercises({ moduleId: "M1" });
+  assert.ok(byModule.length > 0 && byModule.length < total, `moduleId returned ${byModule.length} of ${total}`);
+  assert.equal(byModule.every((e) => e.moduleId === "M1"), true);
+
+  const byTier = store.queryExercises({ moduleId: "M1", tiers: ["10"] });
+  assert.ok(byTier.length < byModule.length);
+  assert.equal(byTier.every((e) => e.moduleId === "M1" && String(e.tier) === "10"), true);
+
+  const byTag = store.queryExercises({ tags: ["no-such-tag"] });
+  assert.deepEqual(byTag, [], "a tag that matches nothing must answer empty, not everything");
+  assert.deepEqual(store.queryExercises({ moduleId: "M99" }), []);
+
+  // Filters compose with lessonId, and the lesson's own authored order is kept when it is the
+  // only filter: a lesson page lists what the lesson said, in the order it said it.
+  const lessonOnly = store.queryExercises({ lessonId: "m1-l2" });
+  assert.deepEqual(lessonOnly, store.queryExercises({ ids: lessonOnly.map((e) => e.id) }));
+  const lessonFiltered = store.queryExercises({ lessonId: "m1-l2", tiers: ["10"] });
+  assert.equal(lessonFiltered.every((e) => e.lessonId === "m1-l2" && String(e.tier) === "10"), true);
+  assert.ok(lessonFiltered.length > 0 && lessonFiltered.length <= lessonOnly.length);
+
+  // Difficulty is a range, and it is the one filter that is order-sensitive.
+  const easy = store.queryExercises({ difficultyMin: 1, difficultyMax: 2 });
+  assert.equal(easy.every((e) => Number(e.difficulty) >= 1 && Number(e.difficulty) <= 2), true);
+  assert.ok(easy.length < total);
 });
 
 test("practice filtering returns a stable order for the same filters", () => {
@@ -213,8 +276,81 @@ test("the grading record is the only place the answer key is assembled", () => {
 });
 
 test("a missing module catalogue is a warning, not a failure", () => {
-  const { modules, present } = loadModuleMeta(DEFAULT_CONTENT_ROOT);
-  assert.equal(present, false);
-  assert.deepEqual(modules, []);
-  assert.ok(store.warnings.some((w) => w.includes("module catalogue")));
+  // When content/modules.json is absent the store still loads and warns; when it is present the
+  // modules get titles. Asserting the absent case unconditionally would fail the day the
+  // catalogue lands, so both are covered through the same contract.
+  const { modules, present, path } = loadModuleMeta(DEFAULT_CONTENT_ROOT);
+  assert.ok(present ? modules.length > 0 : modules.length === 0);
+  assert.ok(path.endsWith("modules.json"));
+  if (!present) {
+    assert.ok(store.warnings.some((w) => w.includes("module catalogue")));
+  } else {
+    assert.equal(store.warnings.some((w) => w.includes("module catalogue")), false);
+  }
+});
+
+test("warnings only describe real gaps, and a clean corpus produces none", () => {
+  // Every warning the loader can emit names an id that does not resolve. This asserts the shape
+  // of a warning and, separately, that the loader does not invent one for content that is fine.
+  const clean = new ContentStore({ root: DEFAULT_CONTENT_ROOT, modules: [] });
+  const dangling = clean.warnings.filter((w) => /which no (exercise|lesson) file defines/.test(w));
+  for (const warning of dangling) assert.match(warning, /\b(m|l)\d/);
+  // A catalogue supplied explicitly removes the catalogue warning and nothing else.
+  const withCatalogue = new ContentStore({
+    root: DEFAULT_CONTENT_ROOT,
+    modules: [{ id: "M1", title: "Algebra Foundations", order: 1 }],
+  });
+  assert.equal(withCatalogue.warnings.some((w) => w.includes("module catalogue")), false);
+});
+
+test("the shipped corpus has no dangling references", () => {
+  // The tests above keep the route contract state-agnostic, which is right, but it means nothing
+  // on its own holds the corpus still. This does: a lesson that lists an exercise nobody authored,
+  // an exercise that claims a lesson that does not exist, or a prerequisite pointing nowhere has
+  // to fail here instead of shipping. It reached zero when the counting lessons moved to M3 and
+  // m4-l4's prerequisite m3-l2 resolved; it should stay there.
+  assert.deepEqual(store.warnings, []);
+});
+
+test("every lesson and every exercise claims a module the catalogue declares", () => {
+  // The regression guard for this change. The counting lessons were filed under M7, which the
+  // catalogue gives to Probability, and nothing complained: the codes looked plausible and the
+  // store only compared ids, never the two files against each other. M3 and M7 mean different
+  // topics, so a lesson under the wrong one is invisible to every other check.
+  const catalogue = new Map(
+    JSON.parse(readFileSync(join(DEFAULT_CONTENT_ROOT, "modules.json"), "utf8")).modules.map((m) => [m.id, m.title]),
+  );
+  for (const lesson of store.lessons.values()) {
+    assert.ok(catalogue.has(lesson.moduleId), `lesson ${lesson.id} claims module ${lesson.moduleId}, which the catalogue does not declare`);
+  }
+  for (const ex of store.exercises.values()) {
+    assert.ok(catalogue.has(ex.moduleId), `exercise ${ex.id} claims module ${ex.moduleId}, which the catalogue does not declare`);
+  }
+  // And the two codes this branch moved between really do name different topics.
+  assert.equal(catalogue.get("M3"), "Counting & Combinatorics");
+  assert.equal(catalogue.get("M7"), "Probability");
+  assert.ok(store.getLesson("m3-l1"), "the counting lessons are m3-l1/m3-l2");
+  assert.equal(store.getLesson("m7-l1"), null, "nothing is filed under the probability code any more");
+});
+
+test("a dangling reference is still reported, so zero warnings means clean rather than unchecked", () => {
+  // The other half of the zero above. Detection must survive the corpus being clean, or a green
+  // run would only mean the check had been switched off.
+  const root = mkdtempSync(join(tmpdir(), "math-dangling-"));
+  try {
+    mkdirSync(join(root, "lessons"), { recursive: true });
+    mkdirSync(join(root, "exercises"), { recursive: true });
+    writeFileSync(join(root, "lessons", "l1.json"), JSON.stringify({
+      id: "l1", moduleId: "M1", order: 1, title: "T",
+      prerequisites: ["l0"],
+      sections: { practice: { exerciseIds: ["e-missing"] } },
+    }));
+    writeFileSync(join(root, "exercises", "e1.json"), JSON.stringify({ id: "e1", lessonId: "l0", moduleId: "M1" }));
+    const warnings = new ContentStore({ root }).warnings;
+    assert.ok(warnings.some((w) => w.includes("prerequisite l0")), `expected the missing prerequisite to be reported, got ${warnings}`);
+    assert.ok(warnings.some((w) => w.includes("e-missing")), `expected the missing practice id to be reported, got ${warnings}`);
+    assert.ok(warnings.some((w) => w.includes("claims lesson l0")), `expected the orphaned exercise to be reported, got ${warnings}`);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
