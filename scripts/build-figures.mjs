@@ -342,22 +342,44 @@ function compileFigure(toolchain, figure, outDir) {
     writeFileSync(join(outDir, "svg", file), svg);
     return { svg, file, box: measureBox(svg) };
   } catch (err) {
-    // The compiler's last two lines are the symptom; the six before them are the cause.
-    // asy reports "shipout failed" from plain_shipout.asy, which says nothing about the
-    // figure — the line that names the offending TeX macro is further up. Keeping two lines
-    // turns every one of these into the same unreadable message, which is how a single
-    // figure that compiles in one run and dies in the next gets looked at twice.
-    const detail = (err.stderr || err.message || "")
-      .toString()
-      .trim()
-      .split("\n")
-      .filter((l) => l.trim())
-      .slice(-8)
-      .join(" | ");
-    return { error: `compile failed: ${detail}` };
+    // The compiler's own last few lines are the symptom; plain_shipout.asy saying "shipout
+    // failed" is the symptom every TeX-side failure wears. What actually failed is in the
+    // work directory, which the finally below deletes, so gather it here while it exists:
+    // the source asy was handed, everything it left behind, and the tail of any log or TeX
+    // file in there. Without this a figure that dies on one run and compiles on the next is
+    // indistinguishable from a flake, and gets re-run instead of diagnosed.
+    return { error: `compile failed: ${describeCompileFailure(err, work, figure)}` };
   } finally {
     rmSync(work, { recursive: true, force: true });
   }
+}
+
+function describeCompileFailure(err, work, figure) {
+  const parts = [];
+  const stderr = (err.stderr || err.message || "").toString().trim();
+  if (stderr) parts.push(stderr.split("\n").filter((l) => l.trim()).slice(-8).join(" | "));
+
+  let left = [];
+  try {
+    left = readdirSync(work).filter((f) => f !== "figure.asy");
+  } catch {
+    // The work directory is gone; nothing more to report than the compiler said.
+  }
+  parts.push(`[${figure.key}] work dir held ${left.join(", ") || "nothing"}`);
+
+  // asy writes one .tex per TeX-rendered label and a combined .log. The latex error is in the
+  // log, and it names the macro — which is the only thing that points at the figure.
+  for (const name of left.filter((f) => /\.log$|\.tex$|\.blg$/.test(f)).slice(0, 4)) {
+    try {
+      const tail = readFileSync(join(work, name), "utf8").trim().split("\n").filter((l) => l.trim()).slice(-12);
+      if (tail.length) parts.push(`${name}: ${tail.join(" | ")}`);
+    } catch {
+      // Unreadable is not worth reporting over the compiler's own words.
+    }
+  }
+
+  parts.push(`source: ${figure.source.split("\n").map((l) => l.trim()).filter(Boolean).join(" ; ")}`);
+  return parts.join("\n      ");
 }
 
 // ---------------------------------------------------------------------------
