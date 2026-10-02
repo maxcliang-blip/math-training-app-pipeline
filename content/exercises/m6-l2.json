@@ -435,7 +435,7 @@
       "slope-intercept-form",
       "clear-denominators-standard-form"
     ],
-    "asymptoteSource": "// A triangle cut off by the coordinate axes and an intercept line.\n// Two-argument size call fixes the output box, so the declared 4/3 is exact.\nsize(320,240);\ndraw((0,0)--(4,0)--(0,6)--cycle);\ndraw((0,0)--(4.6,0),Arrow);\ndraw((0,0)--(0,6.6),Arrow);\nlabel(\"$x$\",(4.7,0),E);\nlabel(\"$y$\",(0,6.7),N);\nlabel(\"$A$\",(4,0),SE);\nlabel(\"$B$\",(0,6),NW);\nlabel(\"$4$\",(2,0),S);\nlabel(\"$6$\",(-0.35,3),E);\nlabel(\"$\\frac{x}{4}+\\frac{y}{6}=1$\",(1.9,2.4),NE);",
+    "asymptoteSource": "// A triangle cut off by the coordinate axes and an intercept line.\n//\n// size(W,H) bounds the output under Asymptote's default keepAspect and does not\n// scale labels, so the compiler decides the box. This declaration is restated from\n// a real compile by `npm run content:figures -- --record-aspect-ratios`.\nsize(320,240);\ndraw((0,0)--(4,0)--(0,6)--cycle);\ndraw((0,0)--(4.6,0),Arrow);\ndraw((0,0)--(0,6.6),Arrow);\nlabel(\"$x$\",(4.7,0),E);\nlabel(\"$y$\",(0,6.7),N);\nlabel(\"$A$\",(4,0),SE);\nlabel(\"$B$\",(0,6),NW);\nlabel(\"$4$\",(2,0),S);\nlabel(\"$6$\",(-0.35,3),E);\nlabel(\"$\\frac{x}{4}+\\frac{y}{6}=1$\",(1.9,2.4),NE);",
     "asymptoteAlt": "A right triangle sits in the first quadrant with its right angle at the origin, one leg running along the horizontal axis to a point labelled A and the other rising along the vertical axis to a point labelled B. The two legs are labelled with their lengths and the hypotenuse joining the two intercept points carries the equation of the slanted line. Coordinate axes with arrowheads extend past the triangle in both directions and are labelled with their names.",
     "asymptoteAspectRatio": 1.333
   },

@@ -559,7 +559,12 @@ export function recordAspectRatios(result) {
     const height = Math.round(m.measuredHeight);
     const newSize = `size(${width},${height})`;
     if (newSize === m.declaredSize && m.measuredRatio === m.declaredRatio) continue;
-    const groupKey = `${m.file} ${m.source}`;
+    // A NUL cannot appear in a file path or in the JSON-escaped source text, so it is a
+    // separator that two distinct (file, source) pairs can never collide on. It is written as
+    // an escape rather than a literal byte: a literal NUL makes this file read as binary to
+    // grep, diff and anything else that sniffs for it, which is how the record pass got
+    // reviewed as a binary diff.
+    const groupKey = `${m.file}\u0000${m.source}`;
     if (!grouped.has(groupKey)) grouped.set(groupKey, []);
     grouped.get(groupKey).push({ m, newSize });
   }
