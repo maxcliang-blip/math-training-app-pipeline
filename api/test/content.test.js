@@ -18,8 +18,8 @@ test("every lesson and every exercise in the repository is loaded", () => {
   // assumes one of them silently serves about a third of the exercises, and the only symptom is
   // a 404 on an exercise the board can see listed. Pin the count so the drop cannot come back.
   const stats = store.stats();
-  assert.equal(stats.lessons, 29);
-  assert.equal(stats.exercises, 532);
+  assert.equal(stats.lessons, 30);
+  assert.equal(stats.exercises, 550);
   assert.ok(stats.modules >= 8, `expected at least the eight authored modules, got ${stats.modules}`);
 });
 

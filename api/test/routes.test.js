@@ -77,7 +77,7 @@ test("health reports the corpus it actually loaded", async () => {
   const { status, body } = await get("/api/health");
   assert.equal(status, 200);
   assert.equal(body.ok, true);
-  assert.equal(body.content.exercises, 532);
+  assert.equal(body.content.exercises, 550);
   assert.equal(typeof body.figures.usable, "boolean");
 });
 

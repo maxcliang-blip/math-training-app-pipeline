@@ -155,6 +155,10 @@ const TAG_TOPIC = [
   "trig-equations", "trig-graphing", "inverse-trig", "law-of-sines", "law-of-cosines",
   "triangle-area", "triangle-solving", "sss-triangles", "sas-triangles", "ssa-triangles",
   "cyclic-quadrilaterals", "angle-chasing", "oblique-triangles", "trigonometric-area",
+  // Module 8, lesson 4 (MAX-20): the polar and roots-of-unity half of trigonometry. The
+  // topics already filed under Module 6 ("complex-numbers") are what an exercise is about;
+  // these two name the parts of it a learner can ask for on their own.
+  "polar-form", "complex-powers",
   // Module 7: counting and probability.
   "fundamental-counting", "permutations", "combinations", "inclusion-exclusion",
   "stars-and-bars", "complementary-counting", "pigeonhole-principle", "probability",
@@ -212,6 +216,12 @@ const TAG_TECHNIQUE = [
   "radius-times-angle", "sector-area-formula", "double-angle-recovery",
   "angle-addition-expansion", "identity-proof-strategy", "area-from-two-sides-angle",
   "chord-angle-relation", "sine-law-inverse-solve", "angles-in-a-quadrilateral",
+  // Module 8, lesson 4 (MAX-20): how a polar-form or roots-of-unity argument is built.
+  // "complex-modulus", "conjugate-arithmetic", "de-moivre" and "roots-of-unity" are
+  // already filed under Module 6 and are reused here rather than restated.
+  "modulus-and-argument", "polar-rectangular-conversion", "argument-quadrant-fix",
+  "de-moivre-power", "angle-multiplication-reduction", "nth-root-extraction",
+  "root-of-unity-sums", "regular-polygon-vertices",
   // Module 7: how a counting or probability argument is actually built.
   "multiplication-principle", "factorial-counting", "complementary-count",
   "inclusion-exclusion-principle", "stars-and-bars-method", "pigeonhole-application",
