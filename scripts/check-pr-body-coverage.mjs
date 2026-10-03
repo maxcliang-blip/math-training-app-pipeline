@@ -83,10 +83,15 @@ export function splitFences(text) {
   const prose = [];
   const fenced = [];
   let inFence = null;
+  let proseAtOpen = 0;
   for (const line of String(text ?? "").split("\n")) {
-    const open = line.match(/^\s*(?:```|~~~)/);
+    // Capturing group, deliberately. `(?:```|~~~)` compiles, yields undefined for [1], and the
+    // consequence is that no fence has ever closed -- so a balanced pair left the whole body
+    // classified as a code listing, and rule 2 could not fire on any body containing a fence.
+    const open = line.match(/^\s*(```|~~~)/);
     if (inFence === null && open) {
       inFence = open[1];
+      proseAtOpen = prose.length;
       continue;
     }
     if (inFence !== null) {
@@ -96,9 +101,10 @@ export function splitFences(text) {
     }
     prose.push(line);
   }
-  // An unterminated fence is still a fence. Treating the rest of the body as prose would let a
-  // truncated diff carry claims it never made.
-  if (inFence !== null) fenced.push(...prose.splice(0));
+  // An unterminated fence is still a fence, so the rest of the body is a listing. Only the text
+  // accumulated *since it opened* moves -- moving all of it would also swallow the prose above the
+  // opening fence, which is prose in every sense that matters here.
+  if (inFence !== null) fenced.push(...prose.splice(proseAtOpen));
   return { prose: prose.join("\n"), fenced: fenced.join("\n") };
 }
 
@@ -116,10 +122,18 @@ export function extractDelimited(text) {
     const ch = src[i];
     if (ch === "`") {
       const ticks = /^`+/.exec(src.slice(i))[0];
+      const lineEnd = src.indexOf("\n", i);
+      const limit = lineEnd === -1 ? src.length : lineEnd;
       const end = src.indexOf(ticks, i + ticks.length);
-      if (end === -1) {
-        clean += src.slice(i);
-        break;
+      // An unpaired backtick must not swallow the rest of the body. Real bodies have them --
+      // a stray backtick inside a pasted diff, a typo in prose -- and an unbounded search turned
+      // one stray character into a whole body with no links and no paths in it, which is how a
+      // real PR ended up here with three nonsense "claims" instead of its links. So the closing
+      // run must exist on this line, and if it does not, the backtick is a literal character.
+      if (end === -1 || end > limit) {
+        clean += ch;
+        i += 1;
+        continue;
       }
       quoted.push(src.slice(i + ticks.length, end).trim());
       clean += " ";
@@ -849,6 +863,65 @@ export function selftest() {
       "| `content/lessons/` | carried unchanged, as the fixture tree the guard runs against in its own selftest |",
     ].join("\n"),
     "pass",
+  );
+
+  caseOf(
+    "balanced-fence-does-not-eat-the-body",
+    "prose-claim",
+    "a balanced fence must leave the prose around it able to claim anything (a non-capturing group meant no fence ever closed, so the whole body became a listing)",
+    ["scripts/a.mjs"],
+    [
+      "Reproduced against the running image:",
+      "",
+      "```",
+      "FAIL  lesson count in the image matches the repository (image 31, repo 35)",
+      "PASS  container resolves content from the image, not from a host checkout",
+      "```",
+      "",
+      "`scripts/a.mjs` — the acceptance check that reads the image moved here, so the same",
+      "assertion that fails in CI is the one a contributor can run locally before pushing.",
+    ].join("\n"),
+    "pass",
+    (r) => {
+      if (r.missingClaims.length) throw new Error(`the fence ate the body: ${JSON.stringify(r.missingClaims)}`);
+    },
+  );
+
+  caseOf(
+    "stray-backtick-with-no-partner-does-not-eat-the-body",
+    "coverage",
+    "a backtick with no partner anywhere must not stop the extractor reaching a later link (one stray character used to end extraction for good)",
+    ["scripts/agent-worktree.sh"],
+    [
+      "The reproduction is below, and the stray backtick above is exactly what a pasted diff",
+      "leaves behind: `",
+      "",
+      "The helper itself is [scripts/agent-worktree.sh](https://github.com/o/r/tree/main/scripts/agent-worktree.sh),",
+      "which is the only place the one-worktree-per-agent rule is written down at all.",
+    ].join("\n"),
+    "pass",
+    (r) => {
+      if (r.covered.length !== 1) throw new Error(`the link after the stray backtick was never reached: ${JSON.stringify(r.patterns)}`);
+    },
+  );
+
+  caseOf(
+    "backtick-may-not-pair-across-a-line",
+    "coverage",
+    "a backtick must not pair with one on a later line and swallow a link in between",
+    ["scripts/agent-worktree.sh"],
+    [
+      "The diff was pasted with a stray backtick, which is why the lesson count looked wrong: `",
+      "",
+      "And here is the second one, on the other side of the only thing this pull request is about:",
+      "",
+      "[scripts/agent-worktree.sh](https://github.com/o/r/tree/main/scripts/agent-worktree.sh) is where",
+      "the one-worktree-per-agent rule is written down, and the guard points at that file. `",
+    ].join("\n"),
+    "pass",
+    (r) => {
+      if (r.covered.length !== 1) throw new Error(`a cross-line code span swallowed the link: ${JSON.stringify(r.patterns)}`);
+    },
   );
 
   // --- D. Harness invariant -------------------------------------------------
