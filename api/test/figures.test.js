@@ -1,8 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert";
-import { mkdtempSync, writeFileSync, readFileSync, rmSync } from "node:fs";
+import { cpSync, mkdtempSync, writeFileSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
 import { FigureStore, requireFigure, loadFigureStore } from "../src/figures.js";
 import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS, figureReference, toFigurePayload, exerciseFigureKey, lessonFigureKey } from "../../lib/figure-contract.mjs";
@@ -277,6 +280,121 @@ test("the drift gate fires on a source edit that was never restated, and is not 
   assert.equal(classifyDrift(1, 1.015).level, "pass");
   assert.equal(classifyDrift(1, 1.03).level, "warn");
   assert.equal(classifyDrift(1, 1.06).level, "reject");
+});
+
+test("the build refuses to record a figure whose ceiling is below the legibility floor", async () => {
+  const { validateFigure } = await import("../../scripts/build-figures.mjs");
+  const base = {
+    declaredRatio: 1.333,
+    alt: "A figure description long enough to satisfy the alt text rule.",
+  };
+
+  // The gap MAX-95 was raised against: size(60,45) has a perfectly legal 1.333 ratio, so it clears
+  // MIN_ASPECT/MAX_ASPECT and every other extent check in the pipeline. Before this floor it passed
+  // validateFigure() and rendered too small to read.
+  const tiny = validateFigure({ ...base, source: "draw((0,0)--(1,1)); size(60,45);" });
+  assert.equal(tiny.problems.length, 1);
+  assert.match(tiny.problems[0], /80pt legibility floor/);
+  assert.match(tiny.problems[0], /W=60, H=45/);
+  // The box is still read and returned, so the rejection is about the ceiling and nothing else --
+  // an author who raises the ceiling gets a usable box back, not a null.
+  assert.deepEqual(tiny.box, { width: 60, height: 45, ratio: 1.333 });
+
+  // One dimension is enough to fail, and it names itself. A figure too thin to hold a label beside
+  // what it labels is a real failure while its height is generous.
+  const thin = validateFigure({ ...base, source: "draw((0,0)--(1,1)); size(60,240);" });
+  assert.equal(thin.problems.length, 1);
+  assert.match(thin.problems[0], /W=60/);
+  assert.doesNotMatch(thin.problems[0], /H=240pt/);
+
+  // The floor is on absolute size, not on ratio: the accepted cases span ratios from 0.5 to 3.
+  for (const source of [
+    "draw((0,0)--(1,1)); size(80,240);", // 0.333 -- under the aspect band, so rejected, but by S9
+    "draw((0,0)--(1,1)); size(240,80);",
+    "draw((0,0)--(1,1)); size(80,80);", // exactly on the floor, and it is allowed
+    "draw((0,0)--(1,1)); size(320,240);",
+    "draw((0,0)--(1,1)); size(640,120);", // 5.33 -- over the aspect band, but the floor is not why
+  ]) {
+    const result = validateFigure({ ...base, source });
+    const floor = result.problems.filter((p) => p.includes("legibility floor"));
+    assert.equal(
+      floor.length,
+      0,
+      `unexpected floor rejection for ${source}: ${JSON.stringify(result.problems)}`,
+    );
+  }
+
+  // Nothing that passed before this floor is rejected now. On origin/main all 91 corpus ceilings use
+  // the two-argument form, the smallest declared dimension is 111, and nothing is under 80 -- so
+  // the floor is additive and changes no existing verdict. size(320,240) is the shape the existing
+  // "the size() verdict is unchanged" test on this gate already pins, and it must stay clean.
+  assert.deepEqual(validateFigure({ ...base, source: "draw((0,0)--(1,1)); size(320,240);" }).problems, []);
+});
+
+test("the build gate and the authoring rule read the same floor", async () => {
+  // Two files declare MIN_SIZE_FLOOR, because scripts/preflight-content.mjs is documented as
+  // runnable with no repo and cannot import the build script, while the build script deliberately
+  // has no dependency on the authoring gate or on katex. The cost of that split is a measured
+  // constant that could drift apart silently, so this pins them together.
+  const build = await import("../../scripts/build-figures.mjs");
+  const preflight = await import("../../scripts/preflight-content.mjs");
+
+  assert.equal(build.MIN_SIZE_FLOOR, 80);
+  assert.equal(preflight.MIN_SIZE_FLOOR, 80);
+
+  // And they have to agree on behaviour, not only on the number: a ceiling the build accepts must
+  // not be one the authoring rule reports. Driven through the authoring rule's own engine over a
+  // copy of the real corpus, with one figure's ceiling rewritten in place, so the assertion covers
+  // the rule rather than a synthetic fixture that could pass for the wrong reason.
+  const dir = mkdtempSync(join(tmpdir(), "size-floor-"));
+  try {
+    cpSync(join(REPO, "content"), dir, { recursive: true });
+    const lessonsDir = join(dir, "lessons");
+    const files = readdirSync(lessonsDir).filter((f) => f.endsWith(".json")).sort();
+    const ordered = files
+      .map((f) => ({ file: f, record: JSON.parse(readFileSync(join(lessonsDir, f), "utf8")) }))
+      .sort((a, b) => String(a.record.id).localeCompare(String(b.record.id)));
+    const victim = ordered.find(({ record }) => {
+      const figures = record.sections && record.sections.concept && record.sections.concept.figures;
+      return Array.isArray(figures) && figures.some((f) => typeof f.asymptoteSource === "string");
+    });
+    assert.ok(victim, "the corpus must contain a figure with a source to rewrite");
+
+    const restate = (w, h) => {
+      const [fig] = victim.record.sections.concept.figures.filter(
+        (f) => typeof f.asymptoteSource === "string",
+      );
+      fig.asymptoteSource = fig.asymptoteSource.replace(
+        /size\s*\(\s*[\d.]+\s*,\s*[\d.]+\s*\)/,
+        `size(${w}, ${h})`,
+      );
+      writeFileSync(join(lessonsDir, victim.file), JSON.stringify(victim.record, null, 2) + "\n");
+      return preflight.run(dir).report.findings.filter((f) => f.rule === "S5.2-size-floor");
+    };
+
+    assert.equal(restate(60, 45).length, 1, "size(60,45) must be reported");
+    assert.equal(restate(60, 240).length, 1, "a too-thin width alone must be reported");
+
+    // The exact boundary, both sides of it: on the floor passes, one unit under fails.
+    assert.equal(restate(80, 80).length, 0, "a ceiling exactly on the floor must pass");
+    assert.equal(restate(79, 240).length, 1, "one unit under the floor must fail");
+
+    // And a one-argument call keeps its own single verdict: it declares no box to read a floor
+    // from, so S5.2-size-floor must stay quiet and S5.4-ratio-unverifiable must be the finding.
+    const [oneArgFigure] = victim.record.sections.concept.figures.filter(
+      (f) => typeof f.asymptoteSource === "string",
+    );
+    oneArgFigure.asymptoteSource = oneArgFigure.asymptoteSource.replace(
+      /size\s*\(\s*[\d.]+\s*,\s*[\d.]+\s*\)/,
+      "size(300)",
+    );
+    writeFileSync(join(lessonsDir, victim.file), JSON.stringify(victim.record, null, 2) + "\n");
+    const single = preflight.run(dir).report.findings;
+    assert.equal(single.some((f) => f.rule === "S5.2-size-floor"), false);
+    assert.equal(single.some((f) => f.rule === "S5.4-ratio-unverifiable"), true);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test("the record pass refuses to bless a figure that compiles outside the S9 #8 band", async () => {
