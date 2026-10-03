@@ -28,6 +28,11 @@ jobs:
       # gate proves it can fail before it is trusted to block anything.
       - name: Content math gate
         run: npm run content:selftest
+      # The delivery resolver is the check a close-out runs by hand, so nothing else in CI would
+      # notice it regressing into one that cannot tell a delivered figure from an undelivered one.
+      # It reads a throwaway corpus and no toolchain, so it costs a second. MAX-104.
+      - name: Delivery resolver selftest
+        run: npm run content:delivered:selftest
       - uses: actions/upload-artifact@v4
         if: always()
         with:
