@@ -23,3 +23,64 @@ jobs:
       - run: npm install
       - run: npm run build --workspace web
       - run: npm test --workspaces --if-present
+
+  # Every other job in this repository reads a checkout. That is the whole reason an image could
+  # be built from a working copy of a different repository, or with scripts/ missing from the
+  # build context, and still leave CI green: the only thing that reads the image is the image
+  # build. So this job builds the image, runs it, and asks it where it came from.
+  #
+  # It is the job that would have caught MAX-61 (image labelled with no source/revision, serving a
+  # 31-lesson corpus that exists on no branch) and the Dockerfile defect behind it (the build
+  # stage copied lib/, api/, web/ and content/ but not scripts/, which api/test/figures.test.js
+  # imports — the suite passed in the checkout and failed in the image).
+  staging-image:
+    runs-on: ubuntu-latest
+    # Asymptote pulls TeX Live, so this is minutes, not seconds. Same ceiling as the figures job
+    # in content.yml: a wedged apt or a hung compile should be a red run, not a job that never
+    # reports.
+    timeout-minutes: 45
+    steps:
+      # Full history, because the guard compares the image against a named commit and counts the
+      # corpus inside the image against that same commit with `git ls-tree`. A depth-1 checkout
+      # can answer neither.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # No network needed. The container is only inspected and exec'd, and 18099 avoids colliding
+      # with anything else on the runner.
+      - name: Build the staging image from this commit
+        run: |
+          set -euo pipefail
+          docker build -t math-training-app:ci \
+            --build-arg BUILD_COMMIT="${GITHUB_SHA}" .
+      - name: Run it
+        run: |
+          set -euo pipefail
+          docker rm -f math-staging-ci 2>/dev/null || true
+          docker run -d --name math-staging-ci -p 127.0.0.1:18099:80 math-training-app:ci
+          for _ in $(seq 1 40); do
+            if curl -fsS --max-time 5 http://127.0.0.1:18099/api/health >/dev/null 2>&1; then
+              echo "api up"; exit 0
+            fi
+            sleep 3
+          done
+          echo "::error::the image started but /api/health never answered"
+          docker logs math-staging-ci
+          exit 1
+      # Asserts the image records this repository and this commit, and independently counts
+      # lessons and exercise files inside the image against the commit -- so a mislabelled image
+      # still fails. Also asserts zero mounts, since a bind-mounted content root is the shape that
+      # lets the next merge drift again.
+      - name: Assert the image is built from this repository at this commit
+        run: sh scripts/verify-staging-source.sh math-staging-ci "${GITHUB_SHA}"
+      # The guard above proves provenance. This proves the image that carries that provenance
+      # actually serves a correct API, which is the other half: an image can be built from the
+      # right tree and still be wired wrong.
+      - name: Acceptance check against the running image
+        run: node scripts/verify-staging.mjs http://127.0.0.1:18099
+      - name: Container logs on failure
+        if: failure()
+        run: docker logs math-staging-ci
+      - name: Tear down
+        if: always()
+        run: docker rm -f math-staging-ci 2>/dev/null || true
