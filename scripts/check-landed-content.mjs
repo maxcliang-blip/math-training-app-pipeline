@@ -28,17 +28,51 @@
 // demonstrably shipped. Judging on reachability alone would fail every squash-merged branch in
 // the repository, which is the fastest way to get a gate switched off.
 //
+// MAX-132 adds a fourth condition, because the first three have no notion of work in progress:
+//
+//   4. the owning issue is still open. A branch whose name carries max-NNN, where MAX-NNN is
+//      not done/cancelled, is work somebody is still doing -- not a stranded branch. Without
+//      this the gate reported three violations on the dev checkout, all of them MAX-64's live
+//      branches, and a gate that cries wolf on the operator's own in-flight work gets muted
+//      rather than fixed.
+//
+// Condition 4 is keyed to the *issue*, not to the branch name. A branch named after an issue
+// that does not resolve, or that resolves to nothing the gate was told about, gets no
+// exemption: that is the MAX-111 shape, and a naming convention is not evidence. The
+// exemption also does not cover a closed-unmerged PR. "No PR ever" and "PR rejected" are
+// different facts, and only the first of them is silence.
+//
+// Where the issue statuses come from, in order:
+//
+//   --issues-json <path> / LANDED_ISSUES_JSON   a recorded status list, replayable offline
+//   PAPERCLIP_API_URL + PAPERCLIP_COMPANY_ID     the issue tracker, when this runs in a
+//                                                session that has it
+//
+// With neither, the gate applies no exemption at all and says so. It does not guess, and it
+// does not fail closed to exit 2 either: an unavailable *exemption* is not an unavailable
+// finding, so the branches it would have covered are reported exactly as MAX-126 reported
+// them. A configured-but-unreadable source is different -- that is a question the gate was
+// asked and could not answer, and it exits 2 rather than guessing in the other direction.
+//
 // Exit codes, and why "cannot ask" is not "pass":
 //
 //   0  nothing to report
 //   1  a violation: gated commits on a branch with no PR          <- the finding
 //   2  the question could not be asked: no base ref, no PR source,
-//      a git failure, or a truncated PR listing
+//      an unreadable issue-status list, a git failure, or a truncated listing
 //
 // 2 is deliberately not 0 and deliberately not 1. A gate that cannot reach the PR list has not
 // established that a PR exists, and reporting that as a pass is how a branch ends up invisible
 // again -- the MAX-111 failure wearing a different hat. Every other gate in scripts/ treats an
 // absent toolchain as a failure (see build-figures.mjs exiting 3) for the same reason.
+//
+// Everything this gate has to say -- the per-branch inventory, the failures, the notes, the
+// verdict line -- goes to stdout, including under --quiet. MAX-132 measured the old behaviour:
+// every line went to stderr and --quiet suppressed precisely that, so `npm run land:check
+// --silent` against a failing gate printed nothing at all and exited 1. That is the same trap
+// this gate exists to close, reached from the other side: a gate that fails silently has not
+// told anybody it failed. stderr carries only an unexpected crash. --json prints the report and
+// nothing else, so it stays parseable.
 //
 // This is deliberately NOT folded into preflight-content.mjs. That script is the author-side
 // reference implementation and is documented as runnable with no app and no repository; a check
@@ -56,16 +90,22 @@
 //   --pr-json <path>        recorded PR list; no network at all. Accepts either the `gh pr list
 //                           --json` shape or the REST /pulls shape, so a fixture recorded from
 //                           either source can be replayed
+//   --issue-source <s>      none | file | paperclip            (default: a recorded file if one
+//                           is named, else the tracker if this session has it, else none)
+//   --issues-json <path>    recorded issue statuses; no network. An array of {identifier,
+//                           status}, or an object keyed by identifier
 //   --repo <owner/name>     repository to ask about            (default: origin's URL)
 //   --local-only / --remote-only   narrow which refs are enumerated in the full audit
 //   --json                  machine-readable report on stdout
-//   --quiet                 only the verdict and the failures
+//   --quiet                 only the verdict, the notes and the failures
 //
 // Environment:
 //   GITHUB_TOKEN / GH_TOKEN   used for the PR list when present. Unauthenticated works for a
 //                             public repository and costs 60 requests/hour; a token costs
 //                             5000/hour and is what Actions provides
 //   GITHUB_REPOSITORY         used as the default --repo inside Actions
+//   LANDED_BASE_REF            default for --base
+//   LANDED_ISSUES_JSON         default for --issues-json
 
 import { execFileSync } from "node:child_process";
 import { accessSync, constants, readFileSync } from "node:fs";
@@ -143,19 +183,89 @@ export function buildPrIndex(raws) {
   return index;
 }
 
+// ---------------------------------------------------------------------------
+// Issue facts: is the work still in progress?
+// ---------------------------------------------------------------------------
+//
+// The branch name is the only link between a branch and the issue it belongs to, and it is a
+// weak one, so it is read strictly. A segment must be `max-NNN` on its own or `max-NNN-...`:
+// `gate/max-64-corpus-pins-rebase` yields 64, `max63-m5-l2` yields 63, and `fix/matrix-12-thing`
+// yields nothing at all. Anchoring on the segment rather than searching the whole name is what
+// keeps a substring from becoming an owning issue -- a wrong match here exempts a branch from
+// the gate, so a loose one is a hole, not a convenience.
+//
+// The key is the digits, not `MAX-64`. Both sides of the lookup normalize the same way, so
+// MAX-64, max-64 and MAX64 all find each other and the gate never has to be told this
+// repository's prefix.
+export const TERMINAL_ISSUE_STATUSES = ["done", "cancelled"];
+
+export function issueIdFromBranchName(name) {
+  for (const segment of String(name).split("/")) {
+    const m = /^max-?(\d+)(?:[-_].*)?$/i.exec(segment);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+export function normalizeIssueKey(identifier) {
+  return String(identifier ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+export function isTerminalIssueStatus(status) {
+  return TERMINAL_ISSUE_STATUSES.includes(String(status ?? "").toLowerCase());
+}
+
+// Accepts the three shapes a status list arrives in, so a fixture recorded from the tracker
+// replays unchanged: an array of {identifier, status}, an array of bare identifiers with a
+// separate status map, and an object keyed by identifier. Anything else is an error rather
+// than an empty map, because an empty map reads as "no issue owns anything" and would exempt
+// nothing while looking as though it had been asked.
+export function buildIssueIndex(raws) {
+  if (raws && !Array.isArray(raws) && typeof raws === "object" && !("issues" in raws)) {
+    // An object keyed by identifier. Only own keys, so `length` and friends cannot become issues.
+    const index = new Map();
+    for (const [identifier, status] of Object.entries(raws)) {
+      if (!/^[a-z]+-\d+$/i.test(identifier)) continue;
+      index.set(normalizeIssueKey(identifier), { identifier, status: String(status) });
+    }
+    if (index.size === 0) throw new Error("no {identifier: status} entries in the issue status list");
+    return index;
+  }
+  const list = Array.isArray(raws) ? raws : raws?.issues;
+  if (!Array.isArray(list)) {
+    throw new Error("the issue status list is neither an array nor an object of {identifier: status}");
+  }
+  const index = new Map();
+  for (const raw of list) {
+    const identifier = raw?.identifier ?? raw?.key ?? raw?.id;
+    if (!identifier || raw?.status === undefined) continue;
+    index.set(normalizeIssueKey(identifier), { identifier, status: String(raw.status) });
+  }
+  if (index.size === 0) throw new Error("the issue status list has no entries with an identifier and a status");
+  return index;
+}
+
 // Verdicts, in the order they are tested. The order is the specification:
 //   'landed'        every commit is reachable from the base: nothing is outstanding
 //   'doc-branch'    no gated paths in the unlanded commits: this branch cannot ship a content
 //                   defect, so demanding a PR of it would be noise
 //   'pr-open'       somebody is already reviewing it
 //   'pr-merged'     it shipped (usually as a squash, which is why reachability is not enough)
+//   'in-flight'     nobody has opened a PR, and the owning issue is still open: work in
+//                   progress, not a finding (MAX-132)
 //   'violation'     gated commits, unlanded, and no PR
-//   'unknown'       the PR question could not be answered -- never a pass
+//   'unknown'       the PR question, or the issue-status question, could not be answered --
+//                   never a pass
+//
+// 'in-flight' sits after the PR states on purpose. An open or merged PR is a stronger and more
+// specific statement about a branch than its issue's status, so it is reported as such, and the
+// exemption is only reached where MAX-126 would have called the branch a violation.
 export const VERDICTS = [
   "landed",
   "doc-branch",
   "pr-open",
   "pr-merged",
+  "in-flight",
   "violation",
   "unknown",
 ];
@@ -168,7 +278,23 @@ export function classifyBranch(branch) {
     gatedPaths = [],
     prs = null, // null means "could not be asked", not "none"
     local = false,
+    // undefined means "no issue source was configured"; null means "one was configured and it
+    // could not be read". Only the second is a question the gate could not answer.
+    issueIndex,
   } = branch;
+
+  const issueId = issueIdFromBranchName(name);
+  const issue = issueIndex == null ? null : issueIndex.get(normalizeIssueKey(`max-${issueId}`)) ?? null;
+  // Why the exemption did not apply, in the operator's words. Each of these is a different
+  // situation and they are not interchangeable: a done issue is a finding, an unknown issue is
+  // a finding, and a status nobody supplied is a gate running with one of its conditions off.
+  const issueClause = issue
+    ? ` (${issue.identifier} is ${issue.status})`
+    : issueId === null
+      ? ""
+      : issueIndex === null
+        ? `, and the status of the issue it names (MAX-${issueId}) could not be read`
+        : `, and no status for MAX-${issueId} was available, so it cannot be called in flight`;
 
   const violations = [];
   if (unlandedCommits.length === 0) {
@@ -184,6 +310,7 @@ export function classifyBranch(branch) {
   } else if (prs === null) {
     violations.push({
       verdict: "unknown",
+      reason: "pr-list-unreadable",
       detail: `${unlandedCommits.length} commit(s) outside ${baseRef} touch ${gatedPaths.length} gated path(s), and the PR list could not be read`,
     });
   } else {
@@ -206,16 +333,39 @@ export function classifyBranch(branch) {
         detail: `#${merged.map((p) => p.number).join(", #")} is merged`,
       });
     } else if (closed.length > 0) {
+      // Not exempt, even when the issue is open. A closed PR without a merge is a decision, not
+      // silence: somebody looked at this branch and did not take it. Work that is genuinely
+      // still in progress belongs on a branch with an open PR.
       violations.push({
         verdict: "violation",
         reason: "closed-unmerged-pr",
-        detail: `#${closed.map((p) => p.number).join(", #")} was closed without merging; the gated commits are still unlanded`,
+        detail:
+          `#${closed.map((p) => p.number).join(", #")} was closed without merging; the gated ` +
+          `commits are still unlanded${issue ? ` (${issue.identifier} is ${issue.status})` : ""}`,
+      });
+    } else if (issueId && issue === null && issueIndex === null) {
+      // A configured-but-unreadable issue source, on the one shape where the answer would have
+      // changed the verdict. Unknown, never a pass and never a violation: guessing either way is
+      // how this gate ends up wrong in the direction nobody notices.
+      violations.push({
+        verdict: "unknown",
+        reason: "issue-status-unreadable",
+        detail:
+          "no pull request has ever been opened with this branch as its head, and the status of " +
+          `the issue it names (MAX-${issueId}) could not be read, so it cannot be called in ` +
+          "flight or stranded",
+      });
+    } else if (issue && !isTerminalIssueStatus(issue.status)) {
+      violations.push({
+        verdict: "in-flight",
+        reason: "issue-open",
+        detail: `no pull request yet, and ${issue.identifier} is ${issue.status}: work in progress`,
       });
     } else {
       violations.push({
         verdict: "violation",
         reason: "no-pr",
-        detail: "no pull request has ever been opened with this branch as its head",
+        detail: "no pull request has ever been opened with this branch as its head" + issueClause,
       });
     }
   }
@@ -233,6 +383,8 @@ export function classifyBranch(branch) {
     unlandedCommits,
     gatedPaths,
     prs: prs ?? null,
+    issueId: issueId ? `MAX-${issueId}` : null,
+    issueStatus: issue?.status ?? null,
   };
 }
 
@@ -414,6 +566,55 @@ export function readPrsFromFile(path) {
 }
 
 // ---------------------------------------------------------------------------
+// Issue sources
+// ---------------------------------------------------------------------------
+
+// A recorded file wins over the tracker, because a recorded list is how a run is made
+// reproducible and how CI asserts the rule without network access. With neither, the answer is
+// "none" and the gate applies no exemption -- it says so rather than pretending there is no work
+// in progress.
+export function chooseIssueSource(explicit, { issuesJson, hasPaperclip }) {
+  if (explicit) return explicit;
+  if (issuesJson) return "file";
+  if (hasPaperclip) return "paperclip";
+  return "none";
+}
+
+export function readIssueStatusesFromFile(path) {
+  const parsed = JSON.parse(readFileSync(path, "utf8"));
+  return buildIssueIndex(parsed);
+}
+
+// The tracker this repository's issues actually live in. Only the status and the identifier are
+// read, and the answer is refused rather than truncated for the same reason the PR list is: a
+// status list that silently lost its `done` entries would exempt branches whose work is finished,
+// which is the MAX-111 direction.
+const ISSUE_PAGE_SIZE = 500;
+const ISSUE_MAX_PAGES = 20;
+
+export async function fetchIssueStatusesFromPaperclip({ baseUrl, companyId, token }) {
+  const headers = { accept: "application/json", "user-agent": "check-landed-content" };
+  if (token) headers.authorization = `Bearer ${token}`;
+  const all = [];
+  for (let page = 1; page <= ISSUE_MAX_PAGES; page += 1) {
+    const url =
+      `${String(baseUrl).replace(/\/api\/?$/, "").replace(/\/$/, "")}` +
+      `/api/companies/${companyId}/issues?limit=${ISSUE_PAGE_SIZE}&offset=${(page - 1) * ISSUE_PAGE_SIZE}`;
+    const res = await fetch(url, { headers });
+    if (!res.ok) throw new Error(`the issue tracker returned ${res.status} for ${url}`);
+    const items = await res.json();
+    const list = Array.isArray(items) ? items : items?.issues;
+    if (!Array.isArray(list)) throw new Error(`the issue tracker returned a non-list for ${url}`);
+    all.push(...list);
+    if (list.length < ISSUE_PAGE_SIZE) return all;
+  }
+  throw new Error(
+    `the issue list is longer than ${ISSUE_MAX_PAGES * ISSUE_PAGE_SIZE} entries; refusing to call ` +
+      `anything in flight from a partial status list.`,
+  );
+}
+
+// ---------------------------------------------------------------------------
 // The audit
 // ---------------------------------------------------------------------------
 
@@ -423,7 +624,15 @@ export async function auditBranch({ name, ref, local }, ctx) {
   const gated = readGatedPaths(ctx.baseRef, ref);
   if (gated === null) return null;
   const prs = ctx.prIndex === null ? null : ctx.prIndex.get(name) ?? [];
-  return classifyBranch({ name, baseRef: ctx.baseRef, unlandedCommits: commits, gatedPaths: gated, prs, local });
+  return classifyBranch({
+    name,
+    baseRef: ctx.baseRef,
+    unlandedCommits: commits,
+    gatedPaths: gated,
+    prs,
+    local,
+    issueIndex: ctx.issueIndex,
+  });
 }
 
 export async function runAudit(options) {
@@ -436,10 +645,17 @@ export async function runAudit(options) {
     repo,
     prSource,
     prJson,
+    issueIndex,
+    issueSource = "none",
     quiet = false,
+    json = false,
+    // Notes the caller collected before the audit ran -- an unreadable PR list, an absent issue
+    // source. They are printed with the rest so that --json is the only thing on stdout when
+    // --json was asked for, and --quiet is not the same as silent.
+    extraNotes = [],
   } = options;
 
-  const notes = [];
+  const notes = [...extraNotes];
   if (!gitLines(["rev-parse", "--verify", `${baseRef}^{commit}`])) {
     return {
       exitCode: 2,
@@ -449,6 +665,7 @@ export async function runAudit(options) {
       ],
       repo,
       prSource,
+      issueSource,
     };
   }
 
@@ -460,7 +677,7 @@ export async function runAudit(options) {
     const hasRemote = gitLines(["rev-parse", "--verify", `${remoteRef}^{commit}`]) !== null;
     const hasLocal = gitLines(["rev-parse", "--verify", `refs/heads/${branch}^{commit}`]) !== null;
     if (!hasRemote && !hasLocal) {
-      return { exitCode: 2, rows: [], notes: [`no such branch: ${branch}`], repo, prSource };
+      return { exitCode: 2, rows: [], notes: [`no such branch: ${branch}`], repo, prSource, issueSource };
     }
     targets = [
       hasRemote
@@ -477,7 +694,7 @@ export async function runAudit(options) {
     targets = targets.filter((t) => t.name !== baseRef && t.name !== baseRef.replace(/^origin\//, ""));
   }
 
-  const ctx = { baseRef, prIndex };
+  const ctx = { baseRef, prIndex, issueIndex };
   const rows = [];
   for (const target of targets) {
     const row = await auditBranch(target, ctx);
@@ -489,26 +706,44 @@ export async function runAudit(options) {
   const failures = rows.filter((r) => r.verdict === "violation");
   const unknowns = rows.filter((r) => r.verdict === "unknown");
 
-  if (!quiet) {
-    const width = Math.max(...rows.map((r) => r.branch.length), 4);
-    for (const row of rows) {
-      if (row.unlandedCount === 0) continue;
-      const tag =
-        {
-          violation: "FAIL ",
-          unknown: "ASK  ",
-          "pr-open": "open ",
-          "pr-merged": "landed",
-          "doc-branch": "doc  ",
-          landed: "same ",
-        }[row.verdict] ?? "?????";
-      console.log(`${tag}  ${row.branch.padEnd(width)}  ${row.unlandedRange}  ${row.detail}`);
+  // stdout, always, including under --quiet. MAX-132 measured the old arrangement: the whole
+  // report went to stderr and --quiet dropped exactly that, so a failing gate under
+  // `npm run land:check --silent` printed nothing and exited 1. Silent is not the same as
+  // passing, and a gate whose failure is invisible gets switched off rather than fixed.
+  //
+  // --json is the one exception: the payload is on stdout and has to stay parseable, and it
+  // carries the counts and the exit code that the prose here would have said.
+  if (!json) {
+    if (!quiet) {
+      const width = Math.max(...rows.map((r) => r.branch.length), 4);
+      for (const row of rows) {
+        if (row.unlandedCount === 0) continue;
+        const tag =
+          {
+            violation: "FAIL ",
+            unknown: "ASK  ",
+            "in-flight": "wip  ",
+            "pr-open": "open ",
+            "pr-merged": "landed",
+            "doc-branch": "doc  ",
+            landed: "same ",
+          }[row.verdict] ?? "?????";
+        console.log(`${tag}  ${row.branch.padEnd(width)}  ${row.unlandedRange}  ${row.detail}`);
+      }
     }
     for (const note of notes) console.log(`note  ${note}`);
-    if (repo) console.log(`note  PR list from ${prSource} for ${repo}`);
+    if (repo && prSource && prSource !== "none") {
+      console.log(`note  PR list from ${prSource} for ${repo}`);
+    }
+    if (issueSource && issueSource !== "none") {
+      console.log(`note  issue statuses from ${issueSource}`);
+    }
+    // The verdict. Not conditional on --quiet: a quiet run that prints nothing at all is exactly
+    // the silent failure this line exists to prevent.
     console.log(
       `      ${rows.length} branch(es) examined: ${counts["violation"]} violation, ` +
-        `${counts.unknown} unanswered, ${counts["pr-open"]} with an open PR, ` +
+        `${counts.unknown} unanswered, ${counts["in-flight"]} in flight on an open issue, ` +
+        `${counts["pr-open"]} with an open PR, ` +
         `${counts["pr-merged"]} merged, ${counts["doc-branch"]} doc/tooling only, ` +
         `${counts.landed} already in ${baseRef}`,
     );
@@ -518,7 +753,7 @@ export async function runAudit(options) {
   if (failures.length > 0) exitCode = 1;
   else if (unknowns.length > 0) exitCode = 2;
 
-  return { exitCode, rows, failures, unknowns, counts, notes, repo, prSource };
+  return { exitCode, rows, failures, unknowns, counts, notes, repo, prSource, issueSource };
 }
 
 // ---------------------------------------------------------------------------
@@ -594,6 +829,273 @@ export function selftest() {
       prs: [{ number: 60, state: "closed" }],
     });
     return [eq(row.verdict, "violation", "verdict"), eq(row.reason, "closed-unmerged-pr", "reason")];
+  });
+
+  // --- the fourth condition: work in progress (MAX-132) --------------------
+  //
+  // The three cases above are all still true; these pin the exemption to the issue's status
+  // rather than to the branch's name, which is the only way the exemption can be safe.
+
+  const openIssue = buildIssueIndex([
+    { identifier: "MAX-64", status: "in_review" },
+    { identifier: "MAX-111", status: "done" },
+    { identifier: "MAX-120", status: "cancelled" },
+    { identifier: "MAX-132", status: "in_progress" },
+  ]);
+
+  check("gated commits on a branch whose issue is still open is in flight, not a violation", () => {
+    // The real shape that made MAX-132 necessary: MAX-64's three live branches, no PR yet,
+    // issue in_review. Before the fourth condition this was a violation, on the operator's own
+    // work, on every run.
+    const row = classifyBranch({
+      name: "gate/max-64-corpus-pins-rebase",
+      baseRef: "origin/main",
+      unlandedCommits: commit("3b90dfb"),
+      gatedPaths: ["content/lessons/m1-l1.json", "scripts/preflight-content.mjs"],
+      prs: [],
+      issueIndex: openIssue,
+    });
+    return [
+      eq(row.verdict, "in-flight", "verdict"),
+      eq(row.reason, "issue-open", "reason"),
+      eq(row.issueId, "MAX-64", "issue id"),
+      eq(row.issueStatus, "in_review", "issue status"),
+      row.detail.includes("MAX-64 is in_review") ? null : `detail does not name the issue: ${row.detail}`,
+    ];
+  });
+
+  check("the same branch is a violation once its issue is done", () => {
+    // MAX-111's shape, with the exemption turned off by the status rather than by the name.
+    const row = classifyBranch({
+      name: "fix/max-111-doubled-backslash-labels",
+      baseRef: "origin/main",
+      unlandedCommits: commit("3f1c9ab"),
+      gatedPaths: ["content/lessons/m1-l3.json"],
+      prs: [],
+      issueIndex: openIssue,
+    });
+    return [
+      eq(row.verdict, "violation", "verdict"),
+      eq(row.reason, "no-pr", "reason"),
+      row.detail.includes("MAX-111 is done") ? null : `detail does not name the issue: ${row.detail}`,
+    ];
+  });
+
+  check("a cancelled issue is not work in progress either", () => {
+    const row = classifyBranch({
+      name: "fix/max-120-abandoned",
+      baseRef: "origin/main",
+      unlandedCommits: commit("aaa1111"),
+      gatedPaths: ["content/lessons/m1-l1.json"],
+      prs: [],
+      issueIndex: openIssue,
+    });
+    return [eq(row.verdict, "violation", "verdict")];
+  });
+
+  check("a branch naming an issue the gate was never told about is a violation", () => {
+    // The case that matters: max-132-shaped naming with no answer behind it. An exemption
+    // granted by the branch name alone would pass MAX-111 with a renamed branch.
+    const row = classifyBranch({
+      name: "fix/max-999-nobody-heard-of-it",
+      baseRef: "origin/main",
+      unlandedCommits: commit("bbb2222"),
+      gatedPaths: ["content/lessons/m1-l1.json"],
+      prs: [],
+      issueIndex: openIssue,
+    });
+    return [eq(row.verdict, "violation", "verdict"), eq(row.reason, "no-pr", "reason")];
+  });
+
+  check("a branch naming no issue at all is a violation", () => {
+    const row = classifyBranch({
+      name: "land/four-families-of-geometry",
+      baseRef: "origin/main",
+      unlandedCommits: commit("ccc3333"),
+      gatedPaths: ["content/lessons/m1-l1.json"],
+      prs: [],
+      issueIndex: openIssue,
+    });
+    return [eq(row.verdict, "violation", "verdict"), eq(row.issueId, null, "issue id")];
+  });
+
+  check("no issue source at all exempts nothing, and says so in the verdict", () => {
+    // What CI gets, where no status list is configured. The gate must behave exactly as MAX-126
+    // wrote it rather than inventing exemptions -- and the operator must be able to see that it
+    // is running without them.
+    const row = classifyBranch({
+      name: "gate/max-64-corpus-pins-rebase",
+      baseRef: "origin/main",
+      unlandedCommits: commit("3b90dfb"),
+      gatedPaths: ["content/lessons/m1-l1.json"],
+      prs: [],
+    });
+    return [eq(row.verdict, "violation", "verdict"), eq(row.issueStatus, null, "issue status")];
+  });
+
+  check("an unreadable issue list is unknown on exactly the branches it would have changed", () => {
+    // issueIndex null is "configured and unreadable". Guessing `violation` here would cry wolf
+    // on every in-flight branch; guessing `in-flight` would wave MAX-111 through. Neither is
+    // available, so it is exit 2 -- and only for a branch whose name names an issue at all.
+    const inFlight = classifyBranch({
+      name: "gate/max-64-corpus-pins-rebase",
+      baseRef: "origin/main",
+      unlandedCommits: commit("3b90dfb"),
+      gatedPaths: ["content/lessons/m1-l1.json"],
+      prs: [],
+      issueIndex: null,
+    });
+    const noIssue = classifyBranch({
+      name: "land/no-issue-here",
+      baseRef: "origin/main",
+      unlandedCommits: commit("ddd4444"),
+      gatedPaths: ["content/lessons/m1-l1.json"],
+      prs: [],
+      issueIndex: null,
+    });
+    const openPr = classifyBranch({
+      name: "fix/max-64-with-a-pr",
+      baseRef: "origin/main",
+      unlandedCommits: commit("3b90dfb"),
+      gatedPaths: ["content/lessons/m1-l1.json"],
+      prs: [{ number: 58, state: "open" }],
+      issueIndex: null,
+    });
+    return [
+      eq(inFlight.verdict, "unknown", "verdict"),
+      eq(inFlight.reason, "issue-status-unreadable", "reason"),
+      eq(noIssue.verdict, "violation", "a branch with no issue cannot be exempted by a status"),
+      eq(openPr.verdict, "pr-open", "an open PR needs no issue status"),
+    ];
+  });
+
+  check("the branch name resolves an issue only on a segment of its own", () => {
+    const problems = [];
+    const yes = {
+      "fix/max-111-doubled-backslash-labels": "111",
+      "gate/max-64-corpus-pins-rebase": "64",
+      max63: "63",
+      "max-103-unlanded": "103",
+      "content/MAX-20-m8-l4": "20",
+    };
+    const no = {
+      "fix/matrix-12-thing": null,
+      "docs/maximum-2-ideas": null,
+      "land/no-issue-here": null,
+      "fix/max--12": null,
+      "fix/12-max": null,
+      "fix/prefix-max-12": null,
+      // A directory called max and a segment called 7 is not a name this repository uses, and
+      // reading one as an owning issue would be a guess that exempts a branch from the gate.
+      "max/7": null,
+    };
+    for (const [name, expected] of Object.entries(yes)) {
+      const got = issueIdFromBranchName(name);
+      if (got !== expected) problems.push(`${name}: expected ${expected}, got ${got}`);
+    }
+    for (const name of Object.keys(no)) {
+      const got = issueIdFromBranchName(name);
+      if (got !== null) problems.push(`${name}: expected no issue, got ${got}`);
+    }
+    return problems;
+  });
+
+  check("issue keys match however the identifier is spelled", () => {
+    // MAX-64, max-64 and MAX64 are one key. If they were not, an exemption would hinge on
+    // somebody's capitalisation.
+    const index = buildIssueIndex([{ identifier: "MAX-64", status: "in_review" }]);
+    return [
+      eq(issueIdFromBranchName("gate/max-64-corpus-pins-rebase"), "64", "digits"),
+      eq(index.get("max64")?.status, "in_review", "lookup"),
+      eq(normalizeIssueKey("Max-64"), "max64", "normalization"),
+    ];
+  });
+
+  check("the issue status source prefers a recorded file, then the tracker, then none", () => {
+    return [
+      eq(chooseIssueSource(null, { issuesJson: "p.json", hasPaperclip: true }), "file", "file wins"),
+      eq(chooseIssueSource(null, { issuesJson: null, hasPaperclip: true }), "paperclip", "tracker next"),
+      eq(chooseIssueSource(null, { issuesJson: null, hasPaperclip: false }), "none", "none last"),
+      eq(chooseIssueSource("none", { issuesJson: "p.json", hasPaperclip: true }), "none", "explicit wins"),
+    ];
+  });
+
+  check("an empty or shapeless status list is an error, not an empty map", () => {
+    // buildIssueIndex throws rather than returning a map with nothing in it: an empty map would
+    // exempt nothing and read as though the gate had been told the answer.
+    const problems = [];
+    for (const bad of [[], {}, { issues: [] }, "MAX-64=in_review", null]) {
+      try {
+        buildIssueIndex(bad);
+        problems.push(`expected a throw for ${JSON.stringify(bad)}`);
+      } catch {
+        // expected
+      }
+    }
+    return problems;
+  });
+
+  check("both status list shapes replay to the same verdict", () => {
+    // A fixture recorded from the tracker's own list and one hand-written as an object must not
+    // disagree about whether work is in flight.
+    const fromList = buildIssueIndex([{ identifier: "MAX-64", status: "in_review" }]);
+    const fromObject = buildIssueIndex({ "MAX-64": "in_review", "MAX-111": "done" });
+    const shape = (index) => ({
+      name: "gate/max-64-corpus-pins-rebase",
+      baseRef: "origin/main",
+      unlandedCommits: commit("3b90dfb"),
+      gatedPaths: ["content/lessons/m1-l1.json"],
+      prs: [],
+      issueIndex: index,
+    });
+    return [
+      eq(classifyBranch(shape(fromList)).verdict, "in-flight", "list shape"),
+      eq(classifyBranch(shape(fromObject)).verdict, "in-flight", "object shape"),
+    ];
+  });
+
+  check("the terminal statuses are the ones that end work, and only those", () => {
+    const problems = [];
+    for (const s of ["done", "DONE", "cancelled", "Cancelled"]) {
+      if (!isTerminalIssueStatus(s)) problems.push(`expected terminal: ${s}`);
+    }
+    for (const s of ["in_progress", "in_review", "todo", "backlog", "blocked", "", null, undefined]) {
+      if (isTerminalIssueStatus(s)) problems.push(`expected in flight: ${s}`);
+    }
+    return problems;
+  });
+
+  check("a closed PR is a violation even on an open issue", () => {
+    // "No PR yet" is silence; a closed unmerged PR is somebody declining it. Exempting the
+    // second would hide a rejected branch behind an open issue.
+    const row = classifyBranch({
+      name: "gate/max-64-corpus-pins-rebase",
+      baseRef: "origin/main",
+      unlandedCommits: commit("3b90dfb"),
+      gatedPaths: ["content/lessons/m1-l1.json"],
+      prs: [{ number: 61, state: "closed" }],
+      issueIndex: openIssue,
+    });
+    return [eq(row.verdict, "violation", "verdict"), eq(row.reason, "closed-unmerged-pr", "reason")];
+  });
+
+  check("an open PR on an open issue is reported as an open PR, not as work in flight", () => {
+    const row = classifyBranch({
+      name: "gate/max-64-corpus-pins-rebase",
+      baseRef: "origin/main",
+      unlandedCommits: commit("3b90dfb"),
+      gatedPaths: ["content/lessons/m1-l1.json"],
+      prs: [{ number: 58, state: "open" }],
+      issueIndex: openIssue,
+    });
+    return [eq(row.verdict, "pr-open", "verdict")];
+  });
+
+  check("the in-flight verdict is in the counted set, so the summary line can name it", () => {
+    return [
+      VERDICTS.includes("in-flight") ? null : "in-flight is missing from VERDICTS",
+      eq(VERDICTS.length, new Set(VERDICTS).size, "no duplicate verdicts"),
+    ];
   });
 
   check("a doc/tooling branch with no PR passes", () => {
@@ -827,6 +1329,8 @@ function parseArgs(argv) {
     repo: null,
     prSource: null,
     prJson: null,
+    issueSource: null,
+    issuesJson: null,
     json: false,
     quiet: false,
     selftest: false,
@@ -847,6 +1351,8 @@ function parseArgs(argv) {
       case "--repo": opts.repo = next(); break;
       case "--pr-source": opts.prSource = next(); break;
       case "--pr-json": opts.prJson = next(); break;
+      case "--issue-source": opts.issueSource = next(); break;
+      case "--issues-json": opts.issuesJson = next(); break;
       case "--json": opts.json = true; break;
       case "--quiet": opts.quiet = true; break;
       case "--selftest": opts.selftest = true; break;
@@ -866,15 +1372,21 @@ const HELP = `Usage:
   node scripts/check-landed-content.mjs --branch <name>       audit one branch (push check)
   node scripts/check-landed-content.mjs --selftest            prove each rule can still fail
 
-Exit: 0 nothing to report · 1 a gated branch with no PR · 2 the question could not be asked`;
+Exit: 0 nothing to report · 1 a gated branch with no PR · 2 the question could not be asked
+
+A branch whose issue is still open is work in progress, not a finding. Give the gate the
+statuses with --issues-json <path>, or let it read the tracker from PAPERCLIP_API_URL and
+PAPERCLIP_COMPANY_ID. Everything this gate prints -- including under --quiet -- is on stdout.`;
 
 async function main(argv) {
   let opts;
   try {
     opts = parseArgs(argv);
   } catch (err) {
-    console.error(`check-landed-content: ${err.message}`);
-    console.error(HELP);
+    // stdout, like everything else here: a usage error under `npm run land:check --silent` that
+    // prints nothing is the same silent failure as a finding that prints nothing.
+    console.log(`check-landed-content: ${err.message}`);
+    console.log(HELP);
     return 2;
   }
   if (opts.help) {
@@ -884,7 +1396,9 @@ async function main(argv) {
   if (opts.selftest) return runSelftest();
 
   const baseRef = opts.base ?? process.env.LANDED_BASE_REF ?? "origin/main";
-  const quiet = opts.quiet || opts.json;
+  const quiet = opts.quiet;
+  const issuesJson = opts.issuesJson ?? process.env.LANDED_ISSUES_JSON ?? null;
+  const prelude = [];
 
   let prIndex = null;
   let repo = opts.repo ?? process.env.GITHUB_REPOSITORY ?? defaultRepo();
@@ -910,9 +1424,48 @@ async function main(argv) {
   } catch (err) {
     // Not a pass and not a violation: the gate could not ask. Exit 2 with the reason, and keep
     // going, so a single-branch push check still reports what it can about branches it can.
-    console.error(`check-landed-content: PR list unavailable: ${err.message}`);
+    prelude.push(`check-landed-content: PR list unavailable: ${err.message}`);
     prIndex = null;
     prSource = "none";
+  }
+
+  // The fourth condition's data. undefined = not configured, so no exemption is claimed and the
+  // gate says so. null = configured and unreadable, so the branches whose verdict would have
+  // depended on it come out `unknown` and the run exits 2 rather than guessing.
+  let issueIndex;
+  let issueSource = chooseIssueSource(opts.issueSource, {
+    issuesJson,
+    hasPaperclip: Boolean(process.env.PAPERCLIP_API_URL && process.env.PAPERCLIP_COMPANY_ID),
+  });
+
+  if (issueSource === "none") {
+    issueIndex = undefined;
+    prelude.push(
+      "no issue-status source: a branch whose issue is still open is reported as a violation. " +
+        "Pass --issues-json <path>, or set PAPERCLIP_API_URL and PAPERCLIP_COMPANY_ID to exempt " +
+        "work in progress.",
+    );
+  } else {
+    try {
+      let raws;
+      if (issueSource === "file") {
+        if (!issuesJson) throw new Error("--issue-source file needs --issues-json <path>");
+        raws = readIssueStatusesFromFile(issuesJson);
+      } else {
+        raws = buildIssueIndex(
+          await fetchIssueStatusesFromPaperclip({
+            baseUrl: process.env.PAPERCLIP_API_URL,
+            companyId: process.env.PAPERCLIP_COMPANY_ID,
+            token: process.env.PAPERCLIP_API_KEY,
+          }),
+        );
+      }
+      issueIndex = raws;
+    } catch (err) {
+      prelude.push(`issue statuses unavailable: ${err.message}`);
+      issueIndex = null;
+      issueSource = "none";
+    }
   }
 
   let result;
@@ -926,20 +1479,25 @@ async function main(argv) {
       repo,
       prSource,
       prJson: opts.prJson,
+      issueIndex,
+      issueSource,
       quiet,
+      json: opts.json,
+      extraNotes: prelude,
     });
   } catch (err) {
+    // An exception escaping the audit is the one thing that still goes to stderr: it is a crash
+    // report for whoever maintains this file, not a verdict about a branch.
     console.error(`check-landed-content: ${err.message}`);
     return 2;
   }
-
-  for (const note of result.notes ?? []) console.error(`check-landed-content: ${note}`);
 
   if (opts.json) {
     console.log(JSON.stringify({
       baseRef,
       repo,
       prSource,
+      issueSource,
       exitCode: result.exitCode,
       counts: result.counts ?? null,
       rows: (result.rows ?? []).map((r) => ({
@@ -952,13 +1510,23 @@ async function main(argv) {
         unlandedCommits: r.unlandedCommits,
         gatedPaths: r.gatedPaths,
         local: r.local,
+        issueId: r.issueId,
+        issueStatus: r.issueStatus,
       })),
     }, null, 2));
-  } else if (!quiet) {
-    for (const row of result.failures ?? []) console.error(formatFailure(row));
+  } else {
+    // Printed in every mode, --quiet included. The old code printed these to stderr under
+    // `if (!quiet)`, which made a failing --quiet run a silent one.
+    for (const row of result.failures ?? []) console.log(formatFailure(row));
     for (const row of result.unknowns ?? []) {
-      console.error(`ASK   ${row.branch}: ${row.detail}`);
-      console.error(`      Cannot say whether a pull request exists, so this is not a pass and not a finding.`);
+      console.log(`ASK   ${row.branch}: ${row.detail}`);
+      // The two `unknown` reasons leave a different question unasked, and naming the wrong one
+      // sends the reader to look at a list that was read perfectly well.
+      console.log(
+        row.reason === "issue-status-unreadable"
+          ? `      Cannot say whether the issue is still open, so this is not a pass and not a finding.`
+          : `      Cannot say whether a pull request exists, so this is not a pass and not a finding.`,
+      );
     }
   }
 

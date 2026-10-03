@@ -315,25 +315,54 @@ npm run land:check -- --branch fix/max-95-figure-size-floor   # one branch, the 
 npm run land:selftest             # prove each rule can still fail
 ```
 
-A branch is a finding when all three of these hold: it carries commits touching `content/**`,
-`lib/**` or `scripts/**`; those commits are not reachable from `origin/main`; and no **open or
-merged** pull request has that branch as its head. "Open or merged" is load-bearing — this
-repository squash-merges, so a merged branch's commits are usually not ancestors of main, and
-judging on reachability alone would fail every squash-merged branch in the repository. A PR that
-was closed without merging is a finding: the work is not on main and nothing is pending.
+A branch is a finding when all of these hold: it carries commits touching `content/**`, `lib/**`
+or `scripts/**`; those commits are not reachable from `origin/main`; no **open or merged** pull
+request has that branch as its head; and the issue it belongs to is finished.
 
-Exit codes are three-valued on purpose:
+"Open or merged" is load-bearing — this repository squash-merges, so a merged branch's commits are
+usually not ancestors of main, and judging on reachability alone would fail every squash-merged
+branch in the repository. A PR that was closed without merging is a finding: the work is not on
+main and nothing is pending.
+
+### Work in progress is not a finding
+
+The last condition is the one that keeps the gate usable. A branch named after an issue that is
+still open (`fix/max-64-…`, `gate/max-64-…`) is work somebody is doing *now*; a branch named
+after an issue that is `done` or `cancelled` is work that stopped without shipping. Without the
+distinction the gate reported three findings on the dev checkout, all of them MAX-64's live
+branches — and a gate that cries wolf on your own in-flight work gets muted rather than fixed.
+
+The exemption is keyed to the issue, not to the branch name. A branch naming an issue the gate was
+never told about is still a finding, because a naming convention is not evidence; that is MAX-111's
+shape, and a renamed branch must not buy it an exemption.
+
+```bash
+npm run land:check                                   # asks the tracker when the session has it
+npm run land:check -- --issues-json statuses.json    # or replay a recorded status list
+```
+
+A recorded list is an array of `{"identifier": "MAX-64", "status": "in_review"}` (or an object
+keyed by identifier). With neither source the gate applies no exemption and says so on stdout,
+rather than guessing. `--issue-source` forces one: `file`, `paperclip`, or `none`.
+
+### Exit codes, and where the output goes
 
 | code | meaning |
 | --- | --- |
 | 0 | nothing to report |
 | 1 | a finding: gated commits on a branch with no PR |
-| 2 | the question could not be asked — no base ref, no PR list, truncated listing, git failure |
+| 2 | the question could not be asked — no base ref, no PR list, unreadable issue statuses, truncated listing, git failure |
 
 2 is neither 0 nor 1. A gate that cannot reach the PR list has not established that a PR exists,
 and reporting that as a pass is how a branch goes invisible again — the MAX-111 failure wearing a
 different hat. Everything else in `scripts/` treats an absent toolchain the same way (see
 `build-figures.mjs` exiting 3).
+
+**Everything the gate has to say goes to stdout, `--quiet` included.** It used to go to stderr and
+`--quiet` suppressed exactly that, so `npm run land:check --silent` against a failing gate printed
+nothing at all and exited 1 — a silent failure that reads as a silent pass. `--quiet` now drops the
+per-branch inventory and keeps the notes, the findings and the one-line verdict. stderr carries only
+an unexpected crash. `--json` prints the payload and nothing else, so it stays parseable.
 
 CI runs it in `.github/workflows/landed.yml`, in three jobs: a hermetic `gate-can-fail` proof that
 the check still knows how to fail (no token, no network, both directions asserted); `branch-push`,

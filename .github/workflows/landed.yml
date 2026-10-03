@@ -139,6 +139,82 @@ jobs:
             exit 1
           fi
 
+          # --- the fourth condition: work in progress (MAX-132) ---------------
+          #
+          # Without it the gate reported three violations on the dev checkout, all of them
+          # MAX-64's live branches, because it had no way to tell work in progress from work
+          # that shipped to nobody. The exemption is keyed to the issue's status, so both
+          # directions are asserted here: the same branch, the same commits, the same empty PR
+          # list -- exit 0 while the issue is open, exit 1 once it is done. A gate that exempts
+          # by branch name alone would pass both, which is why the second case is here.
+          inflight=land/max-126-inflight
+          git checkout -q -B "$inflight" origin/main
+          printf '{}\n' > content/inflight-probe.json
+          git add content/inflight-probe.json
+          git -c user.name=probe -c user.email=probe@example.invalid \
+            commit -q -m 'probe: gated work on an issue that is still open'
+
+          echo '[{"identifier":"MAX-126","status":"in_progress"}]' > "$RUNNER_TEMP/issues-open.json"
+          echo '[{"identifier":"MAX-126","status":"done"}]' > "$RUNNER_TEMP/issues-done.json"
+
+          echo '--- work in progress on an open issue must pass with no PR'
+          set +e
+          node "$gate" --branch "$inflight" --pr-source file --pr-json "$RUNNER_TEMP/no-prs.json" \
+            --issue-source file --issues-json "$RUNNER_TEMP/issues-open.json"
+          code=$?
+          set -e
+          if [ "$code" -ne 0 ]; then
+            echo "::error::an in-flight issue exited $code, expected 0 (false positive)"
+            exit 1
+          fi
+
+          echo '--- the same branch on a done issue must fail'
+          set +e
+          node "$gate" --branch "$inflight" --pr-source file --pr-json "$RUNNER_TEMP/no-prs.json" \
+            --issue-source file --issues-json "$RUNNER_TEMP/issues-done.json"
+          code=$?
+          set -e
+          if [ "$code" -ne 1 ]; then
+            echo "::error::a gated branch whose issue is done exited $code, expected 1"
+            exit 1
+          fi
+
+          echo '--- an unreadable issue list must exit 2, not 0'
+          set +e
+          node "$gate" --branch "$inflight" --pr-source file --pr-json "$RUNNER_TEMP/no-prs.json" \
+            --issue-source file --issues-json "$RUNNER_TEMP/no-such-issues.json"
+          code=$?
+          set -e
+          if [ "$code" -ne 2 ]; then
+            echo "::error::an unreadable issue list exited $code, expected 2"
+            exit 1
+          fi
+
+          # The failure has to be readable, not just return 1. The old gate printed every line
+          # to stderr and --quiet dropped exactly that, so `npm run land:check --silent` against
+          # a failing gate produced no output at all and exit 1 -- a silent failure that reads as
+          # a silent pass. stdout is asserted here, and stderr is asserted empty.
+          echo '--- a failing --quiet run must print the failure on stdout'
+          set +e
+          quiet_out=$(node "$gate" --branch "$inflight" --pr-source file \
+            --pr-json "$RUNNER_TEMP/no-prs.json" --issue-source file \
+            --issues-json "$RUNNER_TEMP/issues-done.json" --quiet 2>"$RUNNER_TEMP/quiet-err.txt")
+          code=$?
+          set -e
+          if [ "$code" -ne 1 ]; then
+            echo "::error::the --quiet run exited $code, expected 1"
+            exit 1
+          fi
+          case "$quiet_out" in
+            *FAIL*"$inflight"*) ;;
+            *) echo "::error::--quiet stdout does not name the failing branch"; exit 1 ;;
+          esac
+          if [ -s "$RUNNER_TEMP/quiet-err.txt" ]; then
+            echo "::error::the gate wrote to stderr; its report belongs on stdout"
+            cat "$RUNNER_TEMP/quiet-err.txt"
+            exit 1
+          fi
+
   # ---------------------------------------------------------------------------
   branch-push:
     name: This branch carries gated commits and no PR

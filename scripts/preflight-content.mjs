@@ -29,9 +29,10 @@
 // and no repository, on a corpus directory, and stays that way on purpose -- an author can run it
 // from a checkout of content and nowhere else. The sibling scripts/check-landed-content.mjs
 // (MAX-126, `npm run land:check`) asks a question that needs git, a remote and a pull-request
-// list: this branch carries gated commits and no PR has ever had it as its head, so nothing here
-// will ever ship. Folding it in would take the repository dependency with it and cost the author
-// workflow the only gate it can run anywhere.
+// list: this branch carries gated commits, no PR has ever had it as its head, and the issue it
+// belongs to is finished, so nothing here will ever ship (MAX-132 added that last condition -- work
+// in progress is not a finding). Folding it in would take the repository dependency with it and
+// cost the author workflow the only gate it can run anywhere.
 //
 // Usage: node scripts/preflight-content.mjs [contentRoot] [--json [<outPath>]]
 //   --json           print the report to stdout
