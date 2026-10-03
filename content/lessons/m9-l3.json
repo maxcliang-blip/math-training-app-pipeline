@@ -17,30 +17,7 @@
   ],
   "sections": {
     "objective": {
-      "objectiveLatex": "State a proposition P(n) for integer n, prove the base case P(0) or P(1), prove the inductive step P(k) implies P(k+1) for mathematical induction, and prove that P(k) for all k < n implies P(n) for strong induction, verifying that the chosen induction hypothesis is strong enough to establish the step.",
-      "figures": [
-        {
-          "id": "m9-l3-fig-1",
-          "captionLatex": "The inductive step: if P(k) holds then P(k+1) follows, building a chain from the base case.",
-          "asymptoteSource": "// The inductive step: P(k), and the P(k+1) the step forces.\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nsize(205,202);\nint k = 3;\npair points[] = { (1,1), (2,4), (3,9), (4,16) };\ndraw((0.4,0)--(5.4,0), Arrow);\nlabel(\"$n$\",(5.4,0),SE);\ndraw((0.4,0)--(0.4,17.4), Arrow);\nfor (int i = 0; i <= k; ++i) {\n  dot(points[i], black+3pt);\n  if (i < k) draw(points[i]--points[i+1], blue);\n}\nlabel(\"$P(1)$\", (1,1), SW);\nlabel(\"$P(2)$\", (2,4), SE);\nlabel(\"$\\ldots$\", (3,9), N);\nlabel(\"$P(k+1)$\", (k+1, (k+1)*(k+1)), N);\nlabel(\"$n$\", (7.8, 15.4), NW);\nlabel(\"$1\\quad 2\\quad 3\\quad 4$\", (7.8, 13.2), NW);\ndraw((7.0,10.6)--(7.0,16.6), gray);\nlabel(\"$P(n)$\", (7.8, 9.4), NW);\nlabel(\"$1\\quad 4\\quad 9\\quad 16$\", (7.8, 7.2), NW);\nlabel(\"$P(k+1)$ follows from $P(k)$ by the step\", (2.4, -1.9), S);",
-          "asymptoteAlt": "A plot of points (1,1), (2,4), (3,9), (4,16) with arrows connecting consecutive points, labeled P(1) through P(k+1), showing the inductive step chain.",
-          "asymptoteAspectRatio": 1.01
-        }
-      ],
-      "examples": [
-        {
-          "id": "m9-l3-ex-1",
-          "titleLatex": "Worked example: sum of first n odd numbers",
-          "bodyLatex": "Claim: For every integer n \\ge 1, the sum of the first n odd numbers equals n^2. That is, 1 + 3 + 5 + \\cdots + (2n-1) = n^2.\n\nBase case n = 1: the first odd number is 1, and 1 = 1^2, so the claim holds.\n\nInductive step: Assume the claim for n = k, i.e., 1 + 3 + 5 + \\cdots + (2k-1) = k^2. We must show it holds for n = k+1: 1 + 3 + 5 + \\cdots + (2k-1) + (2(k+1)-1) = (k+1)^2.\n\nStarting from the induction hypothesis: 1 + 3 + 5 + \\cdots + (2k-1) + (2k+1) = k^2 + (2k+1) = k^2 + 2k + 1 = (k+1)^2.\n\nThe inductive step is complete, so by mathematical induction the claim holds for all n \\ge 1.",
-          "answerLatex": "n^2"
-        },
-        {
-          "id": "m9-l3-ex-2",
-          "titleLatex": "Worked example: strong induction for divisibility",
-          "bodyLatex": "Claim: Every integer n \\ge 2 can be factored into prime numbers. \\n\\nBase case n = 2: 2 is prime, so the claim holds.\\n\\nStrong inductive step: Assume that every integer k with 2 \\le k \\le n can be factored into primes. Consider n+1. If n+1 is prime, we are done. If n+1 is composite, then n+1 = ab where 2 \\le a, b \\le n. By the strong induction hypothesis, both a and b can be factored into primes, and therefore n+1 can also be factored into primes.\\n\\nThe strong induction hypothesis is essential, because the proof of P(k+1) requires P(j) for some j < k, not just P(k).",
-          "answerLatex": "Every integer n \\ge 2 can be factored into primes"
-        }
-      ]
+      "objectiveLatex": "State a proposition P(n) for integer n, prove the base case P(0) or P(1), prove the inductive step P(k) implies P(k+1) for mathematical induction, and prove that P(k) for all k < n implies P(n) for strong induction, verifying that the chosen induction hypothesis is strong enough to establish the step."
     },
     "prerequisites": {
       "items": [
