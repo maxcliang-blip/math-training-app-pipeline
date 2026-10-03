@@ -6,6 +6,10 @@
   --ink: #16181d;
   --muted: #6b7280;
   --line: #e5e7eb;
+  /* The surface a reserved figure box is painted with. Named here because RC §5.4 item 1 names it;
+     it has to exist as a token rather than as a literal at the one call site, or "sunken" becomes
+     whatever hex the first person to write the rule typed. */
+  --surface-sunken: #f6f7f9;
   --warn-bg: #fffbeb;
   --warn-ink: #92400e;
   --err-bg: #fef2f2;
@@ -90,11 +94,46 @@ button {
   margin: 1.25rem 0;
 }
 
-.figure--pending,
-.figure--unavailable {
-  min-height: 3rem;
-  border: 1px dashed var(--line);
+/* The reserved box (Rendering Conventions §5.4 item 1). It is sized from --fig-ratio, which the
+   component sets from asymptoteAspectRatio on the reference before anything is fetched, and it
+   falls back to the same 1.333 the rule names as the default. The sunken surface is what makes the
+   reservation legible as a region rather than as a gap, and it is here rather than on the <img> so
+   that the pending, unavailable and loaded states share one painted box. */
+.figure__box {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: var(--fig-ratio, 1.333);
+  background: var(--surface-sunken);
+  /* Transparent rather than absent, because a border that appears in one state and not the other
+     changes the box by two pixels even with border-box sizing on one side of it. The dashed edge
+     is a deliberate downgrade (RC §5.6: the degraded state is visibly degraded), so the three
+     states differ in colour and never in metrics. */
+  border: 1px solid transparent;
   border-radius: 6px;
+  overflow: hidden;
+}
+
+.figure--pending .figure__box,
+.figure--unavailable .figure__box {
+  border-style: dashed;
+  border-color: var(--line);
+}
+
+/* §5.4 item 2, in full: absolutely positioned, width and height 100%, object-fit contain, so the
+   image's arrival changes nothing about the box. An <img> that is merely max-width:100% with
+   height:auto has no box until it has bytes, and contributes its intrinsic ratio to the flow the
+   moment it gets them — which is the shift. */
+.figure__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.figure--unavailable .figure__box {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,13 +142,6 @@ button {
 .figure__placeholder {
   color: var(--muted);
   font-size: 0.85rem;
-}
-
-.figure__svg {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
 }
 
 .figure__caption {

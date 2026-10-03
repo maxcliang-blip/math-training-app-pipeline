@@ -24,6 +24,30 @@ jobs:
       - run: npm run build --workspace web
       - run: npm test --workspaces --if-present
 
+  # RC §7 budgets layout shift at 0 and §8.5 makes it a testable acceptance criterion, naming the
+  # instrument: "Asserted in a Playwright check on one lesson per module". Until this job existed
+  # there was no browser test in the repository and no CLS assertion anywhere, which is how a figure
+  # box could be resized by its own onLoad handler for months without anything going red.
+  #
+  # It is its own job rather than a step in build-test because it needs a browser binary and a
+  # dev server, and because a layout assertion that fails is a different kind of news from a unit
+  # test that fails. The suite boots its own API against a fixture corpus (e2e/fixture-api.mjs), so
+  # this job needs no Asymptote and no artifacts/ — the same reason the staging-image job's figure
+  # assertions must not be the ones that catch a layout regression.
+  figure-layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - name: Install the browser the layout suite drives
+        run: npx playwright install --with-deps chromium
+      - name: Figures reserve their box and cause no layout shift
+        run: npm run test:e2e
+
   # MAX-69: several agents share this repository, so the delivery path needs its own gate.
   # It is here, and not only as a local hook, because a hook nobody runs is indistinguishable
   # from a hook that does not work -- and because a change that guts the guard must fail the

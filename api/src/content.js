@@ -12,12 +12,16 @@
 //     66 files in content/exercises are objects. A loader that assumes one shape silently drops
 //     roughly two thirds of the corpus, and a 404-per-exercise is the only symptom.
 //
-//  2. Figure information does not travel here. A lesson or exercise carries figureReference()
-//     - a bare figureKey - and the eight payload fields stay behind the figure route. The
-//     declared aspect ratio and the alt text that the UI needs to reserve a figure box with no
-//     reflow (IA §7 gaps 1-2) are both on that route, as declaredAspectRatio and alt. So a
-//     client learns "this exercise has a figure" from the lesson/exercise payload and learns
-//     what it looks like from the figure route, which is the split the figure contract mandates.
+//  2. Figure information does not travel here, except the one number the UI needs before it can
+//     draw anything. A lesson or exercise carries figureReference() - a figureKey plus the
+//     authored asymptoteAspectRatio - and the eight payload fields stay behind the figure route.
+//     The ratio is on the reference because Rendering Conventions §5.4 item 1 sizes the reserved
+//     box from it at first paint, and first paint happens before the figure route answers; a
+//     client that has to fetch the ratio in order to reserve the box reserves nothing. The alt
+//     text the UI needs for the degraded state is on the figure route, as alt. So a client learns
+//     "this exercise has a figure" and how much room it needs from the lesson/exercise payload,
+//     and learns what it looks like from the figure route, which is the split the figure
+//     contract mandates.
 //
 //  3. Dangling references are reported, not patched. A practice list naming an exercise id that
 //     does not exist is a content bug. Serving the list anyway with the id quietly missing would
@@ -28,7 +32,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { exerciseFigureKey, exampleFigureKey, lessonFigureKey, figureReference } from "../../lib/figure-contract.mjs";
+import { exerciseFigureKey, exampleFigureKey, lessonFigureKey, figureReference, usableRatio } from "../../lib/figure-contract.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..", "..");
@@ -311,7 +315,8 @@ export function toLessonResponse(store, lesson) {
     // Worked examples carry their own figure fields, and a worked example is a section member
     // like any other, so the same projection applies to it. Without this the asymptoteSource of
     // every figure-bearing example rides along on every lesson response, which is exactly the
-    // build input the figure contract keeps behind the build.
+    // build input the figure contract keeps behind the build. The authored ratio is what stays,
+    // because it is what the box is reserved from.
     if (Array.isArray(section.examples)) {
       copy.examples = section.examples.map((example, i) => toExampleResponse(lesson, name, example, i));
     }
@@ -337,19 +342,27 @@ export function toLessonResponse(store, lesson) {
 
 function lessonFigureRefs(store, lesson, sectionName, figures) {
   return figures
-    .map((fig, i) => (fig && fig.asymptoteSource ? figureReference(lessonFigureKey(lesson.id, sectionName, i)) : null))
+    .map((fig, i) =>
+      fig && fig.asymptoteSource
+        ? figureReference(lessonFigureKey(lesson.id, sectionName, i), fig.asymptoteAspectRatio)
+        : null
+    )
     .filter(Boolean);
 }
 
 // A worked example, with its figure reduced to a reference. The figure fields are dropped rather
 // than blanked: an empty asymptoteSource would read as "this figure has no source", which is a
-// different and wrong claim. When there is a figure, figureKey is there instead, and the payload
-// comes from the figure route.
+// different and wrong claim. When there is a figure, figureKey and the authored ratio are there
+// instead, and the payload comes from the figure route.
 function toExampleResponse(lesson, sectionName, example, index) {
   if (!example || typeof example !== "object") return example;
   const { asymptoteSource, asymptoteAlt, asymptoteAspectRatio, ...rest } = example;
   if (!asymptoteSource) return rest;
-  return { ...rest, figureKey: exampleFigureKey(lesson.id, sectionName, index) };
+  return {
+    ...rest,
+    figureKey: exampleFigureKey(lesson.id, sectionName, index),
+    ...(usableRatio(asymptoteAspectRatio) === null ? {} : { asymptoteAspectRatio: usableRatio(asymptoteAspectRatio) })
+  };
 }
 
 // The exercise route's shape. Raw LaTeX in, raw LaTeX out - never pre-rendered HTML (IA S7): the
@@ -397,7 +410,13 @@ export function toExerciseResponse(store, ex) {
     response.solutionWithheld = true;
   }
 
-  if (ex.asymptoteSource) response.figureKey = exerciseFigureKey(ex.id);
+  if (ex.asymptoteSource) {
+    response.figureKey = exerciseFigureKey(ex.id);
+    // The reservation travels with the reference so the card's figure box is sized before the
+    // figure route answers; see FIGURE_REFERENCE_FIELDS.
+    const ratio = usableRatio(ex.asymptoteAspectRatio);
+    if (ratio !== null) response.asymptoteAspectRatio = ratio;
+  }
   return response;
 }
 

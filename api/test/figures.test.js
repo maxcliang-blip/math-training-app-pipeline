@@ -47,11 +47,23 @@ test("a figure payload carries the contract fields and nothing else", () => {
 });
 
 test("a non-figure route gets the reference and never the payload", () => {
-  const ref = figureReference("m1-l1.sections.concept.figures[0]");
+  const ref = figureReference("m1-l1.sections.concept.figures[0]", 2.667);
   assert.deepEqual(Object.keys(ref), FIGURE_REFERENCE_FIELDS);
+  // The reservation rides on the reference so the box can be sized at first paint (RC §5.4 item 1);
+  // it is the only figure information a content route may carry.
+  assert.equal(ref.asymptoteAspectRatio, 2.667);
   for (const field of FIGURE_PAYLOAD_FIELDS) {
     if (field === "figureKey") continue;
     assert.equal(field in ref, false, `${field} must not appear on a lesson or exercise response`);
+  }
+});
+
+test("a figure that declares no usable ratio gets no ratio on its reference", () => {
+  // Omitted rather than blanked, and certainly not defaulted here: the default belongs to the
+  // renderer (web/src/lib/figures.js), so the value in the document is always one that was authored.
+  for (const value of [undefined, null, 0, -1, NaN, "wide", {}]) {
+    const ref = figureReference("k", value);
+    assert.deepEqual(Object.keys(ref), ["figureKey"], `${JSON.stringify(value)} must not invent a shape`);
   }
 });
 

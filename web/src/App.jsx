@@ -95,7 +95,15 @@ function Section({ name, section }) {
         {section.examples.map((example, index) => (
           <article key={example.id || index} className="example">
             {example.titleLatex ? <h4><MathBlock source={example.titleLatex} /></h4> : null}
-            {example.figureKey ? <Figure figureKey={example.figureKey} alt={example.asymptoteAlt} /> : null}
+            {/* asymptoteAspectRatio rides on the reference (FIGURE_REFERENCE_FIELDS) so the box can
+                be reserved before the figure route has answered; see RC §5.4 item 1. */}
+            {example.figureKey ? (
+              <Figure
+                figureKey={example.figureKey}
+                alt={example.asymptoteAlt}
+                declaredAspectRatio={example.asymptoteAspectRatio}
+              />
+            ) : null}
             {example.bodyLatex ? <MathBlock source={example.bodyLatex} /> : null}
             {example.answerLatex ? (
               <details>
@@ -135,7 +143,13 @@ function ExerciseCard({ exercise }) {
     <article className="exercise">
       <p className="exercise__tier">Tier {exercise.tier} · difficulty {exercise.difficulty}</p>
       <MathBlock source={exercise.promptLatex} />
-      {exercise.figureKey ? <Figure figureKey={exercise.figureKey} alt={exercise.asymptoteAlt} /> : null}
+      {exercise.figureKey ? (
+        <Figure
+          figureKey={exercise.figureKey}
+          alt={exercise.asymptoteAlt}
+          declaredAspectRatio={exercise.asymptoteAspectRatio}
+        />
+      ) : null}
       {Array.isArray(exercise.choices) && exercise.choices.length ? (
         <ol className="exercise__choices">
           {exercise.choices.map((choice, index) => (
