@@ -502,6 +502,75 @@ function reservationsAreReportedExactly(contentRoot) {
   };
 }
 
+// A figure id is an address, and MAX-107 is the rule that says a figure record must declare one.
+// Four of m5-l1's figure reservations declared none: they existed, they rendered, and no close-out
+// could name them, so nothing could assert they shipped.
+//
+// Proved here, on its own copy of the corpus, for the reason figureCountsTrackTheCorpus is: the
+// mutation framework above writes every record a second time beside the originals, so on its corpus
+// an injected defect cannot be told from the doubling, and the corpus it was failing to protect is
+// the corpus the rule rejects. A rule that fired on every figure would also "catch" a missing id.
+// So what is asserted is the count, not the presence -- and the count is only meaningful against a
+// corpus that raised none to begin with, so the baseline is asserted too.
+//
+// One id is deleted from one real section figure, in the files themselves rather than in a record
+// written beside them, and the return must be exactly one finding naming that figure's site in the
+// spelling figure-id-unique uses. Section figures only, because that is the set MAX-104's resolver
+// walks and therefore the set an id has to exist for.
+function figureIdRequiredIsReportedOnce(contentRoot) {
+  const pristineHits = run(contentRoot).report.findings.filter((f) => f.rule === "figure-id-required").length;
+  const dir = mkdtempSync(join(tmpdir(), "content-figure-id-"));
+  try {
+    cpSync(contentRoot, dir, { recursive: true });
+    const lessonsDir = join(dir, "lessons");
+    const ordered = readdirSync(lessonsDir)
+      .filter((f) => f.endsWith(".json"))
+      .sort()
+      .map((f) => ({ file: f, record: JSON.parse(readFileSync(join(lessonsDir, f), "utf8")) }))
+      .sort((a, b) => String(a.record.id).localeCompare(String(b.record.id)));
+
+    // A section figure on any section, scanned in lesson-id order so the choice is stable across
+    // filesystems and does not depend on which lesson grows a figure next.
+    const donor = ordered
+      .map((entry) => ({
+        ...entry,
+        site: lessonFigureRecords(entry.record).find((s) => s.kind === "section" && s.record.id),
+      }))
+      .find((entry) => entry.site);
+    if (!donor) return { caught: false, detail: "no lesson section figure carrying an id to remove" };
+
+    delete donor.site.record.id;
+    // Written back over the original file, not out under a new name: the harness's own doubling is
+    // what makes a MUTATIONS entry inconclusive here.
+    writeFileSync(join(lessonsDir, donor.file), JSON.stringify(donor.record, null, 2) + "\n");
+    const sitePath = `lessons/${donor.record.id}.sections.${donor.site.sectionName}.figures[${donor.site.index}]`;
+
+    const hits = run(dir).report.findings.filter((f) => f.rule === "figure-id-required");
+    const problems = [];
+    if (pristineHits !== 0) {
+      problems.push(`the corpus raised ${pristineHits} figure-id-required finding(s) before the injection, so "exactly one" would mean nothing`);
+    }
+    if (hits.length !== 1) {
+      problems.push(`unnaming ${donor.record.id}'s figure at ${sitePath} produced ${hits.length} figure-id-required finding(s), not 1`);
+    } else if (hits[0].severity !== "error") {
+      problems.push(`figure-id-required raised ${hits[0].severity} at ${hits[0].path}, expected error`);
+    } else if (!String(hits[0].path).includes(sitePath)) {
+      problems.push(`figure-id-required did not name ${sitePath} (reported ${hits[0].path})`);
+    }
+
+    return {
+      caught: problems.length === 0,
+      detail: problems.length
+        ? problems.join("; ")
+        : `removing the id from ${sitePath} raised exactly one error naming that site, and the ` +
+          `${pristineHits}-finding corpus it came from was clean; a close-out can name every section ` +
+          "figure in it",
+    };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 // The S5.1 caption scope is a settled decision, and a settled decision that nothing asserts is a
 // pending one waiting to be re-litigated by the next person to read "every figure". MAX-93 ruled
 // that the caption *requirement* binds concept section figures only, and that the figure-number
@@ -641,6 +710,27 @@ export function selftest(contentRoot) {
         severity: "error",
         caught,
         detail,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
+        const named = figureIdRequiredIsReportedOnce(pristine);
+        caught = named.caught;
+        detail = named.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "unnamed-figure-is-reported-once-and-by-site",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail: caught
+          ? `${detail} (MAX-104's resolver reads by figure id, so a record without one cannot be asserted delivered)`
+          : `${detail} -- a close-out could not have named that figure, let alone asserted it shipped`,
       });
     }
 
