@@ -48,9 +48,20 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The probe branches below start at origin/main and the gate measures base..branch. A
+          # pull_request checkout is the merge ref at depth 1, which has no origin/main at all --
+          # so `git checkout -B probe origin/main` dies with "origin/main is not a commit" and the
+          # job fails for a reason that has nothing to do with the gate.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Name the base explicitly
+        # fetch-depth: 0 fetches history, not necessarily the remote-tracking ref this job needs.
+        run: git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'
+      - name: The base the probes start from
+        run: git rev-parse --verify 'origin/main^{commit}'
       # No npm install, and that is deliberate: the gate uses node builtins and fetch only, so this
       # job cannot be broken by a dependency change in the same PR it is supposed to police.
       - name: The decision layer passes its own cases
