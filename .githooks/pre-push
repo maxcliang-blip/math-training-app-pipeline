@@ -1,27 +1,40 @@
 #!/bin/sh
 # Delivery-integrity gate: refuse to push commits authored by another agent (MAX-69).
 #
-# The gate itself is scripts/check-push-authors.mjs; this file is the wiring that makes it
-# run on every push in every worktree. Both halves are needed. The script without the hook
-# is a document, and the hook without the script is a line that fails for a missing file.
+# The gate is check-push-authors.mjs. install-git-hooks.sh copies both this hook and that
+# script into the shared .git dir, so the installed pair depends on no working tree: a
+# `git worktree remove` on the checkout it was installed from cannot leave a repository whose
+# pushes are quietly unverified.
 #
-# Resolution order for the gate, and why it is not just "the worktree's copy":
+# Resolution order, and why it is not just "whatever is next to me":
 #
-#   1. the current worktree's scripts/check-push-authors.mjs
-#   2. the checkout the hooks were installed from, recorded by install-git-hooks.sh
-#   3. the main checkout
+#   1. the copy installed beside this hook
+#   2. the current worktree's scripts/check-push-authors.mjs
+#   3. the checkout the hooks were installed from, recorded in .gate-root
+#   4. the main checkout
 #
-# Steps 2 and 3 cover the case that would otherwise bite hardest: the guard ships on main, an
+# Steps 2-4 cover the case that would otherwise bite hardest: the guard ships on main, an
 # agent's branch predates it, and the hook silently stops enforcing anything. Failing the push
 # instead of skipping the check is the point -- an unverified push is the MAX-69 failure, and
 # skipping quietly is how it comes back.
 
 set -eu
 
+here=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 root=$(git rev-parse --show-toplevel)
-gate="$root/scripts/check-push-authors.mjs"
+gate=""
 
-if [ ! -f "$gate" ]; then
+for candidate in \
+  "$here/check-push-authors.mjs" \
+  "$root/scripts/check-push-authors.mjs"
+do
+  if [ -f "$candidate" ]; then
+    gate="$candidate"
+    break
+  fi
+done
+
+if [ -z "$gate" ]; then
   installed=$(git rev-parse --path-format=absolute --git-common-dir)/hooks-paperclip
   source_root=$(cat "$installed/.gate-root" 2>/dev/null || true)
   if [ -n "$source_root" ] && [ -f "$source_root/scripts/check-push-authors.mjs" ]; then
@@ -29,16 +42,16 @@ if [ ! -f "$gate" ]; then
   fi
 fi
 
-if [ ! -f "$gate" ]; then
+if [ -z "$gate" ]; then
   main=$(git worktree list --porcelain | sed -n '1s/^worktree //p')
-  gate="$main/scripts/check-push-authors.mjs"
+  [ -f "$main/scripts/check-push-authors.mjs" ] && gate="$main/scripts/check-push-authors.mjs"
 fi
 
-if [ ! -f "$gate" ]; then
-  printf 'pre-push: cannot find scripts/check-push-authors.mjs in this worktree, the install\n' >&2
-  printf '          root, or the main checkout.\n' >&2
+if [ -z "$gate" ]; then
+  printf 'pre-push: cannot find check-push-authors.mjs beside this hook, in this worktree, at the\n' >&2
+  printf '          recorded install root, or in the main checkout.\n' >&2
   printf 'pre-push: refusing to push with authorship unverified. Merge origin/main, or run\n' >&2
-  printf '          scripts/install-git-hooks.sh to install the guard for this repository.\n' >&2
+  printf '          scripts/install-git-hooks.sh to reinstall the guard for this repository.\n' >&2
   exit 1
 fi
 

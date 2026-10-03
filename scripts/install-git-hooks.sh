@@ -1,8 +1,8 @@
 #!/bin/sh
 # Point this repository at the committed hooks in .githooks/ so every worktree enforces them.
 #
-# The installed hooks live in the shared .git dir, not in any working tree, and core.hooksPath
-# is absolute. Both choices are load-bearing:
+# The installed hooks -- and the gate script they call -- live in the shared .git dir, not in
+# any working tree, and core.hooksPath is absolute. Both choices are load-bearing:
 #
 #   * absolute, because git resolves a relative hooks path against the top level of the
 #     *current* worktree and skips hooks silently when that directory is not there. A worktree
@@ -14,9 +14,14 @@
 #
 # One call covers every current and future worktree of this clone: core.hooksPath is
 # repository-local config, shared by all of them. The installed copies are not committed and
-# are not reviewed -- .githooks/ in the repository is the reviewed source of truth, and this
-# script is the only thing that copies it into place. `--check` compares the two, so drift is
-# visible rather than assumed away.
+# are not reviewed -- .githooks/ and scripts/check-push-authors.mjs in the repository are the
+# reviewed source of truth, and this script is the only thing that copies them into place.
+# `--check` compares every installed file against its source, so drift is visible rather than
+# assumed away.
+#
+# The gate script is copied in rather than referenced. A hook that resolves its gate out of a
+# working tree keeps working exactly until that worktree is removed, and a guard that stops
+# being found does not fail loudly: it fails by not running.
 #
 # Usage: sh scripts/install-git-hooks.sh [--check]
 #
@@ -36,6 +41,7 @@ if ! common=$(git -C "$src_root" rev-parse --path-format=absolute --git-common-d
   exit 2
 fi
 dest="$common/hooks-paperclip"
+gate_src="$src_root/scripts/check-push-authors.mjs"
 
 if [ "${1:-}" = "--check" ]; then
   configured=$(git -C "$src_root" config --get core.hooksPath || true)
@@ -43,21 +49,33 @@ if [ "${1:-}" = "--check" ]; then
   printf 'installed to : %s\n' "$dest"
   printf 'core.hooksPath: %s\n' "${configured:-<unset>}"
   rc=0
-  if [ ! -f "$src_hooks/pre-push" ]; then
-    printf 'pre-push      : MISSING from the source -- are you on a branch that predates it?\n'
-    rc=1
-  elif [ ! -f "$dest/pre-push" ]; then
-    printf 'pre-push      : NOT INSTALLED -- run scripts/install-git-hooks.sh\n'
-    rc=1
-  elif ! cmp -s "$src_hooks/pre-push" "$dest/pre-push"; then
-    printf 'pre-push      : STALE -- installed copy differs from the committed source\n'
-    rc=1
-  elif [ ! -x "$dest/pre-push" ]; then
-    printf 'pre-push      : NOT EXECUTABLE -- git never calls a non-executable hook\n'
-    rc=1
-  else
-    printf 'pre-push      : installed, executable, identical to source\n'
-  fi
+  check_one() {
+    label=$1
+    src=$2
+    if [ ! -f "$src" ]; then
+      printf '%-15s: MISSING from the source -- are you on a branch that predates it?\n' "$label"
+      rc=1
+      return
+    fi
+    if [ ! -f "$dest/$(basename "$src")" ]; then
+      printf '%-15s: NOT INSTALLED -- run scripts/install-git-hooks.sh\n' "$label"
+      rc=1
+      return
+    fi
+    if ! cmp -s "$src" "$dest/$(basename "$src")"; then
+      printf '%-15s: STALE -- installed copy differs from the committed source\n' "$label"
+      rc=1
+      return
+    fi
+    if [ "$3" = "exec" ] && [ ! -x "$dest/$(basename "$src")" ]; then
+      printf '%-15s: NOT EXECUTABLE -- git never calls a non-executable hook\n' "$label"
+      rc=1
+      return
+    fi
+    printf '%-15s: installed and identical to source\n' "$label"
+  }
+  check_one "pre-push" "$src_hooks/pre-push" exec
+  check_one "gate script" "$gate_src" node
   if [ "$configured" != "$dest" ]; then
     printf 'core.hooksPath is not the installed directory; git is running %s\n' "${configured:-nothing}"
     rc=1
@@ -65,9 +83,9 @@ if [ "${1:-}" = "--check" ]; then
   exit "$rc"
 fi
 
-if [ ! -f "$src_hooks/pre-push" ]; then
-  printf 'install-git-hooks: %s/pre-push does not exist.\n' "$src_hooks" >&2
-  printf '                   The hooks are committed, not generated: merge origin/main and retry.\n' >&2
+if [ ! -f "$src_hooks/pre-push" ] || [ ! -f "$gate_src" ]; then
+  printf 'install-git-hooks: %s/pre-push and %s must both exist.\n' "$src_hooks" "$gate_src" >&2
+  printf '                   They are committed, not generated: merge origin/main and retry.\n' >&2
   exit 2
 fi
 
@@ -78,6 +96,7 @@ for hook in "$src_hooks"/*; do
   cp "$hook" "$dest/$name"
   chmod +x "$dest/$name"
 done
+cp "$gate_src" "$dest/check-push-authors.mjs"
 
 # The gate script is resolved at push time by the hook itself, from the pushing worktree or
 # from the checkout the hooks were installed from. Recording that root here means a worktree on
@@ -90,7 +109,8 @@ git -C "$src_root" config core.hooksPath "$dest"
 printf 'installed hooks from %s\n' "$src_hooks"
 printf '  -> %s\n' "$dest"
 printf '  core.hooksPath = %s\n' "$dest"
-printf '  gate script resolved from: %s\n' "$src_root"
+printf '  gate installed alongside the hook, so no working tree has to outlive this\n'
+printf '  fallback install root: %s\n' "$src_root"
 printf 'enforced on every push from every worktree of this clone.\n'
 printf 'verify: sh scripts/install-git-hooks.sh --check\n'
 printf 'bypass: git push --no-verify defeats this. Use it only when a push is blocked for a\n'
