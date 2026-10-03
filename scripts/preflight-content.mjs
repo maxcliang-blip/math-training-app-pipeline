@@ -18,7 +18,9 @@
 //   Rendering Conventions S9  - asymptoteAlt / asymptoteAspectRatio mandatory
 //   Interaction Spec S8       - the nine content requirements
 //
-// Usage: node scripts/preflight-content.mjs [contentRoot] [--json <outPath>]
+// Usage: node scripts/preflight-content.mjs [contentRoot] [--json [<outPath>]]
+//   --json           print the report to stdout
+//   --json <path>    write the report to <path> instead
 
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
@@ -921,9 +923,18 @@ if (isMain) {
   const contentRoot = args[0] && !args[0].startsWith("--") ? resolve(args[0]) : join(REPO, "content");
   const { report, errors } = run(contentRoot);
 
-  const outPath = jsonIdx >= 0 ? args[jsonIdx + 1] : join(REPO, "artifacts", "content-math-report.json");
+  // `--json` with no path used to read `args[jsonIdx + 1]`, which is undefined, and died in
+  // dirname() with a bare TypeError — so the documented way to read the numbers
+  // (`preflight-content.mjs --json`, the command the MAX-76 verification names) printed a stack
+  // trace instead of a report. Bare --json now means stdout, which is what a flag of that name
+  // means everywhere else; `--json <path>` keeps writing the file, and the artifact is written
+  // either way so CI still uploads it.
+  const jsonPath = jsonIdx >= 0 ? args[jsonIdx + 1] : undefined;
+  const jsonToPath = Boolean(jsonPath) && !jsonPath.startsWith("--");
+  const outPath = jsonToPath ? jsonPath : join(REPO, "artifacts", "content-math-report.json");
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, JSON.stringify(report, null, 2) + "\n");
+  if (jsonIdx >= 0 && !jsonToPath) console.log(JSON.stringify(report, null, 2));
 
   const { status, corpus, totals, checksRun: n } = report;
   console.log(`preflight-content: ${status.toUpperCase()}  (${n} checks, KaTeX ${katex.version})`);
