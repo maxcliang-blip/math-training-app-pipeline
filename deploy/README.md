@@ -56,17 +56,22 @@ goes quiet while the container still looks healthy on localhost.
 
 ## Which corpus this serves
 
-The 27 lessons in `content/lessons`, ids `mN-lN`, plus 474 exercises. That is the corpus
-the backend under review reads and the corpus the figure build compiles, so it is the one
-staging serves. Staging previously served a different 10-lesson corpus (`m1-linear-equations`,
+The corpus is whatever `content/` holds on `main` when the image is built, and the served
+numbers are read back from the image rather than assumed: `git ls-tree -r --name-only main --
+content/lessons | wc -l` for lessons and the same for `content/exercises` for exercise files.
+At `24dd6e1` that is 36 lessons and 228 exercise files, which the API reports as
+`{"lessons":36,"exercises":723}`. `scripts/verify-staging-source.sh` asserts exactly those two
+counts against the image, so this paragraph cannot go stale without the deploy failing. That is
+the corpus the backend under review reads and the corpus the figure build compiles, so it is
+the one staging serves. Staging previously served a different 10-lesson corpus (`m1-linear-equations`,
 `m3-permutations-combinations`, `m7-bayes-theorem`) from a different repository, which is
 why a reviewer hitting staging was not looking at the code under review.
 
-One consequence to keep in view: the corpus files are being renumbered by
-[ MAX-35](/MAX/issues/MAX-35), which files the counting lessons under M3 to match the
-module catalogue. A redeploy before that lands serves the old numbering, and a redeploy
-after it serves the corrected one. Neither is a defect; the image is simply a build of
-whatever `main` held when it was built.
+One consequence to keep in view: a redeploy serves whatever corpus `main` held when the image was
+built, so the served numbers move as content lands. That is not a defect, and it is also why
+`curl -s http://127.0.0.1:18083/api/content/warnings` is the check to run before believing any
+measurement taken against staging: it reports `{"lessons":N,"exercises":M}` straight from the
+image.
 
 ## Why there is no /api/asymptote/compile
 
@@ -90,8 +95,18 @@ fields.
 
 ```bash
 curl -s http://127.0.0.1:18083/api/health
-# {"figures":{"usable":true,"status":"pass","count":61,...}}
+# {"figures":{"usable":true,"status":"pass","count":83,...}}
 ```
+
+## CI runs the same two checks
+
+`.github/workflows/ci.yml` has a `staging-image` job that builds this image from the commit under
+test, runs it, and then runs `scripts/verify-staging-source.sh` and `scripts/verify-staging.mjs`
+against it. Every other job in the repository reads a checkout, so nothing else would notice that
+the image had become unbuildable or unprovable — which is how an image went months carrying no
+`org.opencontainers.image.source`, serving a 31-lesson corpus from a different repository, with
+CI green throughout. Keep the deploy procedure and that job in step: a check that only runs by
+hand is the check that eventually does not run.
 
 `figures.usable: false` means the build step did not run. The image build fails on a figure
 build that does not pass, so `usable: false` in a running staging means the manifest in the
