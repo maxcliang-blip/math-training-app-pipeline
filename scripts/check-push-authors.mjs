@@ -15,7 +15,7 @@
 // (scripts/agent-worktree.sh). This gate is the cheap layer that turns a silent bad
 // merge into a failed push, for the window where a shared checkout still exists.
 //
-// What it checks, in two independent layers:
+// What it checks, in three independent layers:
 //
 //   1. Authorship. For every ref being pushed, every commit that push would introduce
 //      must be authored by the identity configured for this checkout.
@@ -25,11 +25,16 @@
 //      matches the configured identity, whoever typed it. The MAX-77 ruling landed as
 //      0c0e3f8, authored `Bob <bob@math-training.app>`, pushed clean out of the shared
 //      root by an agent who is not Bob.
+//   3. Which commits layer 1 is asked about (MAX-105). The range a push introduces is
+//      computed against the push's own base, and a rebase puts main's own commits into
+//      it -- main is what the board squash-merges, so those are board-authored and every
+//      landing in this repository was refused for carrying them. Commits the shared base
+//      already has are subtracted before the comparison, and the count is printed.
 //
-// Layer 1 is the MAX-69 gate and is unchanged. Layer 2 is one more comparison, in the
-// same shape, against the same input. Neither layer catches a squash, which rewrites
-// authorship to the first commit's author: that is why the PR-body check (item 4 of
-// MAX-69) is a separate layer and not optional.
+// Layer 1 is the MAX-69 gate. Layers 2 and 3 are one more comparison each, in the same
+// shape, against the same input. Neither layer 2 nor layer 3 catches a squash, which
+// rewrites authorship to the first commit's author: that is why the PR-body check (item 4
+// of MAX-69) is a separate layer and not optional.
 //
 // Deliberately NOT a check on `Co-Authored-By:` trailers. Every commit on this board
 // carries `Co-Authored-By: Paperclip <noreply@paperclip.ing>`, so treating a trailer as
@@ -99,6 +104,51 @@ export function rangeForUpdate(update, { baseSha }) {
   return { from: baseSha, to: update.localSha, basis: "push base (new branch)" };
 }
 
+// MAX-105: what the base gets to subtract, and what it does not.
+//
+// The range a push introduces is computed against the push's own base: the remote-tracking ref
+// for a branch that already exists, the push base for a new one. That answers "what does this
+// branch add", and after a rebase it also contains everything the rebase pulled in -- main's own
+// commits. Main is what the board squash-merges into, so those commits are authored by
+// maxcliang-blip, and the guard refused the rebase by listing main's history as another agent's
+// work delivered under this agent's name. That is MAX-69's own message, about commits already on
+// main, on every landing in the repository.
+//
+// The distinction that matters is not who wrote the commit but whether the push is delivering it.
+// A commit the shared base already has is not a stranger's work arriving under your name: it is
+// the base, and this push neither adds nor changes it. So it is subtracted before the authorship
+// comparison, and the count is printed -- a range the guard quietly narrowed is indistinguishable
+// from a range it never looked at.
+//
+// Deliberately NOT "reachable from any ref other than the one being pushed". That swallows a
+// commit another agent has on a branch of their own, which is the MAX-69 shape one step earlier
+// (the foreign commit sits on both the wrong branch and the right one), and it swallows a branch
+// being landed on purpose -- MAX-84 -- with no waiver, no PR body and no review, which is the case
+// the PR-body check exists to catch. The shared base is the narrowest set that repairs the rebase
+// without opening either hole.
+//
+// An empty `commits` array means different things depending on `landed`: nothing at all, which the
+// caller cannot explain and which therefore stays a problem; or everything already on the base,
+// which is a push that delivers no new work and is the one empty range that is a legitimate pass.
+export function landedCommits({ commits, landed = 0, landedFrom = null } = {}) {
+  return { commits: commits || [], landed: landed || 0, landedFrom: landedFrom || null };
+}
+
+// Why the subtraction did not happen, or null when it did. A skipped subtraction is judged in full,
+// which is the conservative direction, but it is printed rather than silent: a base the guard could
+// not use is a gap in what it checked, and MAX-69 is what a silent gap looks like afterwards.
+//
+// `contained` is the hole this closes. If the branch being pushed is already inside the base, every
+// commit in its range is base-reachable by definition and subtracting would empty the range -- so
+// `agent.pushBase` aimed at the branch you are pushing would silently switch the authorship layer
+// off. `agent.allowedAuthors` turns the layer off out loud; a ref is not allowed to do it by
+// accident, so a contained branch is judged in full and says so.
+export function landingSkipped({ baseResolved, contained, baseRef }) {
+  if (!baseResolved) return `push base ${baseRef} did not resolve to a commit, so nothing was subtracted`;
+  if (contained) return `the branch being pushed is already contained in ${baseRef}, so nothing was subtracted`;
+  return null;
+}
+
 export function normalizeIdentity(entry) {
   const match = /^\s*(.*?)\s*<([^>]*)>\s*$/.exec(String(entry || ""));
   if (!match) return null;
@@ -140,10 +190,10 @@ function normalizePath(p) {
   return resolve(String(p)).replace(/\/+$/, "") || "/";
 }
 
-// The whole verdict. `updates` is the parsed hook input, `ranges` maps a local sha to
-// the commits in the range it would introduce, and `expected` is the allowed identity
-// set. Anything unexpected is a violation rather than a pass: this gate reports what it
-// could not check.
+// The whole verdict. `updates` is the parsed hook input, `ranges` maps a local sha to what the
+// push would introduce about that ref -- `{ commits, landed, landedFrom }`, see landedCommits below
+// -- and `expected` is the allowed identity set. Anything unexpected is a violation rather than a
+// pass: this gate reports what it could not check.
 //
 // `place` is the checkout classification from classifyCheckout (plus whether the shared
 // root was waived on purpose). It is optional so the authorship layer can be driven on
@@ -154,6 +204,7 @@ export function evaluatePush({ updates, ranges, expected, expectedSource, place 
   const problems = [];
   const sharedRoot = [];
   let introduced = 0;
+  let landed = 0;
 
   for (const update of updates) {
     const range = rangeForUpdate(update, { baseSha: expected.baseSha });
@@ -166,8 +217,28 @@ export function evaluatePush({ updates, ranges, expected, expectedSource, place 
       });
       continue;
     }
-    const commits = ranges[update.localSha] || [];
-    if (!commits.length) {
+    // MAX-105: the adapter has already subtracted the commits the base already has, and named the
+    // base it used -- or said why it could not. What arrives here is the work this push introduces.
+    const found = ranges[update.localSha];
+    const entry = landedCommits(found);
+    const skipped = (found && found.skipped) || null;
+    if (!entry.commits.length) {
+      if (entry.landed) {
+        // Every commit in the range is already on the base. That is a push of no new work, and it
+        // is the one empty range that is a pass rather than a gap -- an unexplained empty range
+        // below still refuses.
+        checked.push({
+          ref: update.localRef,
+          remoteRef: update.remoteRef,
+          basis: range.basis,
+          commits: 0,
+          foreign: [],
+          ...entry,
+          skipped,
+        });
+        landed += entry.landed;
+        continue;
+      }
       problems.push({
         kind: "unresolved-range",
         ref: update.localRef,
@@ -175,13 +246,17 @@ export function evaluatePush({ updates, ranges, expected, expectedSource, place 
       });
       continue;
     }
-    introduced += commits.length;
-    const foreign = commits.filter((c) => !expected.identities.has(identityOf(c)));
+    introduced += entry.commits.length;
+    landed += entry.landed;
+    const foreign = entry.commits.filter((c) => !expected.identities.has(identityOf(c)));
     const row = {
       ref: update.localRef,
       remoteRef: update.remoteRef,
       basis: range.basis,
-      commits: commits.length,
+      commits: entry.commits.length,
+      landed: entry.landed,
+      landedFrom: entry.landedFrom,
+      skipped,
       foreign: foreign.map((c) => describeCommit(c)),
     };
     checked.push(row);
@@ -191,7 +266,7 @@ export function evaluatePush({ updates, ranges, expected, expectedSource, place 
     // there gets for free. Those are named here; the commits authored by somebody else are already
     // named above as foreign. Between them, every commit in the range is accounted for.
     if (place && place.kind === "shared-root" && !place.allowed) {
-      const unverifiable = commits.filter((c) => expected.identities.has(identityOf(c)));
+      const unverifiable = entry.commits.filter((c) => expected.identities.has(identityOf(c)));
       if (unverifiable.length) {
         sharedRoot.push({
           ref: update.localRef,
@@ -216,6 +291,7 @@ export function evaluatePush({ updates, ranges, expected, expectedSource, place 
   return {
     ok: problems.length === 0 && violations.length === 0 && sharedRoot.length === 0,
     introduced,
+    landed,
     refs: checked,
     violations,
     sharedRoot,
@@ -266,20 +342,52 @@ export function collectRanges(updates, baseRef, cwd = REPO) {
     if (ZERO.test(update.localSha)) continue;
     const range = rangeForUpdate(update, { baseSha });
     if (!range) continue;
-    const format = ["%H", "%aN", "%aE", "%s"].join(FIELD) + FIELD_END;
-    const out = gitOptional(["log", `--format=${format}`, `${range.from}..${range.to}`], cwd);
-    ranges[update.localSha] = out
-      ? out
-          .split(FIELD_END)
-          .map((s) => s.replace(/^\n+/, ""))
-          .filter((s) => s.trim())
-          .map((s) => {
-            const [sha, authorName, authorEmail, ...subject] = s.split(FIELD);
-            return { sha, authorName, authorEmail, subject: subject.join(FIELD) };
-          })
-      : [];
+    // MAX-105: subtract what the base already has. `--not <base>` is git's own spelling of
+    // "and not anything reachable from the base", so the subtraction is reachability rather than
+    // a comparison of the two lists afterwards.
+    // A new branch is already diffed against the base, so its range cannot contain a base commit
+    // and there is nothing to subtract. Skipping the second log there is a saving, not a rule.
+    const subtractable = range.basis !== "push base (new branch)";
+    const contained = subtractable && baseSha ? isAncestor(update.localSha, baseSha, cwd) : false;
+    const landedFrom = subtractable && baseSha && !contained ? baseRef : null;
+    const skipped = subtractable
+      ? landingSkipped({ baseResolved: !!baseSha, contained, baseRef })
+      : null;
+    const commits = logCommits(range, landedFrom ? ["--not", landedFrom] : [], cwd);
+    const landed = landedFrom ? logCommits(range, [], cwd).length - commits.length : 0;
+    ranges[update.localSha] = { ...landedCommits({ commits, landed, landedFrom }), skipped };
   }
   return { ranges, baseSha };
+}
+
+// `merge-base --is-ancestor` answers only yes/no, so it comes back as an exit status. Anything but a
+// clean zero -- an unresolvable sha, a git that would not run -- reads as "not contained", which is
+// the safe direction: the subtraction stays off and the whole range is judged.
+function isAncestor(sha, other, cwd) {
+  try {
+    execFileSync("git", ["merge-base", "--is-ancestor", sha, other], {
+      cwd,
+      stdio: ["ignore", "ignore", "ignore"],
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function logCommits(range, notArgs, cwd) {
+  const format = ["%H", "%aN", "%aE", "%s"].join(FIELD) + FIELD_END;
+  const out = gitOptional(["log", `--format=${format}`, `${range.from}..${range.to}`, ...notArgs], cwd);
+  return out
+    ? out
+        .split(FIELD_END)
+        .map((s) => s.replace(/^\n+/, ""))
+        .filter((s) => s.trim())
+        .map((s) => {
+          const [sha, authorName, authorEmail, ...subject] = s.split(FIELD);
+          return { sha, authorName, authorEmail, subject: subject.join(FIELD) };
+        })
+    : [];
 }
 
 export function readExpectedIdentity(cwd = REPO, env = {}) {
@@ -433,6 +541,36 @@ function classificationCases(rows) {
   }
 }
 
+// The MAX-105 cases that need no repository either: when the subtraction is allowed to run. A
+// `landingSkipped` that returned null for a base it could not resolve would turn an unresolvable
+// base into a pass over an empty range, which is the exact failure MAX-105 is fixing, inverted.
+function landingCases(rows) {
+  const cases = [
+    {
+      id: "landing-subtraction-runs-against-a-base-it-can-use",
+      detail: "base resolved, branch not contained in it: the subtraction runs, so there is nothing to report",
+      expect: null,
+      run: () => landingSkipped({ baseResolved: true, contained: false, baseRef: "origin/main" }),
+    },
+    {
+      id: "landing-skipped-when-the-base-does-not-resolve",
+      detail: "an unresolvable base means main's history stays in the range, which has to be visible",
+      expect: "push base origin/main did not resolve to a commit, so nothing was subtracted",
+      run: () => landingSkipped({ baseResolved: false, contained: false, baseRef: "origin/main" }),
+    },
+    {
+      id: "landing-skipped-when-the-branch-is-inside-the-base",
+      detail: "agent.pushBase aimed at the branch being pushed would empty the range and switch the author check off; it is judged in full instead",
+      expect: "the branch being pushed is already contained in refs/heads/x, so nothing was subtracted",
+      run: () => landingSkipped({ baseResolved: true, contained: true, baseRef: "refs/heads/x" }),
+    },
+  ];
+  for (const c of cases) {
+    const got = c.run();
+    rows.push({ id: c.id, detail: c.detail, expected: c.expect, got: got ?? "(no reason)", ok: got === c.expect });
+  }
+}
+
 export function selftest() {
   const dir = mkdtempSync(join(tmpdir(), "push-authors-"));
   const rows = [];
@@ -464,6 +602,19 @@ export function selftest() {
           return { sha: s, authorName: n, authorEmail: e, subject: subj.join(FIELD) };
         });
     };
+    // What the adapter hands the decision layer. The pure cases below cannot compute reachability,
+    // so a case that needs the subtraction says how many commits the base removed; the end-to-end
+    // cases at the bottom do it with a real repository and a real rebase.
+    const incoming = (commits, landed = 0, landedFrom = null) => ({ commits, landed, landedFrom });
+    // The commits main's own history contributes to a rebased branch: authored by the board,
+    // because the board is what squash-merges. Same author on every one, which is what makes the
+    // MAX-69 message read as absurd when they are the commits being named.
+    const boardCommit = (n) => ({
+      sha: "board" + n,
+      authorName: "maxcliang-blip",
+      authorEmail: "max.c.liang@gmail.com",
+      subject: `main's own commit ${n}`,
+    });
 
     const cases = [
       {
@@ -473,7 +624,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
-            ranges: { [bobSha]: commitsOf(base, bobSha) },
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
           }),
@@ -485,7 +636,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${mixedSha} refs/heads/x ${base}`),
-            ranges: { [mixedSha]: commitsOf(base, mixedSha) },
+            ranges: { [mixedSha]: incoming(commitsOf(base, mixedSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
           }),
@@ -497,7 +648,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/new ${mixedSha} refs/heads/new ${"0".repeat(40)}`),
-            ranges: { [mixedSha]: commitsOf(base, mixedSha) },
+            ranges: { [mixedSha]: incoming(commitsOf(base, mixedSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
           }),
@@ -509,7 +660,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/new ${bobSha} refs/heads/new ${"0".repeat(40)}`),
-            ranges: { [bobSha]: commitsOf(base, bobSha) },
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
           }),
@@ -521,7 +672,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${mixedSha} refs/heads/x ${base}`),
-            ranges: { [mixedSha]: commitsOf(base, mixedSha) },
+            ranges: { [mixedSha]: incoming(commitsOf(base, mixedSha)) },
             expected: expect(bothIds),
             expectedSource: "test",
           }),
@@ -534,7 +685,9 @@ export function selftest() {
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
             ranges: {
-              [bobSha]: [{ sha: bobSha, authorName: " Bob ", authorEmail: "BOB@Math-Training.App", subject: "s" }],
+              [bobSha]: incoming([
+                { sha: bobSha, authorName: " Bob ", authorEmail: "BOB@Math-Training.App", subject: "s" },
+              ]),
             },
             expected: expect(bobIds),
             expectedSource: "test",
@@ -559,7 +712,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/new ${mixedSha} refs/heads/new ${"0".repeat(40)}`),
-            ranges: { [mixedSha]: commitsOf(base, mixedSha) },
+            ranges: { [mixedSha]: incoming(commitsOf(base, mixedSha)) },
             expected: { identities: new Set(bobIds), baseSha: "" },
             expectedSource: "test",
           }),
@@ -571,7 +724,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
-            ranges: { [bobSha]: commitsOf(base, bobSha) },
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha)) },
             expected: { identities: new Set(), baseSha: base },
             expectedSource: "test",
           }),
@@ -584,14 +737,14 @@ export function selftest() {
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
             ranges: {
-              [bobSha]: [
+              [bobSha]: incoming([
                 {
                   sha: bobSha,
                   authorName: "Bob",
                   authorEmail: "bob@math-training.app",
                   subject: `add b\n\n${PAPERCLIP_TRAILER}`,
                 },
-              ],
+              ]),
             },
             expected: expect(bobIds),
             expectedSource: "test",
@@ -610,7 +763,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
-            ranges: { [bobSha]: commitsOf(base, bobSha) },
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
             place: { kind: "worktree", allowed: false, topLevel: "/wt/bob-fix-x" },
@@ -623,7 +776,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
-            ranges: { [bobSha]: commitsOf(base, bobSha) },
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
             place: { kind: "shared-root", allowed: false, topLevel: "/repo" },
@@ -636,7 +789,7 @@ export function selftest() {
         run: () => {
           const r = evaluatePush({
             updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
-            ranges: { [bobSha]: commitsOf(base, bobSha) },
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
             place: { kind: "shared-root", allowed: false, topLevel: "/repo" },
@@ -666,7 +819,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
-            ranges: { [bobSha]: commitsOf(base, bobSha) },
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
             place: { kind: "shared-root", allowed: true, topLevel: "/repo" },
@@ -679,7 +832,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${mixedSha} refs/heads/x ${base}`),
-            ranges: { [mixedSha]: commitsOf(base, mixedSha) },
+            ranges: { [mixedSha]: incoming(commitsOf(base, mixedSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
             place: { kind: "shared-root", allowed: true, topLevel: "/repo" },
@@ -692,7 +845,7 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
-            ranges: { [bobSha]: commitsOf(base, bobSha) },
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
             place: { kind: "unknown", allowed: false, topLevel: "/repo" },
@@ -705,11 +858,121 @@ export function selftest() {
         run: () =>
           evaluatePush({
             updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
-            ranges: { [bobSha]: commitsOf(base, bobSha) },
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha)) },
             expected: expect(bobIds),
             expectedSource: "test",
             place: { kind: "bare", allowed: false, topLevel: "" },
           }),
+      },
+
+      // ---- MAX-105: the same rebase, with the base's own history taken out of the range --------
+      //
+      // The range a rebase produces contains main's commits, which are board-authored because the
+      // board squash-merges. Whether they are judged is the adapter's reachability question, so
+      // these cases take the adapter's answer as given and assert what the decision layer does with
+      // it: the removal is reported, the commits that remain are judged exactly as before, and a
+      // removal the guard could not compute leaves the whole range in front of the author check.
+      {
+        id: "max-105-rebase-range-refuses-the-foreign-commit-and-names-only-it",
+        detail: "after the base's commits come out, the one commit left that the base does not have is still refused, and it is the only name in the refusal",
+        expect: "Carol: add c",
+        run: () => {
+          const r = evaluatePush({
+            updates: parseHookInput(`refs/heads/x ${mixedSha} refs/heads/x ${base}`),
+            ranges: { [mixedSha]: incoming(commitsOf(base, mixedSha), 8, "origin/main") },
+            expected: expect(bobIds),
+            expectedSource: "test",
+          });
+          const named = r.refs.flatMap((x) => x.foreign);
+          return { ok: !r.ok, got: named.map((c) => c.subject).join(" | ") || "(none)" };
+        },
+      },
+      {
+        id: "max-105-rebase-passes-clean-without-a-waiver",
+        detail: "the same branch with only my own commits on top of main: no waiver, no MAX-69 refusal",
+        expect: "pass",
+        run: () =>
+          evaluatePush({
+            updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha), 8, "origin/main") },
+            expected: expect(bobIds),
+            expectedSource: "test",
+          }),
+      },
+      {
+        id: "max-105-reports-what-the-base-removed",
+        detail: "a range the guard narrowed must say so and name the base, or a quiet range and an unchecked one look alike",
+        expect: "8 already on origin/main",
+        run: () => {
+          const r = evaluatePush({
+            updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha), 8, "origin/main") },
+            expected: expect(bobIds),
+            expectedSource: "test",
+          });
+          const got = `${r.landed} already on ${r.refs[0].landedFrom}`;
+          return { ok: r.ok && got === "8 already on origin/main", got };
+        },
+      },
+      {
+        id: "max-105-an-unusable-base-judges-main-history-too",
+        detail: "when the base could not be used nothing is subtracted, so a board-authored main commit is refused like any other foreign commit",
+        expect: "maxcliang-blip <max.c.liang@gmail.com>",
+        run: () => {
+          const r = evaluatePush({
+            updates: parseHookInput(`refs/heads/x ${mixedSha} refs/heads/x ${base}`),
+            ranges: {
+              [mixedSha]: incoming([...commitsOf(base, bobSha), boardCommit(1)], 0, null),
+            },
+            expected: expect(bobIds),
+            expectedSource: "test",
+          });
+          const named = r.refs.flatMap((x) => x.foreign);
+          return {
+            ok: !r.ok && named.some((c) => c.author === "maxcliang-blip <max.c.liang@gmail.com>"),
+            got: named.map((c) => c.author).join(" | ") || "(none)",
+          };
+        },
+      },
+      {
+        id: "max-105-nothing-left-after-the-subtraction-is-a-pass",
+        detail: "a branch with no commit the base lacks delivers no new work, which is a pass and not a gap",
+        expect: "pass",
+        run: () =>
+          evaluatePush({
+            updates: parseHookInput(`refs/heads/merged ${base} refs/heads/merged ${"0".repeat(40)}`),
+            ranges: { [base]: incoming([], 9, "origin/main") },
+            expected: expect(bobIds),
+            expectedSource: "test",
+          }),
+      },
+      {
+        id: "max-105-an-empty-range-with-nothing-removed-still-fails",
+        detail: "the one empty range that passes is the one with a subtraction to explain it; an unexplained empty range is still a failure",
+        expect: "fail",
+        run: () =>
+          evaluatePush({
+            updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
+            ranges: { [bobSha]: incoming([], 0, null) },
+            expected: expect(bobIds),
+            expectedSource: "test",
+          }),
+      },
+      {
+        id: "max-105-subtraction-does-not-weaken-the-place-rule",
+        detail: "MAX-101 still fires on the commits the push really adds, with main's history out of the way",
+        expect: "Bob: add b",
+        run: () => {
+          const r = evaluatePush({
+            updates: parseHookInput(`refs/heads/x ${bobSha} refs/heads/x ${base}`),
+            ranges: { [bobSha]: incoming(commitsOf(base, bobSha), 8, "origin/main") },
+            expected: expect(bobIds),
+            expectedSource: "test",
+            place: { kind: "shared-root", allowed: false, topLevel: "/repo" },
+          });
+          const named = (r.sharedRoot || []).flatMap((s) => s.commits);
+          return { ok: named.length === 1 && named[0].subject === "Bob: add b", got: named.map((c) => c.subject).join(" | ") || "(none)" };
+        },
       },
     ];
 
@@ -732,7 +995,7 @@ export function selftest() {
     const squashed = sha(dir);
     const squashedResult = evaluatePush({
       updates: parseHookInput(`refs/heads/s ${squashed} refs/heads/s ${base}`),
-      ranges: { [squashed]: commitsOf(base, squashed) },
+      ranges: { [squashed]: incoming(commitsOf(base, squashed)) },
       expected: expect(bobIds),
       expectedSource: "test",
     });
@@ -748,7 +1011,7 @@ export function selftest() {
     // evidence of a gate that fails at everything.
     baselineClean = evaluatePush({
       updates: parseHookInput(`refs/heads/base ${base} refs/heads/base ${"0".repeat(40)}`),
-      ranges: { [base]: commitsOf(`${base}^`, base) },
+      ranges: { [base]: incoming(commitsOf(`${base}^`, base)) },
       expected: expect(bobIds),
       expectedSource: "test",
     }).ok;
@@ -778,6 +1041,26 @@ export function selftest() {
       run("-C", linkedDir, "config", "extensions.worktreeConfig", "true");
       run("-C", linkedDir, "config", "--worktree", "user.name", bob.name);
       run("-C", linkedDir, "config", "--worktree", "user.email", bob.email);
+
+      // MAX-105's fixture, built with real git: a branch that exists on the remote, a commit that
+      // lands on main afterwards in the board's identity, and a rebase that pulls main in. This is
+      // the shape every landing in this repository takes, and before MAX-105 the guard refused it by
+      // naming the board's own commit as a stranger's work.
+      const board = { name: "maxcliang-blip", email: "max.c.liang@gmail.com" };
+      run("checkout", "-q", "-b", "landed", squashed);
+      commitAs(dir, { ...bob, file: "r.txt", body: "rebased work\n", message: "Bob: add r" });
+      const rebaseOld = sha(dir);
+      run("push", "-q", "origin", "landed:refs/heads/landed");
+      run("checkout", "-q", "-b", "board-main", squashed);
+      commitAs(dir, { ...board, file: "m.txt", body: "main's own work\n", message: "Sanction a symbol (MAX-87)" });
+      const boardMain = sha(dir);
+      run("push", "-q", "origin", "board-main:refs/heads/main");
+      run("fetch", "-q", "origin");
+      run("checkout", "-q", "landed");
+      run("rebase", "-q", "origin/main");
+      const rebasedClean = sha(dir);
+      commitAs(dir, { ...carol, file: "sneaky.txt", body: "carol\n", message: "Carol: add sneaky" });
+      const rebasedMixed = sha(dir);
 
       const spawn = (input, spawnCwd = dir, spawnEnv = {}) => {
         try {
@@ -861,17 +1144,90 @@ export function selftest() {
           expect: { code: 0 },
           run: () => spawn(`refs/heads/x ${bobSha} refs/heads/x ${base}\n`, linkedDir),
         },
+
+        // ---- MAX-105 end to end: a real rebase onto a main the board authored -----------------
+        //
+        // `landed` is on the remote at `rebaseOld` and locally rebased onto `origin/main`, which has
+        // gained a board-authored commit since. The hook input is the real pre-push line for that
+        // push: the range is `rebaseOld..rebasedClean`, and it contains the board's commit. Before
+        // MAX-105 that exited 1 and named maxcliang-blip, on every landing in the repository.
+        {
+          id: "end-to-end-max-105-rebase-onto-main-passes-clean",
+          detail: "a branch rebased onto main, pushed from a worktree whose identity is the agent's: exit 0, no waiver",
+          expect: { code: 0, contains: `already on origin/main` },
+          run: () => spawn(`refs/heads/landed ${rebasedClean} refs/heads/landed ${rebaseOld}\n`, dir, inSharedRoot),
+        },
+        {
+          id: "end-to-end-max-105-rebase-still-refuses-a-foreign-commit",
+          detail: "the same rebased branch with one commit the base does not have, authored by Carol: still exit 1",
+          expect: { code: 1, contains: "Carol: add sneaky" },
+          run: () => spawn(`refs/heads/landed ${rebasedMixed} refs/heads/landed ${rebaseOld}\n`, dir, inSharedRoot),
+        },
+        {
+          id: "end-to-end-max-105-main-history-is-not-in-the-refusal",
+          detail: "the board's own commit is subtracted, not judged: naming it would be MAX-69's message about a commit already on main",
+          expect: { code: 1, notContains: "maxcliang-blip" },
+          run: () => spawn(`refs/heads/landed ${rebasedMixed} refs/heads/landed ${rebaseOld}\n`, dir, inSharedRoot),
+        },
+        {
+          id: "end-to-end-max-105-refusal-says-what-was-removed",
+          detail: "the count and the base it came from are printed, so a narrowed range is never mistaken for an unchecked one",
+          expect: { code: 1, contains: "1 already on origin/main (not judged as new work)" },
+          run: () => spawn(`refs/heads/landed ${rebasedMixed} refs/heads/landed ${rebaseOld}\n`, dir, inSharedRoot),
+        },
+        {
+          id: "end-to-end-max-105-board-main-is-really-on-the-base",
+          detail: "the fixture, asserted directly: if the board's commit were not reachable from origin/main these four cases would mean nothing",
+          expect: { code: 0 },
+          run: () => {
+            try {
+              execFileSync("git", ["merge-base", "--is-ancestor", boardMain, "origin/main"], { cwd: dir, stdio: "ignore" });
+              return { code: 0, stdout: "" };
+            } catch {
+              return { code: 1, stdout: "boardMain is not an ancestor of origin/main" };
+            }
+          },
+        },
+
+        // ---- MAX-105 end to end: the two ways the subtraction refuses to run -------------------
+        //
+        // Both are config, so both are reachable by accident, and a subtraction that ran anyway
+        // would empty the range and switch rule 1 off for whoever set the value. Each case asserts
+        // the whole range is still judged and that the reason is printed.
+        {
+          id: "end-to-end-max-105-push-base-aimed-at-the-branch-does-not-empty-the-range",
+          detail: "agent.pushBase naming the branch being pushed: the range is judged in full, board history included, and says why",
+          expect: { code: 1, contains: "already contained in refs/heads/landed", config: ["agent.pushBase", "refs/heads/landed"] },
+          run: () => spawn(`refs/heads/landed ${rebasedClean} refs/heads/landed ${rebaseOld}\n`, dir, inSharedRoot),
+        },
+        {
+          id: "end-to-end-max-105-unresolvable-push-base-judges-everything",
+          detail: "a push base that does not resolve: nothing is subtracted, the board's commit is judged, and the guard says the base was unusable",
+          expect: { code: 1, contains: "did not resolve", config: ["agent.pushBase", "refs/heads/no-such-base"] },
+          run: () => spawn(`refs/heads/landed ${rebasedClean} refs/heads/landed ${rebaseOld}\n`, dir, inSharedRoot),
+        },
       ];
       for (const c of e2e) {
+        // A case that needs repository config sets it and puts it back, so one case's config can
+        // never decide the next case's verdict.
+        if (c.expect.config) run("config", ...c.expect.config);
         const result = c.run();
+        if (c.expect.config) run("config", "--unset", c.expect.config[0]);
         const codeOk = result.code === c.expect.code;
         const textOk = !c.expect.contains || result.stdout.includes(c.expect.contains);
+        const absentOk = !c.expect.notContains || !result.stdout.includes(c.expect.notContains);
         rows.push({
           id: c.id,
           detail: c.detail,
-          expected: `exit ${c.expect.code}${c.expect.contains ? ` mentioning ${c.expect.contains}` : ""}`,
-          got: `exit ${result.code}${textOk ? "" : ` (output did not mention ${c.expect.contains})`}`,
-          ok: codeOk && textOk,
+          expected:
+            `exit ${c.expect.code}` +
+            (c.expect.contains ? ` mentioning ${c.expect.contains}` : "") +
+            (c.expect.notContains ? ` without mentioning ${c.expect.notContains}` : ""),
+          got:
+            `exit ${result.code}` +
+            (textOk ? "" : ` (output did not mention ${c.expect.contains})`) +
+            (absentOk ? "" : ` (output mentioned ${c.expect.notContains})`),
+          ok: codeOk && textOk && absentOk,
         });
       }
     } finally {
@@ -880,6 +1236,7 @@ export function selftest() {
     }
 
     classificationCases(rows);
+    landingCases(rows);
     missed = rows.filter((r) => !r.ok).map((r) => r.id);
   } finally {
     rmSync(dir, { recursive: true, force: true });
@@ -897,8 +1254,11 @@ function printResult(result) {
   for (const ref of result.refs) {
     lines.push(
       `  ${ref.ref} -> ${ref.remoteRef}: ${ref.commits} commit(s), basis ${ref.basis}` +
+        // MAX-105: say what was removed and why, in the line that says how many were left.
+        (ref.landed ? `, ${ref.landed} already on ${ref.landedFrom} (not judged as new work)` : "") +
         (ref.foreign.length ? `, ${ref.foreign.length} FOREIGN` : ""),
     );
+    if (ref.skipped) lines.push(`    ${ref.skipped}: every commit in the range was judged`);
     for (const f of ref.foreign) lines.push(`    ${f.sha}  ${f.author}  ${f.subject}`);
   }
   for (const s of result.sharedRoot || []) {
@@ -976,7 +1336,10 @@ if (isMain) {
   }
 
   if (result.ok) {
-    console.log(`  ${result.introduced} commit(s) introduced, all authored by this checkout's identity.`);
+    console.log(
+      `  ${result.introduced} commit(s) introduced, all authored by this checkout's identity.` +
+        (result.landed ? ` ${result.landed} more were already on the base and were not judged as new work.` : ""),
+    );
     process.exit(0);
   }
   console.error("");
@@ -985,6 +1348,17 @@ if (isMain) {
     process.exit(1);
   }
   console.error("check-push-authors: REFUSED. This push would deliver another agent's commits under your name.");
+  // MAX-105. Only printed when the base subtraction ran, because that is when a reader is entitled
+  // to wonder why main's own commits are absent from the list -- and the answer is what makes the
+  // remaining names mean something: each one is a commit the base does NOT have, which is the
+  // difference between the MAX-69 shape and another agent's work being landed on purpose.
+  if (result.landed) {
+    console.error(`  ${result.landed} commit(s) already on the base were not judged, because a rebase`);
+    console.error("  carries main's history into the range. Every commit named above is one the base does");
+    console.error("  NOT have: either the MAX-69 shape below, or another agent's work you are landing on");
+    console.error("  purpose. For the second, name it in config -- git config --add agent.allowedAuthors");
+    console.error("  'Name <email>' -- and let the PR body carry the provenance (MAX-69 item 4, MAX-83).");
+  }
   console.error("  This is MAX-69: a shared checkout let a commit land on the wrong branch, and the PR that");
   console.error("  described something else merged it. Do not work around this with --no-verify.");
   console.error("  Fix it instead:");
