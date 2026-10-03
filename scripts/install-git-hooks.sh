@@ -19,9 +19,11 @@
 # `--check` compares every installed file against its source, so drift is visible rather than
 # assumed away.
 #
-# The gate script is copied in rather than referenced. A hook that resolves its gate out of a
-# working tree keeps working exactly until that worktree is removed, and a guard that stops
-# being found does not fail loudly: it fails by not running.
+# Both scripts the hook runs are copied in rather than referenced. A hook that resolves its gate
+# out of a working tree keeps working exactly until that worktree is removed, and a guard that
+# stops being found does not fail loudly: it fails by not running. The estate audit is copied for
+# the same reason and not because it is small: a push from a worktree on a branch that predates
+# `check --for-push` has to be refused by name, and the only copy it can rely on is this one.
 #
 # Usage: sh scripts/install-git-hooks.sh [--check]
 #
@@ -42,6 +44,7 @@ if ! common=$(git -C "$src_root" rev-parse --path-format=absolute --git-common-d
 fi
 dest="$common/hooks-paperclip"
 gate_src="$src_root/scripts/check-push-authors.mjs"
+audit_src="$src_root/scripts/agent-worktree.sh"
 
 if [ "${1:-}" = "--check" ]; then
   configured=$(git -C "$src_root" config --get core.hooksPath || true)
@@ -76,6 +79,14 @@ if [ "${1:-}" = "--check" ]; then
   }
   check_one "pre-push" "$src_hooks/pre-push" exec
   check_one "gate script" "$gate_src" node
+  check_one "worktree audit" "$audit_src" node
+  # `--for-push` is what the hook calls. An installed audit from before MAX-102 ignores the flag
+  # and exits 1 on a row it always printed, so every push fails for a reason that is not the
+  # push. The hook refuses that case too; this is where it gets noticed first.
+  if [ -f "$audit_src" ] && [ -f "$dest/agent-worktree.sh" ] && ! cmp -s "$audit_src" "$dest/agent-worktree.sh"; then
+    printf '%-15s: STALE for the push hook -- it resolves beside the hook, not from here\n' 'worktree audit'
+    rc=1
+  fi
   if [ "$configured" != "$dest" ]; then
     printf 'core.hooksPath is not the installed directory; git is running %s\n' "${configured:-nothing}"
     rc=1
@@ -83,8 +94,8 @@ if [ "${1:-}" = "--check" ]; then
   exit "$rc"
 fi
 
-if [ ! -f "$src_hooks/pre-push" ] || [ ! -f "$gate_src" ]; then
-  printf 'install-git-hooks: %s/pre-push and %s must both exist.\n' "$src_hooks" "$gate_src" >&2
+if [ ! -f "$src_hooks/pre-push" ] || [ ! -f "$gate_src" ] || [ ! -f "$audit_src" ]; then
+  printf 'install-git-hooks: %s/pre-push, %s and %s must all exist.\n' "$src_hooks" "$gate_src" "$audit_src" >&2
   printf '                   They are committed, not generated: merge origin/main and retry.\n' >&2
   exit 2
 fi
@@ -97,6 +108,8 @@ for hook in "$src_hooks"/*; do
   chmod +x "$dest/$name"
 done
 cp "$gate_src" "$dest/check-push-authors.mjs"
+cp "$audit_src" "$dest/agent-worktree.sh"
+chmod +x "$dest/agent-worktree.sh"
 
 # The gate script is resolved at push time by the hook itself, from the pushing worktree or
 # from the checkout the hooks were installed from. Recording that root here means a worktree on
@@ -109,7 +122,8 @@ git -C "$src_root" config core.hooksPath "$dest"
 printf 'installed hooks from %s\n' "$src_hooks"
 printf '  -> %s\n' "$dest"
 printf '  core.hooksPath = %s\n' "$dest"
-printf '  gate installed alongside the hook, so no working tree has to outlive this\n'
+printf '  gate and worktree audit installed alongside the hook, so no working tree has\n'
+printf '  to outlive this\n'
 printf '  fallback install root: %s\n' "$src_root"
 printf 'enforced on every push from every worktree of this clone.\n'
 printf 'verify: sh scripts/install-git-hooks.sh --check\n'

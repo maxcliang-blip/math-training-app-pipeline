@@ -18,7 +18,9 @@
     "git:guard:selftest": "node scripts/check-push-authors.mjs --selftest",
     "git:hooks": "sh scripts/install-git-hooks.sh",
     "git:hooks:check": "sh scripts/install-git-hooks.sh --check",
-    "git:worktree": "sh scripts/agent-worktree.sh"
+    "git:worktree": "sh scripts/agent-worktree.sh",
+    "git:worktrees:check": "sh scripts/agent-worktree.sh check",
+    "git:worktrees:check:push": "sh scripts/agent-worktree.sh check --for-push"
   },
   "devDependencies": {
     "katex": "0.16.11"

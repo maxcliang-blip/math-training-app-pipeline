@@ -131,6 +131,13 @@ be attributed to the agent who wrote it.
 so `add <agent>` needs no environment variables. That file is machine state, deliberately not
 committed: it is a statement about who runs here, not about the corpus.
 
+It also **re-applies** that identity to the agent's existing worktrees, and prints each one it
+changed. Recording an identity and leaving the checkouts on the old one is how the estate drifted
+in the first place: three of five worktrees were created under one address, the registry was
+corrected to another, and every later push from those worktrees was wrong while `check` — the only
+thing that could see it — had to be run by hand (MAX-102). `--registry-only` records without
+touching any worktree.
+
 ### Dependencies
 
 `node_modules` is not in this repository. It was once, as a symlink to
@@ -153,7 +160,9 @@ sh scripts/agent-worktree.sh deps /home/opc/wt/carol-content-max-70-m5-l3 /home/
 
 `check` and `list` report what every worktree's `node_modules` actually resolves to, and a dangling
 link is a `check` failure — a link to a path that does not exist is the same broken state MAX-81
-shipped, one level of indirection closer.
+shipped, one level of indirection closer. It is **not** a push failure: the repair is a
+per-worktree `npm ci` belonging to that worktree's owner, and a bulk rewrite of checkouts other
+agents are working in is the MAX-69 hazard. MAX-98 tracks the repair.
 
 ### The push guard
 
@@ -186,10 +195,35 @@ What it does **not** catch, so nobody assumes it does:
 
 - **A squashed foreign commit.** A squash rewrites authorship to the first commit's author. This
   is why the guard is one layer and not the whole answer.
-- **A linked worktree whose identity is wrong.** A worktree configured as `Bob` in which Carol
-  commits still passes rule 1, because the author does match. `agent-worktree.sh check` compares
-  every worktree's identity against the registry, which is the half nothing else can do.
 - **An agent pushing with `--no-verify`.** The guard is a default, not a lock.
+
+### The worktree audit on every push
+
+Rule 1 compares a commit's author to *this checkout's* identity, so it passes whenever those two
+agree. That is not a gap in the rule; it is what the rule means, and it is why MAX-92's commit
+could be authored as Bob inside bob-2's worktree and pass. The missing half compares the checkout
+against something it cannot agree with by itself: the registry, in `.git`, which says who runs here.
+
+So `check` runs from the same hook, as `check --for-push`:
+
+```bash
+npm run git:worktrees:check         # the full audit, exit 1 on anything
+npm run git:worktrees:check:push    # what the push hook runs
+AGENT_WORKTREE_CHECK=0 git push ... # waive it, in writing, on the issue
+```
+
+`--for-push` prints the whole table and exits only on what makes *this clone* unsafe to deliver
+from: an identity that disagrees with the registry, an identity git cannot find, the push guard
+not installed, or `node_modules` tracked in the tree. Each is one command away. Two conditions are
+reported and do not block: the shared root, which cannot be removed from its own clone and whose
+pushes the guard already refuses by name (MAX-101), and a dangling dependency link (MAX-98). A gate
+that always fails for a reason nobody can act on gets read as noise — that is how MAX-69's exit 1
+went unread for a week.
+
+A clone with no identity registry — a CI runner, a fresh `git clone` — has nothing to account for.
+It says so, names the command that creates a registry, and exits 0. It does not skip silently:
+silence is what a broken gate and a gate that passed look identical like. CI runs the same mode in
+`delivery-integrity`, on a clone whose guard is installed, so the path cannot rot.
 
 ## Roadmap
 

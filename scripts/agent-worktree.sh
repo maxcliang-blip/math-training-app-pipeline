@@ -17,9 +17,9 @@
 # Usage:
 #   sh scripts/agent-worktree.sh add <agent> <branch> [base]
 #   sh scripts/agent-worktree.sh list
-#   sh scripts/agent-worktree.sh check
+#   sh scripts/agent-worktree.sh check [--for-push]
 #   sh scripts/agent-worktree.sh remove <agent> <branch>
-#   sh scripts/agent-worktree.sh identity <agent> "Name" <email>
+#   sh scripts/agent-worktree.sh identity <agent> "Name" <email> [--registry-only]
 #
 #   add      create <wt-root>/<agent>-<branch-slug> off <base> (default origin/main), give it
 #            its own git identity and the shared hooks, and print the cd command
@@ -27,10 +27,16 @@
 #   check    audit every worktree: hooks installed, each agent's identity its own, and what its
 #            node_modules actually is. Exits 1 when anything is unisolated, so it can be read by
 #            a person or a script
+#   check --for-push
+#            the same audit, exiting only on what makes this clone unsafe to deliver from. The
+#            push hook runs this, so the audit happens without anyone choosing to run it (MAX-102).
+#            Conditions that are real but not actionable from a push -- the shared root, a
+#            dependency link that does not resolve -- are printed, named, and do not fail it
 #   remove   drop a worktree; refuses if its working tree is dirty
 #   deps     point an existing worktree's node_modules at a shared install, and report what that
 #            link resolves to
-#   identity record or update an agent's name/email in the shared registry
+#   identity record or update an agent's name/email in the shared registry, and re-apply it to
+#            that agent's existing worktrees (--registry-only to record it and stop there)
 #
 # Environment:
 #   WT_ROOT        where worktrees live (default /home/opc/wt)
@@ -56,6 +62,17 @@
 # source. Hence: off by default, and `check` reports which worktrees opted in.
 
 set -eu
+
+# A git hook is invoked with GIT_DIR, GIT_WORK_TREE, GIT_INDEX_FILE and any `-c` overrides
+# exported, all naming the *pushing* checkout. `git -C <another worktree> config --get
+# user.email` does not ignore them -- it reads the file GIT_DIR points at -- so from inside
+# pre-push every row of an audit would come back as the pushing worktree's identity: bob-2
+# grading carol's worktree as bob-2, and every healthy row disagreeing with the registry. The
+# whole table is wrong, silently, which is the one failure mode an audit cannot have. Clearing
+# them puts every read back on the directory it names; discovery then walks up from the
+# directory this was run in, which is what the next line already required.
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR GIT_CONFIG_PARAMETERS
+unset GIT_CONFIG_COUNT GIT_CONFIG_KEY_0 GIT_CONFIG_VALUE_0
 
 main_root=$(git worktree list --porcelain | sed -n '1s/^worktree //p')
 [ -n "$main_root" ] || { printf 'agent-worktree: not inside a git repository\n' >&2; exit 2; }
@@ -309,7 +326,59 @@ EOF
     # The third column is the dependency link, because MAX-81 shipped a node_modules that pointed
     # at a path which resolved to itself: 15 of the 17 worktrees on this host had a
     # node_modules they could not read, and nothing in the checkout said so.
+    #
+    # Two exit codes, and the difference is the whole point (MAX-102). A human reading this table
+    # wants to know everything. A push needs to know only what makes *this repository* unsafe to
+    # deliver from, because a check wired into the push path that also fails on conditions nobody
+    # can fix from a keyboard is a check that gets bypassed. So:
+    #
+    #   blocking   an identity that disagrees with the registry, an identity git cannot find at
+    #              all, the push guard not installed, or node_modules tracked in the tree. Every
+    #              one of these is a fact about this clone, and each is fixed by one command.
+    #   reported   the shared root (MAX-101: it cannot be removed from its own clone, the gate
+    #              refuses its pushes by name, and the row is the audit saying so) and a dangling
+    #              dependency link (MAX-98: the repair is a per-worktree `npm ci` that belongs to
+    #              that worktree's owner, not to whoever ran this).
+    #
+    # `--for-push` reports all of it and exits on the blocking half only. `AGENT_WORKTREE_CHECK=0`
+    # waives the blocking half, and says so on stdout, so a waiver is a printed fact rather than a
+    # missing line in a log.
+    for_push=no
+    case "${2:-}" in
+      '') ;;
+      --for-push) for_push=yes ;;
+      *) die "unknown flag for check: $2 (expected --for-push)" ;;
+    esac
+    [ $# -le 2 ] || die "check takes at most one flag: --for-push"
+    if [ "$for_push" = yes ] && [ "${AGENT_WORKTREE_CHECK:-}" = 0 ]; then
+      printf 'agent-worktree: AGENT_WORKTREE_CHECK=0 -- the worktree audit is WAIVED for this push.\n'
+      printf '                  Say so on the issue; a waiver nobody reads is how this came back.\n'
+      exit 0
+    fi
+
     rc=0
+    reported=0
+    # One fault, one accounting. In the human mode every fault is the same number, which is what
+    # this exit code has always meant. --for-push is the only mode that tells them apart.
+    note_fault() {
+      if [ "$for_push" = yes ]; then reported=$((reported + 1)); else rc=1; fi
+    }
+
+    # A clone with no registry is either a CI runner or a delivery host where somebody deleted it.
+    # Those look identical from here, so this does not guess: it says which one it cannot tell
+    # apart, names the command that creates one, and lets the push through -- because the gate's
+    # refusal has to be actionable, and "there is nothing to check" is not an action. It is a
+    # printed line, never a silent skip: silence is how a broken gate and a gate that passed end
+    # up indistinguishable.
+    if [ ! -f "$registry" ]; then
+      printf 'WARN  no identity registry at %s.\n' "$registry"
+      printf '      No worktree on this clone can be accounted for: the audit below reads the\n'
+      printf '      registry, not the checkout. Record an agent with\n'
+      printf '        sh scripts/agent-worktree.sh identity <agent> "Name" <email>\n'
+      printf '      On a CI runner or a fresh clone there is no estate to audit, which is why this is\n'
+      printf '      reported rather than fatal.\n'
+      reported=$((reported + 1))
+    fi
     hookspath=$(git -C "$main_root" config --get core.hooksPath || echo '')
     if [ -z "$hookspath" ]; then
       printf 'WARN  no core.hooksPath: the push guard is not installed. Run scripts/install-git-hooks.sh\n'
@@ -341,10 +410,20 @@ EOF
           email=$(git -C "$path" config --get user.email 2>/dev/null || echo '<unset>')
           name=$(git -C "$path" config --get user.name 2>/dev/null || echo '<unset>')
           agent=$(agent_for_path "$path")
+          is_root=no
+          if [ "$first" = yes ]; then
+            first=no
+            is_root=yes
+          fi
           status=ok
           if [ "$email" = '<unset>' ]; then
             status='NO IDENTITY'
-            rc=1
+            # An agent worktree with no identity commits under whatever git invents from the
+            # system account, which is the MAX-69 class. The shared root is different: it is not
+            # a place work happens, its pushes are refused by name (MAX-101), and a fresh clone or
+            # a CI runner legitimately has no identity there at all. Refusing those would refuse
+            # every push on any clone nobody has configured.
+            if [ "$is_root" = yes ]; then note_fault; else rc=1; fi
           elif [ -z "$agent" ]; then
             # Not created by `add`, so there is no agent to check it against. Informational:
             # a worktree with no registry entry may be a human's scratch checkout.
@@ -356,15 +435,17 @@ EOF
               rc=1
             fi
           fi
-          # A dangling dependency link is a check failure, and it is reported by name rather
-          # than folded into the identity status: it is not an isolation fault and the fix is
-          # one command. The state itself is on the second line, because "shared" and
-          # "shared but broken" have to be told apart from a listing.
+          # A dangling dependency link is a fault, and it is reported by name rather than folded
+          # into the identity status: it is not an isolation fault and the fix is a per-worktree
+          # `npm ci`. It is reported-not-blocking under --for-push, because a bulk repair from
+          # whoever happened to run the audit is MAX-69's hazard and MAX-98 tracks the real one.
+          # The state itself is on the second line, because "shared" and "shared but broken" have
+          # to be told apart from a listing.
           deps=$(deps_state "$path")
           case "$deps" in
             *DANGLING*)
               status="$status; node_modules does not resolve"
-              rc=1
+              note_fault
               ;;
           esac
           # The shared root is the first entry `git worktree list` prints, and it is the one
@@ -372,8 +453,12 @@ EOF
           # configured it, so authorship is unverifiable and the push guard refuses to deliver
           # from it (MAX-101). An audit that called this checkout `ok` would be auditing the one
           # directory where isolation is known not to hold.
-          if [ "$first" = yes ]; then
-            first=no
+          #
+          # It cannot be blocking: it is the primary working tree of the clone, so it cannot be
+          # removed, and MAX-101 already refuses its pushes by name. A row that is always red and
+          # always red for a reason nobody can act on trains people to read the exit code as noise,
+          # which is how MAX-69's exit 1 went unread for a week.
+          if [ "$is_root" = yes ]; then
             if [ "$path" != "$main_root" ]; then
               printf 'WARN  %s is not listed first by `git worktree list`; assuming the first entry\n' "$path"
             fi
@@ -383,7 +468,7 @@ EOF
             else
               status="$root_status; $status"
             fi
-            rc=1
+            note_fault
           fi
           printf '%-36s %-40s %-28s %s\n' "$path" "$agent" "$name <$email>" "$status"
           printf '%-36s %-40s %s\n' '' 'node_modules' "$deps"
@@ -404,6 +489,25 @@ EOF
     printf '  sh scripts/agent-worktree.sh add <agent> <branch>   # then commit and push in there\n'
     printf '  a shared-root push is refused by scripts/check-push-authors.mjs; to say the checkout\n'
     printf '  really is yours alone: git -C %s config agent.allowSharedRoot true\n' "$main_root"
+    printf 'fix a dangling node_modules: npm ci in that worktree, or\n'
+    printf '  sh scripts/agent-worktree.sh deps <worktree> <shared-install>   # tracked as MAX-98\n'
+    if [ "$for_push" = yes ]; then
+      if [ "$rc" -ne 0 ]; then
+        printf '\n--for-push: REFUSED. A worktree above commits under an identity the registry\n'
+        printf 'does not record, or this clone cannot say who is pushing. Delivering from here\n'
+        printf 'would put commits on a branch that no checkout is accountable for. Fix the rows\n'
+        printf 'marked above and push again.\n'
+        printf '  To deliver anyway, and say so on the issue: AGENT_WORKTREE_CHECK=0 git push ...\n'
+      elif [ "$reported" -ne 0 ]; then
+        printf '\n--for-push: ok. %s condition(s) above do not block a push, and none of them is\n' "$reported"
+        printf 'something a push can fix: the shared root cannot be removed from its own clone\n'
+        printf '(MAX-101, and its pushes are refused by name), and a dependency link that does not\n'
+        printf 'resolve is repaired per worktree by whoever owns that worktree (MAX-98). This is\n'
+        printf 'why plain `check` and the push path do not always give the same answer.\n'
+      else
+        printf '\n--for-push: ok. Every worktree is isolated and commits under its own identity.\n'
+      fi
+    fi
     exit "$rc"
     ;;
 
@@ -416,10 +520,13 @@ deps)
     ;;
 
   identity)
-    [ $# -ge 4 ] || die "usage: agent-worktree.sh identity <agent> \"Name\" <email>"
+    [ $# -ge 4 ] || die "usage: agent-worktree.sh identity <agent> \"Name\" <email> [--registry-only]"
     agent=$2
     name=$3
     email=$4
+    registry_only=${5:-}
+    [ -z "$registry_only" ] || [ "$registry_only" = '--registry-only' ] \
+      || die "unknown option: $registry_only (expected --registry-only)"
     mkdir -p "$(dirname "$registry")"
     tmp="$registry.tmp.$$"
     if [ -f "$registry" ]; then
@@ -430,8 +537,43 @@ deps)
     printf '%s\t%s\t%s\n' "$agent" "$name" "$email" >>"$tmp"
     mv "$tmp" "$registry"
     printf 'recorded %s as %s <%s> in %s\n' "$agent" "$name" "$email" "$registry"
-    printf 'note: existing worktrees keep the identity they were created with. Re-run\n'
-    printf '      git -C <worktree> config --worktree user.name/user.email to change one.\n'
+
+    # Re-apply to the worktrees this agent already has. Recording an identity and leaving the
+    # existing checkouts on the old one is how MAX-102 was found: three of bob-2's five worktrees
+    # were created under `bob2@paperclip.local`, the registry was corrected to
+    # `bob2@users.noreply.github.com`, and `check` went red for every push from then on with
+    # nothing to point at except a hand-written `git config` per directory. The registry is the
+    # decision; a checkout that disagrees with it is the thing that is wrong.
+    if [ "$registry_only" = '--registry-only' ]; then
+      printf 'registry only: existing worktrees keep the identity they were created with.\n'
+      exit 0
+    fi
+    reapplied=0
+    path=""
+    while IFS= read -r line; do
+      case "$line" in
+        "worktree "*)
+          path=${line#worktree }
+          [ "$(agent_for_path "$path")" = "$agent" ] || continue
+          have_name=$(git -C "$path" config --get user.name 2>/dev/null || echo '')
+          have_email=$(git -C "$path" config --get user.email 2>/dev/null || echo '')
+          [ "$have_name" = "$name" ] && [ "$have_email" = "$email" ] && continue
+          git -C "$path" config extensions.worktreeConfig true
+          git -C "$path" config --worktree user.name "$name"
+          git -C "$path" config --worktree user.email "$email"
+          printf 're-applied to %-46s was %s <%s>\n' "$path" "${have_name:-<unset>}" "${have_email:-<unset>}"
+          reapplied=$((reapplied + 1))
+          ;;
+      esac
+    done <<EOF
+$(git -C "$main_root" worktree list --porcelain)
+EOF
+    if [ "$reapplied" -eq 0 ]; then
+      printf 'no existing worktree of %s held a different identity.\n' "$agent"
+    else
+      printf 're-applied to %s worktree(s). Commits already made keep the identity they were\n' "$reapplied"
+      printf 'authored with: rewriting them is a separate, deliberate decision.\n'
+    fi
     ;;
 
   check|list|remove|identity)
