@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { FigureStore, requireFigure, loadFigureStore } from "../src/figures.js";
-import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS, figureReference, toFigurePayload, exerciseFigureKey, lessonFigureKey } from "../../lib/figure-contract.mjs";
+import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS, FIGURE_ASSET_DIR, figureAssetPath, isRootRelativeFigurePath, figureReference, toFigurePayload, exerciseFigureKey, lessonFigureKey } from "../../lib/figure-contract.mjs";
 
 function manifest(overrides = {}) {
   return {
@@ -15,7 +15,7 @@ function manifest(overrides = {}) {
     figures: [
       {
         figureKey: "m1-l1.sections.concept.figures[0]",
-        figureSvgUrl: "artifacts/figures/svg/m1-l1.svg",
+        figureSvgUrl: "/artifacts/figures/svg/m1-l1.svg",
         figureHash: "sha256:abc123",
         figurePipelineVersion: "asymptote-svg-sanitized@2",
         declaredAspectRatio: 2.667,
@@ -44,6 +44,30 @@ test("a figure payload carries the contract fields and nothing else", () => {
   assert.equal(payload.figureHash, "sha256:abc123");
   // asymptoteVersion is build provenance and stays behind the build.
   assert.equal("asymptoteVersion" in payload, false);
+});
+
+// MAX-74: the URL is the one field of the payload that decides whether the browser asks the API
+// for an SVG or asks nginx for the SPA fallback. `artifacts/figures/svg/x.svg` resolved against the
+// document, so on any route but the first it requested /learn/artifacts/... and got index.html back
+// with a 200 — a broken figure behind a successful request. Root-relative is the only form that is
+// correct on every route, and this is the API's copy of that promise.
+test("a served figure url is root-relative, so it resolves on every route", () => {
+  const payload = new FigureStore(manifest()).get("m1-l1.sections.concept.figures[0]");
+  assert.equal(isRootRelativeFigurePath(payload.figureSvgUrl), true);
+  assert.equal(payload.figureSvgUrl, "/artifacts/figures/svg/m1-l1.svg");
+
+  // The build derives it through the contract, and the client resolves it against the same origin
+  // nginx proxies /artifacts/ to — so the path has to be the one the API is mounted at, built from
+  // the shared directory constant rather than written out again.
+  assert.equal(figureAssetPath("m1-l1.svg"), "/artifacts/figures/svg/m1-l1.svg");
+  assert.equal(FIGURE_ASSET_DIR, "/artifacts/figures/svg");
+
+  // And the two shapes that look almost right and are not: no leading slash resolves against the
+  // document, `//` is protocol-relative and leaves the origin.
+  assert.equal(isRootRelativeFigurePath("artifacts/figures/svg/m1-l1.svg"), false);
+  assert.equal(isRootRelativeFigurePath("//cdn.example/a.svg"), false);
+  assert.equal(isRootRelativeFigurePath("https://cdn.example/a.svg"), false);
+  assert.equal(isRootRelativeFigurePath(""), false);
 });
 
 test("a non-figure route gets the reference and never the payload", () => {

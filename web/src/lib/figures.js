@@ -58,9 +58,24 @@ export function figureRoute(figureKey, apiBase = "") {
   return `${apiBase}/api/figures/${encodeURIComponent(figureKey)}`;
 }
 
+// Turn the manifest's figureSvgUrl into something the browser can be asked for.
+//
+// Both forms have to work, and the reason the bare one exists at all is the failure this closes:
+// a URL without a leading slash resolves against the *document*, so on `/learn/m1` the bare
+// `artifacts/figures/svg/x.svg` becomes `/learn/artifacts/figures/svg/x.svg`, nginx's try_files
+// answers it with index.html, and the <img> fails against a 200 text/html. Normalising here means
+// a manifest emitted in either form renders on every route rather than on exactly one.
+//
+// An absolute URL is passed through untouched: isSameOriginPath has already rejected one that
+// leaves the origin by the time this runs (validateFigurePayload calls it), and rewriting a same
+// -origin absolute URL would only lose information.
 export function figureAssetUrl(figureSvgUrl, origin = "") {
   if (typeof figureSvgUrl !== "string" || figureSvgUrl === "") return null;
-  return figureSvgUrl.startsWith("/") ? `${origin}${figureSvgUrl}` : figureSvgUrl;
+  if (/^https?:\/\//i.test(figureSvgUrl)) return figureSvgUrl;
+  // Collapse any leading slashes so a bare-relative path and a root-relative one both land on the
+  // site root. `//host/x.svg` is caught upstream as protocol-relative; normalising it here would
+  // quietly turn a rejected payload into a served one.
+  return `${origin}/${figureSvgUrl.replace(/^\/+/, "")}`;
 }
 
 // How far a ratio may drift before it counts as a discrepancy. The manifest rounds to three
