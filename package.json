@@ -12,7 +12,12 @@
     "content:figures": "node scripts/build-figures.mjs",
     "content:figures:authoring": "node scripts/build-figures.mjs --allow-missing-toolchain",
     "content:figures:record": "node scripts/build-figures.mjs --record-aspect-ratios",
-    "ci:content": "npm run content:selftest && npm run content:figures"
+    "ci:content": "npm run content:selftest && npm run content:figures",
+    "git:guard": "node scripts/check-push-authors.mjs",
+    "git:guard:selftest": "node scripts/check-push-authors.mjs --selftest",
+    "git:hooks": "sh scripts/install-git-hooks.sh",
+    "git:hooks:check": "sh scripts/install-git-hooks.sh --check",
+    "git:worktree": "sh scripts/agent-worktree.sh"
   },
   "devDependencies": {
     "katex": "0.16.11"

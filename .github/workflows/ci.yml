@@ -23,3 +23,43 @@ jobs:
       - run: npm install
       - run: npm run build --workspace web
       - run: npm test --workspaces --if-present
+
+  # MAX-69: several agents share this repository, so the delivery path needs its own gate.
+  # It is here, and not only as a local hook, because a hook nobody runs is indistinguishable
+  # from a hook that does not work -- and because a change that guts the guard must fail the
+  # build rather than quietly stop refusing pushes.
+  delivery-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Push authorship guard proves it can fail
+        run: npm run git:guard:selftest
+      - name: Hooks are executable and parse
+        # git records the exec bit, and a hook without it is a hook git never calls. Asserting
+        # it here is the difference between "the guard is in the repository" and "the guard
+        # runs", which look identical in a diff.
+        run: |
+          test -x .githooks/pre-push || { echo "::error::.githooks/pre-push is not executable"; exit 1; }
+          sh -n .githooks/pre-push
+          sh -n scripts/install-git-hooks.sh
+          sh -n scripts/agent-worktree.sh
+      - name: The installer installs into .git and reports itself installed
+        # The installed hooks live in the shared .git dir, never in a working tree: a hooks
+        # directory inside a checkout belongs to whatever branch that checkout is on, and
+        # putting one there would drop untracked files into another agent's working tree.
+        run: |
+          sh scripts/install-git-hooks.sh
+          sh scripts/install-git-hooks.sh --check
+          hooks=$(git config --get core.hooksPath)
+          case "$hooks" in
+            "$(git rev-parse --path-format=absolute --git-common-dir)"/*) ;;
+            *) echo "::error::core.hooksPath=$hooks is not inside the shared .git dir"; exit 1 ;;
+          esac
+          if git status --porcelain | grep -q .; then
+            echo "::error::installing hooks dirtied the working tree"
+            git status --porcelain
+            exit 1
+          fi
