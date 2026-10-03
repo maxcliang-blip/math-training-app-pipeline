@@ -81,7 +81,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
+      # Read for the collect step; write for the verdict comment below, and only for it. Creating a
+      # comment on a pull request needs write on pull requests, and without it the posting step
+      # 403s on every event -- which is exactly what the first run of this job did.
+      #
+      # Nothing else here needs write. The check reads a body and a file list and exits with a code.
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -127,8 +132,13 @@ jobs:
       # A check nobody reads is a check that did not happen, and the whole point of this gate is
       # that somebody is routed to the description. The summary is posted on the pull request
       # itself, which is where a reviewer is already looking.
+      #
+      # continue-on-error, because the comment is the routing aid and the gate is the exit code of
+      # the step above it. A webhook timeout or a revoked token must not block a pull request whose
+      # body is fine; it should cost the comment, not the merge.
       - name: Post the verdict on the pull request
         if: always()
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
