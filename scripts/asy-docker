@@ -1,0 +1,46 @@
+#!/bin/sh
+# Run asy 2.87 on a host that has no `asymptote` package, by bind-mounting the caller's working
+# directory into the `asy-local` image. See scripts/lib/asy-container.sh for why that is needed and
+# for the engine/image resolution.
+#
+# Usage: scripts/asy-docker [asy arguments...]
+#
+# Point the figure build at it instead of a binary:
+#
+#   ASYMPTOTE_BIN=scripts/asy-docker DVISVGM_BIN=scripts/dvisvgm-docker \
+#     node scripts/build-figures.mjs
+#
+# or use `npm run content:figures:local`, which sets both.
+#
+# TWO THINGS THIS DELIBERATELY DOES NOT DO
+#
+# It does not convert EPS to SVG. asy 2.87 accepts `-svg` and then writes figure.eps anyway, and
+# it looks tempting to finish the job here so that a bare `asy -svg figure.asy` leaves an SVG
+# behind. scripts/build-figures.mjs already does exactly that conversion, from exactly the same
+# dvisvgm arguments, when figure.svg is missing -- so doing it here too would mean the local run
+# never exercises the branch CI exercises. Same measured box either way; the point is that the
+# path to it is the same path, so a figure that breaks the conversion locally breaks it in CI.
+#
+# It does not fall back to "figure not compiled". If the image cannot run, this exits non-zero
+# and build-figures.mjs reports the failure. MAX-9 established that a figure build which compiles
+# nothing must not pass, and a shim that quietly skipped the compile would undo that.
+
+set -eu
+
+DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+# shellcheck source=scripts/lib/asy-container.sh
+. "$DIR/lib/asy-container.sh"
+
+# A real install wins. scripts/build-figures.mjs probes ASYMPTOTE_BIN before `asymptote` on PATH,
+# so pointing it at this wrapper must not be a way to shadow a native toolchain with a container.
+for candidate in asymptote asy; do
+  if command -v "$candidate" >/dev/null 2>&1 && "$candidate" --version >/dev/null 2>&1; then
+    exec "$candidate" "$@"
+  fi
+done
+
+asy_shim_preflight
+
+# Word-splitting the prefix is intended: it is a list of argv tokens (possibly `sudo -n docker`).
+# shellcheck disable=SC2046,SC2086
+exec $(asy_shim_prefix) asy "$@"
