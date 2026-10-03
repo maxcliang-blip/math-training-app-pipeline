@@ -63,6 +63,15 @@ jobs:
             git status --porcelain
             exit 1
           fi
+      - name: The worktree audit runs in the same mode the push hook runs
+        # The audit catches a clone whose worktrees would commit under an identity the registry
+        # does not record (MAX-102); on the delivery host it runs on every push. A CI runner is not
+        # that host -- no registry, no worktree root, nothing to account for -- and it is not
+        # skipped here: it runs in exactly the mode the push hook runs, on a clone whose guard is
+        # installed (the step above), and prints that it had no registry. Silence is how a gate
+        # that passed and a gate that was never asked end up looking the same. This step is also
+        # what keeps the no-registry path from rotting.
+        run: npm run git:worktrees:check:push
       - name: No tracked node_modules, and none in the export (MAX-81)
         # node_modules was committed to main as a symlink to one host's absolute path, and
         # `git archive origin/main` reproduced it for every operator who followed

@@ -1,15 +1,22 @@
 #!/bin/sh
-# Delivery-integrity gate: refuse to push commits authored by another agent (MAX-69).
+# Delivery-integrity gate: refuse to push commits authored by another agent (MAX-69), and refuse
+# to push from a clone whose worktree identities do not add up (MAX-102).
 #
-# The gate is check-push-authors.mjs. install-git-hooks.sh copies both this hook and that
-# script into the shared .git dir, so the installed pair depends on no working tree: a
-# `git worktree remove` on the checkout it was installed from cannot leave a repository whose
-# pushes are quietly unverified.
+# Two gates run here, and the second exists because the first one was not enough.
+# check-push-authors.mjs compares each commit's author against *this checkout's* identity, so it
+# passes whenever those two agree -- which is exactly what happened when MAX-92's commit was
+# authored as Bob inside bob-2's worktree. agent-worktree.sh `check --for-push` compares the
+# identity against the shared registry, which is a statement about who runs here rather than a
+# fact the pushing checkout can agree with by itself.
+#
+# install-git-hooks.sh copies this hook and both scripts into the shared .git dir, so the
+# installed trio depends on no working tree: a `git worktree remove` on the checkout it was
+# installed from cannot leave a repository whose pushes are quietly unverified.
 #
 # Resolution order, and why it is not just "whatever is next to me":
 #
 #   1. the copy installed beside this hook
-#   2. the current worktree's scripts/check-push-authors.mjs
+#   2. the current worktree's scripts/<name>
 #   3. the checkout the hooks were installed from, recorded in .gate-root
 #   4. the main checkout
 #
@@ -22,31 +29,58 @@ set -eu
 
 here=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 root=$(git rev-parse --show-toplevel)
-gate=""
+installed=$(git rev-parse --path-format=absolute --git-common-dir)/hooks-paperclip
 
-for candidate in \
-  "$here/check-push-authors.mjs" \
-  "$root/scripts/check-push-authors.mjs"
-do
-  if [ -f "$candidate" ]; then
-    gate="$candidate"
-    break
-  fi
-done
-
-if [ -z "$gate" ]; then
-  installed=$(git rev-parse --path-format=absolute --git-common-dir)/hooks-paperclip
+# The first existing candidate, in the order documented above.
+resolve() {
   source_root=$(cat "$installed/.gate-root" 2>/dev/null || true)
-  if [ -n "$source_root" ] && [ -f "$source_root/scripts/check-push-authors.mjs" ]; then
-    gate="$source_root/scripts/check-push-authors.mjs"
-  fi
-fi
-
-if [ -z "$gate" ]; then
   main=$(git worktree list --porcelain | sed -n '1s/^worktree //p')
-  [ -f "$main/scripts/check-push-authors.mjs" ] && gate="$main/scripts/check-push-authors.mjs"
+  for candidate in \
+    "$here/$1" \
+    "$root/scripts/$1" \
+    "${source_root:+$source_root/scripts/$1}" \
+    "$main/scripts/$1"
+  do
+    if [ -f "$candidate" ]; then
+      printf '%s' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Gate 2 first: it is the precondition ("is this clone sound?"), it costs no commit scan, and a
+# clone that cannot account for its own worktrees should not spend the authorship pass to find
+# that out. `--for-push` is what keeps it from refusing on conditions only the board can settle;
+# see the flag's own comment in agent-worktree.sh for which faults those are.
+audit=$(resolve agent-worktree.sh || true)
+if [ -z "$audit" ]; then
+  printf 'pre-push: cannot find agent-worktree.sh beside this hook, in this worktree, at the\n' >&2
+  printf '          recorded install root, or in the main checkout.\n' >&2
+  printf 'pre-push: refusing to push with the worktree identities unaudited. Merge origin/main,\n' >&2
+  printf '          or run scripts/install-git-hooks.sh to reinstall the guard for this repository.\n' >&2
+  exit 1
 fi
 
+# An installed copy from before MAX-102 ignores --for-push and then exits 1 on the shared-root row
+# it has always printed, so every push would fail with a reason that has nothing to do with the
+# push. That is a stale install, not a broken clone, and it is one command to fix -- so it is named
+# as itself instead of surfacing as a wall of red.
+if ! grep -q -- '--for-push' "$audit"; then
+  printf 'pre-push: %s predates `check --for-push`, so this push cannot be audited correctly.\n' "$audit" >&2
+  printf '          sh scripts/install-git-hooks.sh      # then sh scripts/install-git-hooks.sh --check\n' >&2
+  exit 1
+fi
+
+if ! sh "$audit" check --for-push; then
+  printf 'pre-push: REFUSED by the worktree audit above. A worktree here would commit under an\n' >&2
+  printf '          identity the registry does not record. Fix the rows it names and push again.\n' >&2
+  printf '          To deliver anyway, and say so on the issue:\n' >&2
+  printf '            AGENT_WORKTREE_CHECK=0 git push ...\n' >&2
+  exit 1
+fi
+
+gate=$(resolve check-push-authors.mjs || true)
 if [ -z "$gate" ]; then
   printf 'pre-push: cannot find check-push-authors.mjs beside this hook, in this worktree, at the\n' >&2
   printf '          recorded install root, or in the main checkout.\n' >&2
