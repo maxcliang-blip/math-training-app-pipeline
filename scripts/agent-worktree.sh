@@ -333,6 +333,7 @@ EOF
 
     printf '\n%-36s %-40s %-28s %s\n' WORKTREE AGENT IDENTITY STATUS
     path=""
+    first=yes
     while IFS= read -r line; do
       case "$line" in
         "worktree "*)
@@ -366,6 +367,24 @@ EOF
               rc=1
               ;;
           esac
+          # The shared root is the first entry `git worktree list` prints, and it is the one
+          # checkout on this box that every agent shares. Identity there belongs to whoever
+          # configured it, so authorship is unverifiable and the push guard refuses to deliver
+          # from it (MAX-101). An audit that called this checkout `ok` would be auditing the one
+          # directory where isolation is known not to hold.
+          if [ "$first" = yes ]; then
+            first=no
+            if [ "$path" != "$main_root" ]; then
+              printf 'WARN  %s is not listed first by `git worktree list`; assuming the first entry\n' "$path"
+            fi
+            root_status='SHARED ROOT, not isolated; pushes from here are refused (MAX-101)'
+            if [ "$status" = ok ]; then
+              status="$root_status"
+            else
+              status="$root_status; $status"
+            fi
+            rc=1
+          fi
           printf '%-36s %-40s %-28s %s\n' "$path" "$agent" "$name <$email>" "$status"
           printf '%-36s %-40s %s\n' '' 'node_modules' "$deps"
           ;;
@@ -381,6 +400,10 @@ EOF
     fi
     printf '\nfix an identity:  git -C <worktree> config --worktree user.name "Name"\n'
     printf '                   git -C <worktree> config --worktree user.email <email>\n'
+    printf 'fix the shared root: it is a control surface, not a place work happens.\n'
+    printf '  sh scripts/agent-worktree.sh add <agent> <branch>   # then commit and push in there\n'
+    printf '  a shared-root push is refused by scripts/check-push-authors.mjs; to say the checkout\n'
+    printf '  really is yours alone: git -C %s config agent.allowSharedRoot true\n' "$main_root"
     exit "$rc"
     ;;
 
