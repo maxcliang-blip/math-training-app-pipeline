@@ -226,6 +226,43 @@ git config agent.allowSharedRoot true   # or AGENT_PUSH_ALLOW_SHARED_ROOT=1, if 
 That waives rule 2 only. Rule 1 still applies, and `agent-worktree.sh check` reports the shared
 root as `SHARED ROOT, not isolated` whatever config says.
 
+#### What rule 1 is asked about (MAX-105)
+
+Rule 1 compares commits in a range, and the range is computed against the **push's own base**: the
+remote-tracking ref for a branch that already exists, the push base for a new one. After a rebase
+that range also contains main's own commits, and main is what the board squash-merges, so they are
+authored by `maxcliang-blip`. Rule 1 then refuses every landing in this repository by listing main's
+history as another agent's work delivered under your name — MAX-69's own message, about commits
+already on `main`. Four waivers were needed on MAX-103 for exactly this.
+
+So commits reachable from the push base are subtracted before the authorship comparison, and the
+count and the base are printed on the ref line:
+
+```
+refs/heads/fix/max-102-worktree-gate -> refs/heads/fix/max-102-worktree-gate: 1 commit(s), basis remote-tracking ref, 6 already on origin/main (not judged as new work)
+```
+
+The distinction is not who wrote the commit but whether the push is delivering it: a commit the
+base already has is the base, and this push neither adds nor changes it. This is deliberately
+**not** "reachable from any ref other than the one being pushed" — that would also swallow a commit
+another agent has on a branch of their own, which is the MAX-69 shape one step earlier, and it would
+swallow a branch being landed on purpose (MAX-84) with no waiver, no PR body and no review.
+
+Two boundaries keep the subtraction from becoming a way to switch rule 1 off:
+
+- It does not run at all if the push base does not resolve, or if the branch being pushed is already
+  contained in the push base. The second is the `agent.pushBase`-aimed-at-your-own-branch case: the
+  subtraction would empty the range, so the whole range is judged instead. Both are printed on the
+  ref line rather than passing quietly.
+- A range that comes back empty *because* of the subtraction is a pass — a push with no commit the
+  base lacks delivers no new work. An empty range with no subtraction behind it is still
+  `unresolved-range` and still refuses.
+
+What rule 1 still does with what the subtraction leaves: another agent's commit is refused whether
+they put it on your branch by accident (MAX-69) or on purpose (MAX-84) — a deliberate landing is
+waived with `agent.allowedAuthors` and carries its provenance in the PR body (MAX-69 item 4,
+MAX-83). The guard cannot tell those two apart, and does not try to.
+
 What it does **not** catch, so nobody assumes it does:
 
 - **A squashed foreign commit.** A squash rewrites authorship to the first commit's author. This
