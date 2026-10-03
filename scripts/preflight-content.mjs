@@ -18,6 +18,13 @@
 //   Rendering Conventions S9  - asymptoteAlt / asymptoteAspectRatio mandatory
 //   Interaction Spec S8       - the nine content requirements
 //
+// One family has no source document, and is deliberately not numbered like one:
+//
+//   MAX-89  - json-escaped-macro: a JSON control escape inside a math span ate the macro
+//             it introduced. The gate is the only thing that can see this, so it is stated
+//             here rather than waited for. A document half would belong to whoever owns
+//             rendering_conventions; it does not exist yet and this rule does not wait for it.
+//
 // Usage: node scripts/preflight-content.mjs [contentRoot] [--json [<outPath>]]
 //   --json           print the report to stdout
 //   --json <path>    write the report to <path> instead
@@ -426,7 +433,98 @@ const HTML_TAG = /<\/?[a-zA-Z][a-zA-Z0-9]*(\s[^<>]*)?>/;
 const HTML_ENTITY = /&(?!amp;|lt;|gt;|nbsp;)[a-zA-Z]{2,8};/;
 const COMMAND = /\\([a-zA-Z]+|.)/g;
 
+// ---------------------------------------------------------------------------
+// MAX-89: a LaTeX macro whose name was eaten by a JSON control escape
+// ---------------------------------------------------------------------------
+// `\n`, `\r`, `\t`, `\f` and `\b` are JSON's control escapes. A LaTeX field written with a
+// SINGLE backslash before a macro whose name starts with one of those letters therefore
+// parses to the control character plus the tail of the name as literal text:
+//
+//     in the file   "$\zeta \neq 1$"      (one backslash)
+//     parses to     "$\zeta " LF "eq 1$"
+//     renders as    "ζ eq 1"
+//
+// Nothing else in this file sees it. The field parses, S3.3-katex-render passes because KaTeX
+// renders letters perfectly happily, and S3.2 never reaches the macro allowlist because no
+// backslash is left to match. So the corruption reached the corpus 12 times, in 11 math spans
+// across 4 content files, before MAX-87 repaired it -- and the same escape still destroys
+// \newcommand, \nearrow, \nolimits, \right, \notin and every other macro beginning n, r, t,
+// b or f.
+//
+// Severity is error, and the reason is the comparison with the two families it sits between.
+// S3.2-macro-allowlist is an advisory because it fires on macros that render *correctly* and
+// only asks that the convention catch up; the render is never wrong. S3.3-katex-render is an
+// error because the field does not produce the author's formula. This is the same defect as
+// S3.3 with the failure inverted: the formula renders and it is still not what the author
+// wrote, the student reads letters where a relation sign belongs, and nothing on screen says
+// so. An advisory would be indistinguishable from no rule at all, because the only thing that
+// acts on this class of finding is the gate itself.
+//
+// The discriminator is "control character inside a math span", not "newline in a LaTeX field".
+// The corpus uses \n\n for paragraph breaks in solutionLatex and bodyLatex and is full of them:
+// 5,808 control characters sit in the scanned fields, and 12 of them are inside a math span. A
+// rule about newlines would fire on the other 5,796 and mean nothing. Inside a `$...$` or
+// `$$...$$` span there is no legitimate reading -- the block model separates blocks with a blank
+// line, and a math span is one span.
+//
+// The one place this rule knowingly leaves a same-shaped defect alone is a display block, a
+// block with no `$` at all: 13 of the corpus's control characters are `\text` eaten inside
+// display blocks in m5-l1 and m5-l2, and a display block cannot be searched for a control
+// character without also catching the 29 line feeds that legitimately lay a display block out
+// over several lines. Tab-in-a-display-block is therefore its own rule, filed separately,
+// rather than a widening of this one.
+//
+// Deliberate false positive, recorded so it is a decision and not an accident: an author who
+// wants a math span laid out over several source lines will draw this finding. The convention
+// already has a way to say that -- separate blocks with a blank line -- and S3.1-blockstyle
+// separately reports `$$…$$` as a legacy fallback. The corpus contains no `$$` field and no
+// multi-line math span, so this rule adds no finding to the corpus as it stands today.
+
+const CONTROL_CHAR = /[\n\r\t\f\b]/;
+const CONTROL_NAMES = {
+  "\n": "line feed (JSON \\n)",
+  "\r": "carriage return (JSON \\r)",
+  "\t": "tab (JSON \\t)",
+  "\f": "form feed (JSON \\f)",
+  "\b": "backspace (JSON \\b)",
+};
+
+// The path label is `<field>#math<n>`, n counting the math spans of the field from 1 in the
+// order they appear. The field is what the author has to open; the span index is what tells
+// them which of a dozen formulas in a long bodyLatex is the broken one. `#math<n>` sits beside
+// renderBlocks' existing `#block<n>` rather than replacing it: they count different things and
+// a report that reused one label for both would make the two unresolvable.
+function checkEscapedMacro(value, path) {
+  const { blocks, style } = splitBlocks(value);
+  let spans = 0;
+  const report = (span, at) => {
+    const tail = span.slice(at + 1, at + 13).replace(/[\n\r\t\f\b]/g, " ").trim();
+    fail("error", "json-escaped-macro", `${path}#math${spans}`,
+      `${CONTROL_NAMES[span[at]]} inside a math span, followed by ${JSON.stringify(tail)}: ` +
+      "the source almost certainly wrote the macro before it with a single backslash, so JSON " +
+      "read the escape and the macro name became literal text. Double the backslash in the JSON " +
+      "source (\\\\neq), or write it as \\u005cneq, which JSON cannot mistake for an escape");
+  };
+  for (const block of blocks) {
+    if (style === "dollars") {
+      // splitBlocks already stripped the $$ delimiters: the block IS the span.
+      spans += 1;
+      const at = block.search(CONTROL_CHAR);
+      if (at >= 0) report(block, at);
+      continue;
+    }
+    let m;
+    INLINE_SEGMENT.lastIndex = 0;
+    while ((m = INLINE_SEGMENT.exec(block)) !== null) {
+      spans += 1;
+      const at = m[1].search(CONTROL_CHAR);
+      if (at >= 0) report(m[1], at);
+    }
+  }
+}
+
 function scanMath(value, path, { allowCommandsOutside = false } = {}) {
+  checkEscapedMacro(value, path);
   const uni = value.match(UNICODE_MATH);
   check("error", "S3.2-no-unicode-math", path, !uni,
     `raw unicode math in content: ${uni ? [...new Set(uni)].join(" ") : ""} - write the LaTeX command`);

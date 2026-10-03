@@ -192,6 +192,25 @@ export const MUTATIONS = [
     },
   },
   {
+    // MAX-89. The defect is a LaTeX macro whose name a JSON control escape ate, and the only
+    // way to write one is to put the control character in the JS string: JSON.stringify then
+    // emits it as a single-backslash `\n` in the file, which is exactly the shape that shipped
+    // 11 times (MAX-87). A doubled backslash would not test anything -- it would arrive as a
+    // real backslash and the macro would survive.
+    //
+    // The span is appended rather than substituted so the mutation leaves the donor exercise's
+    // prompt otherwise intact: it keeps the plain-reading length above S3.3's floor and adds
+    // exactly one new math span, so the only finding this can raise is this rule's. Appending
+    // also puts the new span last, which keeps its `#math<n>` index independent of whatever
+    // the donor's own prompt happens to contain.
+    id: "macro-name-eaten-by-a-json-control-escape",
+    rule: "json-escaped-macro",
+    severity: "error",
+    apply(c) {
+      c.exercises[1].promptLatex += " $\\zeta \neq 1$";
+    },
+  },
+  {
     id: "answer-not-in-choices",
     rule: "S3.3-answer-matches-choice",
     severity: "error",
