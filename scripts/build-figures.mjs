@@ -38,9 +38,63 @@ const REPO = resolve(HERE, "..");
 const DEFAULT_CONTENT = join(REPO, "content");
 const DEFAULT_OUT = join(REPO, "artifacts", "figures");
 
-// Bump when the pipeline changes what it emits, so a stale figure is detectable by hash
-// rather than by inspection.
+// What the emitter is, not what the environment happened to be. S5.5 puts this string in the
+// cache key "so a renderer upgrade invalidates cleanly", and that only holds if a change of
+// emitter is visible in it.
+//
+// An Asymptote upgrade *is* a change of emitter: the same source compiles to a different viewBox
+// under a different asy, and the glyph shapes come from a different TeX Live font set on top of
+// that. Both are measurable -- prepending only a `unitsize` to one source moves its compiled
+// width by 40% -- so the toolchain fingerprint below is appended to the constant instead of being
+// left to a manual bump.
+//
+// Without it this repository shipped one version string across three toolchains at once:
+// bookworm's asy 2.85 in the Dockerfile figures stage, ubuntu-latest's asy 2.87 in
+// .github/workflows/content.yml, and the 2.87 inside the scripts/asy-docker image. An SVG built by
+// one and an SVG built by another hashed to the same key, so the cache could not tell them apart
+// and neither could detect the other as stale. The audit that found this is MAX-60 S3.11.
+//
+// Bump this constant when the pipeline changes what it emits; the fingerprint covers the
+// environment it emits in.
 export const PIPELINE_VERSION = "asymptote-svg-sanitized@2";
+
+// TeX Live's own banner carries the release year ("TeX Live 2023/Deb 2024"). pdfTeX's build number
+// in front of it tracks the TeX Live *revision*, not the font set, so the year is the part worth
+// keying on.
+const TEXLIVE_RELEASE = /TeX Live\s+(\d{4})/i;
+
+// Versions come off the `--version` line the toolchain probe already captured, reduced to the
+// release number. The full line carries a build date and a host, and a cache key that moves for a
+// reason that cannot change a glyph is not a key: every image rebuild would invalidate every
+// figure for nothing.
+function releaseOf(version, pattern) {
+  const line = String(version || "").trim();
+  if (!line) return null;
+  if (pattern) {
+    const matched = pattern.exec(line);
+    if (matched) return matched[1];
+  }
+  return /(\d+\.\d+(?:\.\d+)?)/.exec(line)?.[1] ?? null;
+}
+
+// `unknown` rather than omission. A component that cannot be read is reported as unreadable,
+// which is the truth: two environments that both fail to report TeX Live are genuinely
+// indistinguishable from here, and printing nothing would claim they had been compared.
+function fingerprintPart(label, version, pattern) {
+  return `${label}-${releaseOf(version, pattern) ?? "unknown"}`;
+}
+
+// The value that goes into `figurePipelineVersion` and the manifest's `pipelineVersion`. The
+// fingerprint is per-toolchain, so it is a function of the compiler rather than of this module --
+// which is why PIPELINE_VERSION alone is not what either site writes.
+export function pipelineVersionFor(toolchain) {
+  if (!toolchain) return PIPELINE_VERSION;
+  return `${PIPELINE_VERSION}+${[
+    fingerprintPart("asy", toolchain.version),
+    fingerprintPart("dvisvgm", toolchain.dvisvgmVersion),
+    fingerprintPart("texlive", toolchain.texliveVersion, TEXLIVE_RELEASE),
+  ].join("_")}`;
+}
 
 // Content declares a ratio at 3 decimal places. Both sides of every comparison below are
 // rounded to that precision first, so the declaration's own quantization cannot masquerade as
@@ -163,9 +217,23 @@ export function validateFigure(figure) {
 
   if (!sizeCall) {
     const single = figure.source.match(/size\s*\(\s*(\d+(?:\.\d+)?)\s*\)/);
+    // Neither message may say that the reserved space is a function of the size() call. It is not,
+    // and never was measurable as one: asymptoteAspectRatio is recorded from the compiled viewBox
+    // (S5.4 item 4), so the box is known after layout and not before it. The old one-argument
+    // message asserted exactly that ("with one argument the reserved space cannot be known before
+    // layout") while the same rule's own second half retracted it -- MAX-59 S3.10 established that
+    // two-argument size(W,H) is a ceiling and not a box, which is why the ratio comes from the
+    // compiler. An author who read both halves was told the call decided the box and then told it
+    // did not.
+    //
+    // What is left to require is the spelling. S5.2 asks for a two-dimensional ceiling and this is
+    // the only spelling this gate reads; size(W) states one dimension. That is a statement about
+    // the contract, so it is the one the message makes.
     problems.push(
       single
-        ? "size(W,H) takes two arguments: with one argument the reserved space cannot be known before layout"
+        ? "size(W,H) takes two arguments: S5.2 requires a two-dimensional ceiling and size(W) states only " +
+          "one. The ceiling bounds the output, it does not fix the box -- asymptoteAspectRatio is recorded " +
+          "from the compiled viewBox (S5.4 item 4)"
         : "figure source must call size(W,H)",
     );
     return { problems, box: null };
@@ -184,9 +252,9 @@ export function validateFigure(figure) {
   // is S5.4-ratio-matches-size under a second name, and the drift gate below then compared the
   // compiled box against the ceiling too -- so the gate compared the compiler's output to the
   // author's guess about their own ceiling rather than to the number the manifest serves and the
-  // renderer reserves space from. Both compared the wrong side. The ceiling is kept, because S5.2
-  // still requires a figure to reserve space it can be laid out against; it is simply not evidence
-  // about the output box.
+  // renderer reserves space from. Both compared the wrong side. The ceiling is kept for the one
+  // thing the source can still state before layout -- an upper bound on the output extent -- and is
+  // read as no evidence at all about the box the figure renders at.
   if (typeof figure.declaredRatio !== "number") {
     problems.push("asymptoteAspectRatio is mandatory with a figure");
   }
@@ -294,7 +362,24 @@ export function findToolchain() {
   if (!dvisvgm) {
     return { ...asy, bin: null, missing: "dvisvgm" };
   }
-  return { ...asy, dvisvgm: dvisvgm.bin, dvisvgmPath: dvisvgm.path, dvisvgmVersion: dvisvgm.version };
+
+  // TeX Live is the third component of the pipeline fingerprint, not a build dependency. asy
+  // renders text through LaTeX and dvips, so the glyph shapes in the SVG come from TeX Live's
+  // fonts rather than from asy, and two hosts with the same asy can still differ there. Probed
+  // best-effort: an absent or unusable `tex` must not fail a figure build whose compiler works,
+  // and an unreadable version becomes `texlive-unknown` in the fingerprint rather than a claim
+  // that the fonts were pinned.
+  let texliveVersion = null;
+  const tex = probeToolchainBin("tex");
+  if (tex.ok) texliveVersion = tex.version;
+
+  return {
+    ...asy,
+    dvisvgm: dvisvgm.bin,
+    dvisvgmPath: dvisvgm.path,
+    dvisvgmVersion: dvisvgm.version,
+    texliveVersion,
+  };
 }
 
 export function sanitizeSvg(svg) {
@@ -555,7 +640,7 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
       figureKey: figure.key,
       figureSvgUrl: `artifacts/figures/svg/${result.file}`,
       figureHash: `sha256:${createHash("sha256").update(result.svg).digest("hex")}`,
-      figurePipelineVersion: PIPELINE_VERSION,
+      figurePipelineVersion: pipelineVersionFor(toolchain),
       declaredAspectRatio: box.ratio,
       compiledAspectRatio: ratioNote,
       asymptoteVersion: toolchain.version,
@@ -819,7 +904,7 @@ if (isMain) {
 
   mkdirSync(outDir, { recursive: true });
   const manifest = {
-    pipelineVersion: PIPELINE_VERSION,
+    pipelineVersion: pipelineVersionFor(result.toolchain),
     toolchain: result.toolchain,
     status: result.status,
     generatedFrom: contentRoot.replace(REPO + "/", ""),

@@ -417,3 +417,95 @@ test("the record pass reaches a fixed point instead of walking the corpus", asyn
 
   rmSync(dir, { recursive: true, force: true });
 });
+
+// MAX-77. Rendering Conventions S5.2 told authors to "prefer size(300)" twice while the gate
+// rejected size(300), and the rejection message justified itself by claiming the reserved space was
+// a function of the size() call. That premise was retired by MAX-59: size(W,H) is a ceiling, and
+// asymptoteAspectRatio is recorded from the compiled viewBox, so the box is known after layout.
+// These three tests pin the two facts that came out of the ruling so neither can come back
+// unnoticed -- the messages an author reads, and the version string the cache key is built from.
+
+test("no size() rejection message claims the reserved space depends on the call", async () => {
+  const { validateFigure } = await import("../../scripts/build-figures.mjs");
+  const base = { declaredRatio: 1.333, alt: "A figure description long enough to satisfy the alt rule." };
+
+  const oneArg = validateFigure({ ...base, source: "draw((0,0)--(1,1)); size(300);" });
+  const noCall = validateFigure({ ...base, source: "draw((0,0)--(1,1));" });
+
+  assert.equal(oneArg.problems.length, 1);
+  assert.equal(noCall.problems.length, 1);
+
+  // The retired premise in its three forms. "cannot be known before layout" is the sentence that
+  // was wrong; the other two are the shapes the same wrong belief takes when it is reworded.
+  for (const { problems } of [oneArg, noCall]) {
+    for (const premise of [
+      "cannot be known before layout",
+      "reserved space cannot be known",
+      "so the pipeline knows its dimensions",
+    ]) {
+      assert.equal(
+        problems.some((p) => p.includes(premise)),
+        false,
+        `a size() rejection still asserts a retired premise: ${JSON.stringify(problems)}`,
+      );
+    }
+  }
+
+  // Both rejections must also say what the call actually is, or the author is left with a rule and
+  // no reason. The correction is the point, not a softened version of the wrong claim.
+  assert.match(oneArg.problems[0], /ceiling bounds the output/);
+  assert.match(oneArg.problems[0], /compiled viewBox/);
+});
+
+test("the size() verdict is unchanged: the ceiling is still required and still read as two numbers", async () => {
+  const { validateFigure } = await import("../../scripts/build-figures.mjs");
+  const base = { declaredRatio: 1.333, alt: "A figure description long enough to satisfy the alt rule." };
+
+  // The two-argument form 66 of 83 corpus figures use is accepted, and the ceiling is still read
+  // out of it -- the fix was to the message, not to the gate.
+  const two = validateFigure({ ...base, source: "draw((0,0)--(1,1)); size(320,240);" });
+  assert.deepEqual(two.problems, []);
+  assert.deepEqual(two.box, { width: 320, height: 240, ratio: 1.333 });
+
+  // Every one of these still rejects. MAX-60 S3.9 recorded all four; the ruling under review was
+  // about what the rule *says*, and none of these verdicts was on the table to change.
+  for (const source of [
+    "draw((0,0)--(1,1));",
+    "draw((0,0)--(1,1)); size(300);",
+    "draw((0,0)--(1,1)); size(300,300,ignore);",
+    "draw((0,0)--(1,1)); size((300,300),ignore);",
+  ]) {
+    const result = validateFigure({ ...base, source });
+    assert.equal(result.problems.length > 0, true, `expected a rejection for ${source}`);
+    assert.equal(result.box, null);
+  }
+});
+
+test("the pipeline version keys on the toolchain, not only on the emitter constant", async () => {
+  const { PIPELINE_VERSION, pipelineVersionFor } = await import("../../scripts/build-figures.mjs");
+
+  // The bug: PIPELINE_VERSION is a fixed string, so an SVG built by bookworm's asy 2.85 and one
+  // built by ubuntu-latest's asy 2.87 hashed to the same cache key and neither could detect the
+  // other as stale. This repository had both, plus a third in scripts/asy-docker.
+  const bookworm = { version: "Asymptote version 2.85 (Debian 2:2.85-1)", dvisvgmVersion: "dvisvgm 2.11.1", texliveVersion: "pdfTeX 3.141592653-2.6-1.40.24 (TeX Live 2022/Deb 2022)" };
+  const ubuntu = { version: "Asymptote version 2.87 (built 2023)", dvisvgmVersion: "dvisvgm 3.2.1", texliveVersion: "pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2023/Deb 2024)" };
+  assert.notEqual(pipelineVersionFor(bookworm), pipelineVersionFor(ubuntu));
+
+  // Different fonts, same asy: still a different artifact, so still a different key.
+  const otherFonts = { ...ubuntu, texliveVersion: "pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025)" };
+  assert.notEqual(pipelineVersionFor(ubuntu), pipelineVersionFor(otherFonts));
+
+  // A key that moved for a reason that cannot change a glyph is not a key: the build date and
+  // host on the same --version line must not invalidate every figure on an image rebuild.
+  assert.equal(pipelineVersionFor(ubuntu), pipelineVersionFor({ ...ubuntu, version: "Asymptote version 2.87 (built 2024)" }));
+
+  // The emitter constant is still the prefix, so a pipeline change is still visible in the key.
+  for (const t of [bookworm, ubuntu]) assert.ok(pipelineVersionFor(t).startsWith(`${PIPELINE_VERSION}+`));
+
+  // No toolchain is the authoring-only path, and it has no environment to report.
+  assert.equal(pipelineVersionFor(null), PIPELINE_VERSION);
+
+  // An unreadable component is named, not omitted: "unknown" is what two environments differing
+  // only in fonts are, from here.
+  assert.match(pipelineVersionFor({ ...ubuntu, texliveVersion: null }), /texlive-unknown/);
+});
