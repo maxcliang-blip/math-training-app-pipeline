@@ -143,6 +143,50 @@ What it does **not** catch, so nobody assumes it does:
   this half.
 - **An agent pushing with `--no-verify`.** The guard is a default, not a lock.
 
+### The pull request body gate
+
+`scripts/check-pr-body-coverage.mjs` fails a pull request whose body does not account for the files
+it changes. CI runs it on every `pull_request` event, as the `pr-body-coverage` job.
+
+It exists because the push guard cannot cover the case. A squash rewrites authorship, and a
+worktree with the wrong identity produces commits that match the configured one — so PR #19 reached
+`main` with a body describing a Dockerfile change and 26 changed files, 23 of them somebody else's
+lesson content. CI was green, the guard passed, the merge succeeded. The signal existed as
+`changed_files 26` in the pull request metadata and nobody read it as an assertion.
+
+Two rules, and the second is the one that matters:
+
+1. **Coverage.** Every changed path must be matched by a path, glob, directory prefix or blob URL
+   named in the body. Unmatched paths are reported by name, as annotations on the diff.
+2. **A prose claim per top-level area.** Every top-level area the change touches needs one block of
+   the body that names it and carries at least 10 words that are not paths.
+
+Rule 1 alone is a rubber stamp: PR #19's body could have listed all 26 paths and passed a coverage
+check while telling a reviewer nothing. Rule 2 is what forces the description to say something. It
+is cheap to satisfy — one sentence per area, in your own words. A fenced `git diff --stat` dump
+names files but does not claim them; neither does `**`.
+
+```bash
+npm run pr:body:selftest                                    # prove each rule can still fail
+npm run pr:body:check -- --body body.md --files changed.txt  # check one locally
+```
+
+What it does **not** catch, so nobody assumes it does:
+
+- **A lie.** "23 geometry lessons carried over from another agent's worktree" is a claim this
+  script cannot audit. It has to be a claim a human can check.
+- **A vague sentence.** The word floor is a floor on volume, not a judge of meaning.
+- **Content, not coverage.** It says the description mentions the files. It cannot say the
+  description is correct.
+
+A coverage check nobody can fail is a check nobody can trust, so the selftest requires the check to
+reject the MAX-69 shape (a Dockerfile body with 26 changed files) and requires a body that lists all
+26 paths with no explanation to still fail on rule 2. CI runs the selftest **before** the check, so
+a change that guts the gate fails on that.
+
+Set **Require status checks to pass before merging** with `CI / pr-body-coverage` enabled on
+`main`, or the check is advisory and the board is relying on someone remembering to read it.
+
 ## Roadmap
 
 1. Repo + CI (this task)
