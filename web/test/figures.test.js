@@ -8,6 +8,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   createFigureClient,
+  figureCacheSlot,
   figureRoute,
   figureAssetUrl,
   validateFigurePayload,
@@ -22,12 +23,19 @@ import {
 
 const KEY = "m1-linear-equations.figures[0]";
 
+// Two build identities for the same figure, shaped like the keys scripts/build-figures.mjs emits:
+// sha256(asymptoteSource + "|" + pipelineVersion). They differ only in the pipeline version, which
+// is what makes them the same figure at two points in time.
+const BUILD_A = `sha256:${"a".repeat(64)}`;
+const BUILD_B = `sha256:${"b".repeat(64)}`;
+
 function payload(overrides = {}) {
   return {
     figureKey: KEY,
     figureSvgUrl: "/artifacts/figures/svg/m1-linear-equations-figures-0.svg",
     figureHash: "sha256:abc123",
     figurePipelineVersion: "3",
+    figureCacheKey: "sha256:" + "a".repeat(64),
     declaredAspectRatio: 1.5,
     compiledAspectRatio: 1.49,
     alt: "A line crossing the x-axis at two units",
@@ -164,7 +172,7 @@ test("a non-object payload is invalid, not a crash", () => {
   }
 });
 
-test("caches per key so revisiting a lesson does not refetch", async () => {
+test("caches per build key so revisiting a lesson does not refetch", async () => {
   let calls = 0;
   const client = createFigureClient({
     fetchImpl: async () => {
@@ -172,9 +180,82 @@ test("caches per key so revisiting a lesson does not refetch", async () => {
       return jsonResponse(200, payload());
     }
   });
-  await client.getFigure(KEY);
-  await client.getFigure(KEY);
+  await client.getFigure(KEY, { figureCacheKey: BUILD_A });
+  await client.getFigure(KEY, { figureCacheKey: BUILD_A });
   assert.equal(calls, 1);
+});
+
+test("a rebuilt figure is refetched: same figureKey, new cache key, no stale bytes", async () => {
+  // The bug this is filed for. figureKey is the figure's position in the content record and is
+  // deliberately stable across rebuilds, so keying the cache on it alone meant a figure
+  // recompiled under a new PIPELINE_VERSION -- or after a source edit -- hit the same slot and
+  // served the previous build's SVG for the life of the tab, with nothing to indicate it.
+  //
+  // Both halves matter. The first getFigure has to populate the cache (or this test passes against
+  // a client with no cache at all, which is the mistake a single-fetch test cannot catch), and the
+  // second has to arrive with a different build identity and get different bytes.
+  const served = [];
+  let calls = 0;
+  const client = createFigureClient({
+    fetchImpl: async () => {
+      calls += 1;
+      const current = payload({ figureSvgUrl: `/artifacts/figures/svg/rebuild-${calls}.svg` });
+      served.push(current.figureSvgUrl);
+      return jsonResponse(200, current);
+    }
+  });
+
+  const first = await client.getFigure(KEY, { figureCacheKey: BUILD_A });
+  assert.equal(first.status, "ready");
+  assert.equal(calls, 1);
+
+  // Same key: the cache is working, and this is the assertion that distinguishes it from no cache.
+  const cached = await client.getFigure(KEY, { figureCacheKey: BUILD_A });
+  assert.equal(calls, 1, "an unchanged build is served from the cache");
+  assert.equal(cached.src, first.src);
+
+  // Same figureKey, new build: the cache must miss and the new bytes must arrive.
+  const rebuilt = await client.getFigure(KEY, { figureCacheKey: BUILD_B });
+  assert.equal(calls, 2, "a changed build key must not be served from the cache");
+  assert.notEqual(rebuilt.src, first.src);
+  assert.deepEqual(served, ["/artifacts/figures/svg/rebuild-1.svg", "/artifacts/figures/svg/rebuild-2.svg"]);
+
+  // And the old entry is still there for a learner who navigates back to the pre-rebuild view.
+  assert.equal((await client.getFigure(KEY, { figureCacheKey: BUILD_A })).src, first.src);
+  assert.equal(calls, 2);
+});
+
+test("the cache slot is the build identity, and only falls back to the address when there is none", () => {
+  // Two slots, not one, because a fallback key cannot tell a current render from a rebuilt one.
+  assert.equal(figureCacheSlot(KEY, BUILD_A), `build:${BUILD_A}`);
+  assert.notEqual(figureCacheSlot(KEY, BUILD_A), figureCacheSlot(KEY, BUILD_B));
+  assert.equal(figureCacheSlot(KEY, null), `figure:${KEY}`);
+  // A figureKey can never share a slot with a hash, even if some future key format looks like one.
+  assert.notEqual(figureCacheSlot(KEY, null), figureCacheSlot(BUILD_A, null));
+  for (const blank of ["", "   ", 7, undefined]) {
+    assert.equal(figureCacheSlot(KEY, blank), `figure:${KEY}`, `${JSON.stringify(blank)} is not a build key`);
+  }
+});
+
+test("a payload fetched with no build key is returned but never memoized", async () => {
+  // The honest cost of a missing figureCacheKey is a repeat request. The bug it replaces was
+  // stale bytes with no signal, and there is no third option: without a build identity, nothing in
+  // hand says whether the cached render is the current one.
+  let calls = 0;
+  const client = createFigureClient({
+    fetchImpl: async () => {
+      calls += 1;
+      return jsonResponse(200, payload());
+    }
+  });
+  assert.equal((await client.getFigure(KEY)).status, "ready");
+  assert.equal((await client.getFigure(KEY)).status, "ready");
+  assert.equal(calls, 2, "no build key, no memoized bytes");
+
+  // The moment a key arrives the cache is used again, from the same client.
+  assert.equal((await client.getFigure(KEY, { figureCacheKey: BUILD_A })).status, "ready");
+  assert.equal((await client.getFigure(KEY, { figureCacheKey: BUILD_A })).status, "ready");
+  assert.equal(calls, 3);
 });
 
 test("caches the toolchain-missing result too, but not a network failure", async () => {

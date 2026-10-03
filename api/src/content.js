@@ -13,16 +13,18 @@
 //     roughly two thirds of the corpus, and a 404-per-exercise is the only symptom.
 //
 //  2. Figure bytes do not travel here. A lesson or exercise carries figureReference() -- a
-//     figureKey and the authored description -- and the eight payload fields stay behind the
-//     figure route. So a client learns "this exercise has a figure, and here is what it shows"
-//     from the lesson/exercise payload, and learns the SVG, the hash and the declared aspect
-//     ratio from the figure route, which is the split the figure contract mandates.
+//     figureKey, the authored description, and the build's §5.5 cache key -- and the nine payload
+//     fields stay behind the figure route. So a client learns "this exercise has a figure, and
+//     here is what it shows" from the lesson/exercise payload, and learns the SVG, the hash and
+//     the declared aspect ratio from the figure route, which is the split the figure contract
+//     mandates.
 //
 //     The description is on the reference rather than on the route because of the degraded
 //     state (Rendering Conventions §5.6): when the build has produced no usable manifest the
 //     figure route is a hard 503 for every key, so the only moment the description is needed is
 //     the moment the route cannot supply it. asymptoteSource -- kilobytes of build input per
-//     figure -- still never leaves the build.
+//     figure -- still never leaves the build; the cache key is the hash of it, computed by the
+//     build and attached from the figure store.
 //
 //  3. Dangling references are reported, not patched. A practice list naming an exercise id that
 //     does not exist is a content bug. Serving the list anyway with the id quietly missing would
@@ -91,8 +93,9 @@ const SECTION_ID_FIELDS = [
 ];
 
 export class ContentStore {
-  constructor({ root = DEFAULT_CONTENT_ROOT, modules = [] } = {}) {
+  constructor({ root = DEFAULT_CONTENT_ROOT, modules = [], figureCacheKeys = null } = {}) {
     this.root = root;
+    this.figureCacheKeys = figureCacheKeys;
     this.lessons = new Map();
     this.exercises = new Map();
     this.warnings = [];
@@ -200,6 +203,19 @@ export class ContentStore {
     const modules = this.moduleIds().map((id) => this.getModule(id).module);
     const missingTitle = modules.filter((m) => m.title === null).map((m) => m.code);
     return { modules, missingTitle };
+  }
+
+  // The figure build's cache key for a figureKey, or null. This is the one field on a figure
+  // reference that a content record cannot supply: §5.5's key is a hash of the Asymptote source
+  // folded with the pipeline version, and asymptoteSource never leaves the build. The keys come
+  // from the figure store (api/src/figures.js) and are attached here once, so the response
+  // builders below never have to know a manifest exists.
+  //
+  // Null is the honest answer when the build has produced no usable manifest, and it is what the
+  // degraded state looks like: no compiled figure, no key, nothing for the client to cache.
+  figureCacheKeyFor(figureKey) {
+    if (!this.figureCacheKeys) return null;
+    return this.figureCacheKeys.get(figureKey) ?? null;
   }
 
   getLesson(lessonId) {
@@ -318,7 +334,7 @@ export function toLessonResponse(store, lesson) {
     // every figure-bearing example rides along on every lesson response, which is exactly the
     // build input the figure contract keeps behind the build.
     if (Array.isArray(section.examples)) {
-      copy.examples = section.examples.map((example, i) => toExampleResponse(lesson, name, example, i));
+      copy.examples = section.examples.map((example, i) => toExampleResponse(store, lesson, name, example, i));
     }
     sections[name] = copy;
   }
@@ -342,11 +358,11 @@ export function toLessonResponse(store, lesson) {
 
 function lessonFigureRefs(store, lesson, sectionName, figures) {
   return figures
-    .map((fig, i) =>
-      fig && fig.asymptoteSource
-        ? figureReference(lessonFigureKey(lesson.id, sectionName, i), fig.asymptoteAlt)
-        : null
-    )
+    .map((fig, i) => {
+      if (!fig || !fig.asymptoteSource) return null;
+      const figureKey = lessonFigureKey(lesson.id, sectionName, i);
+      return figureReference(figureKey, fig.asymptoteAlt, store.figureCacheKeyFor(figureKey));
+    })
     .filter(Boolean);
 }
 
@@ -354,11 +370,12 @@ function lessonFigureRefs(store, lesson, sectionName, figures) {
 // blanked: an empty asymptoteSource would read as "this figure has no source", which is a
 // different and wrong claim. When there is a figure, figureKey and the description are there
 // instead, and the payload comes from the figure route.
-function toExampleResponse(lesson, sectionName, example, index) {
+function toExampleResponse(store, lesson, sectionName, example, index) {
   if (!example || typeof example !== "object") return example;
   const { asymptoteSource, asymptoteAlt, asymptoteAspectRatio, ...rest } = example;
   if (!asymptoteSource) return rest;
-  return { ...rest, ...figureReference(exampleFigureKey(lesson.id, sectionName, index), asymptoteAlt) };
+  const figureKey = exampleFigureKey(lesson.id, sectionName, index);
+  return { ...rest, ...figureReference(figureKey, asymptoteAlt, store.figureCacheKeyFor(figureKey)) };
 }
 
 // The exercise route's shape. Raw LaTeX in, raw LaTeX out - never pre-rendered HTML (IA S7): the
@@ -409,7 +426,8 @@ export function toExerciseResponse(store, ex) {
   // The reference carries the description as well as the key, because the degraded state renders
   // it and the degraded state is the one where this route's figure cannot be fetched.
   if (ex.asymptoteSource) {
-    return { ...response, ...figureReference(exerciseFigureKey(ex.id), ex.asymptoteAlt) };
+    const figureKey = exerciseFigureKey(ex.id);
+    return { ...response, ...figureReference(figureKey, ex.asymptoteAlt, store.figureCacheKeyFor(figureKey)) };
   }
   return response;
 }
@@ -448,9 +466,9 @@ export function loadModuleMeta(root = DEFAULT_CONTENT_ROOT) {
   return { modules: list.filter((m) => m && (m.id || m.code)), present: true, path };
 }
 
-export function loadContentStore(root = process.env.CONTENT_ROOT || DEFAULT_CONTENT_ROOT) {
+export function loadContentStore(root = process.env.CONTENT_ROOT || DEFAULT_CONTENT_ROOT, { figureCacheKeys = null } = {}) {
   const { modules, present, path } = loadModuleMeta(root);
-  const store = new ContentStore({ root, modules });
+  const store = new ContentStore({ root, modules, figureCacheKeys });
   if (!present) {
     store.warnings.push(
       `no module catalogue at ${path}; GET /api/modules reports title: null for every module until content authors one`,

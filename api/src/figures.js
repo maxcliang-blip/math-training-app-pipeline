@@ -57,6 +57,33 @@ export class FigureStore {
     return this.byKey.has(figureKey);
   }
 
+  // The build's client cache key for a figure, or null. This is sha256(asymptoteSource + "|" +
+  // pipelineVersion) computed at ingest (Rendering Conventions §5.5) and read here so a content
+  // route can carry it on the figure reference without ever touching the source.
+  //
+  // Gated on `usable` for the same reason `get` is: a manifest the build did not pass attributes
+  // nothing to a figure, so there is no build identity to hand out. A reference without one is
+  // the degraded state, where the client has nothing to cache and refetches into the 503.
+  cacheKey(figureKey) {
+    if (!this.usable) return null;
+    const entry = this.byKey.get(figureKey);
+    if (!entry || typeof entry.figureCacheKey !== "string" || entry.figureCacheKey === "") return null;
+    return entry.figureCacheKey;
+  }
+
+  // Every cache key the usable manifest knows, keyed by figureKey. The content store takes this
+  // once at startup and reads it while building lesson and exercise responses, so the figure
+  // store stays the only thing that knows what a figure is.
+  cacheKeys() {
+    const out = new Map();
+    if (!this.usable) return out;
+    for (const figureKey of this.byKey.keys()) {
+      const key = this.cacheKey(figureKey);
+      if (key) out.set(figureKey, key);
+    }
+    return out;
+  }
+
   // The payload for the figure route, or null when there is nothing safe to serve. Null is the
   // only failure signal, and it is deliberately not an exception: an absent figure is an
   // expected answer for a figure that the build has not produced yet, and the route turns it

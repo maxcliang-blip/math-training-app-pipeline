@@ -18,6 +18,7 @@ function manifest(overrides = {}) {
         figureSvgUrl: "artifacts/figures/svg/m1-l1.svg",
         figureHash: "sha256:abc123",
         figurePipelineVersion: "asymptote-svg-sanitized@2",
+        figureCacheKey: "sha256:feedface",
         declaredAspectRatio: 2.667,
         compiledAspectRatio: 2.66,
         asymptoteVersion: "Asymptote version 2.86",
@@ -47,21 +48,94 @@ test("a figure payload carries the contract fields and nothing else", () => {
 });
 
 test("a non-figure route gets the reference and never the payload", () => {
-  const ref = figureReference("m1-l1.sections.concept.figures[0]", "a number line with five dots");
+  const ref = figureReference("m1-l1.sections.concept.figures[0]", "a number line with five dots", "sha256:feedface");
   assert.deepEqual(Object.keys(ref), FIGURE_REFERENCE_FIELDS);
   assert.equal(ref.asymptoteAlt, "a number line with five dots");
-  for (const field of FIGURE_PAYLOAD_FIELDS) {
-    if (field === "figureKey") continue;
+  // The payload fields that are not reference fields are the figure route's alone. The ones that
+  // are on both are on the reference because the client reads them before the fetch (§5.5).
+  for (const field of FIGURE_PAYLOAD_FIELDS.filter((f) => !FIGURE_REFERENCE_FIELDS.includes(f))) {
     assert.equal(field in ref, false, `${field} must not appear on a lesson or exercise response`);
+  }
+});
+
+test("a reference carries the build's cache key, and omits it rather than inventing one", () => {
+  // §5.5: the client cache is read before the fetch, so the build identity has to be on the
+  // reference. It is a hash of the source folded with the pipeline version, computed by the build
+  // because the source itself never leaves it.
+  const keyed = figureReference("m1-l1.sections.concept.figures[0]", "dots", "sha256:feedface");
+  assert.equal(keyed.figureCacheKey, "sha256:feedface");
+
+  // No usable build means no key. Substituting the figureKey here is the bug this field was added
+  // to fix: an address that survives a rebuild cannot tell a current render from a stale one.
+  for (const none of [null, undefined, "", "   "]) {
+    const ref = figureReference("m1-l1.sections.concept.figures[0]", "dots", none);
+    assert.equal("figureCacheKey" in ref, false, `${JSON.stringify(none)} is not a build key`);
+    assert.equal(ref.figureKey, "m1-l1.sections.concept.figures[0]", "the address is still there");
   }
 });
 
 test("a reference with no authored description omits it rather than blanking it", () => {
   // An empty description reads as "this figure has no description", which is a different and wrong
   // claim, and the degraded box would render an empty paragraph where the description belongs.
-  assert.deepEqual(Object.keys(figureReference("k", "   ")), ["figureKey"]);
+  assert.deepEqual(Object.keys(figureReference("k", "   ", "sha256:feedface")), ["figureKey", "figureCacheKey"]);
   assert.deepEqual(Object.keys(figureReference("k")), ["figureKey"]);
+  assert.deepEqual(Object.keys(figureReference("k", null, null)), ["figureKey"]);
   assert.equal(figureReference(""), null);
+});
+
+test("\u00a75.5's cache key is sha256(source | pipelineVersion), computed at ingest", async () => {
+  // Rendering Conventions \u00a75.5 names the key and the API names the two jobs it has to do:
+  // "The same source produces the same SVG for the same pipeline version -- the cache key is the
+  // source hash plus the pipeline version", and "Pipeline version is part of the key so a renderer
+  // upgrade invalidates cleanly." Both are assertions about this one function, and both are made
+  // here rather than inferred, because a key that quietly stopped including the pipeline version
+  // would invalidate on a source edit and not on the upgrade it exists for.
+  const { figureCacheKey, PIPELINE_VERSION } = await import("../../scripts/build-figures.mjs");
+  const { createHash } = await import("node:crypto");
+  const source = "import graph;\nsize(200,100);\ndraw((0,0)--(1,1));\n";
+
+  // The rule, literally, with the sha256: prefix that figureHash also uses.
+  assert.equal(
+    figureCacheKey(source, PIPELINE_VERSION),
+    `sha256:${createHash("sha256").update(`${source}|${PIPELINE_VERSION}`).digest("hex")}`
+  );
+  assert.equal(figureCacheKey(source, PIPELINE_VERSION), figureCacheKey(source, PIPELINE_VERSION));
+  // A source edit is a different figure.
+  assert.notEqual(figureCacheKey(source, PIPELINE_VERSION), figureCacheKey(`${source}// edit\n`, PIPELINE_VERSION));
+  // A renderer upgrade is a different build of the same figure, which is the bullet that matters.
+  // The counter-version is derived from the constant rather than written as a literal: MAX-75
+  // moved PIPELINE_VERSION to asymptote-svg-sanitized@3, so a hardcoded "@3" is this build's own
+  // version and the assertion would compare a value with itself and pass for the wrong reason.
+  assert.notEqual(figureCacheKey(source, PIPELINE_VERSION), figureCacheKey(source, `${PIPELINE_VERSION}-next`));
+  // And the version that actually reaches the key is the fingerprinted one, not the constant:
+  // MAX-77 made figurePipelineVersion pipelineVersionFor(toolchain), so a build that recorded the
+  // bare constant beside a fingerprinted key would be describing two different builds at once.
+  const { pipelineVersionFor } = await import("../../scripts/build-figures.mjs");
+  const fingerprinted = pipelineVersionFor({ version: "Asymptote version 2.87", dvisvgmVersion: "dvisvgm 3.2.1", texliveVersion: "TeX Live 2023" });
+  assert.notEqual(figureCacheKey(source, PIPELINE_VERSION), figureCacheKey(source, fingerprinted));
+  // The default is this build's own version, so the build cannot emit a key for a pipeline it did
+  // not run.
+  assert.equal(figureCacheKey(source), figureCacheKey(source, PIPELINE_VERSION));
+  // It reaches the client, which is the reason it is computed here and not in the browser.
+  assert.ok(FIGURE_PAYLOAD_FIELDS.includes("figureCacheKey"));
+  assert.ok(FIGURE_REFERENCE_FIELDS.includes("figureCacheKey"));
+});
+
+test("the figure store hands the build's cache keys to the content store, or none at all", () => {
+  // The usable manifest is the only source of a cache key. An unusable one attributes nothing to
+  // a figure, so the reference falls back to carrying no key and the client has nothing to cache.
+  const usable = new FigureStore(manifest());
+  assert.equal(usable.cacheKey("m1-l1.sections.concept.figures[0]"), "sha256:feedface");
+  assert.deepEqual([...usable.cacheKeys()], [["m1-l1.sections.concept.figures[0]", "sha256:feedface"]]);
+  assert.equal(usable.cacheKey("not-in-the-manifest"), null);
+
+  const failed = new FigureStore(manifest({ status: "fail" }));
+  assert.equal(failed.cacheKey("m1-l1.sections.concept.figures[0]"), null);
+  assert.equal(failed.cacheKeys().size, 0);
+
+  // A manifest written before this field existed has none, and is not given one by guessing.
+  const legacy = new FigureStore(manifest({ figures: [{ ...manifest().figures[0], figureCacheKey: undefined }] }));
+  assert.equal(legacy.cacheKey("m1-l1.sections.concept.figures[0]"), null);
 });
 
 test("a manifest that did not pass the build serves no figure", () => {

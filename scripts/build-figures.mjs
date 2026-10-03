@@ -8,9 +8,9 @@
 // The import contract is one-directional, and it is the whole point of this file:
 //
 //   content authors   asymptoteSource + asymptoteAlt + asymptoteAspectRatio
-//   this build        derives figureSvgUrl + figureHash + figurePipelineVersion
+//   this build        derives figureSvgUrl + figureHash + figurePipelineVersion + figureCacheKey
 //
-// Content must never carry the derived three. Requiring them at import deadlocks authoring
+// Content must never carry the derived fields. Requiring them at import deadlocks authoring
 // on the build and no figure can ever ship, so a derived field found in content is a
 // warning here, not a requirement on the author.
 //
@@ -98,6 +98,23 @@ export function pipelineVersionFor(toolchain) {
     fingerprintPart("dvisvgm", toolchain.dvisvgmVersion),
     fingerprintPart("texlive", toolchain.texliveVersion, TEXLIVE_RELEASE),
   ].join("_")}`;
+}
+
+// Rendering Conventions §5.5 keys the client cache on sha256(asymptoteSource + "|" +
+// pipelineVersion). Both inputs are here and only here: the source is the build's input and the
+// pipeline version is this build's own, so the key is computed once per figure at ingest and
+// shipped as a single opaque string instead of shipping the kilobytes of source the rule is
+// written in terms of.
+//
+// It has to be computed here rather than by the client for the reason §5.5 gives the key in the
+// first place: the cache is read *before* the fetch, so the client is holding the build identity
+// before it asks for the bytes. A key the client derived after the response arrived would be a
+// description of what it already fetched.
+//
+// The `sha256:` prefix matches figureHash and is part of the value, so the key is never
+// mistaken for a source string and never parsed as one.
+export function figureCacheKey(asymptoteSource, pipelineVersion = PIPELINE_VERSION) {
+  return `sha256:${createHash("sha256").update(`${asymptoteSource}|${pipelineVersion}`).digest("hex")}`;
 }
 
 // Content declares a ratio at 3 decimal places. Both sides of every comparison below are
@@ -988,6 +1005,11 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
   const violations = [];
   const compiled = [];
   const skipped = [];
+  // The pipeline identity these bytes are being built under, computed once. MAX-77: this is the
+  // constant plus a fingerprint of the compiler that will read it, and it is what both
+  // figurePipelineVersion and figureCacheKey have to fold in -- a figure whose recorded version
+  // says one toolchain and whose cache key says another is worse than either being absent.
+  const pipelineVersion = pipelineVersionFor(toolchain);
   // Recorded for every figure the compiler actually saw, including the ones that then failed
   // the ratio check. Without this a mismatch reports "wrong number" and not "here is the
   // number", which is the one thing the author needs in order to fix it.
@@ -1067,7 +1089,18 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
       figureKey: figure.key,
       figureSvgUrl: `artifacts/figures/svg/${result.file}`,
       figureHash: `sha256:${createHash("sha256").update(result.svg).digest("hex")}`,
-      figurePipelineVersion: pipelineVersionFor(toolchain),
+figurePipelineVersion: pipelineVersion,
+      // §5.5's client cache key. Computed from the source and the pipeline version, so a rebuilt
+      // figure -- same figureKey, different bytes -- lands on a different key and the client
+      // cannot serve the previous build's SVG from its cache.
+      //
+      // It folds in the *fingerprinted* pipeline version, not the bare PIPELINE_VERSION constant,
+      // because that is the value figurePipelineVersion above carries and therefore the identity
+      // the bytes were actually built under. MAX-77 is what made those two differ: three
+      // toolchains emitted under one version string, so a key built from the constant alone
+      // would say "same build" across an asy upgrade and hand the client the same stale-slot
+      // answer this field exists to prevent.
+      figureCacheKey: figureCacheKey(figure.source, pipelineVersion),
       declaredAspectRatio: box.ratio,
       compiledAspectRatio: ratioNote,
       asymptoteVersion: toolchain.version,
