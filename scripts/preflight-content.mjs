@@ -585,27 +585,39 @@ function checkAsymptote(source, alt, ratio, path) {
 // (MAX-76). All 8 worked-example figures in the corpus carry no `captionLatex` and every one of
 // them passed.
 //
-// Which figures the rule *binds* is a spec question, and it is not answered here. §5.1 says "every
-// figure", and the corpus has two more places a figure lives than the one the check covered:
-// worked examples and exercises, holding 20 caption-less figures between them. Requiring a caption
-// there turns a green gate red over content nobody has re-read; exempting them is an amendment to
-// the convention. So the scope is observed rather than assumed -- concept figures bind, as they
-// always did, and everywhere else the rule reports as an advisory that names the open question.
-// Either answer to §5.1 is then a one-line change here instead of a discovery that the corpus was
-// never covered. MAX-60 owns the decision; MAX-76 flagged it.
+// Which figures the rule *binds* was left open here and reported as an advisory while MAX-60
+// measured it. MAX-93 settled it, and §5.1 now splits in two, so the check splits with it:
+//
+//   S5.1-no-figure-number binds EVERY figure, wherever a figure lives. The prohibition is the part
+//   of §5.1 that is unconditional -- "the UI has no figure-numbering convention and shouldn't
+//   acquire one" -- and a `Fig. 1` on a worked-example or exercise figure would be exactly the
+//   thing §5.1 is written to stop. This is the half that must not be lost by narrowing scope, so it
+//   runs on every figure and is an error.
+//
+//   S5.1-caption-sentence binds concept section figures only. A caption is prose the reader sees in
+//   the figure's own block, and a worked-example or exercise figure already has one: a worked
+//   example's figure is introduced by the example's own body, and an exercise figure is introduced
+//   by its prompt and then described by `asymptoteAlt`, which S9 #8 already makes mandatory. A
+//   third description of one figure is noise. The description that has to survive is not the
+//   caption but the alt text, because §5.6 renders the alt *visibly* in the degraded state and no
+//   caption at all -- the caption is decorative, and §5.3's renderer contract already types it
+//   `caption?`. So requiring one outside concept.figures would demand prose that no state needs.
+//
+// `binding` is therefore the concept-figure flag and nothing else. Worked-example and exercise
+// figures still pass through here -- MAX-76's real fix was that this function reaches them at all,
+// and it still does -- so a figure number on any of them is an error even though a missing caption
+// is not. What is deleted is the advisory that named the open question; the question is answered.
 function checkCaption(record, path, { binding }) {
   const caption = record.captionLatex;
   scanMath(caption || "", path, { allowCommandsOutside: true });
-  if (binding) {
-    check("error", "S5.1-caption-sentence", path,
-      typeof caption === "string" && caption.trim().length > 0 && !/^\s*Fig\.?\s*\d/.test(caption),
-      "a figure caption is a sentence in the prose, never a figure number (S5.1)");
-    return;
-  }
-  check("advisory", "S5.1-caption-sentence-elsewhere", path,
-    typeof caption === "string" && caption.trim().length > 0 && !/^\s*Fig\.?\s*\d/.test(caption),
-    "a figure outside concept.figures has no caption sentence; §5.1 says \"every figure\" and does not say " +
-    "whether this scope binds, so it is reported rather than assumed -- see MAX-60 §3.14");
+  // An absent caption is not a figure number, so this holds for a record that carries none.
+  check("error", "S5.1-no-figure-number", path,
+    !(typeof caption === "string" && /^\s*Fig\.?\s*\d/.test(caption)),
+    "a figure caption is a sentence in the prose, never a figure number (S5.1)");
+  if (!binding) return;
+  check("error", "S5.1-caption-sentence", path,
+    typeof caption === "string" && caption.trim().length > 0,
+    "a concept section figure carries a caption sentence in the prose (S5.1)");
 }
 
 // A declared figure record with no source. The record is a reservation: the caption and the alt
@@ -713,8 +725,10 @@ function checkExercise(ex, lessonIndex) {
   check("error", "S5.1-figure-per-exercise", path,
     !(hasFigure && [ex, ex.figure].filter(Boolean).length > MAX_FIGURES_PER_EXERCISE),
     "an exercise carries at most one figure (S5.1)");
-  // Same caption rule, same open scope: an exercise figure is a figure, and §5.1's "every figure"
-  // does not say whether it binds here. Reported, not assumed (see checkCaption).
+  // Same function, same reach. An exercise figure does not owe a caption (MAX-93 settled §5.1's
+  // scope against concept section figures), but it still may not carry a figure number, so it is
+  // passed with `binding: false` rather than skipped: checkAsymptote and S5.1-no-figure-number both
+  // live in that call.
   if (hasFigure) checkCaption(ex, `${where("captionLatex")}`, { binding: false });
 }
 
@@ -831,9 +845,11 @@ function checkLesson(lesson, exerciseIds, exerciseById) {
     checkFigureReserved(site.record, `${sitePath}.asymptoteSource`);
     checkAsymptote(site.record.asymptoteSource, site.record.asymptoteAlt,
       site.record.asymptoteAspectRatio, sitePath);
-    // Every figure the lesson owns gets the caption rule: section figures on any section, and
+    // Every figure the lesson owns still comes through here: section figures on any section, and
     // worked-example figures. The example figures were the gap -- an unvalidated example figure is
-    // a figure whose caption, source and alt text have never met a rule at all.
+    // a figure whose source and alt text have never met a rule at all. `binding` is what MAX-93
+    // narrowed, not the set of figures reached: an example figure may not carry a `Fig. 1`, and a
+    // section figure outside concept may not either.
     checkCaption(site.record, `${sitePath}.captionLatex`, {
       binding: site.kind === "section" && site.sectionName === "concept",
     });

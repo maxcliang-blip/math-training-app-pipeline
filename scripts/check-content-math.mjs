@@ -162,6 +162,15 @@ function findLessonExampleFigure(lessons) {
   return undefined;
 }
 
+// Third donor, same discipline, for the other figure site. MAX-93 left S5.1's figure-number
+// prohibition binding on exercises while exempting them from the caption requirement, so a rule
+// that has to hold there needs a donor there too -- and the corpus's exercise figures carry no
+// caption at all, which means nothing else in the corpus would ever exercise this path.
+function findExerciseFigure(exercises) {
+  const ordered = [...exercises].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  return ordered.find(isRenderableFigure);
+}
+
 // One defect per rule family, each with the severity that family must raise and a rule
 // token to look for. Rule ids are matched by substring so a renumber after a spec
 // revision does not silently disarm the test.
@@ -298,11 +307,39 @@ export const MUTATIONS = [
     },
   },
   {
+    // Retargeted by MAX-93. This used to fire S5.1-caption-sentence, which then read
+    // `nonEmpty && !isFigureNumber` as one rule. Splitting S5.1 by scope split that predicate in
+    // two, and a `Fig. 3` caption is a non-empty string, so it now passes the binding check and is
+    // caught by the prohibition alone -- which is the point: "there is a caption" and "the caption
+    // is not a figure number" are separate claims and only one of them is scope-dependent.
     id: "figure-caption-is-a-figure-number",
-    rule: "S5.1-caption-sentence",
+    rule: "S5.1-no-figure-number",
     severity: "error",
     apply(c) {
       findLessonFigure(c.lessons).captionLatex = "Fig. 3 the altitude to the hypotenuse";
+    },
+  },
+  {
+    // Proves the half of S5.1 that binds EVERY figure, on the figures it binds everywhere.
+    // MAX-93 narrowed the caption *requirement* to concept section figures and kept the
+    // figure-number *prohibition* everywhere, so a `Fig. 1` on a worked-example figure is still an
+    // error. Without this mutation the narrowing would look identical to deleting the rule outside
+    // concept.figures -- which is exactly the scope MAX-76's fix was about losing once already.
+    id: "example-figure-caption-is-a-figure-number",
+    rule: "S5.1-no-figure-number",
+    severity: "error",
+    apply(c) {
+      findLessonExampleFigure(c.lessons).captionLatex = "Fig. 1 the unit circle";
+    },
+  },
+  {
+    // The same prohibition on the other figure site: an exercise. The corpus's exercise figures
+    // carry no caption today, so this is the only thing that proves the prohibition reaches them.
+    id: "exercise-figure-caption-is-a-figure-number",
+    rule: "S5.1-no-figure-number",
+    severity: "error",
+    apply(c) {
+      findExerciseFigure(c.exercises).captionLatex = "Fig. 2 the region shaded";
     },
   },
   {
@@ -446,6 +483,67 @@ function reservationsAreReportedExactly(contentRoot) {
   };
 }
 
+// The S5.1 caption scope is a settled decision, and a settled decision that nothing asserts is a
+// pending one waiting to be re-litigated by the next person to read "every figure". MAX-93 ruled
+// that the caption *requirement* binds concept section figures only, and that the figure-number
+// *prohibition* binds every figure. Both halves are pinned here, on a corpus with every caption
+// stripped from every figure:
+//
+//   * concept figures with no caption raise S5.1-caption-sentence  -- the binding half still binds
+//   * figures outside concept.figures with no caption raise nothing  -- the exemption is deliberate
+//   * the advisory that named the open question is gone as a rule id, not merely quiet
+//
+// Without this, deleting the check outside concept.figures -- which is what a future reader of "a
+// caption is not required for exercise figures" would reasonably write -- would pass every other
+// test in this file, because the mutations above only prove rules can fire, not which figures they
+// were reaching. That is the exact failure MAX-76 was: a narrower gate reporting a clean run.
+function captionScopeIsDeliberate(contentRoot) {
+  const dir = mkdtempSync(join(tmpdir(), "content-caption-scope-"));
+  try {
+    cpSync(contentRoot, dir, { recursive: true });
+    const corpus = loadCorpus(dir);
+    let stripped = 0;
+    for (const lesson of corpus.lessons) {
+      for (const site of lessonFigureRecords(lesson)) {
+        if (site.record.asymptoteSource) {
+          site.record.captionLatex = "";
+          stripped += 1;
+        }
+      }
+    }
+    for (const ex of [...corpus.exercises, ...corpus.fixtures]) {
+      if (ex.asymptoteSource) {
+        ex.captionLatex = "";
+        stripped += 1;
+      }
+    }
+    for (const [kind, items] of Object.entries(corpus)) {
+      writeFileSync(join(dir, kind, "captionless.json"), JSON.stringify(items, null, 2) + "\n");
+    }
+
+    const findings = run(dir).report.findings;
+    const captionErrors = findings.filter((f) => f.rule === "S5.1-caption-sentence");
+    const conceptCaptionless = captionErrors.filter((f) => /sections\.concept\.figures\[/.test(f.path)).length;
+    const elsewhereCaptionless = captionErrors.filter((f) => !/sections\.concept\.figures\[/.test(f.path)).length;
+    const pending = findings.filter((f) => f.rule === "S5.1-caption-sentence-elsewhere");
+
+    const problems = [];
+    if (!conceptCaptionless) problems.push("a concept figure with no caption raised no S5.1-caption-sentence error");
+    if (elsewhereCaptionless) problems.push(`${elsewhereCaptionless} figure(s) outside concept.figures were charged for a caption`);
+    if (pending.length) problems.push(`${pending.length} pending-question advisory finding(s) survived`);
+    return {
+      caught: problems.length === 0,
+      detail: problems.length
+        ? problems.join("; ")
+        : `${stripped} figure(s) had every caption stripped: ${conceptCaptionless} concept figure(s) raised ` +
+          `S5.1-caption-sentence, the ${stripped - conceptCaptionless} outside concept.figures raised nothing, and ` +
+          "no pending-question advisory survived",
+    };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 export function selftest(contentRoot) {
   const pristine = mkdtempSync(join(tmpdir(), "content-selftest-"));
   const rows = [];
@@ -561,6 +659,25 @@ export function selftest(contentRoot) {
       }
       rows.push({
         id: "report-is-not-aliased-across-runs",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
+        const scope = captionScopeIsDeliberate(pristine);
+        caught = scope.caught;
+        detail = scope.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "caption-scope-is-deliberate",
         rule: "harness-invariant",
         severity: "error",
         caught,
