@@ -24,6 +24,7 @@ import { readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import katex from "katex";
+import { countFigures, isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -101,6 +102,14 @@ const DENIED = new Set(
 const UNICODE_MATH = /[≤≥≠±×÷−√πθΠ∞≡≈≤]/g;
 
 // Figure budget (S5.1) - per-lesson and per-exercise ceilings.
+//
+// These four numbers are the S5.1 ceilings and they are unchanged by MAX-76. What changed is
+// what they are measured against: a ceiling that counted declared records and then the build
+// counted renderable ones could not be checked, and the corpus ceiling reported 150/185 for a
+// corpus holding 83 figures (MAX-76). Every ceiling below now meters `lessonFigureSites` -- the
+// records the build will actually compile -- and nothing is counted twice. A reserved but
+// unwritten figure (`asymptoteSource: null`) is reported by S5.1-figure-reserved rather than
+// charged to a budget it will not spend.
 const MAX_FIGURES_PER_EXERCISE = 1;
 const MAX_FIGURES_IN_CONCEPT = 4;
 const MAX_FIGURES_IN_EXAMPLES = 2;
@@ -507,7 +516,13 @@ function checkAnswerCanonical(ex, path) {
 
 function checkAsymptote(source, alt, ratio, path) {
   if (!source) {
-    check("error", "S9-alt-mandatory", path, !alt && ratio === null,
+    // "must be null" means "must carry no value", not "must spell the literal null". A record
+    // that declares a figure at all spells every field -- the eight reservations in m5-l1 and
+    // m5-l2 carry `"asymptoteAlt": null` next to `"asymptoteSource": null` -- but a worked example
+    // that ships no figure has no figure fields whatsoever, and reading that absence as a
+    // violation produced 146 errors the moment S5.1 was extended to example figures (MAX-76).
+    // An absent field is no value; a stray one is.
+    check("error", "S9-alt-mandatory", path, !alt && (ratio === null || ratio === undefined),
       "asymptoteAlt / asymptoteAspectRatio must be null when there is no figure");
     return;
   }
@@ -558,6 +573,48 @@ function checkAsymptote(source, alt, ratio, path) {
   check("advisory", "S5.2-primitive-budget", path, primitives <= 20,
     `figure uses ${primitives} drawing primitives, budget is 20 (S5.2)`);
   return true;
+}
+
+// S5.1: "Every figure has a caption sentence in the prose, not a `Fig. 1` label."
+//
+// The rule is about figures, so it has to run on figures. It used to run over `concept.figures`
+// and nothing else: a worked-example figure was never passed to checkAsymptote at all, so its
+// source, its alt text and its caption went unvalidated while the gate reported a clean run
+// (MAX-76). All 8 worked-example figures in the corpus carry no `captionLatex` and every one of
+// them passed.
+//
+// Which figures the rule *binds* is a spec question, and it is not answered here. §5.1 says "every
+// figure", and the corpus has two more places a figure lives than the one the check covered:
+// worked examples and exercises, holding 20 caption-less figures between them. Requiring a caption
+// there turns a green gate red over content nobody has re-read; exempting them is an amendment to
+// the convention. So the scope is observed rather than assumed -- concept figures bind, as they
+// always did, and everywhere else the rule reports as an advisory that names the open question.
+// Either answer to §5.1 is then a one-line change here instead of a discovery that the corpus was
+// never covered. MAX-60 owns the decision; MAX-76 flagged it.
+function checkCaption(record, path, { binding }) {
+  const caption = record.captionLatex;
+  scanMath(caption || "", path, { allowCommandsOutside: true });
+  if (binding) {
+    check("error", "S5.1-caption-sentence", path,
+      typeof caption === "string" && caption.trim().length > 0 && !/^\s*Fig\.?\s*\d/.test(caption),
+      "a figure caption is a sentence in the prose, never a figure number (S5.1)");
+    return;
+  }
+  check("advisory", "S5.1-caption-sentence-elsewhere", path,
+    typeof caption === "string" && caption.trim().length > 0 && !/^\s*Fig\.?\s*\d/.test(caption),
+    "a figure outside concept.figures has no caption sentence; §5.1 says \"every figure\" and does not say " +
+    "whether this scope binds, so it is reported rather than assumed -- see MAX-60 §3.14");
+}
+
+// A declared figure record with no source. The record is a reservation: the caption and the alt
+// text are authored ahead of the Asymptote, and the build compiles nothing for it. It is a figure
+// the corpus has promised itself and not yet delivered, which is worth seeing and is not worth
+// charging to an S5.1 ceiling. Advisory, because the reservation is legitimate authoring state --
+// m5-l1 and m5-l2 each hold four while their figures are written.
+function checkFigureReserved(record, path) {
+  check("advisory", "S5.1-figure-reserved", path, isRenderableFigure(record),
+    "figure record reserves a slot but carries no asymptoteSource, so the build compiles nothing for it; " +
+    "it is not counted against an S5.1 budget until its source lands");
 }
 
 function checkExercise(ex, lessonIndex) {
@@ -654,7 +711,9 @@ function checkExercise(ex, lessonIndex) {
   check("error", "S5.1-figure-per-exercise", path,
     !(hasFigure && [ex, ex.figure].filter(Boolean).length > MAX_FIGURES_PER_EXERCISE),
     "an exercise carries at most one figure (S5.1)");
-  return { hasFigure };
+  // Same caption rule, same open scope: an exercise figure is a figure, and §5.1's "every figure"
+  // does not say whether it binds here. Reported, not assumed (see checkCaption).
+  if (hasFigure) checkCaption(ex, `${where("captionLatex")}`, { binding: false });
 }
 
 function checkLesson(lesson, exerciseIds, exerciseById) {
@@ -747,27 +806,47 @@ function checkLesson(lesson, exerciseIds, exerciseById) {
     `the mastery check should mix tiers (found ${[...masteryTiers].join(", ") || "none"})`);
 
   // figures in the lesson
-  const conceptFigures = lesson.sections.concept.figures || [];
-  const exampleFigures = (lesson.sections.concept.examples || []).filter((e) => e.asymptoteSource).length;
+  //
+  // One walk, two readings, counted once. The previous version seeded the total with
+  // `conceptFigures.length` and then added one more inside the loop for every figure whose source
+  // parsed, so each concept figure was charged twice (63 of them), and it seeded the total with the
+  // *declared* records, including the eight reservations whose `asymptoteSource` is null. It also
+  // never looked at a figure outside `concept.figures`, of which this corpus has two, on the
+  // `objective` sections of m9-l3 and m9-l4.
+  //
+  // `lessonFigureRecords` is every declared figure-bearing record and is what gets validated: a
+  // reservation is not a figure, but it is still a record an author can contradict, and dropping
+  // it from validation would have quietly stopped S9-alt-mandatory from firing on a figure with no
+  // source and a stray alt text. `lessonFigureSites` is the renderable subset and is what every
+  // budget below is metered against, which is the same walk the figure build compiles (MAX-76).
+  const declared = lessonFigureRecords(lesson);
+  const sites = declared.filter((s) => isRenderableFigure(s.record));
+  const conceptFiguresRendered = sites.filter((s) => s.kind === "section" && s.sectionName === "concept").length;
+  const exampleFigures = sites.filter((s) => s.kind === "example").length;
+
+  for (const site of declared) {
+    const sitePath = where(`sections.${site.sectionName}.${site.kind === "example" ? "examples" : "figures"}[${site.index}]`);
+    checkFigureReserved(site.record, `${sitePath}.asymptoteSource`);
+    checkAsymptote(site.record.asymptoteSource, site.record.asymptoteAlt,
+      site.record.asymptoteAspectRatio, sitePath);
+    // Every figure the lesson owns gets the caption rule: section figures on any section, and
+    // worked-example figures. The example figures were the gap -- an unvalidated example figure is
+    // a figure whose caption, source and alt text have never met a rule at all.
+    checkCaption(site.record, `${sitePath}.captionLatex`, {
+      binding: site.kind === "section" && site.sectionName === "concept",
+    });
+  }
+
   check("advisory", "S5.1-concept-figure-budget", where("sections.concept"),
-    conceptFigures.length <= MAX_FIGURES_IN_CONCEPT,
-    `concept section carries ${conceptFigures.length} figures, ceiling is ${MAX_FIGURES_IN_CONCEPT}`);
+    conceptFiguresRendered <= MAX_FIGURES_IN_CONCEPT,
+    `concept section carries ${conceptFiguresRendered} figures, ceiling is ${MAX_FIGURES_IN_CONCEPT}` +
+    (conceptFiguresRendered === 0 ? " (the lesson reserves none with a source yet)" : ""));
   check("advisory", "S5.1-example-figure-budget", where("sections.concept.examples"),
     exampleFigures <= MAX_FIGURES_IN_EXAMPLES,
     `worked examples carry ${exampleFigures} figures, ceiling is ${MAX_FIGURES_IN_EXAMPLES}`);
-  let lessonFigures = conceptFigures.length + exampleFigures;
-  for (const [i, f] of conceptFigures.entries()) {
-    if (checkAsymptote(f.asymptoteSource, f.asymptoteAlt, f.asymptoteAspectRatio,
-      `${where(`sections.concept.figures[${i}]`)}`)) lessonFigures += 1;
-    scanMath(f.captionLatex || "", where(`sections.concept.figures[${i}].captionLatex`), { allowCommandsOutside: true });
-    check("error", "S5.1-caption-sentence", where(`sections.concept.figures[${i}].captionLatex`),
-      typeof f.captionLatex === "string" && !/^\s*Fig\.?\s*\d/.test(f.captionLatex),
-      "a figure caption is a sentence in the prose, never a figure number (S5.1)");
-  }
-  check("advisory", "S5.1-lesson-figure-budget", path, lessonFigures <= MAX_FIGURES_PER_LESSON,
-    `lesson carries ${lessonFigures} figures, ceiling is ${MAX_FIGURES_PER_LESSON}`);
+  check("advisory", "S5.1-lesson-figure-budget", path, sites.length <= MAX_FIGURES_PER_LESSON,
+    `lesson carries ${sites.length} figures, ceiling is ${MAX_FIGURES_PER_LESSON}`);
 
-  return { figures: lessonFigures };
 }
 
 // ---------------------------------------------------------------------------
@@ -788,15 +867,20 @@ export function run(contentRoot) {
   const lessonIndex = new Map(lessons.map((l) => [l.id, l]));
   const exerciseIds = new Set([...exercises, ...fixtures].map((e) => e.id));
 
-  let figures = 0;
   let blocksRendered = 0;
   const exerciseById = new Map([...exercises, ...fixtures].map((e) => [e.id, e]));
-  for (const l of lessons) figures += checkLesson(l, exerciseIds, exerciseById).figures;
+  for (const l of lessons) checkLesson(l, exerciseIds, exerciseById);
   for (const e of [...exercises, ...fixtures]) {
-    const { hasFigure } = checkExercise(e, lessonIndex);
-    if (hasFigure) figures += 1;
+    checkExercise(e, lessonIndex);
     blocksRendered += splitBlocks(e.solutionLatex).blocks.length;
   }
+  // The corpus figure total comes from the shared counter, not from summing the per-lesson
+  // returns. Summing a return value is how this number drifted from the build's in the first
+  // place: the build's scan and the gate's tally were two independent expressions of "figure",
+  // and the gate's added each lesson's declared records *and* each lesson's rendered ones.
+  // scripts/check-content-math.mjs asserts this total against collectFigures() on every self-test
+  // run, so the two can no longer disagree without CI going red (MAX-76).
+  const figures = countFigures(lessons, [...exercises, ...fixtures]);
   check("advisory", "S5.1-corpus-figure-budget", "corpus", figures <= MAX_CORPUS_FIGURES,
     `corpus declares ${figures} figures, budget is ${MAX_CORPUS_FIGURES}`);
 

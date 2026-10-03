@@ -25,6 +25,8 @@ import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import katex from "katex";
 import { run, KATEX_PINNED } from "./preflight-content.mjs";
+import { collectFigures } from "./build-figures.mjs";
+import { isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -119,15 +121,43 @@ function loadCorpus(contentRoot) {
 
 // The figure mutations mutate a real donor, so the donor must be located rather than assumed.
 // readdirSync is not sorted, so "lessons[0]" is whichever file the filesystem returned first:
-// on a corpus whose first lesson carries no concept figure the four figure mutations would
-// throw on undefined and report MISSED for a corpus that is actually fine. Scan in lesson-id
-// order and take the first figure found, which is stable across filesystems and corpus growth.
+// on a corpus whose first lesson carries no concept figure the figure mutations would throw on
+// undefined and report MISSED for a corpus that is actually fine. Scan in lesson-id order and take
+// the first figure found, which is stable across filesystems and corpus growth.
+//
+// The donor must also be a figure the build would render. `asymptoteSource: null` is a legal
+// authoring state -- m5-l1 and m5-l2 hold four reservations each while their Asymptote is written
+// (MAX-76, S5.1-figure-reserved) -- and against a reservation the `figure-alt-missing` mutation
+// below proves nothing: checkAsymptote's no-source branch demands a null alt, so blanking an
+// already-absent alt raises nothing. Handing it a reservation makes the mutation silently vacuous
+// on exactly the lessons most likely to be edited first.
 function findLessonFigure(lessons) {
   const ordered = [...lessons].sort((a, b) => String(a.id).localeCompare(String(b.id)));
   for (const lesson of ordered) {
     const concept = lesson.sections && lesson.sections.concept;
     const figures = concept && concept.figures;
-    if (figures && figures.length) return figures[0];
+    if (!Array.isArray(figures)) continue;
+    const donor = figures.find(isRenderableFigure);
+    if (donor) return donor;
+  }
+  return undefined;
+}
+
+// Same discipline, for the worked-example donor. The S5.1 caption rule and the whole S5.2/S9
+// authoring contract now run over worked-example figures (MAX-76) -- before that they ran over
+// `concept.figures` alone, so all 8 example figures in the corpus had never been validated by
+// anything. A rule that is newly reachable and unproved is a rule that will be quietly broken, so
+// the mutations below aim at an example figure specifically: they fail if the scope is ever
+// narrowed back.
+function findLessonExampleFigure(lessons) {
+  const ordered = [...lessons].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  for (const lesson of ordered) {
+    for (const section of Object.values(lesson.sections || {})) {
+      const examples = section && section.examples;
+      if (!Array.isArray(examples)) continue;
+      const donor = examples.find(isRenderableFigure);
+      if (donor) return donor;
+    }
   }
   return undefined;
 }
@@ -256,8 +286,165 @@ export const MUTATIONS = [
       fig.asymptoteSource = "// size(W,H) bounds the output.\n" + code;
     },
   },
+  {
+    // The caption check used to be `typeof f.captionLatex === "string" && !/^\s*Fig\.?\s*\d/`, so
+    // `""` satisfied it: a concept figure with an empty caption was a caption-less figure wearing
+    // a caption's type. It now requires a non-empty trimmed string. (MAX-76)
+    id: "figure-caption-empty-string",
+    rule: "S5.1-caption-sentence",
+    severity: "error",
+    apply(c) {
+      findLessonFigure(c.lessons).captionLatex = "";
+    },
+  },
+  {
+    id: "figure-caption-is-a-figure-number",
+    rule: "S5.1-caption-sentence",
+    severity: "error",
+    apply(c) {
+      findLessonFigure(c.lessons).captionLatex = "Fig. 3 the altitude to the hypotenuse";
+    },
+  },
+  {
+    // Proves S5.2 reaches worked-example figures. Every rule in checkAsymptote used to stop at
+    // the edge of `concept.figures`, so an example figure could ship without size(), with file IO,
+    // or with an unknown import and the gate would still have called the corpus clean (MAX-76).
+    id: "example-figure-without-size-call",
+    rule: "S5.2-size-required",
+    severity: "error",
+    apply(c) {
+      const donor = findLessonExampleFigure(c.lessons);
+      const code = donor.asymptoteSource
+        .split("\n")
+        .filter((l) => !l.trim().startsWith("//"))
+        .join("\n")
+        .replace(/\bsize\s*\([^)]*\)/, "");
+      donor.asymptoteSource = "// size(W,H) bounds the output.\n" + code;
+    },
+  },
+  {
+    // Proves S9 #8 reaches worked-example figures too, not just their concept siblings.
+    id: "example-figure-alt-missing",
+    rule: "S9-alt-mandatory",
+    severity: "error",
+    apply(c) {
+      findLessonExampleFigure(c.lessons).asymptoteAlt = "";
+    },
+  },
+  {
+    // A reservation is not charged to a budget, and S5.1-figure-reserved is what says so out loud.
+    // This corpus carries eight (m5-l1 and m5-l2, four each), and MAX-76's whole failure was a
+    // silent disagreement about whether they were figures at all.
+    id: "figure-reserved-without-source",
+    rule: "S5.1-figure-reserved",
+    severity: "advisory",
+    apply(c) {
+      const donor = findLessonFigure(c.lessons);
+      donor.asymptoteSource = null;
+      donor.asymptoteAlt = null;
+      donor.asymptoteAspectRatio = null;
+    },
+  },
+  {
+    // The companion to the relaxation in checkAsymptote: an *absent* alt/ratio on a record with no
+    // source is not a violation, but a *stray* one is. Without this mutation the relaxation below
+    // could be pushed all the way to "no source, no rule" and the self-test would stay green.
+    id: "figure-reservation-with-a-stray-alt",
+    rule: "S9-alt-mandatory",
+    severity: "error",
+    apply(c) {
+      const donor = findLessonFigure(c.lessons);
+      donor.asymptoteSource = null;
+      donor.asymptoteAspectRatio = null;
+      donor.asymptoteAlt = "An alt text left behind on a figure that has no source.";
+    },
+  },
 ];
 
+
+// Harness invariant, not a content rule: the authoring gate's corpus figure total and the build's
+// own corpus scan must be the same number, and they must both move when the corpus moves.
+//
+// This exists because they were not, for a long time, and nothing said so. `run()` seeded the
+// total with each lesson's *declared* concept figure records and then added one more per record
+// whose source parsed, charging 63 figures twice, and counted eight `asymptoteSource: null`
+// reservations the build never sees; meanwhile it never looked at the two figures this corpus
+// hangs off an `objective` section. The gate reported 150/185 for a corpus the build scanned as 83
+// figures, which is 81% of a budget spent to produce 45% of it (MAX-76). A ceiling that the thing
+// it meters cannot reproduce is not a ceiling.
+//
+// Both sides now read one definition, in lib/figure-contract.mjs. This assertion is the second
+// half of that: shared code makes them agree by construction, and this makes it impossible for
+// either side to be edited back into disagreeing without the self-test going red. The second
+// half matters because the pristine comparison alone is satisfiable by two constants that happen
+// to be equal -- so the count is also taken after one figure's source is removed, and both must
+// fall by exactly one.
+function figureCountsAgree(contentRoot) {
+  const gate = run(contentRoot).report.corpus.figures;
+  const build = collectFigures(contentRoot).figures.length;
+  return { caught: gate === build, gate, build, detail: `gate ${gate} vs build ${build}` };
+}
+
+function figureCountsTrackTheCorpus(contentRoot) {
+  const dir = mkdtempSync(join(tmpdir(), "content-figcount-"));
+  try {
+    cpSync(contentRoot, dir, { recursive: true });
+    const before = figureCountsAgree(dir);
+
+    // Written back over the original file, not out under a new name. The mutation framework
+    // deliberately leaves the pre-mutation records in place so a fresh finding can be told from
+    // a recurring one; that doubling would drop the corpus count by a hundred and prove nothing
+    // about whether the count moves. Here the corpus itself has to shrink by exactly one figure.
+    const lessonsDir = join(dir, "lessons");
+    const files = readdirSync(lessonsDir).filter((f) => f.endsWith(".json")).sort();
+    const ordered = files
+      .map((f) => ({ file: f, record: JSON.parse(readFileSync(join(lessonsDir, f), "utf8")) }))
+      .sort((a, b) => String(a.record.id).localeCompare(String(b.record.id)));
+    const victim = ordered.find(({ record }) => {
+      const figures = record.sections && record.sections.concept && record.sections.concept.figures;
+      return Array.isArray(figures) && figures.some(isRenderableFigure);
+    });
+    if (!victim) return { caught: false, detail: "no lesson figure with a source to remove" };
+    findLessonFigure([victim.record]).asymptoteSource = null;
+    writeFileSync(join(lessonsDir, victim.file), JSON.stringify(victim.record, null, 2) + "\n");
+
+    const after = figureCountsAgree(dir);
+    const dropped = before.gate - after.gate;
+    const caught = after.caught && dropped === 1;
+    const why = !after.caught
+      ? `${after.detail} -- the two counters no longer agree`
+      : dropped !== 1
+        ? `emptying ${victim.record.id}'s only figure moved the total by ${dropped}, not 1`
+        : `both totals fell by exactly 1 with ${victim.record.id}'s only figure emptied (${before.gate} -> ${after.gate})`;
+    return { caught, detail: why };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+// The third reading of the same definition, and the one most easily over-applied: S5.1-figure-reserved
+// must name exactly the declared figure records that carry no source -- and no more. The failure
+// mode is not silence but noise. The first cut of this fix walked every entry of every `examples`
+// array, which reported all 146 worked examples in the corpus as reserved figure slots, because
+// they are entries in an array that can hold figures. A worked example that ships no figure has no
+// asymptoteSource key at all; a reservation has the key with a null value. If the reported count
+// and the declared count ever diverge, the walk and the report have stopped describing the same
+// set of records, which is the shape MAX-76 took.
+function reservationsAreReportedExactly(contentRoot) {
+  const lessonsDir = join(contentRoot, "lessons");
+  const lessons = readdirSync(lessonsDir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => JSON.parse(readFileSync(join(lessonsDir, f), "utf8")));
+  const declared = lessons.reduce(
+    (n, lesson) => n + lessonFigureRecords(lesson).filter((s) => !isRenderableFigure(s.record)).length,
+    0,
+  );
+  const reported = run(contentRoot).report.findings.filter((f) => f.rule === "S5.1-figure-reserved").length;
+  return {
+    caught: declared === reported,
+    detail: `S5.1-figure-reserved names ${reported} record(s); the corpus declares ${declared} figure record(s) with no asymptoteSource`,
+  };
+}
 
 export function selftest(contentRoot) {
   const pristine = mkdtempSync(join(tmpdir(), "content-selftest-"));
@@ -279,6 +466,66 @@ export function selftest(contentRoot) {
     baselineErrors = errors.length;
     baselineFindings = new Set([...report.findings].map(key));
     baselineClean = baselineErrors === 0;
+
+    // Harness invariants: properties of the gate itself, which no corpus mutation can establish.
+    {
+      let caught = false;
+      let detail = "";
+      try {
+        const agree = figureCountsAgree(pristine);
+        caught = agree.caught;
+        detail = agree.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "corpus-figure-count-matches-the-build-scan",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail: caught
+          ? `${detail} (run() and collectFigures() read one definition in lib/figure-contract.mjs)`
+          : `${detail} -- the S5.1 corpus ceiling is metered against a count the build cannot reproduce`,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
+        const exact = reservationsAreReportedExactly(pristine);
+        caught = exact.caught;
+        detail = exact.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "figure-reservations-are-reported-exactly",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
+        const tracks = figureCountsTrackTheCorpus(pristine);
+        caught = tracks.caught;
+        detail = tracks.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "corpus-figure-count-tracks-the-corpus",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail,
+      });
+    }
 
     // Harness invariant, not a content rule: a report must not change under a later run().
     {
