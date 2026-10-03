@@ -33,6 +33,17 @@ rule that stops being enforced fails the build instead of passing quietly.
 no toolchain it exits 3 rather than reporting success: figures validated but not compiled is
 not a build. `content:figures:authoring` is the authoring-only variant for local work.
 
+### Compiling figures on a host with no Asymptote package
+
+`npm run content:figures:container` is `content:figures` with `ASYMPTOTE_BIN` and `DVISVGM_BIN`
+pointed at `scripts/asy-docker` and `scripts/dvisvgm-docker`, which run the compiler inside the
+`asy-local` image (asy 2.87 + dvisvgm 3.2.1 + ghostscript + ImageMagick — the same four packages
+CI's `figures` job installs from apt) with the working directory bind-mounted in. Use it to find
+your own figure bugs instead of leaving the land issue to find them in CI. A native
+`asymptote`/`dvisvgm` on PATH takes precedence inside both wrappers, so this becomes a no-op if
+the packages ever become installable. Details and the runtime fallbacks are in
+`scripts/lib/asy-container.sh`.
+
 Figures are compiled on the server side, not in the browser. The division of labour is
 one-directional and load-bearing:
 

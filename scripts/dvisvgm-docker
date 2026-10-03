@@ -1,0 +1,30 @@
+#!/bin/sh
+# Run dvisvgm on a host that has no `dvisvgm` package, by bind-mounting the caller's working
+# directory into the `asy-local` image. Same resolution as scripts/asy-docker; see
+# scripts/lib/asy-container.sh.
+#
+# Usage: scripts/dvisvgm-docker [dvisvgm arguments...]
+#
+# This is not optional dressing. Asymptote 2.87 -- what apt gives you on ubuntu-latest, and what
+# CI compiles with -- accepts `-svg` and writes EPS, so dvisvgm is what turns the compiler's
+# output into an SVG at all. scripts/build-figures.mjs treats a missing dvisvgm as fatal rather
+# than as a skip (a half-present toolchain must not report as no toolchain), which is correct
+# but leaves an agent with neither binary and no way to compile anything. This is that way.
+#
+# A native dvisvgm on PATH wins and this never touches a container.
+
+set -eu
+
+DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+# shellcheck source=scripts/lib/asy-container.sh
+. "$DIR/lib/asy-container.sh"
+
+if command -v dvisvgm >/dev/null 2>&1 && dvisvgm --version >/dev/null 2>&1; then
+  exec dvisvgm "$@"
+fi
+
+asy_shim_preflight
+
+# Word-splitting the prefix is intended: it is a list of argv tokens (possibly `sudo -n docker`).
+# shellcheck disable=SC2046,SC2086
+exec $(asy_shim_prefix) dvisvgm "$@"

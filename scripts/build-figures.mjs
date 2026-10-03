@@ -26,7 +26,7 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { join, dirname, resolve } from "node:path";
+import { isAbsolute, join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS, lessonFigureKey, exampleFigureKey, exerciseFigureKey } from "../lib/figure-contract.mjs";
@@ -228,15 +228,69 @@ export function validateFigure(figure) {
 // Compile
 // ---------------------------------------------------------------------------
 
+// Resolve ASYMPTOTE_BIN / DVISVGM_BIN against the repository when they name a path, so both the
+// probe and the compile exec the same absolute file.
+//
+// Nothing resolved these before, and that made a repository-relative toolchain unusable rather
+// than merely awkward. Two different cwds were at work: the compile runs with cwd set to a fresh
+// temp directory, and execFile resolves a relative command against the *child's* cwd, so
+// `ASYMPTOTE_BIN=scripts/asy-docker` probed fine from the repo root and then returned ENOENT for
+// all 91 figures. And the probe itself was cwd-dependent, so the same value did not even resolve
+// when the build was invoked from anywhere but the repository root -- which is a real workflow,
+// since contentRoot is an argument. An absolute path would have worked and is not portable, so
+// the fix is to resolve rather than to document around.
+//
+// Only a path-shaped value is resolved; a bare `asymptote` stays a PATH lookup. `bin` keeps the
+// spelling the caller used, so the manifest and the console line do not record one checkout's
+// absolute path.
+export function resolveToolchainBin(bin) {
+  if (!bin.includes("/") || isAbsolute(bin)) return bin;
+  return resolve(REPO, bin);
+}
+
+// Probe one candidate binary. Kept separate from findToolchain because the probe's stderr is the
+// only place a toolchain wrapper can explain itself: scripts/asy-docker knows that its image is
+// missing or its engine socket is unreachable, and prints exactly that on the way out. Discovery
+// captures the stderr so that a failed toolchain reports the real reason instead of "NOT FOUND —
+// set ASYMPTOTE_BIN or install asymptote", which on this host is advice that cannot be taken:
+// asymptote is not installable here, and the thing that IS broken is usually the container image.
+export function probeToolchainBin(candidate) {
+  const path = resolveToolchainBin(candidate);
+  const probe = spawnSync(path, ["--version"], { encoding: "utf8" });
+  const lines = (probe.stdout || probe.stderr || "").split("\n")[0].trim();
+  // First line only. This is the `--version` probe, so the useful text is whatever the candidate
+  // leads with, and a wrapper's own diagnostics lead with a marker line (scripts/asy-docker writes
+  // "asy-shim: ..." first, then its longer hint). Taking the tail instead would report the last
+  // line of a hint and lose the sentence that says what is actually broken.
+  const stderr = (probe.stderr || "")
+    .split("\n")
+    .map((l) => l.trim())
+    .find(Boolean) || "";
+  return {
+    ok: !probe.error && probe.status === 0,
+    path,
+    version: lines,
+    // ENOENT has no stderr to report; the candidate's own spelling is the diagnosis.
+    reason: stderr || (probe.error ? probe.error.code || String(probe.error) : `exited ${probe.status}`),
+  };
+}
+
+// Why the last findToolchain() call found nothing, most specific first. Set on every discovery so
+// the CLI can print it instead of a generic instruction.
+export let toolchainProbeReasons = [];
+
 export function findToolchain() {
+  toolchainProbeReasons = [];
   let asy = null;
   for (const candidate of [process.env.ASYMPTOTE_BIN, "asymptote", "asy"]) {
     if (!candidate) continue;
-    const probe = spawnSync(candidate, ["--version"], { encoding: "utf8" });
-    if (!probe.error && probe.status === 0) {
-      asy = { bin: candidate, version: (probe.stdout || probe.stderr || "").split("\n")[0].trim() };
-      break;
+    const probe = probeToolchainBin(candidate);
+    if (!probe.ok) {
+      toolchainProbeReasons.push(`${candidate}: ${probe.reason}`);
+      continue;
     }
+    asy = { bin: candidate, path: probe.path, version: probe.version };
+    break;
   }
   if (!asy) return null;
 
@@ -249,16 +303,18 @@ export function findToolchain() {
   let dvisvgm = null;
   for (const candidate of [process.env.DVISVGM_BIN, "dvisvgm"]) {
     if (!candidate) continue;
-    const probe = spawnSync(candidate, ["--version"], { encoding: "utf8" });
-    if (!probe.error && probe.status === 0) {
-      dvisvgm = { bin: candidate, version: (probe.stdout || probe.stderr || "").split("\n")[0].trim() };
-      break;
+    const probe = probeToolchainBin(candidate);
+    if (!probe.ok) {
+      toolchainProbeReasons.push(`${candidate}: ${probe.reason}`);
+      continue;
     }
+    dvisvgm = { bin: candidate, path: probe.path, version: probe.version };
+    break;
   }
   if (!dvisvgm) {
     return { ...asy, bin: null, missing: "dvisvgm" };
   }
-  return { ...asy, dvisvgm: dvisvgm.bin, dvisvgmVersion: dvisvgm.version };
+  return { ...asy, dvisvgm: dvisvgm.bin, dvisvgmPath: dvisvgm.path, dvisvgmVersion: dvisvgm.version };
 }
 
 export function sanitizeSvg(svg) {
@@ -351,7 +407,7 @@ function compileFigure(toolchain, figure, outDir) {
     writeFileSync(join(work, asyFile), figure.source);
     // No -outdir: asy 2.87 mis-parses it and eats the source filename. cwd is already the work
     // directory, so the compiler writes its output next to the source.
-    execFileSync(toolchain.bin, ["-svg", asyFile], {
+    execFileSync(toolchain.path, ["-svg", asyFile], {
       cwd: work,
       stdio: ["ignore", "pipe", "pipe"],
       timeout: 60_000,
@@ -367,7 +423,7 @@ function compileFigure(toolchain, figure, outDir) {
           error: `compiler produced no svg or eps for ${figure.key} (saw: ${leftover.join(", ") || "nothing"})`,
         };
       }
-      execFileSync(toolchain.dvisvgm, ["--eps", "--no-fonts", "-o", "figure.svg", "figure.eps"], {
+      execFileSync(toolchain.dvisvgmPath, ["--eps", "--no-fonts", "-o", "figure.svg", "figure.eps"], {
         cwd: work,
         stdio: ["ignore", "pipe", "pipe"],
         timeout: 60_000,
@@ -775,7 +831,9 @@ if (isMain) {
 
   const toolchainLine = result.toolchain
     ? `${result.toolchain.bin} (${result.toolchain.version})`
-    : "NOT FOUND — set ASYMPTOTE_BIN or install asymptote";
+    : ["NOT FOUND — set ASYMPTOTE_BIN, install asymptote, or use scripts/asy-docker", ...toolchainProbeReasons].join(
+        "\n    ",
+      );
   console.log(`build-figures: ${result.status.toUpperCase()}  (${result.figures.length} figures, ${toolchainLine})`);
   console.log(`  compiled ${result.compiled.length} · contract violations ${result.violations.length} · not compiled ${result.skipped.length}`);
 
