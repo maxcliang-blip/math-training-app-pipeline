@@ -56,14 +56,20 @@ goes quiet while the container still looks healthy on localhost.
 
 ## Which corpus this serves
 
-The corpus is whatever `content/` holds on `main` when the image is built, and the served
-numbers are read back from the image rather than assumed: `git ls-tree -r --name-only main --
-content/lessons | wc -l` for lessons and the same for `content/exercises` for exercise files.
-At `24dd6e1` that is 36 lessons and 228 exercise files, which the API reports as
-`{"lessons":36,"exercises":723}`. `scripts/verify-staging-source.sh` asserts exactly those two
-counts against the image, so this paragraph cannot go stale without the deploy failing. That is
-the corpus the backend under review reads and the corpus the figure build compiles, so it is
-the one staging serves. Staging previously served a different 10-lesson corpus (`m1-linear-equations`,
+The corpus is whatever `content/` holds on `main` when the image is built. Do not write the
+counts down: read them back. `scripts/verify-staging-source.sh` counts lessons and exercise
+files inside the image and compares them against the same two counts in `origin/main`
+(`git ls-tree -r --name-only origin/main -- content/lessons`, and `-- content/exercises`), so
+a number written here would be a third thing to keep in sync, and the one that would go stale
+silently while the deploy kept passing. The served numbers come from the image:
+
+```bash
+curl -s http://127.0.0.1:18083/api/content/warnings
+# {"warnings":[],"stats":{"lessons":N,"exercises":M,"modules":K,"warnings":0}}
+```
+
+That is the corpus the backend under review reads and the corpus the figure build compiles,
+so it is the one staging serves. Staging previously served a different 10-lesson corpus (`m1-linear-equations`,
 `m3-permutations-combinations`, `m7-bayes-theorem`) from a different repository, which is
 why a reviewer hitting staging was not looking at the code under review.
 
