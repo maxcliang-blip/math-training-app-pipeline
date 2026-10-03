@@ -193,11 +193,42 @@ SHARED_NODE_MODULES=/home/opc/.shared-node-modules sh scripts/agent-worktree.sh 
 sh scripts/agent-worktree.sh deps /home/opc/wt/carol-content-max-70-m5-l3 /home/opc/.shared-node-modules
 ```
 
-`check` and `list` report what every worktree's `node_modules` actually resolves to, and a dangling
-link is a `check` failure — a link to a path that does not exist is the same broken state MAX-81
-shipped, one level of indirection closer. It is **not** a push failure: the repair is a
-per-worktree `npm ci` belonging to that worktree's owner, and a bulk rewrite of checkouts other
-agents are working in is the MAX-69 hazard. MAX-98 tracks the repair.
+`check` and `list` report what every worktree's `node_modules` actually resolves to. A link that
+does not resolve is a `check` failure — a link to a path that does not exist is the same broken
+state MAX-81 shipped, one level of indirection closer.
+
+**A link into another agent's checkout is its own state, and it is the dangerous one** (MAX-109).
+Such a link resolves, so every test in the worktree runs and every gate passes, while the worktree
+loads that other agent's dependency tree *and* npm's workspace links — `node_modules/api -> ../api`
+— and reports the results under its own name. Nothing fails, which is why the shape survived every
+check: until MAX-109 a listing called any resolved symlink `shared -> <path>`, so a checkout
+pointing into a colleague's branch read exactly like the intended design.
+
+`list` and `check` classify what a link resolves to, naming the agent who owns the tree:
+
+| row | meaning |
+| --- | --- |
+| `shared -> <path>` | the shared install: the shared root's `node_modules`, or one outside this clone |
+| `local` | this checkout's own `npm ci`, no sharing |
+| `external -> <path>` | a real install that is not a checkout of this repo, e.g. `/home/opc/.shared-node-modules` |
+| `FOREIGN[<agent>] -> <path>` | another agent's checkout. **Their** dependency tree, under this worktree's name |
+| `VIA[<agent>] -> <path>` | another agent's link that reaches the shared install. Right tree today; theirs to repoint tomorrow |
+| `missing` | no install yet, and none needed until something runs |
+
+Resolution follows the whole chain, not the first hop, so the answer is the install that is actually
+loaded — a link to another checkout's `node_modules` that is itself a link to the shared root does
+load the shared install. `VIA` reports that case separately, because "correct until someone else
+repoints it" is a real hazard and a row that just said `shared` could not tell it apart.
+
+Both `list` and `check` fail on `FOREIGN` and `VIA`, and `deps` prints a warning naming the repair
+when it is asked to create such a link, so the leak is caught where it is created. Neither is a
+*push* failure: the repair is a per-worktree `npm ci` or one `deps` command belonging to that
+worktree's owner, and a bulk rewrite of checkouts other agents are working in is the MAX-69 hazard.
+
+```bash
+sh scripts/agent-worktree.sh list                        # exits 1 on FOREIGN or a dangling link
+sh scripts/agent-worktree.sh deps /home/opc/wt/<wt> /home/opc/math-training-app/node_modules
+```
 
 ### The push guard
 
@@ -288,7 +319,8 @@ AGENT_WORKTREE_CHECK=0 git push ... # waive it, in writing, on the issue
 from: an identity that disagrees with the registry, an identity git cannot find, the push guard
 not installed, or `node_modules` tracked in the tree. Each is one command away. Two conditions are
 reported and do not block: the shared root, which cannot be removed from its own clone and whose
-pushes the guard already refuses by name (MAX-101), and a dangling dependency link (MAX-98). A gate
+pushes the guard already refuses by name (MAX-101), and a dependency link that is dangling or
+foreign (MAX-98, MAX-109). A gate
 that always fails for a reason nobody can act on gets read as noise — that is how MAX-69's exit 1
 went unread for a week.
 

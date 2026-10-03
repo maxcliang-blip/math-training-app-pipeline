@@ -23,7 +23,9 @@
 #
 #   add      create <wt-root>/<agent>-<branch-slug> off <base> (default origin/main), give it
 #            its own git identity and the shared hooks, and print the cd command
-#   list     every worktree with the identity it will commit under
+#   list     every worktree with the identity it will commit under, and what its node_modules
+#            resolves to. Exits 1 if any checkout runs against another checkout's install, or
+#            against a link that does not resolve: both are silent failures (MAX-109)
 #   check    audit every worktree: hooks installed, each agent's identity its own, and what its
 #            node_modules actually is. Exits 1 when anything is unisolated, so it can be read by
 #            a person or a script
@@ -34,7 +36,8 @@
 #            dependency link that does not resolve -- are printed, named, and do not fail it
 #   remove   drop a worktree; refuses if its working tree is dirty
 #   deps     point an existing worktree's node_modules at a shared install, and report what that
-#            link resolves to
+#            link resolves to -- including a refusal in print when the target is another
+#            checkout of this repo rather than a shared install (MAX-109)
 #   identity record or update an agent's name/email in the shared registry, and re-apply it to
 #            that agent's existing worktrees (--registry-only to record it and stop there)
 #
@@ -131,25 +134,129 @@ or set AGENT_GIT_NAME and AGENT_GIT_EMAIL for this one call."
   printf '%s\t%s' "$name" "$email"
 }
 
+# Every registered worktree of this clone, one path per line, in physical form. Called out to its
+# own function because deps classification needs the estate's membership, not just its layout: the
+# difference between a supported shared install and another agent's checkout is *which checkout*,
+# and that is only answerable from `git worktree list`.
+worktree_paths() {
+  git -C "$main_root" worktree list --porcelain | sed -n 's/^worktree //p' |
+    while IFS= read -r wt; do physical "$wt"; printf '\n'; done
+}
+
+# Physical form of an existing path: `..` collapsed, intermediate symlinks resolved. String
+# comparison alone is not enough to decide which checkout a link lands in --
+# `node_modules -> ../other/node_modules` and `node_modules -> /abs/other/node_modules` are the
+# same link and were two different answers -- and a relative link into another agent's checkout
+# reads as a perfectly good shared install if you only compare the strings. Falls back to the
+# input when the path does not exist, because the callers check that separately and a diagnostic
+# must not die on a dangling target.
+physical() {
+  (cd -P -- "$1" 2>/dev/null && pwd -P) || printf '%s' "$1"
+}
+
+# Absolute form of a symlink target, read the way the kernel reads it: a relative link resolves
+# against the directory holding the link, not the directory the reader happens to be in. Reporting
+# the raw `readlink` string would let `../other/node_modules` read as a path nothing else here
+# ever produces.
+abs_target() {
+  dir=$1
+  target=$2
+  case "$target" in
+    /*) printf '%s' "$target" ;;
+    *) printf '%s' "$dir/${target#./}" ;;
+  esac
+}
+
+# Is $1 a checkout of this clone other than the shared root? The shared root is excluded by name,
+# and so is a directory that is not a checkout at all: /home/opc/.shared-node-modules is a
+# supported install that lives outside the estate, and calling it a cross-agent leak would be
+# wrong. Read line by line rather than through `$(...)` in a for loop, because a worktree path may
+# contain a space and a split one would silently audit a directory nobody has.
+in_estate() {
+  probe=$1
+  ret=1
+  while IFS= read -r wt; do
+    [ -n "$wt" ] || continue
+    [ "$wt" = "$main_root" ] && continue
+    if [ "$wt" = "$probe" ]; then
+      ret=0
+      break
+    fi
+  done <<EOF
+$(worktree_paths)
+EOF
+  return "$ret"
+}
+
+# The directory containing a path, in physical form. Fails when there is no directory part.
+parent_of() {
+  base=${1%/*}
+  [ "$base" != "$1" ] || return 1
+  [ -n "$base" ] || base=/
+  physical "$base"
+}
+
 # What a worktree's node_modules is, read rather than assumed. MAX-81's tracked symlink pointed
 # at /home/opc/math-training-app/node_modules, which was itself a symlink to that same path: a
 # self-referential loop, so every worktree that inherited it had a node_modules it could not
 # resolve and did not know was broken. `shared -> path` therefore only ever reports what the link
 # resolves to now.
+#
+# Four states plus one, and the new ones are the reason this function reads the estate. A link that
+# resolves into *another agent's checkout* is a working directory: every test in it runs, every gate
+# passes, and it loads that other agent's dependency tree while reporting this worktree's name in
+# the results. `shared ->` was the wrong word for it, which is exactly why it survived -- the row
+# looked like the intended design. It is now FOREIGN and carries whose tree it is, because a gate
+# that cannot say whose dependencies it loaded cannot detect a cross-agent leak.
+#
+# Resolution follows the whole chain, not the first hop, so the reported answer is the install that
+# is actually loaded: a link to another checkout's node_modules that is itself a link to the shared
+# root does load the shared install. That is not the same as being pointed at it, though. Such a
+# chain is VIA, and it is a fault of its own -- the tree it loads today is correct only for as long
+# as the other agent leaves that intermediate link alone, and `npm ci` or one `deps` call over there
+# repoints it with nothing here changing. A row that reads `shared` cannot tell those two apart.
 deps_state() {
-  nm=$1/node_modules
+  dir=$1
+  nm=$dir/node_modules
   if [ -L "$nm" ]; then
     target=$(readlink "$nm")
-    if [ -d "$nm" ]; then
+    immediate=$(abs_target "$dir" "$target")
+    resolved=$(physical "$immediate")
+    if [ ! -d "$nm" ]; then
+      printf 'shared -> %s (DANGLING)' "$target"
+      return 0
+    fi
+    at_shared=no
+    if [ "$resolved" = "$(physical "$main_root/node_modules")" ]; then at_shared=yes; fi
+    if owner=$(deps_owner "$immediate"); then
+      if [ "$at_shared" = yes ]; then
+        printf 'VIA[%s] -> %s' "$owner" "$target"
+      else
+        printf 'FOREIGN[%s] -> %s' "$owner" "$target"
+      fi
+      return 0
+    fi
+    if [ "$at_shared" = yes ]; then
       printf 'shared -> %s' "$target"
     else
-      printf 'shared -> %s (DANGLING)' "$target"
+      printf 'external -> %s' "$target"
     fi
   elif [ -d "$nm" ]; then
     printf 'local'
   else
     printf 'missing'
   fi
+}
+
+# Whose link is this path, if it is one? Prints the registry agent owning the checkout that
+# contains it, or fails when the path is not inside a checkout of this clone. The shared root is
+# deliberately not "somebody's link": it is the estate's own install and everyone may share it.
+deps_owner() {
+  owner=$(parent_of "$1") || return 1
+  in_estate "$owner" || return 1
+  owner=$(agent_for_path "$owner")
+  [ -n "$owner" ] || owner='unregistered'
+  printf '%s' "$owner"
 }
 
 # Point a worktree's node_modules at a shared install and say what the result resolves to.
@@ -187,6 +294,23 @@ or leave it and run npm ci in $dir instead."
     printf 'warning: %s does not exist, so %s/node_modules does not resolve.\n' "$shared" "$dir" >&2
     printf '         create it once from a worktree that already installed:\n' >&2
     printf '           mkdir -p %s && mv <worktree>/node_modules %s\n' "$shared" "$shared" >&2
+    printf '         or drop the link (rm %s) and run npm ci in the worktree.\n' "$nm" >&2
+    return 0
+  fi
+
+  # The other way a link can be wrong is by resolving. Pointing a checkout at another agent's
+  # node_modules produces a worktree that runs, tests green, and loads that agent's dependency
+  # tree -- and reads as `shared ->` in every listing, because until MAX-109 nothing said whose
+  # install it was. Refusing it here would break the legitimate case of an install outside the
+  # estate, so it is named instead: the person who just created it is the one who can undo it.
+  parent=$(physical "${shared%/node_modules}")
+  if [ "$parent" != "$shared" ] && owner=$(deps_owner "$shared"); then
+    printf 'WARNING: %s is another checkout of this repo' "$shared" >&2
+    printf '         (physical path %s, agent %s), not a shared install.\n' "$parent" "$owner" >&2
+    printf '         %s will now load that agent'"'"'s dependency tree and its npm workspace links,\n' "$dir" >&2
+    printf '         under its own name -- silently, because nothing else reported it (MAX-109).\n' >&2
+    printf '         If that is deliberate, say so on the issue. Otherwise:\n' >&2
+    printf '           sh scripts/agent-worktree.sh deps %s %s\n' "$dir" "$main_root/node_modules" >&2
     printf '         or drop the link (rm %s) and run npm ci in the worktree.\n' "$nm" >&2
   fi
 }
@@ -288,15 +412,66 @@ case "$cmd" in
 $(git -C "$main_root" worktree list --porcelain)
 EOF
     printf '\ndeps\n'
+    # `list` exits non-zero on the states where a checkout's dependency tree is not its own to
+    # trust -- a link into another agent's checkout (FOREIGN), a link that reaches the shared
+    # install only through another agent's link (VIA), and one that does not resolve. `missing`
+    # is counted and printed but is not a failure: `add` without SHARED_NODE_MODULES deliberately
+    # leaves a worktree to its own `npm ci`, so a new worktree reads `missing` for the length of
+    # one npm run. An exit code that fires on that window would be red on every healthy machine
+    # and get ignored, which is how MAX-69's exit 1 went unread for a week.
+    foreign=0
+    via=0
+    dangling=0
+    missing=0
     path=""
     while IFS= read -r line; do
       case "$line" in
-        "worktree "*) path=${line#worktree } ;;
-        "branch "*|"detached "*) printf '%-36s %s\n' "$path" "$(deps_state "$path")" ;;
+        "worktree "*)
+          path=${line#worktree }
+          ;;
+        "branch "*|"detached "*)
+          state=$(deps_state "$path")
+          case "$state" in
+            FOREIGN*) foreign=$((foreign + 1)) ;;
+            VIA*) via=$((via + 1)) ;;
+            *DANGLING*) dangling=$((dangling + 1)) ;;
+            missing) missing=$((missing + 1)) ;;
+          esac
+          printf '%-36s %s\n' "$path" "$state"
+          ;;
       esac
     done <<EOF
 $(git -C "$main_root" worktree list --porcelain)
 EOF
+    if [ "$foreign" -ne 0 ]; then
+      printf '\nFOREIGN: %s checkout(s) above load another agent'"'"'s node_modules.\n' "$foreign"
+      printf '  They resolve, so nothing fails and no gate says whose tree it loaded: a\n'
+      printf '  package.json or lockfile delta on the owning branch lands in every one of them.\n'
+    fi
+    if [ "$via" -ne 0 ]; then
+      printf '\nVIA: %s checkout(s) above reach the shared install through another checkout'"'"'s\n' "$via"
+      printf '  link. They load the right tree today and the wrong one the moment that agent\n'
+      printf '  runs npm ci or repoints it. Point them at the shared install themselves.\n'
+    fi
+    if [ "$foreign" -ne 0 ] || [ "$via" -ne 0 ]; then
+      printf '  Repoint each at the shared install (one command per row, no directory is clobbered):\n'
+      printf '    sh scripts/agent-worktree.sh deps <worktree-dir> %s\n' "$main_root/node_modules"
+      printf '  or run npm ci in that worktree and keep its own install.\n'
+    fi
+    if [ "$dangling" -ne 0 ]; then
+      printf '\nDANGLING: %s checkout(s) above have a node_modules that does not resolve.\n' "$dangling"
+      printf '  npm ci in the worktree, or `deps <worktree-dir> %s`.\n' "$main_root/node_modules"
+    fi
+    if [ "$missing" -ne 0 ]; then
+      printf '\n%d checkout(s) have no node_modules yet: npm ci in each, or share the install.\n' "$missing"
+    fi
+    if [ "$foreign" -ne 0 ] || [ "$via" -ne 0 ] || [ "$dangling" -ne 0 ]; then
+      printf '\nregistry: %s\n' "$registry"
+      [ -f "$registry" ] && cat "$registry"
+      printf '\nagent-worktree: %s foreign, %s via another checkout, %s dangling -- see above.\n' \
+        "$foreign" "$via" "$dangling"
+      exit 1
+    fi
     printf '\nregistry: %s\n' "$registry"
     [ -f "$registry" ] && cat "$registry"
     ;;
@@ -336,9 +511,10 @@ EOF
     #              all, the push guard not installed, or node_modules tracked in the tree. Every
     #              one of these is a fact about this clone, and each is fixed by one command.
     #   reported   the shared root (MAX-101: it cannot be removed from its own clone, the gate
-    #              refuses its pushes by name, and the row is the audit saying so) and a dangling
-    #              dependency link (MAX-98: the repair is a per-worktree `npm ci` that belongs to
-    #              that worktree's owner, not to whoever ran this).
+    #              refuses its pushes by name, and the row is the audit saying so), and a
+    #              dependency link that is dangling (MAX-98) or foreign -- resolving into
+    #              another agent's checkout (MAX-109). Both are repaired per worktree by
+    #              whoever owns that worktree, not by whoever happened to run the audit.
     #
     # `--for-push` reports all of it and exits on the blocking half only. `AGENT_WORKTREE_CHECK=0`
     # waives the blocking half, and says so on stdout, so a waiver is a printed fact rather than a
@@ -435,16 +611,25 @@ EOF
               rc=1
             fi
           fi
-          # A dangling dependency link is a fault, and it is reported by name rather than folded
-          # into the identity status: it is not an isolation fault and the fix is a per-worktree
-          # `npm ci`. It is reported-not-blocking under --for-push, because a bulk repair from
-          # whoever happened to run the audit is MAX-69's hazard and MAX-98 tracks the real one.
-          # The state itself is on the second line, because "shared" and "shared but broken" have
-          # to be told apart from a listing.
+          # A dependency link that is dangling, or that resolves into another agent's checkout, is
+          # a fault reported by name rather than folded into the identity status: it is not an
+          # identity fault and the fix belongs to the worktree's owner. Neither is push-blocking,
+          # because a bulk rewrite of checkouts other agents are working in is MAX-69's hazard --
+          # that repair is one `deps` command per worktree, run by whoever owns it (MAX-109).
+          # The state itself is on the second line, because "shared", "shared but broken" and
+          # "another agent's tree" have to be told apart from a listing.
           deps=$(deps_state "$path")
           case "$deps" in
             *DANGLING*)
               status="$status; node_modules does not resolve"
+              note_fault
+              ;;
+            FOREIGN*)
+              status="$status; node_modules is another checkout's install"
+              note_fault
+              ;;
+            VIA*)
+              status="$status; node_modules reaches the shared install via another checkout"
               note_fault
               ;;
           esac
@@ -490,7 +675,13 @@ EOF
     printf '  a shared-root push is refused by scripts/check-push-authors.mjs; to say the checkout\n'
     printf '  really is yours alone: git -C %s config agent.allowSharedRoot true\n' "$main_root"
     printf 'fix a dangling node_modules: npm ci in that worktree, or\n'
-    printf '  sh scripts/agent-worktree.sh deps <worktree> <shared-install>   # tracked as MAX-98\n'
+    printf '  sh scripts/agent-worktree.sh deps <worktree> %s   # tracked as MAX-98\n' "$main_root/node_modules"
+    printf 'fix a FOREIGN node_modules: this checkout loads another agent'"'"'s install, so its gates\n'
+    printf '  report their dependencies under this worktree'"'"'s name. Repoint the owner at the shared\n'
+    printf '  install -- one command, no directory is clobbered -- or npm ci in that worktree:\n'
+    printf '  sh scripts/agent-worktree.sh deps <worktree> %s   # tracked as MAX-109\n' "$main_root/node_modules"
+    printf 'fix a VIA node_modules: it loads the shared install, but through a link another agent\n'
+    printf '  can repoint. Same one command, so nothing here depends on their node_modules.\n'
     if [ "$for_push" = yes ]; then
       if [ "$rc" -ne 0 ]; then
         printf '\n--for-push: REFUSED. A worktree above commits under an identity the registry\n'
@@ -502,7 +693,8 @@ EOF
         printf '\n--for-push: ok. %s condition(s) above do not block a push, and none of them is\n' "$reported"
         printf 'something a push can fix: the shared root cannot be removed from its own clone\n'
         printf '(MAX-101, and its pushes are refused by name), and a dependency link that does not\n'
-        printf 'resolve is repaired per worktree by whoever owns that worktree (MAX-98). This is\n'
+        printf 'resolve or that resolves into another agent'"'"'s checkout is repaired per worktree\n'
+        printf 'by whoever owns that worktree (MAX-98, MAX-109). This is\n'
         printf 'why plain `check` and the push path do not always give the same answer.\n'
       else
         printf '\n--for-push: ok. Every worktree is isolated and commits under its own identity.\n'
