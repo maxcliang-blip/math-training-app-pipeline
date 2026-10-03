@@ -1,4 +1,9 @@
-node_modules/
+# No trailing slash, and that is load-bearing (MAX-81). A `dir/` pattern only matches a real
+# directory, and git does not follow symlinks, so `node_modules/` ignored the installed tree but
+# did not ignore a symlink named node_modules -- which is how an absolute host path
+# (/home/opc/math-training-app/node_modules) ended up committed to main as a 120000 entry and
+# reproduced by `git archive` for every operator's clean export. Bare `node_modules` matches both.
+node_modules
 dist/
 build/
 .env

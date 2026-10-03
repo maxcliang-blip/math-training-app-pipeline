@@ -63,6 +63,38 @@ jobs:
             git status --porcelain
             exit 1
           fi
+      - name: No tracked node_modules, and none in the export (MAX-81)
+        # node_modules was committed to main as a symlink to one host's absolute path, and
+        # `git archive origin/main` reproduced it for every operator who followed
+        # deploy/README.md. Two things let it back in, so both are asserted:
+        #   - `node_modules/` in .gitignore does not match a symlink named node_modules: a
+        #     trailing-slash pattern matches real directories, and git does not follow symlinks.
+        #     The bare pattern does.
+        #   - an export carries whatever the tree carries, so the tree is the thing to gate.
+        # The last block is the general form of the same defect: any tracked symlink whose
+        # target is an absolute path is valid on exactly the host that wrote it.
+        run: |
+          set -euo pipefail
+          if git ls-files --error-unmatch node_modules >/dev/null 2>&1; then
+            echo "::error::node_modules is tracked again"
+            git ls-tree -l HEAD -- node_modules
+            exit 1
+          fi
+          if git archive HEAD | tar -t | grep -qx 'node_modules'; then
+            echo "::error::git archive HEAD still contains node_modules"
+            exit 1
+          fi
+          links=$(git ls-files -s | awk '$1 == "120000" { print $4 }')
+          for link in $links; do
+            target=$(git cat-file blob ":$link")
+            case "$target" in
+              /*)
+                echo "::error::$link is a symlink to the absolute path $target"
+                exit 1
+                ;;
+            esac
+          done
+          echo "no tracked node_modules; tracked symlinks: ${links:-<none>}"
   # Every other job in this repository reads a checkout. That is the whole reason an image could
   # be built from a working copy of a different repository, or with scripts/ missing from the
   # build context, and still leave CI green: the only thing that reads the image is the image
