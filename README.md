@@ -47,8 +47,8 @@ ids it delivered and this command is run against `origin/main` before the issue 
 corpus without moving the pin is a local failure rather than a red `main`:
 
 ```
-corpus pins are stale: tests assert 36 lessons / 723 exercises,
-content/ holds 37 lessons / 741 exercises
+corpus pins are stale: tests assert 38 lessons / 759 exercises,
+content/ holds 39 lessons / 777 exercises
 ```
 
 These were three literals in three test files and had been left stale three times, each caught by
@@ -57,7 +57,7 @@ a person reading a diff. Only `api/test/content.test.js` asserts against the pin
 store it loaded, because what they are testing is the route's honesty, not the corpus size.
 
 Count records, not files, anywhere you count the corpus: a file in `content/exercises/` is either
-one record or an array of them, so 228 files hold 723 records. `api/src/content.js` says so at the
+one record or an array of them, so 264 files hold 759 records. `api/src/content.js` says so at the
 loader.
 
 `content:figures` needs an Asymptote toolchain (`ASYMPTOTE_BIN`, or `asymptote` on PATH). With
