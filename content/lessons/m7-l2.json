@@ -105,7 +105,7 @@
           "slug": "complementary-count",
           "name": "Take the complement when the condition is awkward",
           "summaryLatex": "$P(E) = 1 - P(E^c)$, and inside a conditioned space the two still add to $1$.",
-          "bodyLatex": "Without replacement it is sometimes easier to ask what would spoil the event than what would complete it, and the two are related by subtraction from $1$ inside whichever conditioned space you are working in. A useful shape is $P(\text{both red} \\mid \text{first red}) = 1 - \\frac{\\text{remaining non-red}}{\\text{remaining total}}$, which avoids a running tally of the cases in which the property already holds."
+          "bodyLatex": "Without replacement it is sometimes easier to ask what would spoil the event than what would complete it, and the two are related by subtraction from $1$ inside whichever conditioned space you are working in. A useful shape is $P(\\text{both red} \\mid \\text{first red}) = 1 - \\frac{\\text{remaining non-red}}{\\text{remaining total}}$, which avoids a running tally of the cases in which the property already holds."
         },
         {
           "slug": "distribution-identification",
