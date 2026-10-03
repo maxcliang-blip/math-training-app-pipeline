@@ -32,9 +32,17 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { createFigureClient, figureUnavailableView, FIGURE_UNAVAILABLE_MESSAGE } from "../src/lib/figures.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const ENTRY = path.resolve(HERE, "../src/components/Figure.jsx");
+const ENTRIES = {
+  // Figure.jsx on its own: the box the lesson draws when the endpoint fails.
+  figure: path.resolve(HERE, "../src/components/Figure.jsx"),
+  // LessonFigures.jsx is the whole lazy boundary — the component App.jsx's React.lazy actually
+  // resolves to, with Figure.jsx and lib/figures.js behind it. Compiling it separately is what
+  // makes the boundary's own prop contract testable; see the tests at the bottom of this file.
+  boundary: path.resolve(HERE, "../src/components/LessonFigures.jsx")
+};
 
 let FigureUnavailable;
+let LessonFigure;
 let scratch;
 
 before(async () => {
@@ -49,16 +57,23 @@ before(async () => {
       ssr: true,
       write: false,
       target: "node20",
-      rollupOptions: { input: ENTRY, output: { entryFileNames: "figure.mjs" } }
+      rollupOptions: { input: ENTRIES, output: { entryFileNames: "[name].mjs" } }
     }
   });
   const output = Array.isArray(result) ? result[0].output : result.output;
-  const chunk = output.find((entry) => entry.type === "chunk" && entry.isEntry);
-  assert.ok(chunk, "Figure.jsx compiled to an entry chunk");
+  const entry = (name) => {
+    const chunk = output.find((c) => c.type === "chunk" && c.isEntry && c.name === name);
+    assert.ok(chunk, `${name} compiled to an entry chunk`);
+    return chunk.code;
+  };
   scratch = await mkdtemp(path.join(HERE, ".degraded-"));
-  const file = path.join(scratch, "figure.mjs");
-  await writeFile(file, chunk.code);
-  ({ FigureUnavailable } = await import(pathToFileURL(file).href));
+  const write = async (name, code) => {
+    const file = path.join(scratch, `${name}.mjs`);
+    await writeFile(file, code);
+    return pathToFileURL(file).href;
+  };
+  ({ FigureUnavailable } = await import(await write("figure", entry("figure"))));
+  ({ LessonFigure } = await import(await write("boundary", entry("boundary"))));
 });
 
 after(async () => {
@@ -160,4 +175,45 @@ test("a figure with no authored description degrades to the sentence alone, not 
   assert.equal(view.alt, null);
   assert.equal(html.includes("figure__alt"), false);
   assert.ok(html.includes("Figure unavailable"), "it still says the figure is missing");
+});
+
+// --- the lazy boundary -------------------------------------------------------------------
+//
+// MAX-74 moved the figure bundle behind `React.lazy(() => import("./components/LessonFigures.jsx"))`,
+// so what a lesson renders now crosses a dynamic import boundary. The failure mode for that is
+// silent and total: bind the lazy import to the wrong export and `Figure` receives `reference`,
+// never finds a `figureKey`, returns null, and the lesson renders an empty div — with every
+// figure-section figure gone and no error anywhere. Nothing above notices, because the lesson
+// itself renders perfectly.
+//
+// So these assert the boundary's prop contract behaviourally: LessonFigure is the component
+// App.jsx's lazy import resolves to, and each of the two shapes a lesson carries a figure in has
+// to come out the other side as a figure box that asked the route for its payload. Rendering with
+// a failing fetch means "did it reach the client at all" is observable — the box either has the
+// degraded sentence and the description, or it is empty.
+
+test("the lazy boundary renders an exercise/worked-example figure from figureKey", async () => {
+  const html = renderToStaticMarkup(
+    React.createElement(LessonFigure, { figureKey: KEY, alt: DESCRIPTION, declaredAspectRatio: 0.661 })
+  );
+  // renderToStaticMarkup cannot await a fetch, so this is the pending box — and it is the whole
+  // claim: the component mounted, ran its effect, and asked for the key. Empty means it did not.
+  assert.match(html, /class="figure figure--pending"/);
+  assert.ok(!html.includes("</div></div>"), `the boundary rendered nothing for a figureKey: ${html}`);
+});
+
+test("the lazy boundary renders a lesson-section figure from a reference object", async () => {
+  const html = renderToStaticMarkup(React.createElement(LessonFigure, { reference: REFERENCE }));
+  // This is the one that was silently empty. A reference is not a figureKey, and the component it
+  // was bound to reads figureKey — so the assertion that the box exists is the assertion that the
+  // reference reached the component that understands it. It passes the reference through whole, so
+  // asymptoteAlt travels with it and the degraded box still has a description to show (§5.6).
+  assert.match(html, /class="figure figure--pending"/);
+});
+
+test("the lazy boundary renders nothing for a figure that is not there", async () => {
+  // No key and no reference is the one input that should produce no box, and it is what a section
+  // with an empty figures array hands the boundary.
+  assert.equal(renderToStaticMarkup(React.createElement(LessonFigure, {})), "");
+  assert.equal(renderToStaticMarkup(React.createElement(LessonFigure, { reference: {} })), "");
 });

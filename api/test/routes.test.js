@@ -347,7 +347,7 @@ test("with a passing manifest, the figure route serves exactly the contract payl
       figures: [
         {
           figureKey: "m6-l3-p6",
-          figureSvgUrl: "artifacts/figures/svg/m6-l3-p6.svg",
+          figureSvgUrl: "/artifacts/figures/svg/m6-l3-p6.svg",
           figureHash: "sha256:deadbeef",
           figurePipelineVersion: "asymptote-svg-sanitized@2",
           declaredAspectRatio: 0.661,
@@ -378,7 +378,14 @@ test("with a passing manifest, the figure route serves exactly the contract payl
     // figureHash is a sha256 over the sanitised SVG, which makes it a usable strong ETag and
     // safe to cache immutably.
     assert.equal(one.headers.get("etag"), "sha256:deadbeef");
-    assert.equal((await one.json()).declaredAspectRatio, 0.661);
+    const served = await one.json();
+    assert.equal(served.declaredAspectRatio, 0.661);
+
+    // MAX-74: the served url is what the <img> is pointed at, and a url without a leading slash
+    // resolves against the document. On any route but the first the browser would then request
+    // /learn/artifacts/... and be handed the SPA fallback: 200, text/html, broken image. Asserted
+    // on the wire rather than only on the store, because this is the last hop before the browser.
+    assert.equal(served.figureSvgUrl, "/artifacts/figures/svg/m6-l3-p6.svg");
 
     assert.equal((await fetch(`${url}/api/figures/m1-l1.sections.concept.figures[0]`)).status, 404);
   } finally {

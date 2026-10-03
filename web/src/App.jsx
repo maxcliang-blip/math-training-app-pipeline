@@ -5,10 +5,48 @@
 // reference arriving from the API end up as rendered math and a rendered figure, with a broken
 // expression or a missing figure degrading instead of blanking the page.
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import MathBlock from "./components/MathBlock.jsx";
-import Figure, { FigureRef } from "./components/Figure.jsx";
 import "./styles.css";
+
+// The figure bundle is behind a lazy import, per Rendering Conventions §5.5: it is loaded only on
+// a route that can actually contain figures, and never on the dashboard, the module list or the
+// progress view. The import is evaluated when the component is first rendered, not when this
+// module is, which is the whole mechanism -- a static import here would put Figure.jsx and
+// lib/figures.js in the dashboard payload at a cost §7 budgets at 0 KB.
+//
+// `.then(m => ({ default: m.LessonFigure }))` names the export rather than taking the module's
+// default by accident: a lesson and an exercise carry a figure in two shapes and they render
+// different components, and one boundary component that accepts both is what keeps the two from
+// being wired to each other. See web/src/components/LessonFigures.jsx.
+//
+// `scripts/assert-figure-bundle-split.mjs` fails the build if any of that stops being true, so this
+// is an enforced boundary rather than a convention.
+const LessonFigure = lazy(() => import("./components/LessonFigures.jsx").then((m) => ({ default: m.LessonFigure })));
+
+// The placeholder for the chunk's arrival. It is `aria-hidden` and reserves no box on purpose: the
+// figures it stands in for reserve their own (the component measures and applies the manifest's
+// ratio), and a suspense placeholder that guessed a height would move the lesson as it resolved.
+function FigureFallback() {
+  return <div className="figure figure--pending" aria-hidden="true" />;
+}
+
+// The boundary is one figure wide, not one lesson wide, and that is the point of putting it here
+// rather than around <Lesson>. Wrapping the lesson would hide the prose — the whole section body
+// and the practice list — for as long as the chunk took, which is a worse failure than a figure
+// arriving late. Here the fallback covers exactly the element Figure.jsx would have drawn as its
+// own loading state anyway, so the visible result is unchanged from the pre-lazy build.
+//
+// Lesson and exercise are the only routes that render this, which is what keeps §7's 0 KB budget
+// intact: the dashboard, the module list and progress render no LazyFigure, so the browser is
+// never asked for the chunk.
+function LazyFigure(props) {
+  return (
+    <Suspense fallback={<FigureFallback />}>
+      <LessonFigure {...props} />
+    </Suspense>
+  );
+}
 
 async function getJson(path) {
   const response = await fetch(path);
@@ -95,7 +133,9 @@ function Section({ name, section }) {
         {section.examples.map((example, index) => (
           <article key={example.id || index} className="example">
             {example.titleLatex ? <h4><MathBlock source={example.titleLatex} /></h4> : null}
-            {example.figureKey ? <Figure figureKey={example.figureKey} alt={example.asymptoteAlt} /> : null}
+            {example.figureKey ? (
+              <LazyFigure figureKey={example.figureKey} alt={example.asymptoteAlt} />
+            ) : null}
             {example.bodyLatex ? <MathBlock source={example.bodyLatex} /> : null}
             {example.answerLatex ? (
               <details>
@@ -112,7 +152,7 @@ function Section({ name, section }) {
     body.push(
       <div key="figures" className="figures">
         {section.figures.map((reference, index) => (
-          <FigureRef key={reference.figureKey || index} reference={reference} />
+          <LazyFigure key={reference.figureKey || index} reference={reference} />
         ))}
       </div>
     );
@@ -135,7 +175,9 @@ function ExerciseCard({ exercise }) {
     <article className="exercise">
       <p className="exercise__tier">Tier {exercise.tier} · difficulty {exercise.difficulty}</p>
       <MathBlock source={exercise.promptLatex} />
-      {exercise.figureKey ? <Figure figureKey={exercise.figureKey} alt={exercise.asymptoteAlt} /> : null}
+      {exercise.figureKey ? (
+        <LazyFigure figureKey={exercise.figureKey} alt={exercise.asymptoteAlt} />
+      ) : null}
       {Array.isArray(exercise.choices) && exercise.choices.length ? (
         <ol className="exercise__choices">
           {exercise.choices.map((choice, index) => (

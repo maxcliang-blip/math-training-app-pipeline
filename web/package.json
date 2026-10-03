@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node ../scripts/assert-figure-bundle-split.mjs",
+    "build:no-assert": "vite build",
     "preview": "vite preview",
     "test": "node --test test/*.test.js"
   },

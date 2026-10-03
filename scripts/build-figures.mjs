@@ -29,7 +29,15 @@ import { tmpdir } from "node:os";
 import { isAbsolute, join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS, lessonFigureKey, exampleFigureKey, exerciseFigureKey } from "../lib/figure-contract.mjs";
+import {
+  DERIVED_FIELDS,
+  FIGURE_PAYLOAD_FIELDS,
+  figureAssetPath,
+  isRootRelativeFigurePath,
+  lessonFigureKey,
+  exampleFigureKey,
+  exerciseFigureKey
+} from "../lib/figure-contract.mjs";
 
 export { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS };
 
@@ -571,9 +579,14 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
       ratioNote = measurement.measuredRatio;
     }
     measurements.push(measurement);
+    // Root-relative, from the shared contract rather than a template literal here: the URL is
+    // what the browser resolves, so a missing leading slash is a broken figure on every route
+    // except the one the app happens to have today, and a broken figure whose request answers 200
+    // text/html. Asserted immediately below so it cannot ship.
+    const svgUrl = figureAssetPath(result.file);
     compiled.push({
       figureKey: figure.key,
-      figureSvgUrl: `artifacts/figures/svg/${result.file}`,
+      figureSvgUrl: svgUrl,
       figureHash: `sha256:${createHash("sha256").update(result.svg).digest("hex")}`,
       figurePipelineVersion: PIPELINE_VERSION,
       declaredAspectRatio: box.ratio,
@@ -582,6 +595,19 @@ export function buildFigures(contentRoot, outDir, { requireToolchain = true } = 
       alt: figure.alt,
       captionLatex: figure.caption,
     });
+    if (!isRootRelativeFigurePath(svgUrl)) {
+      // Fail closed. A manifest whose asset URLs are not root-relative is a manifest that serves
+      // HTML where an SVG belongs, and the failure looks like a working page.
+      violations.push({
+        key: figure.key,
+        problems: [
+          `figureSvgUrl "${svgUrl}" is not root-relative. It must start with a single "/", because the ` +
+            "browser resolves a bare relative path against the document: on /learn/<moduleId> that url " +
+            "requests the SPA fallback and answers 200 text/html. Build it with figureAssetPath() from " +
+            "lib/figure-contract.mjs.",
+        ],
+      });
+    }
   }
 
   const status = violations.length ? "fail" : toolchain ? (skipped.length ? "partial" : "pass") : "toolchain-missing";

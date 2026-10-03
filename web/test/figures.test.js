@@ -292,6 +292,34 @@ test("resolves a relative asset url against an origin", () => {
   assert.equal(figureAssetUrl("", "https://app.example"), null);
 });
 
+// MAX-74: the manifest emitted `artifacts/figures/svg/x.svg` with no leading slash, and
+// figureAssetUrl passed that through unchanged. It resolves against the *document*, not the site
+// root, so it worked on the single route the SPA had and broke on the next one — and it broke as a
+// request that answers 200 text/html, which is the shape of failure that survives a smoke test.
+// These pin the normalisation on both forms so a manifest written either way lands on the same
+// root-relative URL.
+test("a bare-relative figure url resolves against the site root, not the document", () => {
+  const bare = "artifacts/figures/svg/m1-l1.sections.concept.figures_0_.svg";
+  assert.equal(figureAssetUrl(bare, "https://app.example"), `https://app.example/${bare}`);
+
+  // With no origin configured the same normalisation still has to happen, or the <img> src is the
+  // bare string and the browser resolves it against whatever route the learner is on.
+  assert.equal(figureAssetUrl(bare, ""), `/${bare}`);
+  assert.equal(figureAssetUrl("/a.svg", ""), "/a.svg");
+
+  // Both forms of the same file have to produce one url, or the figure cache keys two strings for
+  // one asset depending on which manifest wrote it.
+  assert.equal(
+    figureAssetUrl(bare, "https://app.example"),
+    figureAssetUrl(`/${bare}`, "https://app.example")
+  );
+
+  // Duplicated leading slashes collapse rather than producing `//`, which is protocol-relative and
+  // would leave the origin. isSameOriginPath rejects that payload before this runs; normalising it
+  // must not be the thing that un-rejects it.
+  assert.equal(figureAssetUrl("//artifacts/a.svg", "https://app.example"), "https://app.example/artifacts/a.svg");
+});
+
 // --- aspect ratio resolution ----------------------------------------------
 //
 // These exist because the ratio is applied to the <img> box, so a wrong one does not look broken —

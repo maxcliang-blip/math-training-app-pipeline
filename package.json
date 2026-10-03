@@ -6,6 +6,7 @@
     "dev:web": "npm run dev --workspace web",
     "dev:api": "npm run dev --workspace api",
     "build": "npm run build --workspace web",
+    "build:bundles": "node scripts/assert-figure-bundle-split.mjs",
     "test": "npm test --workspaces --if-present",
     "content:check": "node scripts/check-content-math.mjs",
     "content:selftest": "node scripts/check-content-math.mjs --selftest",
