@@ -100,9 +100,30 @@ button {
   justify-content: center;
 }
 
+/* The degraded figure is a column, not a centred label: the sentence says what happened and the
+   description below it is the content. Centring both on one line each is what made the box look
+   like a label somebody forgot to replace. The reserved ratio still sizes it; the padding is
+   inside the box so the text never sits on the dashed border. */
+.figure--unavailable {
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
 .figure__placeholder {
   color: var(--muted);
   font-size: 0.85rem;
+}
+
+/* The figure's description, in the reader's text colour and not the muted one. This is the
+   content of the degraded state, and the difference between a caption and the only description of
+   the figure is the difference between "here is a diagram" and "here is what the diagram said". */
+.figure__alt {
+  color: var(--ink);
+  font-size: 0.95rem;
+  margin: 0;
+  max-width: 60ch;
 }
 
 .figure__svg {

@@ -13,7 +13,10 @@ import {
   validateFigurePayload,
   isToolchainMissing,
   isSameOriginPath,
-  figurePlaceholder,
+  figureUnavailableView,
+  resolveFigureAlt,
+  DEFAULT_FIGURE_ASPECT_RATIO,
+  FIGURE_UNAVAILABLE_MESSAGE,
   resolveFigureRatio
 } from "../src/lib/figures.js";
 
@@ -72,7 +75,9 @@ test("a 503 is toolchain-missing, not a broken figure", async () => {
   const result = await client.getFigure(KEY);
   assert.equal(result.status, "toolchain-missing");
   assert.equal(result.reason, "pipeline-not-run");
-  assert.ok(figurePlaceholder(result).label.includes("not built"));
+  // Not what the learner is told. The status stays on data-reason; the sentence does not.
+  assert.equal(figureUnavailableView(result).message, FIGURE_UNAVAILABLE_MESSAGE);
+  assert.equal(figureUnavailableView(result).detail, "pipeline-not-run");
 });
 
 test("a build that never ran and a 404 do not look the same", async () => {
@@ -210,12 +215,75 @@ test("an empty key is invalid without a request", async () => {
   assert.equal(called, false);
 });
 
-test("every status has a placeholder, so a new status cannot ship unstyled", () => {
+test("every status has a degraded view, so a new status cannot ship unstyled", () => {
   for (const status of ["ready", "unavailable", "invalid", "toolchain-missing"]) {
-    const placeholder = figurePlaceholder({ status, reason: "x" });
-    assert.equal(placeholder.kind, "unavailable");
-    assert.ok(placeholder.label.length > 0);
+    const view = figureUnavailableView({ status, reason: "x" });
+    assert.equal(view.kind, "unavailable");
+    assert.ok(view.message.length > 0);
   }
+});
+
+// --- the degraded state (Rendering Conventions §5.6) ----------------------
+//
+// §5.6: "SVG missing / fetch failed | Reserved box keeps its size, alt text rendered *visibly* |
+// 'Figure unavailable — the description below is complete.'" and "The degraded state is visibly
+// degraded, not silently empty: the alt text is shown to everyone, not just assistive tech."
+//
+// The interesting property is not that the copy is right. It is that the copy is reachable: in
+// every degraded status there is no payload, so `alt` has to come from the reference the caller
+// passed, and the reference is the only thing a client still has when the figure route has failed.
+
+test("the degraded copy is §5.6's sentence, for every status that degrades", () => {
+  assert.equal(
+    FIGURE_UNAVAILABLE_MESSAGE,
+    "Figure unavailable — the description below is complete."
+  );
+  for (const status of ["unavailable", "invalid", "toolchain-missing"]) {
+    const view = figureUnavailableView({ status, reason: "http-503" });
+    assert.equal(view.message, FIGURE_UNAVAILABLE_MESSAGE);
+    assert.equal(view.detail, "http-503", `${status} stays distinguishable on data-reason`);
+  }
+});
+
+test("the description survives the endpoint failing, because it came from the reference", async () => {
+  const reference = { figureKey: KEY, asymptoteAlt: "A line crossing the x-axis at two units" };
+  const client = createFigureClient({
+    fetchImpl: async () => jsonResponse(503, { status: "toolchain-missing" })
+  });
+  const result = await client.getFigure(reference.figureKey);
+  const view = figureUnavailableView(result, { alt: reference.asymptoteAlt });
+  assert.equal(view.alt, reference.asymptoteAlt);
+});
+
+test("the payload's alt wins over the prop, and an absent one is null rather than a blank", () => {
+  assert.equal(resolveFigureAlt("from the payload", "from the caller"), "from the payload");
+  assert.equal(resolveFigureAlt(null, "from the caller"), "from the caller");
+  assert.equal(resolveFigureAlt(undefined, undefined), null);
+  for (const blank of ["", "   "]) {
+    assert.equal(resolveFigureAlt(blank, blank), null, `${JSON.stringify(blank)} is not a description`);
+  }
+});
+
+test("the degraded box keeps its size: the reserved ratio, or the documented default", () => {
+  // A degraded box that collapses to the height of two lines of text is a reflow, and §5.4 forbids
+  // one. With no payload there is no compiled ratio to reserve from, so the authored one is used
+  // and the documented default is the floor.
+  assert.equal(figureUnavailableView({ status: "unavailable" }).aspectRatio, DEFAULT_FIGURE_ASPECT_RATIO);
+  assert.equal(DEFAULT_FIGURE_ASPECT_RATIO, 1.333);
+  assert.equal(
+    figureUnavailableView({ status: "unavailable" }, { declaredAspectRatio: 0.661 }).aspectRatio,
+    0.661
+  );
+  assert.equal(
+    figureUnavailableView({ status: "unavailable" }, { declaredAspectRatio: -3 }).aspectRatio,
+    DEFAULT_FIGURE_ASPECT_RATIO,
+    "a nonsense ratio falls back rather than handing the browser a value it has to reject"
+  );
+});
+
+test("a missing reason is null, not the string 'undefined'", () => {
+  assert.equal(figureUnavailableView({ status: "unavailable" }).detail, null);
+  assert.equal(figureUnavailableView(null).detail, null);
 });
 
 test("resolves a relative asset url against an origin", () => {

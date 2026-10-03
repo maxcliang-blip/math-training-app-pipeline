@@ -100,6 +100,9 @@ test("an exercise carrying a figure exposes figureKey and none of the payload fi
   // The authored Asymptote source is a build input, not a learner-facing payload, and it is
   // several kilobytes per figure.
   assert.equal("asymptoteSource" in response, false);
+  // The description is, because the degraded state renders it and the degraded state is the one
+  // state in which the figure route cannot supply it (Rendering Conventions §5.6).
+  assert.match(response.asymptoteAlt, /^A circle lies mostly in the second quadrant/);
 });
 
 test("an exercise with no figure carries no figure information at all", () => {
@@ -125,14 +128,44 @@ test("no Asymptote build input reaches any lesson, including inside worked examp
   // of figure as a figure in a section list. Walking every lesson rather than one hand-picked
   // record is the point: four lessons had a figure-bearing example and the projection used to miss
   // all four, because only `sections.*.figures` was reduced to references.
+  //
+  // asymptoteAlt is not in this list and is not a mistake. It is the authored description, one
+  // sentence per figure, and it is on the reference because the degraded state has to render it
+  // while the figure route is 503 for every key (§5.6). The build input beside it stays here.
   const offenders = [];
   for (const lessonId of store.lessons.keys()) {
     const json = JSON.stringify(store.getLesson(lessonId));
-    for (const field of ["asymptoteSource", "asymptoteAlt", "asymptoteAspectRatio"]) {
+    for (const field of ["asymptoteSource", "asymptoteAspectRatio"]) {
       if (json.includes(`"${field}"`)) offenders.push(`${lessonId}:${field}`);
     }
   }
   assert.deepEqual(offenders, []);
+});
+
+test("every figure reference in the corpus carries the description the degraded state needs", () => {
+  // §8.6 asserts the alt text is visible with the figure endpoint failing. That assertion can only
+  // hold if the description survives to the client without the payload, so every reference in the
+  // corpus is checked rather than the one record a test happened to pick.
+  const missing = [];
+  for (const lessonId of store.lessons.keys()) {
+    const lesson = store.getLesson(lessonId);
+    for (const [name, section] of Object.entries(lesson.sections)) {
+      for (const [where, refs] of [
+        ["figures", section.figures || []],
+        ["examples", (section.examples || []).filter((e) => e && e.figureKey)]
+      ]) {
+        for (const ref of refs) {
+          if (!ref.figureKey) continue;
+          if (!ref.asymptoteAlt) missing.push(`${lessonId}.${name}.${where}:${ref.figureKey}`);
+        }
+      }
+    }
+  }
+  for (const exerciseId of store.exercises.keys()) {
+    const exercise = store.getExercise(exerciseId);
+    if (exercise.figureKey && !exercise.asymptoteAlt) missing.push(`${exerciseId}:figureKey`);
+  }
+  assert.deepEqual(missing, []);
 });
 
 test("a figure-bearing worked example becomes a reference, and an example without one is untouched", () => {

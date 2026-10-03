@@ -7,8 +7,11 @@
 //      contract says not to build; it must not answer 200, and it must not answer at all.
 //   2. No free-response exercise carries answerLatex or solutionLatex, and no payload anywhere
 //      contains the answer string of the free-response exercise used as the probe.
-//   3. No lesson or exercise response carries asymptoteSource, asymptoteAlt, or
-//      asymptoteAspectRatio, and figure information is exactly { figureKey }.
+//   3. No lesson or exercise response carries asymptoteSource or asymptoteAspectRatio, and figure
+//      information is exactly { figureKey, asymptoteAlt } -- the reference, never the payload.
+//      asymptoteAlt is on the reference because the degraded figure state renders it while the
+//      figure route is failing for every key (Rendering Conventions §5.6, §8.6); asymptoteSource,
+//      the build input, still never leaves the build.
 //
 // Usage: node verify-staging.mjs [baseUrl]
 
@@ -30,7 +33,8 @@ const FIGURE_PAYLOAD_FIELDS = [
   "alt",
   "captionLatex",
 ];
-const FIGURE_BUILD_INPUT_FIELDS = ["asymptoteSource", "asymptoteAlt", "asymptoteAspectRatio"];
+const FIGURE_BUILD_INPUT_FIELDS = ["asymptoteSource", "asymptoteAspectRatio"];
+const FIGURE_REFERENCE_FIELDS = ["figureKey", "asymptoteAlt"];
 
 async function json(path, options) {
   const res = await fetch(`${BASE}${path}`, options);
@@ -105,7 +109,7 @@ const lessonKeys = collectKeys(lessonList);
 for (const field of FIGURE_BUILD_INPUT_FIELDS) {
   check(!lessonKeys.has(field), `lesson list carries no ${field}`);
 }
-const leaked = FIGURE_PAYLOAD_FIELDS.filter((f) => f !== "figureKey" && lessonKeys.has(f));
+const leaked = FIGURE_PAYLOAD_FIELDS.filter((f) => !FIGURE_REFERENCE_FIELDS.includes(f) && lessonKeys.has(f));
 check(leaked.length === 0, "lesson list carries no figure payload field", leaked.join(", "));
 
 if (lessonList[0]) {
@@ -114,7 +118,7 @@ if (lessonList[0]) {
   for (const field of FIGURE_BUILD_INPUT_FIELDS) {
     check(!keys.has(field), `lesson detail carries no ${field}`);
   }
-  const leakedDetail = FIGURE_PAYLOAD_FIELDS.filter((f) => f !== "figureKey" && keys.has(f));
+  const leakedDetail = FIGURE_PAYLOAD_FIELDS.filter((f) => !FIGURE_REFERENCE_FIELDS.includes(f) && keys.has(f));
   check(leakedDetail.length === 0, "lesson detail carries no figure payload field", leakedDetail.join(", "));
 }
 
