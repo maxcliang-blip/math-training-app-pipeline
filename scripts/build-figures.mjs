@@ -56,7 +56,11 @@ const DEFAULT_OUT = join(REPO, "artifacts", "figures");
 //
 // Bump this constant when the pipeline changes what it emits; the fingerprint covers the
 // environment it emits in.
-export const PIPELINE_VERSION = "asymptote-svg-sanitized@2";
+//
+// @2 -> @3 (MAX-75): the emitted SVG is now minified and the sanitizer closes the <image> and
+// url() gaps, so bytes built by the previous pipeline and bytes built by this one are not
+// interchangeable and must not share a hash.
+export const PIPELINE_VERSION = "asymptote-svg-sanitized@3";
 
 // TeX Live's own banner carries the release year ("TeX Live 2023/Deb 2024"). pdfTeX's build number
 // in front of it tracks the TeX Live *revision*, not the font set, so the year is the part worth
@@ -114,20 +118,42 @@ const MAX_ASPECT = 3;
 // Defence in depth. The primary control is that only Asymptote output for approved figure
 // sources is ever shipped; this removes the active-content vectors that could survive a
 // compromised or unexpected source.
+//
+// Order matters and is load-bearing in two places. `<image>` is removed before the href rules
+// run, because rewriting a data URI to `href="#"` leaves a live `<image>` element pointing at
+// nothing: the payload is gone but the element the rule names is still there. And the `url()`
+// rule runs before the `javascript:` rule so a `url(javascript:...)` is resolved as a reference
+// rather than as a substring.
 const SVG_DENY = [
   [/<script\b[\s\S]*?<\/script>/gi, ""],
   [/<!--[\s\S]*?-->/g, ""],
   [/\son[a-z]+\s*=\s*"[^"]*"/gi, ""],
   [/\son[a-z]+\s*=\s*'[^']*'/gi, ""],
   [/<foreignObject[\s\S]*?<\/foreignObject>/gi, ""],
+  // An <image> is removed outright, paired or self-closing, whatever it points at. S5.3 says to
+  // strip "any <image> with a data URI", and the href rules below already reduce such a payload
+  // to `href="#"` -- which satisfies that sentence while leaving the element in place. Asymptote
+  // emits no <image> at all, so there is nothing to lose and one fewer way in.
+  [/<image\b[^>]*(?:\/>|>[\s\S]*?<\/image\s*>)/gi, ""],
   [/<a\b[^>]*>/gi, ""],
   [/<\/a>/gi, ""],
   [/(href|xlink:href)\s*=\s*"(?!#)[^"]*"/gi, 'href="#"'],
   [/(href|xlink:href)\s*=\s*'(?!#)[^']*'/gi, "href='#'"],
+  // A CSS url() is a fetch exactly like href is, and neither the href rules nor the entity rules
+  // reach one inside a <style> block or a style attribute. Only a same-document fragment survives,
+  // which is what an internal gradient reference looks like; everything else becomes `none`, a
+  // value every paint property accepts.
+  [/url\(\s*(['"]?)(?!#)[^)]*\)/gi, "none"],
+  [/@import\b/gi, ""],
   [/javascript:/gi, ""],
   [/<!ENTITY[\s\S]*?>/gi, ""],
   [/<!DOCTYPE[\s\S]*?>/gi, ""],
 ];
+
+// The guarantees the deny list above makes, asserted on the emitted text rather than assumed.
+// A new vector that slips past every pattern fails the build here instead of shipping.
+const SVG_ACTIVE_CONTENT = /<script|<image|javascript:|\son[a-z]+\s*=|<foreignObject|<!ENTITY|@import/i;
+const SVG_OFFSITE_URL = /url\(\s*(['"]?)(?!#)[^)]*\)/i;
 
 
 // ---------------------------------------------------------------------------
@@ -382,6 +408,104 @@ export function findToolchain() {
   };
 }
 
+// ---------------------------------------------------------------------------
+// Minify
+// ---------------------------------------------------------------------------
+
+//
+// dvisvgm writes the compiler's full double precision: a coordinate on a 187pt-wide figure
+// arrives as `380.847576`. One PostScript point is 1/72 inch, so the third decimal of one is
+// 1/720000 inch -- finer than any renderer addresses. Rounding there is not a visible change at
+// any zoom a learner can reach, and it is the single largest source of bytes in the output.
+const SVG_COORD_DECIMALS = 3;
+
+// One SVG number, as written by dvisvgm and asymptote: optional sign, digits with an optional
+// fraction, optional exponent. Anchored so it cannot start mid-identifier -- `e5` in a colour
+// like `#ffee00` is not a number, and `id='g1'` is not a number.
+const SVG_NUMBER = /[+-]?(?:\d+\.\d+|\.\d+|\d+)(?:[eE][+-]?\d+)?/g;
+
+// Shortest exact-enough spelling of one number: rounded, trailing zeros dropped, the leading
+// zero before a bare fraction dropped. `380.847576` -> `380.848`, `0.500` -> `.5`, `1.000` -> `1`.
+// Never returns an empty string, so a token cannot vanish and weld two tokens together.
+function shortenNumber(token, decimals = SVG_COORD_DECIMALS) {
+  const value = Number(token);
+  if (!Number.isFinite(value)) return token;
+  let short = value.toFixed(decimals);
+  if (short.includes(".")) short = short.replace(/\.?0+$/, "");
+  if (short === "-0") return "0";
+  if (short.startsWith("0.")) short = short.slice(1);
+  else if (short.startsWith("-0.")) short = `-${short.slice(2)}`;
+  return short || "0";
+}
+
+function shortenNumbers(text) {
+  return text.replace(SVG_NUMBER, (token) => shortenNumber(token));
+}
+
+// Attributes whose value is geometry, so rounding a number in it cannot change a colour, a
+// font name, a URL or a text string. `width`/`height`/`viewBox` carry a unit suffix (`187pt`);
+// the number is matched and the suffix is left alone, which is why this is a plain number scan
+// and not a whole-value parse.
+const GEOMETRY_ATTRS = new Set([
+  "d", "points", "viewBox", "transform", "gradientTransform", "patternTransform",
+  "width", "height", "x", "y", "x1", "y1", "x2", "y2", "cx", "cy", "r", "rx", "ry",
+  "offset", "stroke-width", "stroke-dashoffset", "font-size",
+]);
+
+// Shorten the numbers inside one `name='value'` / `name="value"` attribute.
+//
+// `d` gets the path pass rather than a number scan, because it is where the bytes are: 97% of a
+// dvisvgm figure is path data, and most of that is a six-decimal absolute coordinate. A number
+// scan shortens those and stops. Expressing them as deltas is what actually halves the file.
+function shortenAttribute(name, value) {
+  if (name === "d") return toRelativePathData(value) || shortenNumbers(value);
+  if (!GEOMETRY_ATTRS.has(name)) return value;
+  return shortenNumbers(value);
+}
+
+// Minify an SVG document.
+//
+// Three passes, in this order, each independently a no-op on input that has nothing to remove:
+// inter-tag whitespace, attribute padding, then number precision. Nothing here drops an element,
+// changes an attribute name, or rewrites markup structure -- the sanitiser owns that -- so a
+// figure that renders before minification renders after it. `<text>`/`<tspan>` content is held
+// out of the whitespace pass, because in text a newline is a space and dropping it would change
+// what a screen reader reads.
+export function minifySvg(svg) {
+  // `<text>`/`<tspan>` content is held out of every pass. In text a newline is a space, so
+  // dropping whitespace there changes what a screen reader reads, and a run of text can contain
+  // the very shapes the other passes match on. Asymptote emits no text at all (`--no-fonts`
+  // turns glyphs into paths), so this costs nothing today and removes a class of surprise if a
+  // figure ever does carry a label.
+  const textSpans = [];
+  let out = svg.replace(/<(text|tspan)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, (match) => {
+    textSpans.push(match);
+    return `\u0000${textSpans.length - 1}\u0000`;
+  });
+  const restore = (text) => text.replace(/\u0000(\d+)\u0000/g, (_, i) => textSpans[Number(i)]);
+
+  // 1. Inter-element whitespace. dvisvgm writes one element per line with no indentation, and
+  //    across the corpus that is thousands of bytes per figure spent on newlines.
+  out = out.replace(/>\s+</g, "><").replace(/\s+\/>/g, "/>");
+
+  // 2. Attribute padding: `<path  d='..' />` and `d = '..'` become single-spaced and tight. Both
+  //    sides of every attribute match keep their original quote character, and the self-closing
+  //    slash is carried through: dropping it would turn `<circle ... />` into an unclosed
+  //    `<circle ...>` and produce a document that no longer parses.
+  out = out.replace(
+    /<([a-zA-Z][\w:.-]*)((?:\s+[\w:.-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)\s*(\/?)>/g,
+    (tag, name, attrs, slash) => `<${name}${attrs.replace(/\s*=\s*/g, "=")}${slash}>`,
+  );
+
+  // 3. Geometry, inside geometry attributes only.
+  out = out.replace(
+    /([\w:.-]+)\s*=\s*(["'])([^"']*)\2/g,
+    (match, name, quote, value) => `${name}=${quote}${shortenAttribute(name, value)}${quote}`,
+  );
+
+  return restore(out);
+}
+
 export function sanitizeSvg(svg) {
   let out = svg;
   for (const [pattern, replacement] of SVG_DENY) out = out.replace(pattern, replacement);
@@ -389,9 +513,183 @@ export function sanitizeSvg(svg) {
   // after the prolog is gone, and re-emit a canonical one.
   out = out.replace(/^\s*<\?xml[^>]*\?>\s*/i, "").replace(/^\s*<!DOCTYPE[^>]*>\s*/i, "").trim();
   if (!/^<svg[\s>]/i.test(out)) throw new Error("sanitized output has no svg root element");
-  if (/<script|javascript:|\son[a-z]+\s*=/i.test(out)) throw new Error("active content survived sanitization");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n${out}\n`;
+  // Minified before the assertions, so what is asserted on is exactly what ships.
+  out = minifySvg(out);
+  if (SVG_ACTIVE_CONTENT.test(out)) throw new Error("active content survived sanitization");
+  if (SVG_OFFSITE_URL.test(out)) throw new Error("a url() reference outside the document survived sanitization");
+  return `<?xml version="1.0" encoding="UTF-8"?>${out}\n`;
 }
+
+// ---------------------------------------------------------------------------
+// Path data
+// ---------------------------------------------------------------------------
+
+// Every path command: how many arguments it takes, and which of those arguments are the x and y
+// of a point that becomes a delta when the command is made relative. dvisvgm emits only the
+// absolute forms; the rest is here so the pass stays correct for any conformant producer.
+//
+// `H` carries an x and no y, `V` a y and no x, and `A`'s rx/ry/rotation/flags are not points at
+// all. Getting those three right is the difference between a smaller file and a broken one.
+const PATH_COMMANDS = {
+  M: { arity: 2, delta: { 0: "x", 1: "y" } },
+  L: { arity: 2, delta: { 0: "x", 1: "y" } },
+  T: { arity: 2, delta: { 0: "x", 1: "y" } },
+  H: { arity: 1, delta: { 0: "x" } },
+  V: { arity: 1, delta: { 0: "y" } },
+  C: { arity: 6, delta: { 0: "x", 1: "y", 2: "x", 3: "y", 4: "x", 5: "y" } },
+  S: { arity: 4, delta: { 0: "x", 1: "y", 2: "x", 3: "y" } },
+  Q: { arity: 4, delta: { 0: "x", 1: "y", 2: "x", 3: "y" } },
+  A: { arity: 7, delta: { 5: "x", 6: "y" } },
+  Z: { arity: 0, delta: {} },
+};
+
+// The tolerance, in user units, on how far the reconstructed point may drift from the original.
+//
+// This is the gate that makes relative path data safe here. Rounding an absolute coordinate
+// bounds its error at half an ulp of the last decimal. Rounding a *delta* does not: the consumer
+// sums the deltas, so the errors accumulate along the path, one rounding step per command. A
+// dense polyline can walk off the shape it is supposed to draw. So the transform tracks the
+// position a renderer will reconstruct and compares it against the original at every command, and
+// a path that exceeds the tolerance is emitted in absolute form instead -- still shortened, still
+// correct, just not the smallest. Nothing downstream has to trust the arithmetic; the pass
+// refuses to emit a path it cannot vouch for.
+const PATH_DRIFT_TOLERANCE = 0.05;
+
+// One number in path data, up to the next separator or command letter. Exponent notation is
+// included because the SVG grammar allows it even though dvisvgm does not emit it.
+const PATH_NUMBER = /^[+-]?(?:\d*\.\d+|\d+\.?)(?:[eE][+-]?\d+)?/;
+
+// Rewrite path data with absolute coordinates expressed as deltas, or return null if the input
+// cannot be parsed or the rewrite would drift too far to vouch for.
+//
+// A null return is not a failure: the caller keeps the absolute form, which is always safe. The
+// parse is strict on purpose and throws rather than guessing, because a half-understood path is
+// worse than an unminified one.
+export function toRelativePathData(d, decimals = SVG_COORD_DECIMALS, tolerance = PATH_DRIFT_TOLERANCE) {
+  const src = String(d);
+  const isSeparator = (c) => c === " " || c === "," || c === "\t" || c === "\n" || c === "\r";
+  let i = 0;
+  let exactX = 0;
+  let exactY = 0;
+  let startX = 0;
+  let startY = 0;
+  let drawnX = 0;
+  let drawnY = 0;
+  let started = false;
+  let out = "";
+  let previous = null;
+
+  const skipSeparators = () => {
+    while (i < src.length && isSeparator(src[i])) i++;
+  };
+
+  try {
+    skipSeparators();
+    while (i < src.length) {
+      // A command letter, or an implicit repeat of the previous one. `M`'s implicit repeats are
+      // `L` and `m`'s are `l`; every other command repeats itself.
+      let letter;
+      if (/[A-Za-z]/.test(src[i])) {
+        letter = src[i];
+        i++;
+      } else if (previous === null) {
+        throw new Error("path data does not start with a command");
+      } else if (previous === "M") {
+        letter = "L";
+      } else if (previous === "m") {
+        letter = "l";
+      } else {
+        letter = previous;
+      }
+      previous = letter;
+
+      const upper = letter.toUpperCase();
+      const spec = PATH_COMMANDS[upper];
+      if (!spec) throw new Error(`unknown path command '${letter}'`);
+      // A path has to open with a moveto: every other command needs a current point to be
+      // relative to, and a document that opens with anything else is malformed anyway.
+      if (!started && upper !== "M") throw new Error("path data does not open with a moveto");
+      const isAbsolute = letter === upper;
+
+      if (upper === "Z") {
+        skipSeparators();
+        out += `${letter} `;
+        exactX = startX;
+        exactY = startY;
+        drawnX = startX;
+        drawnY = startY;
+        continue;
+      }
+
+      const isArc = upper === "A";
+      const value = [];
+      const emitted = [];
+      for (let n = 0; n < spec.arity; n++) {
+        skipSeparators();
+        const isFlag = isArc && (n === 3 || n === 4);
+        const match = (isFlag ? /^[01]/ : PATH_NUMBER).exec(src.slice(i));
+        if (!match) throw new Error(`no path argument where argument ${n} of ${letter} was expected`);
+        value.push(Number(match[0]));
+        // Flags stay verbatim: they are single characters, not measurements.
+        emitted.push(isFlag ? match[0] : shortenNumber(match[0], decimals));
+        i += match[0].length;
+      }
+
+      // Which arguments hold the endpoint: the last x and the last y this command sets. `H` has an
+      // x and no y, `V` a y and no x, and an arc's rx/ry/rotation/flags are not points at all.
+      const xs = Object.keys(spec.delta).map(Number).filter((k) => spec.delta[k] === "x");
+      const ys = Object.keys(spec.delta).map(Number).filter((k) => spec.delta[k] === "y");
+      const endX = xs.length ? (isAbsolute ? value[xs[xs.length - 1]] : exactX + value[xs[xs.length - 1]]) : exactX;
+      const endY = ys.length ? (isAbsolute ? value[ys[ys.length - 1]] : exactY + value[ys[ys.length - 1]]) : exactY;
+
+      // Rewriting to a delta needs a current point to be relative to, and a command that is
+      // already relative is already as short as it gets -- though its endpoint still has to be
+      // tracked, because the next delta is measured from where it lands.
+      const relative = isAbsolute && started;
+      if (relative) {
+        // Each argument is measured from the position the renderer is actually at, not from the
+        // previous argument: in `C x1 y1 x2 y2 x y` all three pairs are deltas from the same
+        // current point, not from each other.
+        for (const [index, axis] of Object.entries(spec.delta)) {
+          emitted[Number(index)] = shortenNumber(String(value[Number(index)] - (axis === "x" ? drawnX : drawnY)), decimals);
+        }
+        out += letter.toLowerCase();
+      } else {
+        out += letter;
+      }
+      // No separator is needed around a command letter: `M0 0l10 0` is the grammar's own canonical
+      // spelling, and dropping the space is one byte per command across thousands of commands.
+      out += emitted.join(" ");
+
+      // Where a renderer lands after reading what was just emitted.
+      const lastX = xs.length ? xs[xs.length - 1] : -1;
+      const lastY = ys.length ? ys[ys.length - 1] : -1;
+      const nextDrawnX = lastX < 0 ? drawnX : relative ? drawnX + Number(emitted[lastX]) : Number(emitted[lastX]);
+      const nextDrawnY = lastY < 0 ? drawnY : relative ? drawnY + Number(emitted[lastY]) : Number(emitted[lastY]);
+
+      // The gate. Nothing is emitted unless the reconstructed point is still within tolerance of
+      // the real one, so accumulated rounding can never walk a path off the shape it draws. The
+      // caller falls back to the absolute form, which is always safe.
+      if (Math.abs(nextDrawnX - endX) > tolerance || Math.abs(nextDrawnY - endY) > tolerance) return null;
+
+      exactX = endX;
+      exactY = endY;
+      drawnX = nextDrawnX;
+      drawnY = nextDrawnY;
+      if (upper === "M") {
+        startX = endX;
+        startY = endY;
+      }
+      started = true;
+    }
+  } catch {
+    // Unparseable, or a shape this pass does not model.
+    return null;
+  }
+
+  return out.trim() || null;
+}
+
 
 // Measure the compiled box, for the S5.5 declared-vs-compiled drift check.
 //
@@ -514,10 +812,130 @@ function compileFigure(toolchain, figure, outDir) {
   }
 }
 
-function describeCompileFailure(err, work, figure) {
+// ---------------------------------------------------------------------------
+// Diagnosing a compile failure
+// ---------------------------------------------------------------------------
+
+// Two literal backslashes, two literal backslashes followed by a macro name, and two literal
+// backslashes immediately after a `^` or `_`. `\\\\` in a regex literal is two escaped backslashes,
+// i.e. two characters.
+const DOUBLED_BACKSLASH = /\\\\/;
+const DOUBLED_BACKSLASH_MACRO = /\\\\[A-Za-z]+/g;
+const DOUBLED_BACKSLASH_AFTER_SCRIPT = /[\^_]\s*\\\\[A-Za-z]+/g;
+
+// Every LaTeX macro in this figure's source that was written with a doubled backslash, in source
+// order and de-duplicated.
+function doubledBackslashMacros(source) {
+  return [...new Set(String(source || "").match(DOUBLED_BACKSLASH_MACRO) || [])];
+}
+
+// The one line of a TeX log that says what went wrong.
+//
+// TeX prints `! <error>` where it happens and then keeps going; Asymptote's shipout aborts
+// afterwards, so the last line of every TeX-side failure is plain_shipout.asy saying "shipout
+// failed". The first `!` line is the cause and the tail is the symptom, which is why taking the
+// tail — what this used to do — reported the renderer and not the figure.
+function firstTexError(text) {
+  for (const line of String(text || "").split("\n")) {
+    const trimmed = line.trim();
+    if (/^!\s*\S/.test(trimmed)) return trimmed;
+  }
+  return null;
+}
+
+// Name the cause, when the cause is one this pipeline knows.
+//
+// Returns null when nothing is recognised, and the caller then falls back to the raw compiler
+// output. A diagnosis is only worth printing if it is more specific than the symptom it replaces,
+// so each case below has to be evidence from the figure source or the compiler log rather than a
+// guess from the shape of the failure.
+function diagnoseCompileFailure(err, figure, logs) {
+  const source = String((figure && figure.source) || "");
+  const stderr = (err && (err.stderr || err.message)) || "";
+  const compilerText = `${stderr}\n${logs}`;
+
+  // The corpus-wide failure behind MAX-75's audit. Asymptote copies a string literal into the
+  // .tex it generates for a TeX label *verbatim* — it does not process `\\` as an escape — so
+  // `label("$90^\\circ$", ...)` reaches TeX as `^\\circ`. TeX's `^` takes exactly one token as
+  // its argument, `\\` is a control symbol rather than a character, and the result is
+  // `Missing { inserted` on every TeX Live, from every amsmath configuration, at every asy
+  // version. Isolated: one backslash compiles, two do not. The compiler's own message names
+  // shipout, so without this case the figure is unfixable from the build output alone.
+  //
+  // The `^`/`_` adjacency is what makes it a *compile* failure rather than a rendering one, and
+  // it is the condition this keys on. A doubled backslash anywhere else -- `y=\\sqrt{x-2}` --
+  // compiles perfectly and silently renders a line break followed by italic `sqrt`, which is
+  // worse in a way no build output will ever report. The corpus currently carries 34 of those
+  // (MAX-62); they are named here so the fix is not mistaken for "the five that happened to
+  // fail".
+  const scripting = [...new Set(source.match(DOUBLED_BACKSLASH_AFTER_SCRIPT) || [])];
+  const elsewhere = doubledBackslashMacros(source);
+  if (scripting.length) {
+    const others = elsewhere.filter((m) => !scripting.some((s) => s.endsWith(m.slice(2))));
+    // The same macro spelled the way it should be, so the fix line quotes it instead of
+    // describing it.
+    const bare = scripting[0].replace(/[\^_]\s*\\/, "");
+    return (
+      `cause: LaTeX macro${scripting.length > 1 ? "s" : ""} written with a doubled backslash immediately after ` +
+      `^ or _ inside the Asymptote string literal (${scripting.join(", ")}). Asymptote copies string literals ` +
+      `into the .tex it generates verbatim, so both backslashes reach TeX; TeX's ^ and _ take exactly one ` +
+      `token, \\ is a control symbol rather than a character, and the result is the "Missing { inserted" above. ` +
+      `Write one backslash (${bare}, not ${scripting[0]}). This is not a missing \\usepackage: adding amsmath ` +
+      `changes nothing here.` +
+      (others.length
+        ? ` The same figure also carries ${others.length} doubled backslash${others.length > 1 ? "es" : ""} ` +
+          `that do NOT break the compile but do render wrong -- ${others.join(", ")} -- because TeX reads \\ as ` +
+          `a line break and then sets the bare macro name in italic. Fix those in the same edit.`
+        : "")
+    );
+  }
+
+  // A TeX Live without amsmath fails inside shipout too, and with the same last line. This is the
+  // one other cause that is a property of the box rather than of the figure, so it is worth
+  // naming separately: the fix is on the machine, not in the content.
+  const missingFile = compilerText.match(/File `?'?([\w.-]+\.sty)'? not found/i);
+  if (missingFile) {
+    return `cause: TeX is missing ${missingFile[1]}. That is a toolchain property, not a figure defect: ` +
+      `install the package providing it (CI: texlive-latex-base plus the package that ships the .sty).`;
+  }
+  if (/TeX capacity exceeded/i.test(compilerText)) {
+    return `cause: TeX hit a capacity limit, which almost always means a LaTeX package the labels need ` +
+      `is not installed (amsmath above all). Check \`kpsewhich amsmath.sty\` on the build host.`;
+  }
+
+  // execFileSync's timeout kills the child with SIGTERM and reports it as `killed`, not as an exit
+  // code. Without naming it, a wedged compile is reported with whatever the compiler managed to
+  // print first, which reads like a content defect.
+  if ((err && (err.killed || err.signal === "SIGTERM" || err.code === "ETIMEDOUT")) ||
+      /timed out|timeout/i.test(compilerText)) {
+    return `cause: the compiler was killed by the ${(err && err.timeout) ? `${err.timeout}ms ` : ""}` +
+      `timeout in compileFigure, not by the figure's source. Raise the budget or split the figure if this ` +
+      `repeats; a label that typesets once should not need minutes.`;
+  }
+
+  const tex = firstTexError(compilerText);
+  if (tex) return `cause: TeX reported \`${tex}\`. See the log tail below for the line it failed on.`;
+
+  return null;
+}
+
+// Everything the compiler left behind that could name a cause, as one blob of text.
+function readWorkLogs(work, names) {
+  const logs = [];
+  // asy writes one .tex per TeX-rendered label and a combined .log. The latex error is in the log,
+  // and it names the macro — which is the only thing that points at the figure.
+  for (const name of names.filter((f) => /\.log$|\.tex$|\.blg$/.test(f)).slice(0, 4)) {
+    try {
+      logs.push(readFileSync(join(work, name), "utf8"));
+    } catch {
+      // Unreadable is not worth reporting over the compiler's own words.
+    }
+  }
+  return logs.join("\n");
+}
+
+export function describeCompileFailure(err, work, figure) {
   const parts = [];
-  const stderr = (err.stderr || err.message || "").toString().trim();
-  if (stderr) parts.push(stderr.split("\n").filter((l) => l.trim()).slice(-8).join(" | "));
 
   let left = [];
   try {
@@ -525,10 +943,19 @@ function describeCompileFailure(err, work, figure) {
   } catch {
     // The work directory is gone; nothing more to report than the compiler said.
   }
+  const logs = readWorkLogs(work, left);
+
+  // The name of the cause goes first, because everything below it is evidence and the reader
+  // needs the conclusion before the appendix. A caller that only prints the first line still gets
+  // a diagnosis rather than "shipout failed".
+  const diagnosis = diagnoseCompileFailure(err, figure, logs);
+  if (diagnosis) parts.push(diagnosis);
+
+  const stderr = (err.stderr || err.message || "").toString().trim();
+  if (stderr) parts.push(stderr.split("\n").filter((l) => l.trim()).slice(-8).join(" | "));
+
   parts.push(`[${figure.key}] work dir held ${left.join(", ") || "nothing"}`);
 
-  // asy writes one .tex per TeX-rendered label and a combined .log. The latex error is in the
-  // log, and it names the macro — which is the only thing that points at the figure.
   for (const name of left.filter((f) => /\.log$|\.tex$|\.blg$/.test(f)).slice(0, 4)) {
     try {
       const tail = readFileSync(join(work, name), "utf8").trim().split("\n").filter((l) => l.trim()).slice(-12);

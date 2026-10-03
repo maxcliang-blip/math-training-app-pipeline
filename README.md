@@ -54,6 +54,41 @@ one-directional and load-bearing:
 Content must never carry the derived three. Requiring them at import deadlocks authoring on
 the build, and no figure can ever ship.
 
+### What the emitted SVG is
+
+`figure.svg` is sanitized and minified, and both are enforced rather than assumed.
+`sanitizeSvg()` strips `<script>`, `on*` handlers, `<foreignObject>`, external
+`href`/`xlink:href`, every `<image>` outright, and any `url()` that does not point inside the
+document — a CSS `url()` is an off-origin fetch exactly like `href` is, and neither reaches the
+other. What survives the deny list is then asserted on before the file is written, so a vector no
+pattern catches fails the build instead of shipping.
+
+`minifySvg()` then removes the bytes that carry no information: inter-element whitespace,
+attribute padding, and the compiler's full double precision — `380.847576` becomes `380.848`, and
+path coordinates become deltas (`M380.848 396.192h-168.559`) rather than absolute repeats. Path
+data is about 97% of a dvisvgm figure, so that is where the budget is won: across the corpus,
+total bytes fall ~38% and the 95th percentile lands under the 40 KB ceiling in Rendering
+Conventions S7.
+
+Making a coordinate relative is only safe if the arithmetic is checked, because a consumer sums
+the deltas and the rounding errors accumulate along the path. So `toRelativePathData()` tracks
+the position a renderer will reconstruct alongside the real one, and a path that drifts more than
+`PATH_DRIFT_TOLERANCE` is emitted in absolute form instead. A minified figure is never one this
+pipeline has not proved it drew the same shape.
+
+### When a figure will not compile
+
+A compile failure is reported with the cause named, not with the symptom. Asymptote aborts inside
+`shipout()` for every TeX-side failure, so the last line of the log is always "shipout failed" and
+the interesting line is the first one. `describeCompileFailure()` leads with the diagnosis and
+keeps the raw output as evidence.
+
+The one worth knowing about: **a LaTeX macro written with a doubled backslash inside the Asymptote
+string literal**. Asymptote copies string literals into the `.tex` it generates verbatim, so
+`label("$90^\\circ$", ...)` reaches TeX as `^\\circ`; TeX reads `\\` as a line break and then
+tries to typeset a bare `circ`, which fails identically on every TeX Live and is not fixed by
+`\usepackage("amsmath")`. Write one backslash.
+
 ### The figure box is a measurement, not an arithmetic consequence
 
 `size(W,H)` does not produce a W by H picture. Under Asymptote's default `keepAspect=Aspect` the
