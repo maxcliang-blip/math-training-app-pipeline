@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { createApp } from "../src/app.js";
 import { loadContentStore } from "../src/content.js";
 import { FigureStore } from "../src/figures.js";
-import { FIGURE_PAYLOAD_FIELDS } from "../../lib/figure-contract.mjs";
+import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure-contract.mjs";
 
 // Route-level acceptance for the API surface IA §7 lists as P0, plus the two rules that are
 // cheaper to assert here than to discover in a learner's browser: no figure payload on a
@@ -211,9 +211,9 @@ test("a batched exercise fetch refuses more than 60 ids and reports the ones it 
 
 test("no figure payload field appears anywhere on a content route", async () => {
   // figureKey is the one payload-named field a content route may carry, because it is the
-  // reference, not the payload: FIGURE_REFERENCE_FIELDS is exactly ["figureKey"]. The other seven
-  // fields are the figure route's alone.
-  const allowed = new Set(FIGURE_PAYLOAD_FIELDS.filter((f) => f !== "figureKey"));
+  // reference, not the payload: FIGURE_REFERENCE_FIELDS is ["figureKey", "asymptoteAlt"]. The other
+  // seven fields are the figure route's alone.
+  const allowed = new Set(FIGURE_PAYLOAD_FIELDS.filter((f) => !FIGURE_REFERENCE_FIELDS.includes(f)));
   for (const path of ["/api/modules", "/api/modules/M1", "/api/lessons/m1-l3", "/api/exercises?lessonId=m6-l3", "/api/exercises/m6-l3-p6"]) {
     const { body } = await get(path);
     const keys = collectKeys(body);
@@ -221,16 +221,23 @@ test("no figure payload field appears anywhere on a content route", async () => 
       assert.equal(keys.has(field), false, `${field} leaked onto ${path}`);
     }
   }
-  // And the references that do appear are keys alone.
+  // And the references that do appear carry nothing beyond the reference fields.
   const withFigure = await get("/api/exercises/m6-l3-p6");
-  assert.deepEqual(Object.keys(withFigure.body).filter((k) => k === "figureKey"), ["figureKey"]);
+  const figureish = Object.keys(withFigure.body).filter((k) => /figure|alt|caption|aspect|hash|pipeline/i.test(k));
+  assert.deepEqual(figureish.sort(), [...FIGURE_REFERENCE_FIELDS].sort());
+  assert.ok(withFigure.body.asymptoteAlt, "the description rides along with the key");
 });
 
-// The seven figure payload fields are not the whole leak. asymptoteSource and its two siblings are
-// build input, they are kilobytes per figure, and a payload-field check cannot see them because
-// none of them is named in FIGURE_PAYLOAD_FIELDS. This walks every lesson and every exercise.
+// The seven figure payload fields are not the whole leak. asymptoteSource is build input, it is
+// kilobytes per figure, and a payload-field check cannot see it because it is not named in
+// FIGURE_PAYLOAD_FIELDS. This walks every lesson and every exercise.
+//
+// asymptoteAlt is deliberately absent from that list. It is the authored description rather than
+// build input, and it is on the reference because the degraded state renders it while the figure
+// route is failing for every key (Rendering Conventions §5.6, §8.6). A client that only learns the
+// description from the route that failed never shows it.
 test("no Asymptote build input appears anywhere on a content route", async () => {
-  const buildInput = ["asymptoteSource", "asymptoteAlt", "asymptoteAspectRatio"];
+  const buildInput = ["asymptoteSource", "asymptoteAspectRatio"];
   const lessons = await get("/api/lessons");
   for (const summary of lessons.body) {
     for (const path of [`/api/lessons/${summary.id}`, `/api/exercises?lessonId=${summary.id}`]) {
@@ -299,6 +306,37 @@ test("a figure key lookup against an unusable manifest is a 503, not a 404", asy
     await new Promise((resolve) => server3.close(resolve));
   }
 });
+
+test("with the figure endpoint failing, the lesson and exercise still describe the figure", async () => {
+  // Rendering Conventions §8.6, from the server's side of the boundary: with the figure endpoint
+  // forced to fail, the alt text has to reach the client or there is nothing for the degraded box
+  // to show. The figure route is the thing that is failing here, so it cannot be the source of the
+  // description -- which is the whole reason asymptoteAlt is on the reference.
+  const unusable = createApp({ dataDir, figureStore: unusableManifest() });
+  const server4 = unusable.listen(0);
+  await new Promise((resolve) => server4.once("listening", resolve));
+  const url = `http://127.0.0.1:${server4.address().port}`;
+  try {
+    // The endpoint really is failing, for every key.
+    assert.equal((await fetch(`${url}/api/figures/m6-l3-p6`)).status, 503);
+    assert.equal((await fetch(`${url}/api/figures`)).status, 503);
+
+    const exercise = await (await fetch(`${url}/api/exercises/m6-l3-p6`)).json();
+    assert.equal(exercise.figureKey, "m6-l3-p6");
+    assert.match(exercise.asymptoteAlt, /^A circle lies mostly in the second quadrant/);
+
+    const lesson = await (await fetch(`${url}/api/lessons/m1-l3`)).json();
+    const refs = lesson.sections.concept.figures;
+    assert.ok(refs.length > 0);
+    for (const ref of refs) {
+      assert.ok(ref.asymptoteAlt, `${ref.figureKey} has no description to degrade to`);
+      assert.match(ref.asymptoteAlt, /\S/);
+    }
+  } finally {
+    await new Promise((resolve) => server4.close(resolve));
+  }
+});
+
 test("with a passing manifest, the figure route serves exactly the contract payload", async () => {
   const passing = createApp({
     dataDir,

@@ -1,16 +1,17 @@
 // Figure — renders one figure for a lesson or exercise.
 //
-// The parent hands over a reference ({ figureKey } and nothing else) exactly as the API sends it;
-// the payload is fetched here, once, against the figure route. That is the whole point of the
+// The parent hands over a reference ({ figureKey, asymptoteAlt }) exactly as the API sends it; the
+// payload is fetched here, once, against the figure route. That is the whole point of the
 // contract: a lesson response carries a key and no figure bytes, so a lesson page costs one
 // figure request, not one per figure in the lesson body.
 //
 // Nothing here renders an error state for a missing figure. A 503 means the build has not run,
 // which is a deployment fact and not the learner's problem; the prose around it is still correct
-// and still worth showing.
+// and still worth showing. What the learner does get is the figure's description, visibly, and a
+// box the size the figure would have been: the state is degraded out loud, not silently empty.
 
 import React, { useEffect, useState } from "react";
-import { createFigureClient, figurePlaceholder, resolveFigureRatio } from "../lib/figures.js";
+import { createFigureClient, figureUnavailableView, resolveFigureAlt, resolveFigureRatio } from "../lib/figures.js";
 import MathBlock from "./MathBlock.jsx";
 
 let sharedClient = null;
@@ -67,17 +68,16 @@ export default function Figure({ figureKey, alt, captionLatex, declaredAspectRat
   }
 
   if (state.status !== "ready") {
-    const placeholder = figurePlaceholder(state);
-    return (
-      <div className="figure figure--unavailable" data-reason={placeholder.detail}>
-        <span className="figure__placeholder">{placeholder.label}</span>
-      </div>
-    );
+    const { message, detail, alt: description, aspectRatio } = figureUnavailableView(state, {
+      alt,
+      declaredAspectRatio
+    });
+    return <FigureUnavailable message={message} detail={detail} alt={description} aspectRatio={aspectRatio} />;
   }
 
   // The alt on the payload wins over the prop: it came from the authoring record that owns the
   // figure, so it describes this figure rather than whatever placeholder text the caller passed.
-  const altText = state.alt || alt || "Figure";
+  const altText = resolveFigureAlt(state.alt, alt) ?? "Figure";
 
   return (
     <figure className="figure figure--ready">
@@ -109,9 +109,35 @@ export default function Figure({ figureKey, alt, captionLatex, declaredAspectRat
   );
 }
 
+// The degraded figure, drawn. Exported rather than inlined so the test that asserts Rendering
+// Conventions §8.6 renders the same box the lesson renders, instead of a copy of it.
+//
+// Three things are load-bearing here and each is a spec line rather than a taste call:
+//
+//   * the message is §5.6's sentence verbatim;
+//   * the alt text is element text, visible to everyone and not only to assistive tech, because a
+//     blank region reads as "nothing was meant to be here" rather than "this failed to load";
+//   * the box is sized from the reserved ratio, so the figure's absence does not move the lesson.
+export function FigureUnavailable({ message, detail, alt: description, aspectRatio }) {
+  return (
+    <div
+      className="figure figure--unavailable"
+      data-reason={detail ?? undefined}
+      style={aspectRatio ? { aspectRatio: String(aspectRatio) } : undefined}
+    >
+      <span className="figure__placeholder">{message}</span>
+      {description ? <p className="figure__alt">{description}</p> : null}
+    </div>
+  );
+}
+
 // The form a lesson or exercise record actually carries. Extracted so that a caller passing the
 // whole exercise object does not accidentally thread a payload through from some other response.
+//
+// The description is forwarded because it is the only thing the degraded box has to show: a
+// lesson section figure has no other route to its alt text, and dropping it here is what made a
+// lesson figure degrade to a bare "Figure not built yet".
 export function FigureRef({ reference }) {
   if (!reference || typeof reference.figureKey !== "string") return null;
-  return <Figure figureKey={reference.figureKey} />;
+  return <Figure figureKey={reference.figureKey} alt={reference.asymptoteAlt} />;
 }

@@ -67,6 +67,14 @@ export function figureAssetUrl(figureSvgUrl, origin = "") {
 // decimals, so anything inside this band is rounding and not a disagreement.
 const RATIO_TOLERANCE = 0.02;
 
+// The ratio a figure box is sized at when nothing authored one. From Rendering Conventions §5.4
+// item 1 ("default 1.333", IA §7 gap 1). A box with no ratio is not neutral, it is unreserved: it
+// collapses to the height of its content, so it is a thin line while nothing is in it and a
+// different height once something is. That is the reflow the reserved box exists to prevent, and
+// the degraded state is where it is most visible, because there the content arriving is two lines
+// of text inside a box that is supposed to hold a diagram.
+export const DEFAULT_FIGURE_ASPECT_RATIO = 1.333;
+
 // Which aspect ratio the <img> box should use, and whether the manifest's numbers disagree.
 //
 // Two ratios come from the build (declared is the author's, compiled is the compiler's) and a third
@@ -157,15 +165,48 @@ export function createFigureClient({ fetchImpl, apiBase = "", origin = "" } = {}
   return { getFigure };
 }
 
-// What a learner should see for each status. Kept next to the statuses so a new status cannot be
-// added without deciding what it looks like.
-export function figurePlaceholder(result) {
-  switch (result.status) {
-    case "toolchain-missing":
-      return { kind: "unavailable", label: "Figure not built yet", detail: result.reason };
-    case "invalid":
-      return { kind: "unavailable", label: "Figure unavailable", detail: result.reason };
-    default:
-      return { kind: "unavailable", label: "Figure unavailable", detail: result.reason };
+// The one sentence the degraded state shows. Verbatim from Rendering Conventions §5.6, because the
+// wording is the contract: the learner is told the figure is missing and told that what follows is
+// the whole description of it, which is what makes the state usable rather than alarming.
+//
+// The status that produced it is not in this sentence. toolchain-missing, a 404 and a dropped
+// connection are different bugs with different fixes, and they stay readable on data-reason -- but
+// they are deployment facts, and a learner cannot act on one. "Figure not built yet" as the whole
+// message told a learner nothing about the figure they were trying to read.
+export const FIGURE_UNAVAILABLE_MESSAGE = "Figure unavailable — the description below is complete.";
+
+// The alt text for whichever figure this is.
+//
+// The payload's alt wins over the prop: it came from the authoring record that owns the figure, so
+// it describes that figure rather than whatever placeholder text a caller passed. In the degraded
+// state there is no payload to win, so the answer is the description the reference carried -- which
+// is why FIGURE_REFERENCE_FIELDS carries asymptoteAlt, since the degraded state is the one state in
+// which the figure route cannot supply it.
+export function resolveFigureAlt(payloadAlt, propAlt) {
+  for (const candidate of [payloadAlt, propAlt]) {
+    if (typeof candidate === "string" && candidate.trim() !== "") return candidate;
   }
+  return null;
+}
+
+// Everything the degraded box shows, decided here rather than in the component.
+//
+// Two reasons it is not JSX. The first is the repo's rule that anything assertable stays out of a
+// component (see web/test/latex.test.js). The second is that this is the state with no test
+// coverage to speak of until now, and §8.6 asks for an assertion that the alt text is in the DOM as
+// visible text when the figure endpoint fails -- which needs the whole chain (endpoint failure, the
+// view this produces, the box the component draws) to be reachable from a test.
+//
+// aspectRatio is the reserved ratio, so the box keeps the size it was reserved at. The figure never
+// arrives, so there is no measurement to correct it with and nothing should change the box: a
+// degraded box that collapses to the height of two lines of text is a reflow at the exact moment
+// the reader is already looking at something that went wrong.
+export function figureUnavailableView(result, { alt, declaredAspectRatio } = {}) {
+  return {
+    kind: "unavailable",
+    message: FIGURE_UNAVAILABLE_MESSAGE,
+    detail: result?.reason ?? null,
+    alt: resolveFigureAlt(result?.alt, alt),
+    aspectRatio: resolveFigureRatio({ declaredAspectRatio }).reserved ?? DEFAULT_FIGURE_ASPECT_RATIO
+  };
 }

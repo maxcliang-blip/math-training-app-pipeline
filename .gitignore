@@ -8,3 +8,6 @@ build/
 coverage/
 artifacts/
 .data/
+# The compiled Figure.jsx the degraded-state test imports. It is deleted when the suite finishes,
+# and ignored so that a suite killed halfway does not leave a build product in a commit.
+web/test/.degraded-*/

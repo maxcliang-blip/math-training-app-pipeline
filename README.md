@@ -69,8 +69,11 @@ reach a learner, shared by the build, the API (`api/src/figures.js`) and the fro
   serves a learner the wrong figure
 - the figure payload is exactly `figureKey`, `figureSvgUrl`, `figureHash`,
   `figurePipelineVersion`, `declaredAspectRatio`, `compiledAspectRatio`, `alt`, `captionLatex`
-- a lesson or exercise response carries `figureReference()` and nothing more: a key, never an
-  inline SVG, hash or pipeline version
+- a lesson or exercise response carries `figureReference()` and nothing more: `figureKey` and
+  `asymptoteAlt`, never an inline SVG, hash or pipeline version. The description is on the
+  reference because the figure route is the thing that can fail — a manifest that did not pass is
+  a 503 for every key — and the degraded figure box renders that description visibly rather than
+  leaving a blank region
 - the payload is served only from a manifest with `status: "pass"` and a `figureHash` on the
   figure. Absent, unbuilt or unhashed means the route does not answer; it is not an empty
   catalogue

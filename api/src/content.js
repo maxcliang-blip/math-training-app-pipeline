@@ -12,12 +12,17 @@
 //     66 files in content/exercises are objects. A loader that assumes one shape silently drops
 //     roughly two thirds of the corpus, and a 404-per-exercise is the only symptom.
 //
-//  2. Figure information does not travel here. A lesson or exercise carries figureReference()
-//     - a bare figureKey - and the eight payload fields stay behind the figure route. The
-//     declared aspect ratio and the alt text that the UI needs to reserve a figure box with no
-//     reflow (IA §7 gaps 1-2) are both on that route, as declaredAspectRatio and alt. So a
-//     client learns "this exercise has a figure" from the lesson/exercise payload and learns
-//     what it looks like from the figure route, which is the split the figure contract mandates.
+//  2. Figure bytes do not travel here. A lesson or exercise carries figureReference() -- a
+//     figureKey and the authored description -- and the eight payload fields stay behind the
+//     figure route. So a client learns "this exercise has a figure, and here is what it shows"
+//     from the lesson/exercise payload, and learns the SVG, the hash and the declared aspect
+//     ratio from the figure route, which is the split the figure contract mandates.
+//
+//     The description is on the reference rather than on the route because of the degraded
+//     state (Rendering Conventions §5.6): when the build has produced no usable manifest the
+//     figure route is a hard 503 for every key, so the only moment the description is needed is
+//     the moment the route cannot supply it. asymptoteSource -- kilobytes of build input per
+//     figure -- still never leaves the build.
 //
 //  3. Dangling references are reported, not patched. A practice list naming an exercise id that
 //     does not exist is a content bug. Serving the list anyway with the id quietly missing would
@@ -337,19 +342,23 @@ export function toLessonResponse(store, lesson) {
 
 function lessonFigureRefs(store, lesson, sectionName, figures) {
   return figures
-    .map((fig, i) => (fig && fig.asymptoteSource ? figureReference(lessonFigureKey(lesson.id, sectionName, i)) : null))
+    .map((fig, i) =>
+      fig && fig.asymptoteSource
+        ? figureReference(lessonFigureKey(lesson.id, sectionName, i), fig.asymptoteAlt)
+        : null
+    )
     .filter(Boolean);
 }
 
-// A worked example, with its figure reduced to a reference. The figure fields are dropped rather
-// than blanked: an empty asymptoteSource would read as "this figure has no source", which is a
-// different and wrong claim. When there is a figure, figureKey is there instead, and the payload
-// comes from the figure route.
+// A worked example, with its figure reduced to a reference. The build input is dropped rather than
+// blanked: an empty asymptoteSource would read as "this figure has no source", which is a
+// different and wrong claim. When there is a figure, figureKey and the description are there
+// instead, and the payload comes from the figure route.
 function toExampleResponse(lesson, sectionName, example, index) {
   if (!example || typeof example !== "object") return example;
   const { asymptoteSource, asymptoteAlt, asymptoteAspectRatio, ...rest } = example;
   if (!asymptoteSource) return rest;
-  return { ...rest, figureKey: exampleFigureKey(lesson.id, sectionName, index) };
+  return { ...rest, ...figureReference(exampleFigureKey(lesson.id, sectionName, index), asymptoteAlt) };
 }
 
 // The exercise route's shape. Raw LaTeX in, raw LaTeX out - never pre-rendered HTML (IA S7): the
@@ -397,7 +406,11 @@ export function toExerciseResponse(store, ex) {
     response.solutionWithheld = true;
   }
 
-  if (ex.asymptoteSource) response.figureKey = exerciseFigureKey(ex.id);
+  // The reference carries the description as well as the key, because the degraded state renders
+  // it and the degraded state is the one where this route's figure cannot be fetched.
+  if (ex.asymptoteSource) {
+    return { ...response, ...figureReference(exerciseFigureKey(ex.id), ex.asymptoteAlt) };
+  }
   return response;
 }
 

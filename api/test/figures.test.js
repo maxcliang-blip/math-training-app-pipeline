@@ -47,12 +47,21 @@ test("a figure payload carries the contract fields and nothing else", () => {
 });
 
 test("a non-figure route gets the reference and never the payload", () => {
-  const ref = figureReference("m1-l1.sections.concept.figures[0]");
+  const ref = figureReference("m1-l1.sections.concept.figures[0]", "a number line with five dots");
   assert.deepEqual(Object.keys(ref), FIGURE_REFERENCE_FIELDS);
+  assert.equal(ref.asymptoteAlt, "a number line with five dots");
   for (const field of FIGURE_PAYLOAD_FIELDS) {
     if (field === "figureKey") continue;
     assert.equal(field in ref, false, `${field} must not appear on a lesson or exercise response`);
   }
+});
+
+test("a reference with no authored description omits it rather than blanking it", () => {
+  // An empty description reads as "this figure has no description", which is a different and wrong
+  // claim, and the degraded box would render an empty paragraph where the description belongs.
+  assert.deepEqual(Object.keys(figureReference("k", "   ")), ["figureKey"]);
+  assert.deepEqual(Object.keys(figureReference("k")), ["figureKey"]);
+  assert.equal(figureReference(""), null);
 });
 
 test("a manifest that did not pass the build serves no figure", () => {
