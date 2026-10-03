@@ -403,7 +403,11 @@ case "$cmd" in
           email=$(git -C "$path" config --get user.email 2>/dev/null || echo '<unset>')
           printf '%-36s %-42s %-28s %s\n' "$path" "$br" "$email" "$hookspath"
           ;;
-        "detached "*)
+        "detached"|"detached "*)
+          # `detached` arrives bare -- no trailing space, no ref after it -- so a `"detached "*`
+          # pattern matched nothing at all and every detached worktree fell out of both tables.
+          # That is a checkout whose node_modules nothing here could see, which is the one shape
+          # this table exists to catch.
           email=$(git -C "$path" config --get user.email 2>/dev/null || echo '<unset>')
           printf '%-36s %-42s %-28s %s\n' "$path" '(detached)' "$email" "$hookspath"
           ;;
@@ -429,7 +433,7 @@ EOF
         "worktree "*)
           path=${line#worktree }
           ;;
-        "branch "*|"detached "*)
+        "branch "*|"detached"|"detached "*)
           state=$(deps_state "$path")
           case "$state" in
             FOREIGN*) foreign=$((foreign + 1)) ;;
