@@ -62,6 +62,9 @@ COPY web/ web/
 # ERR_MODULE_NOT_FOUND inside the image, which is why this image could not be rebuilt from main at
 # all: the build died at `npm test` before it ever reached the runtime stage.
 COPY scripts/ scripts/
+# deploy/ for the same reason: api/test/supervise.test.js imports deploy/supervise.mjs, and the
+# test has to run against the file the container actually executes.
+COPY deploy/ deploy/
 # The suite asserts against the real corpus, so the corpus has to be in this stage. A build that
 # ran the tests against an empty content/ would pass 25 assertions by accident.
 COPY content/ content/
@@ -110,7 +113,11 @@ COPY --from=figures --chown=node:node /repo/content ./content
 
 COPY --chown=node:node deploy/nginx-staging.conf /etc/nginx/conf.d/default.conf
 COPY --chown=node:node deploy/entrypoint-staging.sh /usr/local/bin/entrypoint-staging.sh
-RUN chmod +x /usr/local/bin/entrypoint-staging.sh
+# supervise.mjs is what keeps the API alive, so it has to be in the image. It lives in the repo
+# (and in api/test/supervise.test.js) rather than being written inline here, because the test that
+# proves the respawn path runs against the same file the container runs.
+COPY --chown=node:node deploy/supervise.mjs /opt/mta/deploy/supervise.mjs
+RUN chmod +x /usr/local/bin/entrypoint-staging.sh /opt/mta/deploy/supervise.mjs
 
 ENV NODE_ENV=production \
     HOST=127.0.0.1 \
@@ -121,8 +128,13 @@ ENV NODE_ENV=production \
 
 EXPOSE 80
 
+# Probed through nginx, not straight at the API's own port. Hitting 127.0.0.1:3001 said nothing
+# about the only path a learner takes: if nginx wedges, or the proxy stops reaching the API, this
+# goes unhealthy instead of reporting a container that is Up and serving 502s. During a respawn the
+# API is unreachable for well under one check interval, so a single miss is not enough to flip the
+# status — three consecutive failures are.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD node -e "fetch('http://127.0.0.1:3001/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+  CMD node -e "fetch('http://127.0.0.1/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
 ENTRYPOINT ["/usr/local/bin/entrypoint-staging.sh"]
 CMD ["nginx", "-g", "daemon off;"]
