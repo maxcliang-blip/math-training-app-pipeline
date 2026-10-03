@@ -386,6 +386,27 @@ export const MUTATIONS = [
     },
   },
   {
+    // S5.2-size-floor: the absolute-size counterpart to the S9 #8 aspect band, which constrains only
+    // the *shape* of the declared box. A size(60,45) figure has a legal 1.333 ratio and clears every
+    // other extent check in the pipeline.
+    //
+    // The mutation uses the corpus's own thin shape rather than an arbitrary small number, and only
+    // shrinks one dimension: the smallest ceiling the corpus actually contains is size(127,201),
+    // whose width sits below the floor while its height sits far above it. A figure too thin to hold
+    // a label beside what it labels is the case the rule exists for, and a rule that guarded area
+    // or shrank both dimensions would still pass this mutation.
+    id: "figure-ceiling-below-legibility-floor",
+    rule: "S5.2-size-floor",
+    severity: "error",
+    apply(c) {
+      const fig = findLessonFigure(c.lessons);
+      fig.asymptoteSource = fig.asymptoteSource.replace(
+        /size\s*\(\s*[\d.]+\s*,\s*[\d.]+\s*\)/,
+        "size(60, 240)",
+      );
+    },
+  },
+  {
     // The caption check used to be `typeof f.captionLatex === "string" && !/^\s*Fig\.?\s*\d/`, so
     // `""` satisfied it: a concept figure with an empty caption was a caption-less figure wearing
     // a caption's type. It now requires a non-empty trimmed string. (MAX-76)

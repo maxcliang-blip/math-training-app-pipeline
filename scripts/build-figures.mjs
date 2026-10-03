@@ -140,6 +140,44 @@ const RATIO_REJECT = 0.05;
 const MIN_ASPECT = 0.5;
 const MAX_ASPECT = 3;
 
+// Lower bound on each dimension of the declared size(W,H) ceiling, in the same units as the call.
+// This is the *absolute size* counterpart to MIN_ASPECT/MAX_ASPECT, and it exists because the band
+// above only constrains the shape of the box: a size(60,45) figure has a legal 1.333 ratio and
+// passes every other extent check in the pipeline.
+//
+// WHY 80, MEASURED (MAX-95). Measured on asy 2.87 + dvisvgm 3.2.1 through this same compile path
+// (scripts/asy-docker, --eps --no-fonts), over a 12-rung ladder from size(40,30) to size(640,480),
+// each rung drawing a stroked line plus default-font labels:
+//
+//   1. size() does NOT scale type. The label glyph path is byte-identical at size(40,30) and
+//      size(640,480) -- same absolute coordinates, only translated -- at a cap-height of 8.51pt =
+//      11.38 CSS px. stroke-width stays 0.5pt at every rung too. So there is no "the text shrank"
+//      regime to guard, and a floor pitched at type size would be guarding a number that does not
+//      move. This is why the number below is a floor on the *box*, not on the font.
+//   2. size(W,H) sets a uniform unitsize from the declared HEIGHT and lets width follow the
+//      content's aspect ratio: declared size(80,60) emits 71x61pt, size(100,75) emits 89x75.
+//      Consistent with MAX-59's "size() bounds the box, it does not fix it".
+//   3. What degrades as the ceiling shrinks is therefore proportion, not type: glyph-box area as a
+//      fraction of the emitted viewBox runs 0.204 at size(40,30), 0.048 at size(80,60), 0.025 at
+//      size(111,83), 0.003 at size(320,240). Past roughly 5% the labels stop being annotations and
+//      become the figure. asy never overlaps them -- glyphPairs was 0 at every rung, because it
+//      shrinks the drawing instead -- so there is no hard collision edge to sit on, only a
+//      gradient, and 80pt is where that gradient is still comfortably on the good side.
+//
+// 80pt declared is >= 106.7 CSS px of rendered figure, against a container that very nearly binds:
+// web/src/styles.css gives .figure__svg `max-width: 100%` and never `width: 100%`, so the browser
+// lays the <img> out at the SVG's intrinsic pt width * 4/3 inside a 736px `main` (704px inside
+// article.exercise). Measured over the 91 artifacts a current container build emits, intrinsic
+// widths run 169-641 CSS px -- the widest clears 91% of the container an exercise figure gets, so
+// the ceiling is very nearly what sets the on-screen size of a figure today.
+//
+// The corpus is clear of this floor by 39%: on origin/main all 91 ceilings use the two-argument
+// form, the smallest declared dimension is 111, and nothing is below 80. So this rejects nothing
+// that passes today. That is also why the number is NOT derived from the corpus -- MAX-60 found 55
+// of 78 ceilings equal to their own measured box, so the corpus distribution is a record of a
+// writeback pass, not of author intent. 80 came from the ladder; the corpus merely clears it.
+export const MIN_SIZE_FLOOR = 80;
+
 // Defence in depth. The primary control is that only Asymptote output for approved figure
 // sources is ever shipped; this removes the active-content vectors that could survive a
 // compromised or unexpected source.
@@ -292,6 +330,29 @@ export function validateFigure(figure) {
 
   const width = Number(sizeCall[1]);
   const height = Number(sizeCall[2]);
+
+  // The floor on the ceiling. MIN_ASPECT/MAX_ASPECT above constrain the *shape* of the declared
+  // box; this constrains its absolute size, which nothing else in the pipeline does. The reason it
+  // is a floor on the box and not on the font is measured, and it is the opposite of the intuitive
+  // story: asy 2.87's size() does not scale type, so a figure's labels stay at 11.38 CSS px cap-
+  // height whatever the ceiling says. Shrinking the ceiling does not make the text small -- it
+  // shrinks the drawing out from under text that never shrank, so the labels stop being annotations
+  // and become the figure. See MIN_SIZE_FLOOR above for the ladder.
+  //
+  // Reported per dimension rather than on the area or the minimum, because the two dimensions fail
+  // for different reasons and an author needs to know which one to raise: a too-narrow W means the
+  // figure cannot hold a label beside what it labels, a too-short H means it cannot hold a label
+  // above and below. One message covers both and names the pair, because the fix is the same.
+  const tooSmall = [["W", width], ["H", height]].filter(([, v]) => v < MIN_SIZE_FLOOR);
+  if (tooSmall.length) {
+    problems.push(
+      `size(${width},${height}) declares a ceiling below the ${MIN_SIZE_FLOOR}pt legibility floor ` +
+        `(${tooSmall.map(([n, v]) => `${n}=${v}`).join(", ")}). Asymptote's size() does not scale type, so a ` +
+        `ceiling this small does not shrink the labels -- it shrinks the drawing underneath labels that ` +
+        "stay the same size, and the figure stops being readable (S5.2). The ceiling still bounds the " +
+        "output, it is not the box: asymptoteAspectRatio comes from the compiled viewBox (S5.4 item 4)",
+    );
+  }
 
   // The declared ratio is content's own assertion about the box this figure renders at, and it is
   // what S5.4 item 4 compares against the compiled viewBox. It is NOT width/height: Asymptote's
