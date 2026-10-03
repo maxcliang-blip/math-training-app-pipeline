@@ -10,8 +10,9 @@ Approved plan (MAX-1): React frontend + Node.js/Express backend, KaTeX for math 
 - `api/` — Node.js/Express backend (lesson CRUD, exercise handling, rendering support)
 - `content/` — the authored corpus: `lessons/`, `exercises/`, `fixtures/`. This is the import
   source of truth, so it lives in the repository and not beside it.
-- `scripts/` — the content and figure build gates
-- `.github/workflows/ci.yml` — CI: install, build, test
+- `scripts/` — the content and figure build gates, plus the agent git tooling below
+- `.githooks/` — the hooks git runs on every push. `scripts/install-git-hooks.sh` installs them
+- `.github/workflows/ci.yml` — CI: install, build, test, and the delivery-integrity gate
 - `.github/workflows/content.yml` — CI: content math gate and figure build
 
 ## Content build gates
@@ -81,6 +82,52 @@ npm install
 npm run dev:api   # Express API on :4000
 npm run dev:web   # Vite dev server on :5173
 ```
+
+## One worktree per agent
+
+Several agents work this repository at the same time, so the git working directory is shared
+mutable state unless something stops it. On 2026-10-02 it was not stopped: Bob staged three
+files and committed on `max-61-staging-source`, and Carol ran her own `git commit` in the same
+directory seconds later. Her commit landed on his branch. The branch carried two commits, the
+pull request reported 26 changed files instead of 3, and it was squash-merged under his title —
+22 files of her geometry content on `main`, unreviewed, under a stranger's commit message
+(MAX-69).
+
+Scoping `git add` does not prevent this. It protects the files you stage, not the branch you are
+standing on. Three things are shared in one checkout — the checked-out branch, the index, and the
+working tree — and only one of them is ever being looked at.
+
+```bash
+sh scripts/install-git-hooks.sh            # once per clone: install the push guard
+sh scripts/agent-worktree.sh add carol content/max-70-m5-l3
+sh scripts/agent-worktree.sh check         # audit every worktree on this box
+```
+
+`add` creates `/home/opc/wt/<agent>-<branch>` off `origin/main` (override with `WT_ROOT`), gives
+it its own `user.name`/`user.email` in **worktree** config, points it at the shared hooks, and
+prints the `cd`. Separate HEAD, separate index, separate identity: nothing two agents can land on
+each other.
+
+`identity` records an agent's name and email in `.git/agent-identities` in the shared `.git` dir,
+so `add <agent>` needs no environment variables. That file is machine state, deliberately not
+committed: it is a statement about who runs here, not about the corpus.
+
+### The push guard
+
+`scripts/check-push-authors.mjs` refuses a push that would introduce a commit authored by anyone
+other than the identity configured for that checkout, and names the offending commits. It runs
+from `.githooks/pre-push`, installed into the shared `.git` dir with an absolute `core.hooksPath`
+so a worktree on an older branch still gets it. `npm run git:guard:selftest` proves each rule can
+still fail, end to end against real repositories, and CI runs it.
+
+What it does **not** catch, so nobody assumes it does:
+
+- **A squashed foreign commit.** A squash rewrites authorship to the first commit's author. This
+  is why the guard is one layer and not the whole answer.
+- **A worktree whose identity is wrong.** If a checkout is configured as `Bob` and Carol commits
+  in it, the commit says Bob and the guard passes. `agent-worktree.sh check` exists for exactly
+  this half.
+- **An agent pushing with `--no-verify`.** The guard is a default, not a lock.
 
 ## Roadmap
 
