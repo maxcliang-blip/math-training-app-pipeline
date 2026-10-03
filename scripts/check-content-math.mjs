@@ -211,6 +211,33 @@ export const MUTATIONS = [
     },
   },
   {
+    // MAX-110. The reach half of MAX-89's rule, and the half that was missing: the same defect
+    // in a display block, a block with no `$` at all, which is where all 13 shipped instances
+    // lived (m5-l1, m5-l2). This mutation is separate from the one above rather than an
+    // extension of it, because the two probe different code paths: the span mutation needs the
+    // INLINE_SEGMENT scan, and this one needs the display-block scan. A single mutation cannot
+    // prove both, so a rule whose reach silently narrows back to spans still passes the first
+    // one. Two mutations, two paths, both required.
+    //
+    // Appended as a new block to a block-separated field, so the appended block has no `$` and
+    // is therefore a display block. The tab deliberately follows `180^{\circ}`, so the tail
+    // after it is `ext{.}` -- the exact shape of all 13 shipped sites, 9 of which were written
+    // that way in m5-l1. KaTeX renders a tab as letters without complaint, so nothing else in
+    // the gate sees it and the finding below is this rule's alone.
+    //
+    // The tab is written as the escape `\t`, and that is the whole mechanism rather than a typo:
+    // in a JavaScript string literal `\t` *is* a tab, and JSON.stringify then writes that tab
+    // back out into the mutated file as a single-backslash `\t` -- the shipped corruption.
+    // Writing `\\text` here instead would put a real backslash in the value, the macro would
+    // survive intact, and the mutation would pass while proving nothing.
+    id: "macro-name-eaten-in-a-display-block",
+    rule: "json-escaped-macro",
+    severity: "error",
+    apply(c) {
+      c.exercises[1].solutionLatex += "\n\n180^{\\circ}\text{.}";
+    },
+  },
+  {
     id: "answer-not-in-choices",
     rule: "S3.3-answer-matches-choice",
     severity: "error",
