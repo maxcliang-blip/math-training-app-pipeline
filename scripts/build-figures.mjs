@@ -29,7 +29,7 @@ import { tmpdir } from "node:os";
 import { isAbsolute, join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS, lessonFigureKey, exampleFigureKey, exerciseFigureKey } from "../lib/figure-contract.mjs";
+import { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS, isRenderableFigure, lessonFigureSites, exerciseFigureKey } from "../lib/figure-contract.mjs";
 
 export { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS };
 
@@ -107,46 +107,26 @@ export function collectFigures(contentRoot) {
   const lessonFiles = loadDir(join(contentRoot, "lessons"), false);
   const exerciseFiles = [...loadDir(join(contentRoot, "exercises"), true), ...loadDir(join(contentRoot, "fixtures"), true)];
 
+  // The walk below is the shared counter's walk, not a second traversal of the same records.
+  // MAX-76 measured a corpus twice: this function found 83 figures, the authoring gate reported
+  // 150 for the same files, and neither number could be derived from the other. What counts as a
+  // figure is now decided once, in lib/figure-contract.mjs, and this is one of the two readers.
   for (const { file, record: lesson } of lessonFiles) {
-    for (const [sectionName, section] of Object.entries(lesson.sections || {})) {
-      const list = section && section.figures;
-      if (Array.isArray(list)) {
-        list.forEach((fig, i) => {
-          if (!fig || !fig.asymptoteSource) return;
-          figures.push({
-            key: lessonFigureKey(lesson.id, sectionName, i),
-            source: fig.asymptoteSource,
-            alt: fig.asymptoteAlt,
-            declaredRatio: fig.asymptoteAspectRatio,
-            caption: fig.captionLatex || null,
-            file,
-            record: fig,
-          });
-        });
-      }
-      // Worked examples carry figures too. They are compiled here for the same reason: an example
-      // whose asymptoteSource reaches a client is build input on the request path, and the
-      // figureKey the API emits has to resolve or the example just loses its figure.
-      const examples = section && section.examples;
-      if (Array.isArray(examples)) {
-        examples.forEach((example, i) => {
-          if (!example || !example.asymptoteSource) return;
-          figures.push({
-            key: exampleFigureKey(lesson.id, sectionName, i),
-            source: example.asymptoteSource,
-            alt: example.asymptoteAlt,
-            declaredRatio: example.asymptoteAspectRatio,
-            caption: example.captionLatex || null,
-            file,
-            record: example,
-          });
-        });
-      }
+    for (const site of lessonFigureSites(lesson)) {
+      figures.push({
+        key: site.figureKey,
+        source: site.record.asymptoteSource,
+        alt: site.record.asymptoteAlt,
+        declaredRatio: site.record.asymptoteAspectRatio,
+        caption: site.record.captionLatex || null,
+        file,
+        record: site.record,
+      });
     }
   }
 
   for (const { file, record: ex } of exerciseFiles) {
-    if (!ex.asymptoteSource) continue;
+    if (!isRenderableFigure(ex)) continue;
     figures.push({
       key: exerciseFigureKey(ex.id),
       source: ex.asymptoteSource,
