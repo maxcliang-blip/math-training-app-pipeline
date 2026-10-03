@@ -122,6 +122,11 @@ it its own `user.name`/`user.email` in **worktree** config, points it at the sha
 prints the `cd`. Separate HEAD, separate index, separate identity: nothing two agents can land on
 each other.
 
+The primary checkout stays as a control surface — that is where `install-git-hooks.sh` and
+`worktree list` run — but not as a place work happens. A push that introduces commits from it is
+refused by the guard's place rule below, because that is the one checkout where authorship cannot
+be attributed to the agent who wrote it.
+
 `identity` records an agent's name and email in `.git/agent-identities` in the shared `.git` dir,
 so `add <agent>` needs no environment variables. That file is machine state, deliberately not
 committed: it is a statement about who runs here, not about the corpus.
@@ -152,19 +157,38 @@ shipped, one level of indirection closer.
 
 ### The push guard
 
-`scripts/check-push-authors.mjs` refuses a push that would introduce a commit authored by anyone
-other than the identity configured for that checkout, and names the offending commits. It runs
+`scripts/check-push-authors.mjs` refuses two things, and names what it refused either way. It runs
 from `.githooks/pre-push`, installed into the shared `.git` dir with an absolute `core.hooksPath`
 so a worktree on an older branch still gets it. `npm run git:guard:selftest` proves each rule can
 still fail, end to end against real repositories, and CI runs it.
+
+1. **Authorship.** A push may not introduce a commit authored by anyone other than the identity
+   configured for that checkout. This is the MAX-69 rule.
+2. **Place.** A push may not come from the repository's **primary working tree** — the shared root.
+   This is MAX-101, and it exists because rule 1 cannot see there: identity is a property of the
+   checkout, so in the shared root every commit carries its configured identity no matter which
+   agent typed it, and rule 1 passes by construction. The MAX-77 ruling landed exactly that way, as
+   a commit attributed to Bob, pushed clean by an agent who is not Bob.
+
+Rule 2 decides "primary working tree" from git rather than from a path convention: in the primary
+tree `--git-dir` and `--git-common-dir` are the same directory, and in a linked worktree the first
+is that worktree's private slot under the second. The refusal names every commit the push would
+attribute to the checkout's identity and points at `scripts/agent-worktree.sh add`.
+
+```bash
+git config agent.allowSharedRoot true   # or AGENT_PUSH_ALLOW_SHARED_ROOT=1, if a checkout really is yours alone
+```
+
+That waives rule 2 only. Rule 1 still applies, and `agent-worktree.sh check` reports the shared
+root as `SHARED ROOT, not isolated` whatever config says.
 
 What it does **not** catch, so nobody assumes it does:
 
 - **A squashed foreign commit.** A squash rewrites authorship to the first commit's author. This
   is why the guard is one layer and not the whole answer.
-- **A worktree whose identity is wrong.** If a checkout is configured as `Bob` and Carol commits
-  in it, the commit says Bob and the guard passes. `agent-worktree.sh check` exists for exactly
-  this half.
+- **A linked worktree whose identity is wrong.** A worktree configured as `Bob` in which Carol
+  commits still passes rule 1, because the author does match. `agent-worktree.sh check` compares
+  every worktree's identity against the registry, which is the half nothing else can do.
 - **An agent pushing with `--no-verify`.** The guard is a default, not a lock.
 
 ## Roadmap
