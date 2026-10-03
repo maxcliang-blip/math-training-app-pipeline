@@ -83,8 +83,8 @@
         {
           "slug": "linear-pair-supplementary",
           "name": "Linear pair angles are supplementary",
-          "summaryLatex": "\\text{Angles in a linear pair sum to } 180^{\\circ}\text{.}",
-          "bodyLatex": "\\text{If two adjacent angles form a straight line, their measures add to } 180^{\\circ}\text{.}"
+          "summaryLatex": "\\text{Angles in a linear pair sum to } 180^{\\circ}\\text{.}",
+          "bodyLatex": "\\text{If two adjacent angles form a straight line, their measures add to } 180^{\\circ}\\text{.}"
         },
         {
           "slug": "corresponding-angles",
@@ -108,19 +108,19 @@
           "slug": "consecutive-interior-supplementary",
           "name": "Consecutive interior angles are supplementary",
           "summaryLatex": "\\text{Consecutive interior angles formed by a transversal and parallel lines are supplementary.}",
-          "bodyLatex": "\\text{When two parallel lines are cut by a transversal, interior angles on the same side of the transversal sum to } 180^{\\circ}\text{.}"
+          "bodyLatex": "\\text{When two parallel lines are cut by a transversal, interior angles on the same side of the transversal sum to } 180^{\\circ}\\text{.}"
         },
         {
           "slug": "triangle-angle-sum",
           "name": "Triangle angle sum is 180",
-          "summaryLatex": "\\text{The interior angles of a triangle sum to } 180^{\\circ}\text{.}",
-          "bodyLatex": "\\text{For any triangle } \\triangle ABC, \\angle A + \\angle B + \\angle C = 180^{\\circ}\text{.}"
+          "summaryLatex": "\\text{The interior angles of a triangle sum to } 180^{\\circ}\\text{.}",
+          "bodyLatex": "\\text{For any triangle } \\triangle ABC, \\angle A + \\angle B + \\angle C = 180^{\\circ}\\text{.}"
         },
         {
           "slug": "polygon-angle-sum",
           "name": "Polygon interior angle sum",
-          "summaryLatex": "\\text{The interior angle sum of a convex } n\text{-gon is } (n-2)\\times 180^{\\circ}\text{.}",
-          "bodyLatex": "\\text{A convex } n\text{-gon can be decomposed into } (n-2) \\text{ triangles, each contributing } 180^{\\circ}\text{.}"
+          "summaryLatex": "\\text{The interior angle sum of a convex } n\\text{-gon is } (n-2)\\times 180^{\\circ}\\text{.}",
+          "bodyLatex": "\\text{A convex } n\\text{-gon can be decomposed into } (n-2) \\text{ triangles, each contributing } 180^{\\circ}\\text{.}"
         }
       ]
     },

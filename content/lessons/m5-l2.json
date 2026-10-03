@@ -148,7 +148,7 @@
           "slug": "sides-angles-sides-check",
           "name": "Check that the given angle is the included angle",
           "summaryLatex": "\\text{Before using SAS, confirm that the stated angle sits between the two stated sides.}",
-          "bodyLatex": "\\text{If } AB = DE, BC = EF, \text{ and } \\angle C = \\angle F, \text{ the data do not work: } \\angle C \text{ is opposite } AB \text{ rather than between the two known sides.}"
+          "bodyLatex": "\\text{If } AB = DE, BC = EF, \\text{ and } \\angle C = \\angle F, \\text{ the data do not work: } \\angle C \\text{ is opposite } AB \\text{ rather than between the two known sides.}"
         },
         {
           "slug": "cpctc",
