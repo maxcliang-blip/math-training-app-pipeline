@@ -32,28 +32,28 @@
           "captionLatex": "A trapezoid cut by its midsegment: the midsegment is the average of the two parallel sides, and multiplying it by the height gives the area directly.",
           "asymptoteSource": "size(300,200);\npen p = currentpen;\npair A = (0,0);\npair B = (7,0);\npair C = (5.4,3);\npair D = (1.6,3);\ndraw(A--B--C--D--cycle);\ndraw((1.6,0)--(1.6,3), dashed);\ndraw((5.4,0)--(5.4,3), dashed);\ndraw((1.6,1.5)--(5.4,1.5), dotted+linewidth(1.2));\nlabel(\"$A$\", A, SW);\nlabel(\"$B$\", B, SE);\nlabel(\"$C$\", C, NE);\nlabel(\"$D$\", D, NW);\nlabel(\"$b_1$\", (3.5,0), S);\nlabel(\"$b_2$\", (3.5,3), N);\nlabel(\"$h$\", (1.6,1.5), W);\nlabel(\"$m$\", (3.5,1.5), E);",
           "asymptoteAlt": "A trapezoid with a long horizontal bottom side and a shorter horizontal top side. Two dashed vertical lines drop from the top corners to the bottom side, and a dotted horizontal segment joins the two dashed lines halfway up. The two parallel sides, the height, and the midsegment are each labelled.",
-          "asymptoteAspectRatio": 1.5
+          "asymptoteAspectRatio": 2.02
         },
         {
           "id": "m5-l4-fig-2",
           "captionLatex": "A regular hexagon split into triangles from its centre: each triangle has two sides equal to the hexagon's side, and the perpendicular from the centre to a side is the apothem.",
           "asymptoteSource": "import graph;\nsize(240,240);\npen p = currentpen;\ndraw(scale(2)*polygon(6));\npair O = (0,0);\npair A = dir(0);\npair B = dir(60);\npair M = (A+B)/2;\ndraw(O--A--B);\ndraw(O--M);\ndot(O); dot(A); dot(B); dot(M);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, SE);\nlabel(\"$B$\", B, NW);\nlabel(\"$M$\", M, E);\nlabel(\"$a$\", M/2, S);\nlabel(\"$s$\", (A+B)/2 + (0,0.3), NE);",
           "asymptoteAlt": "A regular hexagon with its centre marked. One corner triangle is outlined with two segments from the centre to two adjacent vertices, and a third segment from the centre to the midpoint of the side joining those two vertices. The centre, the two vertices, and that midpoint are all marked with dots, and the radii, the apothem, and the side are labelled.",
-          "asymptoteAspectRatio": 1.0
+          "asymptoteAspectRatio": 1.153
         },
         {
           "id": "m5-l4-fig-3",
           "captionLatex": "A sector is the piece of the disc cut off by two radii: its area and its arc length are the central angle's fraction of the whole, taken out of the full area and the full circumference.",
-          "asymptoteSource": "import graph;\nsize(240,230);\npen p = currentpen;\npair O = (0,0);\ndraw(scale(2)*unitcircle, lightgray);\npair A = dir(150);\npair B = dir(30);\nfill(O--A--arc(O,2,A,B)--cycle, white);\ndraw(scale(2)*unitcircle);\ndraw(O--A); draw(O--B);\ndot(O);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, W);\nlabel(\"$B$\", B, E);\nlabel(\"$r$\", A/2, NW);\nlabel(\"$\\\\theta$\", O + (0,0.45), N);",
+          "asymptoteSource": "import graph;\nsize(240,230);\npen p = currentpen;\npair O = (0,0);\ndraw(scale(2)*unitcircle, lightgray);\npair A = dir(150);\npair B = dir(30);\nfill(O--arc(O,2,30,150)--cycle, white);\ndraw(scale(2)*unitcircle);\ndraw(O--A); draw(O--B);\ndot(O);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, W);\nlabel(\"$B$\", B, E);\nlabel(\"$r$\", A/2, NW);\nlabel(\"$\\\\theta$\", O + (0,0.45), N);",
           "asymptoteAlt": "A circle with a wedge-shaped piece of its interior left blank and the rest of the disc shaded lightly. Two radii bound the blank wedge, the centre is marked with a dot, and the radius and the central angle are labelled.",
-          "asymptoteAspectRatio": 1.043
+          "asymptoteAspectRatio": 1
         },
         {
           "id": "m5-l4-fig-4",
           "captionLatex": "A pyramid stands on a polygonal base: the volume is one third of the base area times the perpendicular height, and the surface area adds the lateral faces to the base.",
           "asymptoteSource": "size(240,260);\npen p = currentpen;\npair A = (-2,-1.1);\npair B = (2,-1.1);\npair C = (2,0.9);\npair D = (-2,0.9);\npair V = (0,2.4);\npair M = (0,0.9);\ndraw(A--B--C--D--cycle);\ndraw(V--A); draw(V--B); draw(V--C); draw(V--D);\ndraw(V--M, dashed);\ndot(V); dot(M);\nlabel(\"$V$\", V, N);\nlabel(\"$M$\", M, E);\nlabel(\"$h$\", (0,1.65), W);\nlabel(\"base\", (0,-1.1), S);",
           "asymptoteAlt": "A pyramid drawn over a four-sided base shown as a flat parallelogram, with four edges running from the top vertex down to the base corners. A dashed segment drops from the top vertex to the centre of the base, and the height along it is labelled.",
-          "asymptoteAspectRatio": 0.923
+          "asymptoteAspectRatio": 1.017
         }
       ],
       "examples": [

@@ -34,28 +34,28 @@
           "captionLatex": "The same arc is measured two ways: the central angle $\\angle AOB$ at the centre and the inscribed angle $\\angle ACB$ at the circumference, which is exactly half of it.",
           "asymptoteSource": "import graph;\nsize(280,220);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair A = dir(90);\npair B = dir(210);\npair C = dir(330);\ndot(A); dot(B); dot(C); dot((0,0));\ndraw(A--B); draw(A--C);\ndraw((0,0)--A, dashed); draw((0,0)--B, dashed);\nlabel(\"$A$\", A, N); label(\"$B$\", B, SW); label(\"$C$\", C, SE);\nlabel(\"$O$\", (0,0), SE);\nlabel(\"$\\\\angle AOB$\", (0.55,0.35), NE);\nlabel(\"$\\\\angle ACB$\", C, S);",
           "asymptoteAlt": "A circle carries a central angle drawn from the centre out to two points on the circumference with dashed radii, and an inscribed angle at a third point on the circumference whose two arms reach the same two points. The angle at the circumference is drawn at the bottom of the circle and the angle at the centre is drawn between the two dashed radii.",
-          "asymptoteAspectRatio": 1.273
+          "asymptoteAspectRatio": 1
         },
         {
           "id": "m5-l3-fig-2",
           "captionLatex": "A tangent meets the radius drawn to its point of contact at a right angle, so the radius, the tangent segment, and the line back to the centre form a right triangle and the tangent segment is easy to recover.",
           "asymptoteSource": "import graph;\nsize(280,220);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair T = dir(50);\npair P = 3.3*dir(50);\ndot((0,0)); dot(T); dot(P);\ndraw(T--P);\ndraw((0,0)--T, dashed);\ndraw(T+dir(140)*0.42 -- T+dir(140)*0.42 + dir(50)*0.42 -- T+dir(50)*0.42);\nlabel(\"$O$\", (0,0), S);\nlabel(\"$T$\", T, NW);\nlabel(\"$P$\", P, E);\nlabel(\"$r$\", T/2, SW);\nlabel(\"$PT$\", (T+P)/2, NE);\nlabel(\"$OP$\", P/2, SE);",
           "asymptoteAlt": "A circle with its centre marked, a radius drawn out to a point on the circumference, and a straight segment from that point continuing outward to an external point. A small square marks the right angle where the radius meets the segment, showing that the radius and the segment are perpendicular.",
-          "asymptoteAspectRatio": 1.273
+          "asymptoteAspectRatio": 0.955
         },
         {
           "id": "m5-l3-fig-3",
           "captionLatex": "One external point, one tangent and two secants: the tangent counts as a chord with both ends at the same point, and all three products of the two intercepted lengths are equal.",
-          "asymptoteSource": "import graph;\nsize(300,230);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair P = P(3.4,0.6);\npair A = P(1.412,1.419);\npair B = P(0,2);\npair C = P(1.951,0.439);\npair D = P(-2,0);\npair T = P(0.858,1.807);\ndot(P); dot(A); dot(B); dot(C); dot(D); dot(T);\ndraw(P--A--B);\ndraw(P--C--D);\ndraw(P--T);\nlabel(\"$P$\", P, E);\nlabel(\"$A$\", A, NE); label(\"$B$\", B, N);\nlabel(\"$C$\", C, SE); label(\"$D$\", D, SW);\nlabel(\"$T$\", T, W);",
+          "asymptoteSource": "import graph;\nsize(300,230);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair P = (3.4,0.6);\npair A = (1.412,1.419);\npair B = (0,2);\npair C = (1.951,0.439);\npair D = (-2,0);\npair T = (0.858,1.807);\ndot(P); dot(A); dot(B); dot(C); dot(D); dot(T);\ndraw(P--A--B);\ndraw(P--C--D);\ndraw(P--T);\nlabel(\"$P$\", P, E);\nlabel(\"$A$\", A, NE); label(\"$B$\", B, N);\nlabel(\"$C$\", C, SE); label(\"$D$\", D, SW);\nlabel(\"$T$\", T, W);",
           "asymptoteAlt": "A circle with a single point outside it on the right. Three straight lines run from that point into the circle: one touches the circle at a single point near the top and stops, while the other two pass through the circle, cutting it at a near point and a far point. Each line is labelled with its near and far points.",
-          "asymptoteAspectRatio": 1.304
+          "asymptoteAspectRatio": 1.4
         },
         {
           "id": "m5-l3-fig-4",
           "captionLatex": "A radius drawn perpendicular to a chord cuts the chord into two equal halves, and the perpendicular from the centre to a chord is the shortest distance from the centre to any point of the chord.",
           "asymptoteSource": "import graph;\nsize(280,230);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair A = (-1.833,0.8);\npair B = (1.833,0.8);\npair M = (0,0.8);\ndraw(A--B);\ndraw((0,0)--M--(0,2), dashed);\ndot((0,0)); dot(A); dot(B); dot(M); dot((0,2));\nlabel(\"$O$\", (0,0), SW);\nlabel(\"$A$\", A, W); label(\"$B$\", B, E);\nlabel(\"$M$\", M, NE);\nlabel(\"$P$\", (0,2), N);",
           "asymptoteAlt": "A circle with a horizontal chord across its upper half. A dashed line runs from the centre of the circle, through the midpoint of the chord marked with a dot, and onward to the top of the circle marked with a second dot. The foot of the dashed line on the chord is labelled as the midpoint.",
-          "asymptoteAspectRatio": 1.217
+          "asymptoteAspectRatio": 0.983
         }
       ],
       "examples": [
