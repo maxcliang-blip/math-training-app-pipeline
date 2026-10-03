@@ -117,7 +117,7 @@ lesson ids", and that is what `ls-tree` answers.
 
 ## Why a file count will not do
 
-A file in `content/exercises/` is *either* one record or an array of them: 228 files hold 723
+A file in `content/exercises/` is *either* one record or an array of them: 264 files hold 759
 records at the current pin. Any gate that counts files undercounts the corpus by roughly two
 thirds and passes anyway. `api/src/content.js` documents this at the loader, and
 `lib/corpus-pins.mjs` documents it at the pin; read the loader's `readRecords()` before writing a
@@ -129,9 +129,9 @@ Growing the corpus changes the counts in `lib/corpus-pins.mjs`, in the same comm
 that changed them:
 
 ```
-corpus pins are stale: tests assert 36 lessons / 723 exercises,
-content/ holds 37 lessons / 741 exercises
-Raise CORPUS_PINS in lib/corpus-pins.mjs to 37 / 741 in the same commit.
+corpus pins are stale: tests assert 38 lessons / 759 exercises,
+content/ holds 39 lessons / 777 exercises
+Raise CORPUS_PINS in lib/corpus-pins.mjs to 39 / 777 in the same commit.
 ```
 
 `npm run content:check` and `npm test` both raise that message. It was left stale three times
