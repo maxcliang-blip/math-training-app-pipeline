@@ -29,7 +29,15 @@ import { tmpdir } from "node:os";
 import { isAbsolute, join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS, isRenderableFigure, lessonFigureSites, exerciseFigureKey } from "../lib/figure-contract.mjs";
+import {
+  DERIVED_FIELDS,
+  FIGURE_PAYLOAD_FIELDS,
+  doubledBackslashAfterScript,
+  doubledBackslashMacros,
+  isRenderableFigure,
+  lessonFigureSites,
+  exerciseFigureKey,
+} from "../lib/figure-contract.mjs";
 
 export { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS };
 
@@ -833,18 +841,23 @@ function compileFigure(toolchain, figure, outDir) {
 // Diagnosing a compile failure
 // ---------------------------------------------------------------------------
 
-// Two literal backslashes, two literal backslashes followed by a macro name, and two literal
-// backslashes immediately after a `^` or `_`. `\\\\` in a regex literal is two escaped backslashes,
-// i.e. two characters.
-const DOUBLED_BACKSLASH = /\\\\/;
-const DOUBLED_BACKSLASH_MACRO = /\\\\[A-Za-z]+/g;
-const DOUBLED_BACKSLASH_AFTER_SCRIPT = /[\^_]\s*\\\\[A-Za-z]+/g;
-
-// Every LaTeX macro in this figure's source that was written with a doubled backslash, in source
-// order and de-duplicated.
-function doubledBackslashMacros(source) {
-  return [...new Set(String(source || "").match(DOUBLED_BACKSLASH_MACRO) || [])];
-}
+// The doubled-backslash detector lives in lib/figure-contract.mjs, next to the TeX label
+// extractor, and is imported rather than re-declared here. (MAX-119)
+//
+// It used to be a regex and a helper defined right here, called from exactly one place:
+// diagnoseCompileFailure, below. That is the half of the defect that was already understood --
+// Asymptote copies a string literal into the .tex it generates for a TeX label verbatim, so a macro
+// written with `\\` reaches TeX as two backslashes -- and the half the authoring gate could not
+// reach, because the detector sat behind a compile failure. One definition, in a module both
+// consumers already import, is what lets checkAsymptote ask the same question on the pass path, and
+// it means the two can no longer disagree about what a doubled backslash is.
+//
+// This file still matches over the *whole* source rather than over extracted label payloads, on
+// purpose: the two answer different questions. The build must not add a new failure mode to a
+// figure that compiles, and a payload this extractor does not recognise (a macro that builds its
+// label some other way) still has to be diagnosable when TeX rejects it. The authoring gate asks
+// the narrower question, on purpose, because it has to be right about every figure and cannot afford
+// to guess. Both use the same definition of the defect, which is the part that had to be shared.
 
 // The one line of a TeX log that says what went wrong.
 //
@@ -885,7 +898,7 @@ function diagnoseCompileFailure(err, figure, logs) {
   // worse in a way no build output will ever report. The corpus currently carries 34 of those
   // (MAX-62); they are named here so the fix is not mistaken for "the five that happened to
   // fail".
-  const scripting = [...new Set(source.match(DOUBLED_BACKSLASH_AFTER_SCRIPT) || [])];
+  const scripting = doubledBackslashAfterScript(source);
   const elsewhere = doubledBackslashMacros(source);
   if (scripting.length) {
     const others = elsewhere.filter((m) => !scripting.some((s) => s.endsWith(m.slice(2))));
