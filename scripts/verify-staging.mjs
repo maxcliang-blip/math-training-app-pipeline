@@ -8,12 +8,22 @@
 //   2. No free-response exercise carries answerLatex or solutionLatex, and no payload anywhere
 //      contains the answer string of the free-response exercise used as the probe.
 //   3. No lesson or exercise response carries asymptoteSource or asymptoteAspectRatio, and figure
-//      information is exactly { figureKey, asymptoteAlt } -- the reference, never the payload.
-//      asymptoteAlt is on the reference because the degraded figure state renders it while the
-//      figure route is failing for every key (Rendering Conventions §5.6, §8.6); asymptoteSource,
-//      the build input, still never leaves the build.
+//      information is exactly { figureKey, asymptoteAlt, figureCacheKey } -- the reference, never
+//      the payload. asymptoteAlt is on the reference because the degraded figure state renders it
+//      while the figure route is failing for every key (Rendering Conventions §5.6, §8.6);
+//      asymptoteSource, the build input, still never leaves the build. figureCacheKey is the
+//      build's own hash of that source folded with the pipeline version (§5.5's cache key), which
+//      is the point: the client reads its cache before it fetches, so the build identity has to
+//      reach it without the source reaching it.
+//
+// The field lists are imported from lib/figure-contract.mjs rather than written out here. They
+// used to be copies, which is exactly the drift this repository keeps arguing against: a field
+// added to the contract failed here as a leak on a content route until someone remembered to
+// edit the second list too.
 //
 // Usage: node verify-staging.mjs [baseUrl]
+
+import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../lib/figure-contract.mjs";
 
 const BASE = process.argv[2] || "http://127.0.0.1:18083";
 
@@ -23,18 +33,7 @@ function check(ok, label, detail = "") {
   console.log(`${ok ? "PASS" : "FAIL"}  ${label}${detail ? `  ${detail}` : ""}`);
 }
 
-const FIGURE_PAYLOAD_FIELDS = [
-  "figureKey",
-  "figureSvgUrl",
-  "figureHash",
-  "figurePipelineVersion",
-  "declaredAspectRatio",
-  "compiledAspectRatio",
-  "alt",
-  "captionLatex",
-];
 const FIGURE_BUILD_INPUT_FIELDS = ["asymptoteSource", "asymptoteAspectRatio"];
-const FIGURE_REFERENCE_FIELDS = ["figureKey", "asymptoteAlt"];
 
 async function json(path, options) {
   const res = await fetch(`${BASE}${path}`, options);
@@ -134,7 +133,7 @@ for (const field of FIGURE_BUILD_INPUT_FIELDS) {
 const mc = exerciseList.find((e) => Array.isArray(e.choices) && e.choices.length > 0);
 check(Boolean(mc?.answerLatex), "a multiple-choice exercise still ships answerLatex", mc?.id);
 
-// The figure route, and that its payload is exactly the eight contract fields.
+// The figure route, and that its payload is exactly the contract whitelist.
 const figures = await json("/api/figures");
 if (figures.status === 200) {
   const first = figures.body.figures[0];

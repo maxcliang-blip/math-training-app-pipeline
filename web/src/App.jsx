@@ -95,7 +95,13 @@ function Section({ name, section }) {
         {section.examples.map((example, index) => (
           <article key={example.id || index} className="example">
             {example.titleLatex ? <h4><MathBlock source={example.titleLatex} /></h4> : null}
-            {example.figureKey ? <Figure figureKey={example.figureKey} alt={example.asymptoteAlt} /> : null}
+            {example.figureKey ? (
+              <Figure
+                figureKey={example.figureKey}
+                figureCacheKey={example.figureCacheKey}
+                alt={example.asymptoteAlt}
+              />
+            ) : null}
             {example.bodyLatex ? <MathBlock source={example.bodyLatex} /> : null}
             {example.answerLatex ? (
               <details>
@@ -135,7 +141,13 @@ function ExerciseCard({ exercise }) {
     <article className="exercise">
       <p className="exercise__tier">Tier {exercise.tier} · difficulty {exercise.difficulty}</p>
       <MathBlock source={exercise.promptLatex} />
-      {exercise.figureKey ? <Figure figureKey={exercise.figureKey} alt={exercise.asymptoteAlt} /> : null}
+      {exercise.figureKey ? (
+        <Figure
+          figureKey={exercise.figureKey}
+          figureCacheKey={exercise.figureCacheKey}
+          alt={exercise.asymptoteAlt}
+        />
+      ) : null}
       {Array.isArray(exercise.choices) && exercise.choices.length ? (
         <ol className="exercise__choices">
           {exercise.choices.map((choice, index) => (

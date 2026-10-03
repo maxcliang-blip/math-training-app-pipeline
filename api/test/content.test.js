@@ -116,11 +116,30 @@ test("a lesson's figure lists become references, and the Asymptote source does n
   const figures = lesson.sections.concept.figures;
   assert.ok(figures.length > 0, "m1-l3 has a figure in its concept section");
   for (const ref of figures) {
-    assert.deepEqual(Object.keys(ref), FIGURE_REFERENCE_FIELDS);
+    // No figure store is attached in this unit test, which is the degraded state: the build has
+    // produced nothing, so there is no build identity to carry. The reference is otherwise whole.
+    assert.deepEqual(Object.keys(ref), ["figureKey", "asymptoteAlt"]);
+    for (const field of Object.keys(ref)) {
+      assert.ok(FIGURE_REFERENCE_FIELDS.includes(field), `${field} is not a reference field`);
+    }
     assert.match(ref.figureKey, /^m1-l3\.sections\.concept\.figures\[\d+\]$/);
   }
   // The raw source is kilobytes of Asymptote per figure and belongs to the build.
   assert.equal(JSON.stringify(lesson).includes("size(299,241)"), false);
+});
+
+test("a lesson's figures carry the build's cache key once a figure store knows it", () => {
+  // §5.5 reads the client cache before the figure fetch, so the build identity has to arrive with
+  // the lesson rather than with the payload. That is the only reason this field is on a route that
+  // is otherwise forbidden from carrying figure information.
+  const keys = new Map([["m1-l3.sections.concept.figures[0]", "sha256:feedface"]]);
+  const built = new ContentStore({ root: store.root, figureCacheKeys: keys });
+  const ref = built.getLesson("m1-l3").sections.concept.figures.find((f) => f.figureKey.endsWith("[0]"));
+  assert.equal(ref.figureCacheKey, "sha256:feedface");
+  assert.deepEqual(Object.keys(ref), FIGURE_REFERENCE_FIELDS);
+  // A figure the build did not compile carries no key rather than a borrowed one.
+  const other = built.getLesson("m1-l3").sections.concept.figures.find((f) => !f.figureKey.endsWith("[0]"));
+  if (other) assert.equal("figureCacheKey" in other, false);
 });
 
 test("no Asymptote build input reaches any lesson, including inside worked examples", () => {

@@ -5,6 +5,11 @@
 // here is `FIGURE_PAYLOAD_FIELDS` from that file, imported rather than copied, which is the whole
 // point of putting it there.
 //
+// The cache key is the other half of the contract. `figureCacheKey` arrives on the figure
+// reference from the content route, is derived by the build from the Asymptote source and the
+// pipeline version, and is what this module keys its cache on — see figureCacheSlot below and
+// Rendering Conventions §5.5.
+//
 // The 503 case is the one that matters. `GET /api/figures` answers 503 `toolchain-missing` when
 // the build has not produced a manifest, and a client that treats that as an error has no way to
 // tell "figures are broken" from "there are no figures here". A learner should see the prose and
@@ -110,18 +115,52 @@ export function resolveFigureRatio({ declaredAspectRatio, compiledAspectRatio, m
   return { reserved, resolved, drift };
 }
 
+// The build identity a call carries, or null. Whitespace is not an identity: a blank key would be
+// a cache slot shared by every figure that had one, which is the same failure as keying on the
+// address, and it would fail silently rather than loudly.
+export function figureBuildKey(figureCacheKey) {
+  return typeof figureCacheKey === "string" && figureCacheKey.trim() !== "" ? figureCacheKey : null;
+}
+
+// Which cache entry a getFigure call reads and writes.
+//
+// Rendering Conventions §5.5: the client cache is keyed on sha256(asymptoteSource + "|" +
+// pipelineVersion), so "pipeline version is part of the key" and "the cache key is the source
+// hash plus the pipeline version". The build computes that key (scripts/build-figures.mjs) and
+// the API carries it on the figure reference, because §5.5 reads the cache *before* the fetch:
+// "client hit ⇒ render immediately, no request". A key derived from the response could only ever
+// describe bytes already in hand.
+//
+// Keying this on figureKey alone — which is what the address is, and what it used to be keyed on —
+// says nothing about which build produced the SVG. figureKey is the figure's position in the
+// content record (`m1-l3.sections.concept.figures[0]`) and is deliberately stable across rebuilds,
+// so a figure recompiled under a new PIPELINE_VERSION, or after a source edit, hit the same slot
+// and served the previous build's bytes for the life of the tab with nothing to indicate it.
+//
+// The two prefixes are namespaces, not decoration. They keep a build-derived identity from ever
+// sharing a slot with a fallback that means something weaker, and they let the caller below store
+// only what a build key authorizes: a `ready` payload is never memoized under `figure:`, because
+// an entry in that namespace was fetched with no build identity and so cannot be proven current.
+export function figureCacheSlot(figureKey, figureCacheKey) {
+  const build = figureBuildKey(figureCacheKey);
+  return build === null ? `figure:${figureKey}` : `build:${build}`;
+}
+
 // Per-key cache. Figures are immutable for a given figureHash, and a lesson page asks for the
-// same figure every time the learner navigates back to it.
+// same figure every time the learner navigates back to it — keyed on the build that produced it,
+// so a rebuilt figure is fetched again rather than served from the previous build's entry.
 export function createFigureClient({ fetchImpl, apiBase = "", origin = "" } = {}) {
   const doFetch = fetchImpl || (typeof fetch === "function" ? fetch : null);
   const cache = new Map();
 
-  async function getFigure(figureKey) {
+  async function getFigure(figureKey, { figureCacheKey = null } = {}) {
     if (!doFetch) return { status: "unavailable", reason: "no-fetch", figureKey };
     const url = figureRoute(figureKey, apiBase);
     if (!url) return { status: "invalid", reason: "empty-figureKey", figureKey };
 
-    if (cache.has(figureKey)) return cache.get(figureKey);
+    const build = figureBuildKey(figureCacheKey);
+    const slot = figureCacheSlot(figureKey, build);
+    if (cache.has(slot)) return cache.get(slot);
 
     let response;
     try {
@@ -140,7 +179,10 @@ export function createFigureClient({ fetchImpl, apiBase = "", origin = "" } = {}
 
     if (response.status === 503 || isToolchainMissing(body)) {
       const result = { status: "toolchain-missing", reason: "pipeline-not-run", figureKey };
-      cache.set(figureKey, result);
+      // Cached with or without a build key: a pipeline that has not run is not a payload, so
+      // there are no bytes here that a later build could contradict. The next view that arrives
+      // with a cache key lands in a different slot and asks again.
+      cache.set(slot, result);
       return result;
     }
     if (!response.ok) {
@@ -158,7 +200,10 @@ export function createFigureClient({ fetchImpl, apiBase = "", origin = "" } = {}
       ...validated.payload,
       src: figureAssetUrl(validated.payload.figureSvgUrl, origin)
     };
-    cache.set(figureKey, result);
+    // Only a build-keyed payload is memoized. Without a figureCacheKey there is no way to tell a
+    // current render from a rebuilt one, so the bytes are returned and not kept: the honest cost
+    // is a repeat request, and the bug this replaces was stale bytes served with no signal.
+    if (build !== null) cache.set(slot, result);
     return result;
   }
 

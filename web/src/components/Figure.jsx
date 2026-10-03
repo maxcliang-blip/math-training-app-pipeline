@@ -24,7 +24,11 @@ function client() {
 // Vite build, where the ratio drift is still recorded on the element but not warned about.
 const IS_DEV = typeof import.meta.env === "undefined" ? false : Boolean(import.meta.env.DEV);
 
-export default function Figure({ figureKey, alt, captionLatex, declaredAspectRatio }) {
+// figureCacheKey is the build's identity for this figure, carried on the reference (§5.5). It is
+// a prop rather than something read out of the payload because the client cache is consulted
+// before the payload exists: pass the figureKey alone and every render of this figure refetches,
+// which is the cost of refusing to guess whether the bytes on screen are current.
+export default function Figure({ figureKey, figureCacheKey, alt, captionLatex, declaredAspectRatio }) {
   const [state, setState] = useState(null);
   const [measured, setMeasured] = useState(null);
 
@@ -35,14 +39,14 @@ export default function Figure({ figureKey, alt, captionLatex, declaredAspectRat
     // The previous figure's measurement belongs to the previous figure.
     setMeasured(null);
     client()
-      .getFigure(figureKey)
+      .getFigure(figureKey, { figureCacheKey })
       .then((result) => {
         if (live) setState(result);
       });
     return () => {
       live = false;
     };
-  }, [figureKey]);
+  }, [figureKey, figureCacheKey]);
 
   const { reserved, resolved: ratio, drift } = resolveFigureRatio({
     declaredAspectRatio: state?.declaredAspectRatio ?? declaredAspectRatio,
@@ -137,7 +141,17 @@ export function FigureUnavailable({ message, detail, alt: description, aspectRat
 // The description is forwarded because it is the only thing the degraded box has to show: a
 // lesson section figure has no other route to its alt text, and dropping it here is what made a
 // lesson figure degrade to a bare "Figure not built yet".
+//
+// figureCacheKey is forwarded for the same reason and is the one field here that is not about the
+// learner: it is what tells the client whether what it has cached is still the current build
+// (Rendering Conventions §5.5). A reference without one means no build compiled this figure.
 export function FigureRef({ reference }) {
   if (!reference || typeof reference.figureKey !== "string") return null;
-  return <Figure figureKey={reference.figureKey} alt={reference.asymptoteAlt} />;
+  return (
+    <Figure
+      figureKey={reference.figureKey}
+      figureCacheKey={reference.figureCacheKey}
+      alt={reference.asymptoteAlt}
+    />
+  );
 }

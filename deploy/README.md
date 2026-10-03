@@ -83,11 +83,15 @@ image.
 
 Figures are compiled at build time, in the `figures` stage, and the runtime image has no
 compiler installed. A runtime compiler is a different project with a different security and
-latency profile, and `FIGURE_REFERENCE_FIELDS` is `["figureKey", "asymptoteAlt"]` so that a
-lesson list carries an address and one sentence of description rather than kilobytes of
-Asymptote per figure. The description is there because the figure route is the thing that goes
-missing: when a build produces no usable manifest it 503s for every key, and the degraded box
-still has to say what the figure showed (Rendering Conventions §5.6).
+latency profile, and `FIGURE_REFERENCE_FIELDS` is `["figureKey", "asymptoteAlt",
+"figureCacheKey"]` so that a lesson list carries an address, one sentence of description, and the
+build's 71-byte cache key rather than kilobytes of Asymptote per figure. The description is there
+because the figure route is the thing that goes missing: when a build produces no usable manifest
+it 503s for every key, and the degraded box still has to say what the figure showed (Rendering
+Conventions §5.6). `figureCacheKey` is `sha256(asymptoteSource + "|" + pipelineVersion)` — the
+hash of that Asymptote, not the Asymptote (§5.5) — and it is on the reference because the client
+reads its figure cache *before* it fetches the payload, so the build identity has to arrive with
+the lesson.
 
 `GET /api/figures` fails closed: a manifest that did not pass the build is a 503 naming the
 build, never an empty catalogue. If staging ever answers 503 there, the figure build is what
@@ -99,8 +103,8 @@ to read, not the API.
 service that the compile route is gone, that a free-response exercise withholds both its key
 and its worked solution, and that no lesson or exercise response carries `asymptoteSource` or
 `asymptoteAspectRatio`. It also asserts the things that must *not* break:
-multiple choice still ships its key, and the figure route serves exactly the eight contract
-fields.
+multiple choice still ships its key, and the figure route serves exactly the contract
+whitelist.
 
 ```bash
 curl -s http://127.0.0.1:18083/api/health

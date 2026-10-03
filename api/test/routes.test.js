@@ -210,9 +210,10 @@ test("a batched exercise fetch refuses more than 60 ids and reports the ones it 
 });
 
 test("no figure payload field appears anywhere on a content route", async () => {
-  // figureKey is the one payload-named field a content route may carry, because it is the
-  // reference, not the payload: FIGURE_REFERENCE_FIELDS is ["figureKey", "asymptoteAlt"]. The other
-  // seven fields are the figure route's alone.
+  // figureKey, asymptoteAlt and figureCacheKey are the three payload-named fields a content route
+  // may carry, because they are the reference, not the payload: FIGURE_REFERENCE_FIELDS. The other
+  // six are the figure route's alone. figureCacheKey is on the reference because §5.5 reads the
+  // client cache before the fetch; it is the build's hash of the source, never the source.
   const allowed = new Set(FIGURE_PAYLOAD_FIELDS.filter((f) => !FIGURE_REFERENCE_FIELDS.includes(f)));
   for (const path of ["/api/modules", "/api/modules/M1", "/api/lessons/m1-l3", "/api/exercises?lessonId=m6-l3", "/api/exercises/m6-l3-p6"]) {
     const { body } = await get(path);
@@ -221,11 +222,64 @@ test("no figure payload field appears anywhere on a content route", async () => 
       assert.equal(keys.has(field), false, `${field} leaked onto ${path}`);
     }
   }
-  // And the references that do appear carry nothing beyond the reference fields.
+  // And the references that do appear carry nothing beyond the reference fields. No manifest is
+  // readable in this process, so there is no build identity to hand out and the key is absent --
+  // which is the degraded state, not a leak.
   const withFigure = await get("/api/exercises/m6-l3-p6");
   const figureish = Object.keys(withFigure.body).filter((k) => /figure|alt|caption|aspect|hash|pipeline/i.test(k));
-  assert.deepEqual(figureish.sort(), [...FIGURE_REFERENCE_FIELDS].sort());
+  for (const field of figureish) {
+    assert.ok(FIGURE_REFERENCE_FIELDS.includes(field), `${field} is not a reference field`);
+  }
   assert.ok(withFigure.body.asymptoteAlt, "the description rides along with the key");
+});
+
+test("a lesson and an exercise reference carry the build's cache key, and no build input", async () => {
+  // The whole of §5.5's key on a content route, asserted end to end: the build hashes the source
+  // and the pipeline version, the API carries the hash, and the source itself never ships. A
+  // client can therefore key its cache on which build produced a figure without holding the input
+  // that produced it — which is what lets the cache be right and the payload stay small.
+  const built = createApp({
+    dataDir,
+    figureStore: new FigureStore({
+      pipelineVersion: "asymptote-svg-sanitized@2",
+      status: "pass",
+      toolchain: { bin: "asymptote", version: "Asymptote version 2.87" },
+      figures: [
+        {
+          figureKey: "m6-l3-p6",
+          figureSvgUrl: "artifacts/figures/svg/m6-l3-p6.svg",
+          figureHash: "sha256:deadbeef",
+          figurePipelineVersion: "asymptote-svg-sanitized@2",
+          figureCacheKey: "sha256:c0ffee",
+          figureCacheKey: "sha256:c0ffee",
+          declaredAspectRatio: 0.661,
+          compiledAspectRatio: 0.66,
+          asymptoteVersion: "Asymptote version 2.87",
+          alt: "A circle lies mostly in the second quadrant.",
+          captionLatex: null,
+        },
+      ],
+    }),
+  }).listen(0);
+  const url = `http://127.0.0.1:${built.address().port}`;
+  try {
+    const exercise = await (await fetch(`${url}/api/exercises/m6-l3-p6`)).json();
+    assert.equal(exercise.figureCacheKey, "sha256:c0ffee");
+    assert.equal("asymptoteSource" in exercise, false, "the build input still does not ship");
+
+    const lesson = await (await fetch(`${url}/api/lessons/m1-l3`)).json();
+    const refs = lesson.sections.concept.figures;
+    assert.ok(refs.length > 0);
+    for (const ref of refs) {
+      // This manifest knows one figure and it is not one of these, so the lesson's references
+      // carry no key at all rather than a borrowed one. Same rule, other direction.
+      assert.equal("figureCacheKey" in ref, false, `${ref.figureKey} is not in the manifest`);
+      assert.deepEqual(Object.keys(ref), ["figureKey", "asymptoteAlt"]);
+    }
+    assert.equal(JSON.stringify(lesson).includes("size(299,241)"), false, "no Asymptote source in a lesson");
+  } finally {
+    await new Promise((resolve) => built.close(resolve));
+  }
 });
 
 // The seven figure payload fields are not the whole leak. asymptoteSource is build input, it is
@@ -350,6 +404,7 @@ test("with a passing manifest, the figure route serves exactly the contract payl
           figureSvgUrl: "artifacts/figures/svg/m6-l3-p6.svg",
           figureHash: "sha256:deadbeef",
           figurePipelineVersion: "asymptote-svg-sanitized@2",
+          figureCacheKey: "sha256:c0ffee",
           declaredAspectRatio: 0.661,
           compiledAspectRatio: 0.66,
           asymptoteVersion: "Asymptote version 2.87",

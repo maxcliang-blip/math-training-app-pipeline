@@ -9,7 +9,8 @@
 // enforced per route is a rule that gets forgotten on the route written last:
 //
 //  1. Figure payloads never appear on a lesson, module, or exercise response. Those carry
-//     figureKey and nothing else; the eight payload fields belong to the figure route.
+//     figureReference() -- figureKey, the description, and the build's §5.5 cache key -- and the
+//     payload fields belong to the figure route.
 //
 //  2. Free-response answer keys are withheld, and solutions are locked until the learner earns
 //     them. Multiple choice is the documented exception and ships its key, because §3.3 says the
@@ -56,6 +57,18 @@ export function createApp({
   // from booting: the content routes are the product, and a figure build that never ran degrades
   // the figure route to a 503 rather than taking down lessons.
   const figures = figureStore === null ? tryLoadFigureStore() : figureStore;
+
+  // A lesson and an exercise response carry the build's client cache key on the figure reference,
+  // because Rendering Conventions §5.5 reads the client cache *before* the figure fetch and only
+  // the figure store knows the key. It is a hash of the Asymptote source folded with the pipeline
+  // version, so it cannot be computed from a content record -- asymptoteSource is behind the build.
+  //
+  // Attached here rather than in loadContentStore() so the figure store stays the only thing that
+  // knows what a figure is, and so an unusable manifest contributes no keys: that is the degraded
+  // state, in which a reference carries no key and the client has nothing to cache.
+  if (content && typeof content.figureCacheKeyFor === "function") {
+    content.figureCacheKeys = figures ? figures.cacheKeys() : null;
+  }
 
   // ---------------------------------------------------------------------
   // Health and metadata
