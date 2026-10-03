@@ -1,0 +1,33 @@
+{
+  "id": "m5-l4-p8",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "circles",
+    "circle-area"
+  ],
+  "promptLatex": "A circle has radius $6$. What is the area of the circle, in terms of $\\pi$?",
+  "choices": [
+    "6\\pi",
+    "12\\pi",
+    "18\\pi",
+    "36\\pi",
+    "72\\pi"
+  ],
+  "answerLatex": "36\\pi",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The area of a circle is the square of its radius times $\\pi$.",
+    "The radius here is $6$.",
+    "$6^{2} \\cdot \\pi = 36\\pi$."
+  ],
+  "solutionLatex": "The area of a circle is $\\pi$ times the square of its radius.\n\nThe radius is $6$, so the area is $\\pi \\cdot 6^{2} = \\pi \\cdot 36 = 36\\pi$.\n\nThe number $12\\pi$ would be the circumference, $2 \\pi r$, and it is the other quantity most often wanted from a circle with radius $6$.",
+  "techniqueSlugs": [
+    "circle-area-formula"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

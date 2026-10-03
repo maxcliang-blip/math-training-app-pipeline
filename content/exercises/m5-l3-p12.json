@@ -1,0 +1,34 @@
+{
+  "id": "m5-l3-p12",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "circles",
+    "arcs",
+    "inscribed-angles"
+  ],
+  "promptLatex": "Two secants drawn from an external point $P$ cut off arcs of $200^{\\circ}$ and $80^{\\circ}$ between them. What is the measure of the angle at $P$, in degrees?",
+  "choices": [
+    "20",
+    "40",
+    "60",
+    "140",
+    "160"
+  ],
+  "answerLatex": "60",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "An angle formed outside the circle is half the difference of the two arcs it intercepts.",
+    "Subtract the smaller arc from the larger one before halving.",
+    "$\\frac{1}{2}(200 - 80) = \\frac{1}{2} \\cdot 120 = 60$."
+  ],
+  "solutionLatex": "The vertex $P$ lies outside the circle, so the angle it intercepts is formed by two secants rather than by two chords.\n\nFor that configuration the angle equals half the difference of the two intercepted arcs, and the far arc is always the larger of the pair.\n\nHere the arcs are $200^{\\circ}$ and $80^{\\circ}$, so $m\\angle P = \\frac{1}{2}(200^{\\circ} - 80^{\\circ}) = \\frac{1}{2} \\cdot 120^{\\circ} = 60^{\\circ}$. Adding the arcs instead would give $140^{\\circ}$, which is the rule for a vertex inside the circle.",
+  "techniqueSlugs": [
+    "external-secant-angle"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

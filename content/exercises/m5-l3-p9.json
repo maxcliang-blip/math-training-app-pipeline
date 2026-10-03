@@ -1,0 +1,28 @@
+{
+  "id": "m5-l3-p9",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "circles",
+    "chords",
+    "intersecting-chords"
+  ],
+  "promptLatex": "Two chords $\\overline{AB}$ and $\\overline{CD}$ of a circle meet at an interior point $E$, with $A$, $E$, $B$ in that order and $C$, $E$, $D$ in that order. If $AE = 4$, $EB = 6$, and $CE = 3$, what is $ED$, in units?",
+  "choices": null,
+  "answerLatex": "8",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The products of the two pieces of one chord equal the products of the two pieces of the other.",
+    "Write the relation for $\\overline{AB}$ and set it equal to the relation for $\\overline{CD}$.",
+    "$4 \\cdot 6 = 3 \\cdot ED$, so $ED = \\frac{24}{3} = 8$."
+  ],
+  "solutionLatex": "The two chords cross inside the circle at $E$, so the product of the two pieces of one chord equals the product of the two pieces of the other.\n\nFor $\\overline{AB}$ the pieces are $AE = 4$ and $EB = 6$, giving a product of $24$. For $\\overline{CD}$ the pieces are $CE = 3$ and the unknown $ED$.\n\nSo $3 \\cdot ED = 24$, which gives $ED = 8$. Notice that the pairing is inside piece with inside piece, not with whole chord: writing $CE$ against the whole of $AB$ is the standard slip here.",
+  "techniqueSlugs": [
+    "intersecting-chords-product"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

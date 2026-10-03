@@ -1,0 +1,33 @@
+{
+  "id": "m5-l4-p2",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "area-of-triangles",
+    "triangles"
+  ],
+  "promptLatex": "In triangle $ABC$ the altitude from $A$ meets the line $BC$ at $D$, where $D$ lies beyond $C$ and so outside the triangle. If $BC = 12$ and $AD = 5$, what is the area of triangle $ABC$, in square units?",
+  "choices": [
+    "15",
+    "24",
+    "30",
+    "60",
+    "17"
+  ],
+  "answerLatex": "30",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The height is the perpendicular distance from the vertex to the line through the base.",
+    "That distance is still $5$, even though the foot of the altitude falls outside the triangle.",
+    "$\\frac{1}{2} \\cdot 12 \\cdot 5 = 30$."
+  ],
+  "solutionLatex": "The area formula $\\frac{1}{2} \\times \\text{base} \\times \\text{height}$ uses the perpendicular distance from the vertex to the **line** carrying the base, not the distance to the base segment.\n\nHere that perpendicular distance is $AD = 5$. The altitude lands outside the triangle because the angle at $C$ is obtuse, but the formula is completely unaffected by that.\n\nSo the area is $\\frac{1}{2} \\cdot 12 \\cdot 5 = 30$.",
+  "techniqueSlugs": [
+    "triangle-area-from-base-height"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

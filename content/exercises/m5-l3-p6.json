@@ -1,0 +1,28 @@
+{
+  "id": "m5-l3-p6",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "circles",
+    "chords",
+    "pythagorean"
+  ],
+  "promptLatex": "A circle has radius $13$, and one of its chords measures $24$ units. What is the distance from the centre of the circle to that chord, in units?",
+  "choices": null,
+  "answerLatex": "5",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The perpendicular from the centre to a chord cuts the chord into two equal halves.",
+    "Draw the radius to one endpoint of the chord and look at the right triangle that appears.",
+    "The half-chord is $12$, so the distance is $\\sqrt{13^{2} - 12^{2}} = \\sqrt{25} = 5$."
+  ],
+  "solutionLatex": "Let $M$ be the foot of the perpendicular from the centre $O$ to the chord, and let $A$ be one endpoint of the chord.\n\nSince $OM$ is perpendicular to the chord, it bisects it, so $AM = \\frac{24}{2} = 12$. The triangle $OMA$ has a right angle at $M$, with hypotenuse $OA = 13$.\n\nBy the Pythagorean theorem, $OM^{2} = 13^{2} - 12^{2} = 169 - 144 = 25$, so the distance is $OM = 5$.",
+  "techniqueSlugs": [
+    "radius-perpendicular-to-chord"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

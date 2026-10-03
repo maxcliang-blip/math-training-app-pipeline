@@ -1,0 +1,33 @@
+{
+  "id": "m5-l4-p3",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "quadrilaterals",
+    "area-of-triangles"
+  ],
+  "promptLatex": "A rhombus has diagonals of length $10$ and $24$. What is the area of the rhombus, in square units?",
+  "choices": [
+    "60",
+    "120",
+    "170",
+    "240",
+    "290"
+  ],
+  "answerLatex": "120",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The diagonals of a rhombus meet at right angles and bisect each other.",
+    "Cutting along one diagonal leaves two congruent right triangles.",
+    "$\\frac{1}{2} \\cdot 10 \\cdot 24 = 120$."
+  ],
+  "solutionLatex": "The diagonals of a rhombus bisect each other at right angles, so their intersection splits the rhombus into four congruent right triangles with legs $5$ and $12$.\n\nEquivalently, cutting along one diagonal gives two congruent triangles whose combined base is the long diagonal and whose combined height is the short one.\n\nEither way the area is $\\frac{1}{2} d_1 d_2 = \\frac{1}{2} \\cdot 10 \\cdot 24 = 120$.",
+  "techniqueSlugs": [
+    "rhombus-diagonal-area"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

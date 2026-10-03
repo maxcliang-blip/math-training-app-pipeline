@@ -1,0 +1,35 @@
+{
+  "id": "m5-l3-p8",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "circles",
+    "tangents",
+    "inscribed-angles"
+  ],
+  "promptLatex": "Two tangents drawn from an external point $P$ touch a circle with centre $O$ at $A$ and $B$, and the minor arc $AB$ measures $140^{\\circ}$. What is the measure of $\\angle APB$, in degrees?",
+  "choices": [
+    "20",
+    "40",
+    "70",
+    "110",
+    "140"
+  ],
+  "answerLatex": "40",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Use the right angles that sit at the two points of tangency.",
+    "The four angles of quadrilateral $AOBP$ add up to a full turn, and two of them are right angles.",
+    "$\\angle APB = 360 - 90 - 90 - 140 = 40$."
+  ],
+  "solutionLatex": "At the point of tangency the radius is perpendicular to the tangent, so $\\angle OAP = 90^{\\circ}$ and $\\angle OBP = 90^{\\circ}$.\n\nThe angles of quadrilateral $AOBP$ therefore satisfy $m\\angle AOB + m\\angle APB + 90^{\\circ} + 90^{\\circ} = 360^{\\circ}$.\n\nThe central angle $m\\angle AOB$ stands on the minor arc $AB$, so it measures $140^{\\circ}$. That gives $m\\angle APB = 360^{\\circ} - 90^{\\circ} - 90^{\\circ} - 140^{\\circ} = 40^{\\circ}$, which is the general rule $180^{\\circ}$ minus the minor arc.",
+  "techniqueSlugs": [
+    "tangent-radius-perpendicular",
+    "arc-measure-as-central-angle"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

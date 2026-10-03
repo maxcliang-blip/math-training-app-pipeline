@@ -1,0 +1,31 @@
+{
+  "id": "m5-l4-m3",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "A",
+  "difficulty": 5,
+  "tags": [
+    "area-of-triangles",
+    "triangles",
+    "inradius",
+    "circles"
+  ],
+  "promptLatex": "A triangle has sides of length $13$, $14$, and $15$, and a circle is inscribed in it. What is the radius of the inscribed circle, in units?",
+  "choices": null,
+  "answerLatex": "4",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Join the centre of the circle to the three vertices and look at the three areas that appear.",
+    "Each of those three triangles has a height equal to the radius, measured to one of the three sides.",
+    "The area is $84$, the semiperimeter is $21$, and $84 = 21 \\cdot r$, so $r = 4$."
+  ],
+  "solutionLatex": "First find the area of the triangle. Heron's formula needs the semiperimeter $s = \\frac{13 + 14 + 15}{2} = 21$, and then the three differences $8$, $7$, and $6$, so the area is $\\sqrt{21 \\cdot 8 \\cdot 7 \\cdot 6} = \\sqrt{7056} = 84$.\n\nNow join the centre of the inscribed circle to the three vertices of the triangle. This cuts the triangle into three smaller triangles, and in each of them the height dropped to a side is exactly the radius $r$, because the circle touches each side.\n\nThe three areas sum to the whole, so $84 = \\frac{1}{2} r (13 + 14 + 15) = 21 r$, which gives $r = 4$.",
+  "techniqueSlugs": [
+    "inradius-from-area",
+    "heron-area",
+    "triangle-area-from-base-height"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

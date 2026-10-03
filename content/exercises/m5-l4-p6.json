@@ -1,0 +1,33 @@
+{
+  "id": "m5-l4-p6",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "area-of-triangles",
+    "triangles"
+  ],
+  "promptLatex": "A triangle has sides of length $13$, $14$, and $15$. What is the area of the triangle, in square units?",
+  "choices": [
+    "42",
+    "84",
+    "96",
+    "168",
+    "210"
+  ],
+  "answerLatex": "84",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Heron's formula needs the semiperimeter of the triangle.",
+    "The semiperimeter is half of the perimeter.",
+    "$s = 21$, and the area is $\\sqrt{21 \\cdot 8 \\cdot 7 \\cdot 6} = \\sqrt{7056} = 84$."
+  ],
+  "solutionLatex": "Three side lengths determine an area, and Heron's formula is the way to get at it. The semiperimeter is $s = \\frac{13 + 14 + 15}{2} = 21$.\n\nThe three differences from the semiperimeter are $21 - 13 = 8$, $21 - 14 = 7$, and $21 - 15 = 6$. Heron's formula multiplies the semiperimeter by those three differences and takes a square root.\n\nSo the area is $\\sqrt{21 \\cdot 8 \\cdot 7 \\cdot 6} = \\sqrt{7056} = 84$.",
+  "techniqueSlugs": [
+    "heron-area"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

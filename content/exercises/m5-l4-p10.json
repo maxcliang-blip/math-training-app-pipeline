@@ -1,0 +1,36 @@
+{
+  "id": "m5-l4-p10",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "circles",
+    "arcs",
+    "central-angles",
+    "arc-length"
+  ],
+  "promptLatex": "An arc of a circle of radius $10$ is cut off by a central angle of $72^{\\circ}$. What is the length of the arc, in terms of $\\pi$?",
+  "choices": [
+    "2\\pi",
+    "4\\pi",
+    "10\\pi",
+    "20\\pi",
+    "72\\pi"
+  ],
+  "answerLatex": "4\\pi",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "An arc takes the same fraction of the circumference as its central angle takes of a full turn.",
+    "The circumference is $20\\pi$, and $72$ is one fifth of $360$.",
+    "$\\frac{72}{360} \\cdot 20\\pi = 4\\pi$."
+  ],
+  "solutionLatex": "The same central angle that fixes a sector's area fixes its arc length, because both divide the circle into $360$ equal parts.\n\nThe circumference is $2\\pi r = 2 \\pi \\cdot 10 = 20\\pi$, and the fraction is $\\frac{72}{360} = \\frac{1}{5}$.\n\nSo the arc measures $\\frac{1}{5} \\cdot 20\\pi = 4\\pi$, while the sector with the same central angle has area $20\\pi$.",
+  "techniqueSlugs": [
+    "radius-times-angle",
+    "arc-length-from-central-angle"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

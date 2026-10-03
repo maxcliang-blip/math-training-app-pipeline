@@ -1,0 +1,33 @@
+{
+  "id": "m5-l4-p1",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "area-of-triangles",
+    "triangles"
+  ],
+  "promptLatex": "A triangle has a base of $14$ units, and the altitude drawn to that base measures $9$ units. What is the area of the triangle, in square units?",
+  "choices": [
+    "27",
+    "63",
+    "126",
+    "252",
+    "45"
+  ],
+  "answerLatex": "63",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "The area of a triangle is half of its base times the matching height.",
+    "The base and the height here are $14$ and $9$.",
+    "$\\frac{1}{2} \\cdot 14 \\cdot 9 = 63$."
+  ],
+  "solutionLatex": "The area of a triangle is $\\frac{1}{2}$ times the length of a chosen base times the perpendicular height drawn to the line through that base.\n\nHere the base is $14$ and the matching altitude is $9$, so the area is $\\frac{1}{2} \\cdot 14 \\cdot 9 = 7 \\cdot 9 = 63$.",
+  "techniqueSlugs": [
+    "triangle-area-from-base-height"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

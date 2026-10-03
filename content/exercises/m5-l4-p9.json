@@ -1,0 +1,37 @@
+{
+  "id": "m5-l4-p9",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "10",
+  "difficulty": 3,
+  "tags": [
+    "circles",
+    "circle-area",
+    "central-angles",
+    "arcs"
+  ],
+  "promptLatex": "A sector of a circle of radius $10$ is cut off by a central angle of $72^{\\circ}$. What is the area of the sector, in terms of $\\pi$?",
+  "choices": [
+    "10\\pi",
+    "20\\pi",
+    "36\\pi",
+    "72\\pi",
+    "100\\pi"
+  ],
+  "answerLatex": "20\\pi",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A sector takes the fraction of the circle given by its central angle.",
+    "The whole circle has area $100\\pi$, and $72$ is one fifth of $360$.",
+    "$\\frac{72}{360} \\cdot 100\\pi = 20\\pi$."
+  ],
+  "solutionLatex": "The two radii bounding a sector cut the circle into as many sectors as there are degrees in the central angle, so a sector's area is that fraction of the whole.\n\nHere the fraction is $\\frac{72}{360} = \\frac{1}{5}$, and the whole circle has area $\\pi r^{2} = \\pi \\cdot 10^{2} = 100\\pi$.\n\nSo the sector has area $\\frac{1}{5} \\cdot 100\\pi = 20\\pi$.",
+  "techniqueSlugs": [
+    "radius-times-angle",
+    "sector-area-formula",
+    "circle-area-formula"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

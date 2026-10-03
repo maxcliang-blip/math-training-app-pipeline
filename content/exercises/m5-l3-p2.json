@@ -1,0 +1,35 @@
+{
+  "id": "m5-l3-p2",
+  "moduleId": "M5",
+  "lessonId": "m5-l3",
+  "tier": "10",
+  "difficulty": 1,
+  "tags": [
+    "circles",
+    "inscribed-angles",
+    "central-angles"
+  ],
+  "promptLatex": "In a circle with centre $O$, the central angle $\\angle AOB$ measures $100^{\\circ}$, and $C$ is a point on the circle on the major arc $AB$. What is the measure of the inscribed angle $\\angle ACB$, in degrees?",
+  "choices": [
+    "25",
+    "50",
+    "100",
+    "160",
+    "200"
+  ],
+  "answerLatex": "50",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "Relate the inscribed angle to the arc it intercepts.",
+    "The two angles stand on the same pair of points, but only one of them has its vertex on the circle.",
+    "The intercepted arc is $100^{\\circ}$, and the inscribed angle is half of that."
+  ],
+  "solutionLatex": "Because $C$ lies on the major arc $AB$, the arc $AB$ that $\\angle ACB$ intercepts is the minor arc, the one that does not contain $C$.\n\nThat minor arc is exactly the arc cut off by the central angle $\\angle AOB$, so it measures $100^{\\circ}$.\n\nAn inscribed angle is half of its intercepted arc, so $\\angle ACB = \\frac{1}{2} \\cdot 100^{\\circ} = 50^{\\circ}$.",
+  "techniqueSlugs": [
+    "inscribed-angle-half-arc",
+    "arc-measure-as-central-angle"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

@@ -1,0 +1,35 @@
+{
+  "id": "m5-l4-p13",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "12",
+  "difficulty": 3,
+  "tags": [
+    "volume",
+    "surface-area",
+    "composite-solids"
+  ],
+  "promptLatex": "A cylinder has radius $3$ and height $8$. What is the total surface area of the cylinder, in terms of $\\pi$?",
+  "choices": [
+    "18\\pi",
+    "24\\pi",
+    "42\\pi",
+    "48\\pi",
+    "66\\pi"
+  ],
+  "answerLatex": "66\\pi",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A cylinder's surface is two circles and one curved rectangle.",
+    "The curved part is the circumference of the base times the height.",
+    "$2 \\cdot \\pi \\cdot 3^{2} + 2 \\cdot \\pi \\cdot 3 \\cdot 8 = 18\\pi + 48\\pi = 66\\pi$."
+  ],
+  "solutionLatex": "The surface of a cylinder is one circular base, the other circular base, and the curved wall between them. The curved wall unrolls into a rectangle whose width is the circumference $2 \\pi r$ and whose height is $h$, so its area is $2 \\pi r h$.\n\nThe two bases together contribute $2 \\pi r^{2}$. Substituting $r = 3$ and $h = 8$ gives $2 \\pi \\cdot 9 = 18\\pi$ for the bases and $2 \\pi \\cdot 3 \\cdot 8 = 48\\pi$ for the wall.\n\nThe total is $18\\pi + 48\\pi = 66\\pi$.",
+  "techniqueSlugs": [
+    "surface-area-lateral-plus-base",
+    "prism-and-cylinder-volume"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}

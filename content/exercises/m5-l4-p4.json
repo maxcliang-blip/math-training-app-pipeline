@@ -1,0 +1,34 @@
+{
+  "id": "m5-l4-p4",
+  "moduleId": "M5",
+  "lessonId": "m5-l4",
+  "tier": "10",
+  "difficulty": 2,
+  "tags": [
+    "trapezoids",
+    "quadrilaterals"
+  ],
+  "promptLatex": "A trapezoid has parallel sides of length $8$ and $14$, and the perpendicular distance between them is $6$. What is the area of the trapezoid, in square units?",
+  "choices": [
+    "22",
+    "44",
+    "66",
+    "96",
+    "132"
+  ],
+  "answerLatex": "66",
+  "answerAlternatives": [],
+  "hintLatex": [
+    "A trapezoid's area is half the sum of its parallel sides times the height between them.",
+    "The parallel sides are $8$ and $14$, and the height is $6$.",
+    "$\\frac{1}{2}(8 + 14) \\cdot 6 = \\frac{1}{2} \\cdot 22 \\cdot 6 = 66$."
+  ],
+  "solutionLatex": "Drop perpendiculars from the two ends of the shorter parallel side down to the longer one. The figure splits into a rectangle and two right triangles whose combined base is the difference of the parallel sides.\n\nThat gives the standard formula $A = \\frac{1}{2}(b_1 + b_2)h$, where $h$ is the distance between the parallel sides.\n\nSubstituting, $A = \\frac{1}{2}(8 + 14) \\cdot 6 = \\frac{1}{2} \\cdot 22 \\cdot 6 = 66$.",
+  "techniqueSlugs": [
+    "trapezoid-midsegment-area",
+    "polygon-rectangle-decomposition"
+  ],
+  "asymptoteSource": null,
+  "asymptoteAlt": null,
+  "asymptoteAspectRatio": null
+}
