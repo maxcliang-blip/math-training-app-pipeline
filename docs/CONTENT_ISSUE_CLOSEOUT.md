@@ -30,47 +30,79 @@ git fetch origin
 git log --oneline origin/main..origin/<your-branch>   # empty means it is merged
 ```
 
-### 3. Record the lesson ids in the close-out comment
+### 3. Record the ids it delivered in the close-out comment
 
 This is the required line. Put it in the comment that sets the issue to `done`:
 
 ```
-Delivered: m5-l2 (18 exercises)
+Delivered: m5-l2, m5-l2-fig-1, m5-l2-fig-2 (lesson + its two figures)
 ```
 
-One lesson id per lesson the issue delivered, comma-separated. If the issue was not a content
-issue, or delivered nothing, say so — `Delivered: none (docs only)` is a valid answer and a
-missing line is not. A close-out that names nothing has proved nothing.
+Name one id per thing the issue delivered — a lesson, a figure, a worked example, an exercise.
+If the issue was not a content issue, or delivered nothing, say so — `Delivered: none (docs only)`
+is a valid answer and a missing line is not. A close-out that names nothing has proved nothing.
 
 ### 4. Run the delivery check against `main`
 
 ```bash
-npm run content:delivered -- m5-l2
+npm run content:delivered -- m5-l2 m5-l2-fig-1
 ```
 
-It reads `origin/main`'s tree, resolves each id against the lesson records the tree holds, and
-exits non-zero for any id that is not there. Copy the output into the close-out comment.
+It reads `origin/main`'s tree, resolves each id against the records the tree holds, and exits
+non-zero for any id that is not there. Copy the output into the close-out comment.
 
 ```
 verify-delivery: DELIVERED  (ref origin/main)
-  36 lesson files hold 36 lesson records
-  ok    m5-l2  (content/lessons/m5-l2.json)
+  302 content files hold 1020 addressable ids  (38 lessons, 73 figures, 150 worked-examples, 759 exercises)
+  ok    m5-l2  (lesson  content/lessons/m5-l2.json)
+  ok    m5-l2-fig-1  (figure  lessons/m5-l2.sections.concept.figures[0])
 ```
 
-For comparison, the same command while `m5-l2` was genuinely absent — which is what MAX-23 looked
-like, four weeks of it:
+For comparison, the same command against the commit before `m5-l2` was authored — which is what
+MAX-23 looked like, four weeks of it (run against `769a33e^`, the parent of the commit that added
+`content/lessons/m5-l2.json`):
 
 ```
-verify-delivery: NOT DELIVERED  (ref origin/main)
-  35 lesson files hold 35 lesson records
+verify-delivery: NOT DELIVERED  (ref 769a33e^)
+  245 content files hold 939 addressable ids  (35 lessons, 61 figures, 138 worked-examples, 705 exercises)
   MISS  m5-l2
+  MISS  m5-l2-fig-1
 
-  m5-l2 is not on origin/main.
+  m5-l2, m5-l2-fig-1 is not on 769a33e^.
   Either the work is not merged, or it was never written. Do not close the issue done.
 ```
 
 Then close the issue. If the check fails, the issue is not done. Leave it `in_progress` and name
 what is missing.
+
+Exit 2 is different from exit 1: it means the check could not answer rather than that the answer
+was no. That covers a usage error, a git error, and an id the ref holds **twice** — which the
+check refuses to resolve rather than resolving to whichever record it read first.
+
+## What the check can and cannot see
+
+It resolves every id in `content/lessons` and `content/exercises`: lesson ids, figure ids
+(`sections.<name>.figures[].id`), worked-example ids (`sections.<name>.examples[].id`) and
+exercise ids. An earlier version of this script read top-level `record.id` only, and reported
+`MISS` for a figure that was in the tree and `MISS` for one that was not — the same answer for a
+delivered thing and an undelivered one, which is the only answer a gate must never give. On the
+current corpus that version saw 38 of 1,020 addressable ids.
+
+Two limits are stated here rather than left to be discovered:
+
+- **A record with no id cannot be named, so it cannot be asserted delivered.** The check counts
+  them and prints the count on every run — four of m5-l1's figure reservations are in that state,
+  and they are reported because silence is how they stayed invisible.
+- **Work that delivers no id-bearing record cannot be checked by this at all.** A change to the
+  SVG sanitiser, or to the figure cache key, or to a gate rule, leaves nothing on `content/` for
+  an id to resolve against, so `Delivered: none` is an honest close-out that this procedure does
+  not check. Covering that needs a check over a declared manifest of paths rather than ids, which
+  is tracked in [MAX-104](/MAX/issues/MAX-104).
+
+`npm run content:delivered:selftest` proves the resolver can tell those two apart. It runs on a
+throwaway corpus rather than on this one, and each case is asserted with its opposite — a figure
+id that is present must resolve *and* a figure id that is absent must not — because the bug it
+guards against was not a wrong answer but an answer that could not be wrong.
 
 ## Why the check reads the tree and not the history
 
