@@ -522,12 +522,13 @@ function checkAsymptote(source, alt, ratio, path) {
   check("error", "S5.2-line-budget", path, lines.length <= 40,
     `figure source is ${lines.length} lines, budget is 40 (S5.2)`);
   // The rules below read the figure's code, not its header. A source that says
-  // size(W,H) in a comment and never calls it has no reserved space, and a rule that
+  // size(W,H) in a comment and never calls it declares no ceiling, and a rule that
   // matched the comment would call that a figure: it is exactly how this header was able
   // to defeat the S5.2 self-test while every figure it described was unmeasurable.
   const code = lines.join("\n");
   check("error", "S5.2-size-required", path, /\bsize\s*\(/.test(code),
-    "figure source must call size(...) so the pipeline knows its dimensions (S5.2)");
+    "figure source must call size(...) to state a ceiling on the output extent (S5.2). The ceiling " +
+    "bounds the output, it is not the box: asymptoteAspectRatio comes from the compiled viewBox (S5.4)");
   // There is deliberately no authoring-time check here that the declared ratio equals
   // size(W,H)/size(W,H). One used to live here, as S5.4-ratio-matches-size, and it was the
   // source of the drift this gate now exists to catch: Asymptote's two-argument size() is a
