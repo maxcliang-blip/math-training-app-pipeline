@@ -8,3 +8,6 @@ build/
 coverage/
 artifacts/
 .data/
+.e2e-tmp/
+test-results/
+playwright-report/

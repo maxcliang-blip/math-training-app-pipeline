@@ -7,6 +7,8 @@
     "dev:api": "npm run dev --workspace api",
     "build": "npm run build --workspace web",
     "test": "npm test --workspaces --if-present",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps chromium",
     "content:check": "node scripts/check-content-math.mjs",
     "content:selftest": "node scripts/check-content-math.mjs --selftest",
     "content:figures": "node scripts/build-figures.mjs",
@@ -20,6 +22,7 @@
     "git:worktree": "sh scripts/agent-worktree.sh"
   },
   "devDependencies": {
+    "@playwright/test": "1.59.1",
     "katex": "0.16.11"
   }
 }

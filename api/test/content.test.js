@@ -113,9 +113,15 @@ test("a lesson's figure lists become references, and the Asymptote source does n
   const figures = lesson.sections.concept.figures;
   assert.ok(figures.length > 0, "m1-l3 has a figure in its concept section");
   for (const ref of figures) {
-    assert.deepEqual(Object.keys(ref), FIGURE_REFERENCE_FIELDS);
+    // Not exact equality: a record that authored no ratio produces a reference without one, and the
+    // client then falls back to the documented default. What must hold is that nothing outside the
+    // reference fields rides along.
+    assert.deepEqual(Object.keys(ref).filter((k) => !FIGURE_REFERENCE_FIELDS.includes(k)), []);
     assert.match(ref.figureKey, /^m1-l3\.sections\.concept\.figures\[\d+\]$/);
   }
+  // The reservation travels with the reference so the box is sized before the figure route answers
+  // (RC §5.4 item 1). Every figure-bearing record in the corpus authors one.
+  assert.ok(figures.every((ref) => typeof ref.asymptoteAspectRatio === "number"));
   // The raw source is kilobytes of Asymptote per figure and belongs to the build.
   assert.equal(JSON.stringify(lesson).includes("size(299,241)"), false);
 });
@@ -125,10 +131,14 @@ test("no Asymptote build input reaches any lesson, including inside worked examp
   // of figure as a figure in a section list. Walking every lesson rather than one hand-picked
   // record is the point: four lessons had a figure-bearing example and the projection used to miss
   // all four, because only `sections.*.figures` was reduced to references.
+  //
+  // asymptoteAspectRatio is the one exception, and it is a deliberate one: it is a reference field
+  // (FIGURE_REFERENCE_FIELDS) rather than build input, because RC §5.4 item 1 sizes the reserved box
+  // from it at first paint. It is checked below that it carries nothing else.
   const offenders = [];
   for (const lessonId of store.lessons.keys()) {
     const json = JSON.stringify(store.getLesson(lessonId));
-    for (const field of ["asymptoteSource", "asymptoteAlt", "asymptoteAspectRatio"]) {
+    for (const field of ["asymptoteSource", "asymptoteAlt"]) {
       if (json.includes(`"${field}"`)) offenders.push(`${lessonId}:${field}`);
     }
   }
@@ -140,8 +150,13 @@ test("a figure-bearing worked example becomes a reference, and an example withou
   const examples = lesson.sections.concept.examples;
   const withFigure = examples.find((e) => "figureKey" in e);
   assert.ok(withFigure, "m4-l2 has a worked example with a figure");
-  assert.deepEqual(Object.keys(withFigure).filter((k) => k === "figureKey"), ["figureKey"]);
+  // A worked example is a section member, so its own fields survive the projection; what must not
+  // survive is the figure's build input.
+  for (const field of ["asymptoteSource", "asymptoteAlt"]) {
+    assert.equal(field in withFigure, false, `${field} must not ride along on a worked example`);
+  }
   assert.match(withFigure.figureKey, /^m4-l2\.sections\.concept\.examples\[\d+\]$/);
+  assert.equal(typeof withFigure.asymptoteAspectRatio, "number", "the authored ratio is reserved from");
   // The prose of the example survives the projection; only the figure fields are dropped.
   assert.ok(withFigure.titleLatex);
   assert.ok(withFigure.bodyLatex);

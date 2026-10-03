@@ -67,29 +67,39 @@ export function figureAssetUrl(figureSvgUrl, origin = "") {
 // decimals, so anything inside this band is rounding and not a disagreement.
 const RATIO_TOLERANCE = 0.02;
 
-// Which aspect ratio the <img> box should use, and whether the manifest's numbers disagree.
-//
-// Two ratios come from the build (declared is the author's, compiled is the compiler's) and a third
-// from the browser once the SVG decodes. They are not equally trustworthy, and treating them as
-// interchangeable is how a diagram ends up drawn at the wrong shape: applying the declared ratio to
-// an SVG whose intrinsic ratio differs stretches the picture, and a stretched geometry figure
-// teaches the wrong thing. The measured ratio wins for layout because it is the only one that
-// describes the bytes actually being painted.
-//
-// The declared/compiled numbers still have a job — reserving the box before the SVG arrives — and a
-// disagreement between them is a build defect worth reporting rather than silently picking a
-// winner. This returns both so the component can reserve, then correct, then say so.
-export function resolveFigureRatio({ declaredAspectRatio, compiledAspectRatio, measuredAspectRatio } = {}) {
-  const usable = (value) =>
-    typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
+// The ratio a figure box is sized at when the authoring record declares none. Named by Rendering
+// Conventions §5.4 item 1, which sizes the box from asymptoteAspectRatio "(default 1.333, from the
+// IA doc §7 gap 1)". A box with no ratio at all is not a neutral default, it is an unreserved box:
+// it collapses to the height of its content, so it is zero-height while pending and full-height
+// once the SVG lands. That transition is the layout shift the whole section exists to forbid.
+export const DEFAULT_FIGURE_ASPECT_RATIO = 1.333;
 
+// Which aspect ratio the figure box is sized at, and whether the manifest's numbers disagree.
+//
+// Three ratios are in play and they are not equally trustworthy: the author's declaration, the
+// compiler's measurement of the built SVG, and the browser's measurement once the SVG decodes.
+//
+// The box is sized from the author's declaration and from nothing else, once, on the figure's
+// first paint. That is the whole no-reflow contract (§5.4 items 1 and 5): the reserved box and the
+// loaded box must be the same box, so nothing that arrives later may resize it. Applying the
+// browser's measurement to the box is what made the layout depend on load timing — the measured
+// ratio replaced the reservation after first paint, and on the deployed corpus the reservation and
+// the measurement disagree on 65 of 69 figures, so the box changed height under the reader.
+//
+// The compiler's and the browser's numbers are still worth having: they say whether the authored
+// declaration is true. They are returned as drift, and the component records it, because a figure
+// drawn at the wrong shape is a build defect to fix in the authoring record or the compiler and
+// not in the stylesheet. The <img> is laid into the box with object-fit: contain, so a declaration
+// that turns out to be wrong letterboxes the picture instead of distorting the geometry.
+export function resolveFigureRatio({ declaredAspectRatio, compiledAspectRatio, measuredAspectRatio } = {}) {
   const declared = usable(declaredAspectRatio);
   const compiled = usable(compiledAspectRatio);
   const measured = usable(measuredAspectRatio);
 
-  // Before the SVG arrives the compiler's measurement beats the author's declaration.
-  const reserved = compiled ?? declared;
-  const resolved = measured ?? reserved;
+  // The authored declaration wins because it is the only one available at first paint; the
+  // compiler's measurement is the fallback for a figure that somehow reached the client without
+  // one. The measurement is deliberately not in this expression.
+  const reserved = declared ?? compiled ?? DEFAULT_FIGURE_ASPECT_RATIO;
 
   const drift = [];
   if (declared && compiled && Math.abs(declared - compiled) / compiled > RATIO_TOLERANCE) {
@@ -99,7 +109,12 @@ export function resolveFigureRatio({ declaredAspectRatio, compiledAspectRatio, m
     drift.push({ kind: "reserved-vs-measured", expected: reserved, actual: measured });
   }
 
-  return { reserved, resolved, drift };
+  return { reserved, declared, compiled, measured, drift };
+}
+
+function usable(value) {
+  if (typeof value === "string" && value.trim() !== "") value = Number(value);
+  return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
 }
 
 // Per-key cache. Figures are immutable for a given figureHash, and a lesson page asks for the

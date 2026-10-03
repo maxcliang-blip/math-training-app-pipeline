@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { createApp } from "../src/app.js";
 import { loadContentStore } from "../src/content.js";
 import { FigureStore } from "../src/figures.js";
-import { FIGURE_PAYLOAD_FIELDS } from "../../lib/figure-contract.mjs";
+import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure-contract.mjs";
 
 // Route-level acceptance for the API surface IA §7 lists as P0, plus the two rules that are
 // cheaper to assert here than to discover in a learner's browser: no figure payload on a
@@ -71,6 +71,28 @@ function collectKeys(value, into = new Set()) {
     }
   }
   return into;
+}
+
+// Every object that names itself a figure reference: an object with a figureKey string. Walking for
+// the shape rather than for known paths is deliberate — a figure in a section list, a figure on a
+// worked example and a figure on an exercise are three different places, and a check that knows the
+// first two and not the third is how four lessons ended up shipping their Asymptote source.
+//
+// Such an object is not *only* a reference: a worked example keeps its prose and an exercise keeps
+// its prompt. What is asserted about it is narrower — nothing figure-shaped rides along except the
+// reference fields themselves.
+const FIGURE_SHAPED_KEYS = [
+  ...new Set([...FIGURE_PAYLOAD_FIELDS, ...FIGURE_REFERENCE_FIELDS, "asymptoteSource", "asymptoteAlt"])
+];
+
+function walkReferences(value, into) {
+  if (Array.isArray(value)) {
+    for (const item of value) walkReferences(item, into);
+    return;
+  }
+  if (!value || typeof value !== "object") return;
+  if (typeof value.figureKey === "string") into.push(value);
+  for (const child of Object.values(value)) walkReferences(child, into);
 }
 
 test("health reports the corpus it actually loaded", async () => {
@@ -221,16 +243,53 @@ test("no figure payload field appears anywhere on a content route", async () => 
       assert.equal(keys.has(field), false, `${field} leaked onto ${path}`);
     }
   }
-  // And the references that do appear are keys alone.
+  // And the references that do appear are reference fields and nothing else.
   const withFigure = await get("/api/exercises/m6-l3-p6");
-  assert.deepEqual(Object.keys(withFigure.body).filter((k) => k === "figureKey"), ["figureKey"]);
+  assert.deepEqual(
+    Object.keys(withFigure.body).filter((k) => k === "figureKey" || k === "asymptoteAspectRatio"),
+    ["figureKey", "asymptoteAspectRatio"]
+  );
+  assert.equal(typeof withFigure.body.asymptoteAspectRatio, "number");
 });
 
-// The seven figure payload fields are not the whole leak. asymptoteSource and its two siblings are
+// The one number a content route is allowed to carry about a figure, asserted where it is a
+// deliberate exception rather than as an absence: every figure reference in the corpus must carry
+// the authored ratio, because a client that has to fetch the ratio in order to reserve the box
+// reserves nothing and the box moves when the SVG lands (RC §5.4 items 1 and 5).
+test("every figure reference in the corpus carries the authored ratio, and nothing else", async () => {
+  const lessons = await get("/api/lessons");
+  let references = 0;
+  for (const summary of lessons.body) {
+    const { body } = await get(`/api/lessons/${summary.id}`);
+    const found = [];
+    walkReferences(body, found);
+    for (const ref of found) {
+      references += 1;
+      assert.deepEqual(
+        Object.keys(ref).filter((k) => FIGURE_SHAPED_KEYS.includes(k) && !FIGURE_REFERENCE_FIELDS.includes(k)),
+        [],
+        `figure reference on ${summary.id} carried something else: ${JSON.stringify(ref)}`
+      );
+      assert.equal(
+        typeof ref.asymptoteAspectRatio,
+        "number",
+        `figure reference ${ref.figureKey} on ${summary.id} has no ratio to reserve from`
+      );
+    }
+  }
+  assert.ok(references > 0, "the corpus has figure references to check");
+});
+
+// The seven figure payload fields are not the whole leak. asymptoteSource and asymptoteAlt are
 // build input, they are kilobytes per figure, and a payload-field check cannot see them because
-// none of them is named in FIGURE_PAYLOAD_FIELDS. This walks every lesson and every exercise.
+// neither of them is named in FIGURE_PAYLOAD_FIELDS. This walks every lesson and every exercise.
+//
+// asymptoteAspectRatio is deliberately absent from that list: it is a reference field rather than
+// build input (see FIGURE_REFERENCE_FIELDS) because RC §5.4 item 1 sizes the reserved box from it
+// at first paint, which is before the figure route has answered. The test below is where it is
+// pinned instead, so widening the reference cannot quietly become a wider leak.
 test("no Asymptote build input appears anywhere on a content route", async () => {
-  const buildInput = ["asymptoteSource", "asymptoteAlt", "asymptoteAspectRatio"];
+  const buildInput = ["asymptoteSource", "asymptoteAlt"];
   const lessons = await get("/api/lessons");
   for (const summary of lessons.body) {
     for (const path of [`/api/lessons/${summary.id}`, `/api/exercises?lessonId=${summary.id}`]) {
