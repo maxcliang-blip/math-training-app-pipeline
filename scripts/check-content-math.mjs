@@ -21,12 +21,12 @@
 import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { join, dirname, resolve } from "node:path";
+import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import katex from "katex";
 import { run, KATEX_PINNED } from "./preflight-content.mjs";
 import { collectFigures } from "./build-figures.mjs";
-import { isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
+import { doubledBackslashInTexLabels, isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -169,6 +169,77 @@ function findLessonExampleFigure(lessons) {
 function findExerciseFigure(exercises) {
   const ordered = [...exercises].sort((a, b) => String(a.id).localeCompare(String(b.id)));
   return ordered.find(isRenderableFigure);
+}
+
+// Clean donors, for the S5.2-tex-label-doubled-backslash family (MAX-119).
+//
+// "Clean" is not a nicety here, it is what makes the mutation conclusive. The mutation harness
+// treats a finding as caught only when it is *fresh* -- a rule|path pair absent from the baseline
+// run -- because a mutated corpus holds the original records alongside the mutated ones and a
+// pre-existing finding simply recurs. MAX-119's rule reports at the figure's own path, and twelve
+// figures on main already carry this defect, so injecting the defect into the figure
+// findLessonFigure() returns (m1-l3-fig-1, which is one of the twelve) would re-raise a baseline
+// finding: filtered as not-fresh, and the mutation would report MISSED for a rule that works.
+//
+// So these three pick the first figure that has a source and no doubled-backslash TeX label at its
+// own site. All three sites have one today; a corpus that lost them would report MISSED rather than
+// silently proving nothing, which is the right way for that to fail.
+function firstCleanFigure(records, where_) {
+  const ordered = [...records].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  for (const lesson of ordered) {
+    for (const site of lessonFigureRecords(lesson)) {
+      if (where_(site) && isRenderableFigure(site.record) &&
+          doubledBackslashInTexLabels(site.record.asymptoteSource).length === 0) {
+        return site.record;
+      }
+    }
+  }
+  return undefined;
+}
+
+function findCleanLessonFigure(lessons) {
+  return firstCleanFigure(lessons, () => true);
+}
+
+function findCleanLessonExampleFigure(lessons) {
+  return firstCleanFigure(lessons, (site) => site.kind === "example");
+}
+
+function findCleanExerciseFigure(exercises) {
+  const ordered = [...exercises].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  return ordered.find((ex) => isRenderableFigure(ex) &&
+    doubledBackslashInTexLabels(ex.asymptoteSource).length === 0);
+}
+
+// The nine label bodies measured against the pinned katex@0.16.11 for MAX-119.
+//
+// These are the fixture the issue names as the definition of done, and the reason they are a table
+// rather than one representative case: KaTeX renders all nine without error, so nothing that asks
+// "does it render?" distinguishes a broken payload from a correct one. Nine near-identical rows
+// that a single rule catches is the measurement that "a render-based rule is blind to this class
+// by construction" rests on -- with one row it would be an anecdote.
+//
+// Each body is spliced into a figure source with its backslashes DOUBLED, which is the defect:
+// Asymptote copies the literal verbatim, so two backslashes is what reaches TeX.
+const MEASURED_LABEL_BODIES = [
+  "\\frac{a}{b}",
+  "\\sqrt{x-2}",
+  "b\\cos C",
+  "\\lceil 7/3 \\rceil",
+  "\\theta",
+  "3^{2}\\equiv 1\\pmod{8}",
+  "4 \\cdot 3 \\cdot 2 = 24",
+  "\\angle AOB",
+  "\\frac{a}{\\sin A} = 2R",
+];
+
+// Append one label whose payload carries `body`, doubled. Appended rather than substituted so the
+// donor figure keeps every other property the S5.2 rules look at, and so the only new finding this
+// can raise is this rule's.
+function poisonLabelWith(donor, body) {
+  const doubled = body.replace(/\\/g, "\\\\");
+  donor.asymptoteSource += `\nlabel("$${doubled}$",B,SE);`;
+  return donor;
 }
 
 // One defect per rule family, each with the severity that family must raise and a rule
@@ -417,6 +488,60 @@ export const MUTATIONS = [
   },
 ];
 
+// Nine mutations, one per measured label body, and then the three that are about *reach* rather
+// than about detection. (MAX-119)
+//
+// The nine come from the table in the issue: bodies that KaTeX renders without complaint, so the
+// rule that catches them cannot be a render rule. They are appended to MUTATIONS rather than
+// written inline there because they are generated from one measurement, and a hand-copied table of
+// nine near-identical rows is a table that drifts from its source on the second edit.
+for (const body of MEASURED_LABEL_BODIES) {
+  MUTATIONS.push({
+    id: `tex-label-doubled-backslash-${body.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
+    rule: "S5.2-tex-label-doubled-backslash",
+    severity: "error",
+    apply(c) {
+      poisonLabelWith(findCleanLessonFigure(c.lessons), body);
+    },
+  });
+}
+
+// The subset of the same family that sits immediately after `^` or `_`. That one does not render
+// wrong, it fails to build, so it gets its own rule id and its own mutation: without this the
+// second id would be an untested branch of the first, and "keep it only if it buys a better
+// message" is only true if the message is reachable.
+MUTATIONS.push({
+  id: "tex-label-doubled-backslash-after-a-script",
+  rule: "S5.2-tex-label-doubled-backslash-after-script",
+  severity: "error",
+  apply(c) {
+    poisonLabelWith(findCleanLessonFigure(c.lessons), "90^\\circ");
+  },
+});
+
+// The two other figure sites. The rule lives in checkAsymptote, which all three sites already call,
+// so on paper it cannot miss one -- and "on paper" is exactly what MAX-76 was: a rule that ran over
+// concept.figures and not over the two other sites, with the gate reporting a clean run for 8
+// worked-example figures that had never met a rule at all. These two mutations are the assertion,
+// and they fail if the reach is ever narrowed back to lessons.
+MUTATIONS.push({
+  id: "example-figure-label-doubled-backslash",
+  rule: "S5.2-tex-label-doubled-backslash",
+  severity: "error",
+  apply(c) {
+    poisonLabelWith(findCleanLessonExampleFigure(c.lessons), "\\theta");
+  },
+});
+
+MUTATIONS.push({
+  id: "exercise-figure-label-doubled-backslash",
+  rule: "S5.2-tex-label-doubled-backslash",
+  severity: "error",
+  apply(c) {
+    poisonLabelWith(findCleanExerciseFigure(c.exercises), "\\theta");
+  },
+});
+
 
 // Harness invariant, not a content rule: the authoring gate's corpus figure total and the build's
 // own corpus scan must be the same number, and they must both move when the corpus moves.
@@ -563,6 +688,118 @@ function captionScopeIsDeliberate(contentRoot) {
   }
 }
 
+// MAX-119's DoD asks for a proof that the rule runs in the authoring path and not only in the
+// figure build. Two claims, both checkable, and neither of them is "the mutation above passed":
+//
+//   1. The rule fires from `run()` alone. `run` is preflight-content.mjs's engine. That matters
+//      because preflight-content.mjs is the author-side reference implementation, the one an
+//      author can run against a corpus with no app, no repo and no toolchain -- which is where a
+//      rule about figure *source* belongs. The nine mutations above go through checkCorpus(), and
+//      checkCorpus() is `run`, so this is partly redundant on purpose: it states the claim where a
+//      reader of the rule will find it.
+//
+//   2. preflight-content.mjs's module graph contains no compiler. This is the half that cannot be
+//      asserted by inspection later, because the obvious future edit -- "just call
+//      diagnoseCompileFailure, it already knows about this" -- is an import away and would silently
+//      turn an authoring-path rule into one that needs a toolchain. If someone makes that edit, the
+//      rule keeps working on any machine that has Asymptote and stops working on every machine that
+//      does not, and nothing else in the file would notice. So the import is checked.
+//
+// Claim 2 reads the source of preflight-content.mjs rather than its resolved module graph: it is
+// the *edges in this repository* that are the hazard, and a transitive dependency of katex is not
+// where a compiler would come from.
+// Claim 2 is a static fact about preflight-content.mjs's module graph: it must not reach a
+// compiler. This has to be a *graph* walk and not a grep of the file, for two reasons.
+//
+// First, a grep is defeated by the file's own prose. This one was: the rule's comment explains
+// that scripts/build-figures.mjs carries the detector, so a substring check for "build-figures.mjs"
+// reads that sentence and calls the gate compiler-dependent. The claim is about import edges, so
+// only import edges are read.
+//
+// Second, and more to the point, the detector now lives in lib/figure-contract.mjs, which
+// preflight-content.mjs imports. An execFileSync added *there* reaches the authoring gate just as
+// surely as one added to preflight itself, and a one-file check would not see it. So the walk
+// follows relative specifiers out of the repository's own scripts/ and lib/ directories and reports
+// the closure.
+function authoringGateImportClosure() {
+  const seen = new Set();
+  const compilerEdges = [];
+  const queue = [join(HERE, "preflight-content.mjs")];
+  const IMPORT_SPECIFIER = /(?:^|\n)\s*(?:import|export)[\s\S]*?from\s+["']([^"']+)["']|(?:^|\n)\s*import\s+["']([^"']+)["']/g;
+  while (queue.length) {
+    const file = queue.pop();
+    if (seen.has(file)) continue;
+    seen.add(file);
+    let source;
+    try {
+      source = readFileSync(file, "utf8");
+    } catch {
+      continue; // unresolvable specifier: nothing to read, and nothing to claim about it
+    }
+    for (const m of source.matchAll(IMPORT_SPECIFIER)) {
+      const spec = m[1] || m[2];
+      if (spec === "node:child_process") {
+        compilerEdges.push(`${relative(HERE, file)} -> ${spec}`);
+        continue;
+      }
+      if (!spec.startsWith(".")) continue; // third-party: katex, node builtins, nothing else
+      if (/build-figures\.mjs$/.test(spec)) {
+        // The figure build is not a compiler by itself -- but diagnoseCompileFailure lives in it,
+        // so importing it is the edit this check exists to notice.
+        compilerEdges.push(`${relative(HERE, file)} -> ${spec}`);
+        continue;
+      }
+      queue.push(resolve(dirname(file), spec));
+    }
+  }
+  return { files: [...seen], compilerEdges };
+}
+
+function labelRuleNeedsNoToolchain(contentRoot) {
+  const problems = [];
+
+  const closure = authoringGateImportClosure();
+  for (const edge of closure.compilerEdges) {
+    problems.push(`the authoring gate's import closure reaches a compiler: ${edge}`);
+  }
+
+  // The rule has to actually fire, from run() alone, on a corpus that carries the defect.
+  const dir = mkdtempSync(join(tmpdir(), "content-label-notoolchain-"));
+  try {
+    cpSync(contentRoot, dir, { recursive: true });
+    const corpus = loadCorpus(dir);
+    const donor = findCleanLessonFigure(corpus.lessons);
+    if (!donor) {
+      problems.push("no lesson figure with a clean source to poison");
+    } else {
+      poisonLabelWith(donor, "\\theta");
+      for (const [kind, items] of Object.entries(corpus)) {
+        writeFileSync(join(dir, kind, "notoolchain.json"), JSON.stringify(items, null, 2) + "\n");
+      }
+      const findings = run(dir).report.findings.filter(
+        (f) => f.rule === "S5.2-tex-label-doubled-backslash" && f.severity === "error",
+      );
+      if (!findings.length) {
+        problems.push("run() over a poisoned corpus raised no S5.2-tex-label-doubled-backslash error");
+      }
+      if (!problems.length) {
+        return {
+          caught: true,
+          detail: `run() -- the engine behind content:check and the author-side preflight -- raised ` +
+            `${findings.length} S5.2-tex-label-doubled-backslash error(s) on a poisoned label ` +
+            `(${findings[0].path}), and all ${closure.files.length} module(s) in the gate's own import closure ` +
+            `(scripts/preflight-content.mjs, lib/figure-contract.mjs) reach neither node:child_process nor the figure build`,
+        };
+      }
+    }
+  } catch (err) {
+    problems.push(`threw: ${err.message}`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+  return { caught: false, detail: problems.join("; ") };
+}
+
 export function selftest(contentRoot) {
   const pristine = mkdtempSync(join(tmpdir(), "content-selftest-"));
   const rows = [];
@@ -697,6 +934,25 @@ export function selftest(contentRoot) {
       }
       rows.push({
         id: "caption-scope-is-deliberate",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
+        const noToolchain = labelRuleNeedsNoToolchain(pristine);
+        caught = noToolchain.caught;
+        detail = noToolchain.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "tex-label-rule-needs-no-toolchain",
         rule: "harness-invariant",
         severity: "error",
         caught,
