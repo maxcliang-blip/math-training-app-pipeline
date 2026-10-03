@@ -175,11 +175,29 @@ function normalizeClaim(raw) {
 // is exactly the file name of something the change really touches. The last
 // clause is what lets `the Dockerfile` in running prose cover `Dockerfile` while
 // `the content of this change` covers nothing at all.
+//
+// The rejections matter as much as the acceptances, and they were both found by
+// running this gate against a real pull request whose body *discusses* the gate:
+//   - whitespace: a path has no spaces, so a quoted span like `changed_files 26`
+//     or `CI / pr-body-coverage` is prose about paths, not a path.
+//   - a leading dash: `--selftest` is a flag. Naming a flag names no file.
 export function qualifiesAsClaim(token, { quoted = false, basenames = new Set() } = {}) {
   if (!token) return false;
+  if (/\s/.test(token)) return false;
+  if (token.startsWith("-")) return false;
+  if (isDegenerateGlob(token)) return false;
   if (quoted || token.includes("/")) return true;
   if (FILE_EXTENSION.test(token)) return true;
   return basenames.has(token);
+}
+
+// A pattern made only of glob characters and separators: `**`, `*`, `*/*`. It
+// matches everything, so accepting it would make rule 1 pass on any body that
+// happens to mention a wildcard -- which is what a body *describing this very
+// gate* does. A pattern with any literal segment (`content/**`, `docs/**`,
+// `*.md`) is still a claim; one with nothing to name is not.
+export function isDegenerateGlob(pattern) {
+  return /^[*?[\]\\/]+$/.test(String(pattern ?? ""));
 }
 
 // The literal prefix of a pattern: everything before the first glob character.
@@ -680,10 +698,28 @@ export function selftest() {
   caseOf(
     "wildcard-everything-is-not-a-claim",
     "prose-claim",
-    "a body that claims `**` covers every path and still owes an explanation for each area",
+    "a body that claims `**` covers nothing and owes an explanation for every area",
     ["scripts/a.mjs", "content/lessons/a.json"],
     "`**` — everything.",
     "fail",
+    (r) => {
+      // Both halves, not just rule 2. `**` matching every path is the rubber stamp: it would let a
+      // body that says nothing at all account for a whole change, and rule 1 has to refuse it.
+      if (r.covered.length) throw new Error(`a bare ** covered ${r.covered.length} file(s)`);
+      if (r.missingClaims.length !== 2) throw new Error(`missingClaims was ${JSON.stringify(r.missingClaims)}`);
+    },
+  );
+
+  caseOf(
+    "quoted-phrase-is-not-a-path",
+    "coverage",
+    "a quoted span with spaces or a leading dash is prose about paths, not a path (found by running this against a real PR body)",
+    ["scripts/a.mjs", "README.md"],
+    "`changed_files 26` and `--selftest` are both mentioned here, as is `CI / pr-body-coverage`.",
+    "fail",
+    (r) => {
+      if (r.covered.length) throw new Error(`a quoted phrase covered ${JSON.stringify(r.covered.map((c) => c.by))}`);
+    },
   );
 
   caseOf(
