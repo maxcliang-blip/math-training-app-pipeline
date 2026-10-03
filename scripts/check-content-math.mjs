@@ -563,6 +563,88 @@ function captionScopeIsDeliberate(contentRoot) {
   }
 }
 
+// A figure id and a worked-example id are addresses, and MAX-106 is the rule that says two records
+// may not hold the same one. It cannot be proved by a MUTATIONS entry, and the reason is worth
+// writing down because the obvious way to add it is wrong.
+//
+// The mutation harness validates a corpus that has every record written a second time: `apply()`
+// mutates in memory and the mutated records land in a fresh `<kind>.json` beside the originals, so
+// a fresh finding can be told from a recurring one. On that corpus every figure id and every
+// worked-example id in the corpus is already claimed twice. An id-collision mutation there would be
+// reported as caught by the doubling alone -- the rule could be deleted outright and the mutation
+// would still pass. So it is proved the way `figureCountsTrackTheCorpus` is: on its own copy of
+// the corpus, with one collision injected into the files themselves.
+//
+// What it asserts is the count, not the presence. A uniqueness rule that fires on everything also
+// "catches" a collision, and the corpus it was failing to protect would be exactly the corpus it
+// rejected. So one injected figure-id collision must produce one finding and no more, and that
+// finding must name both sites -- which is the property MAX-104's resolver needs, since a collision
+// report that does not say which records collided is not something anyone can act on.
+function idCollisionsAreReported(contentRoot) {
+  const pristineHits = countIdFindings(contentRoot);
+
+  const dir = mkdtempSync(join(tmpdir(), "content-id-collisions-"));
+  try {
+    cpSync(contentRoot, dir, { recursive: true });
+    const lessonsDir = join(dir, "lessons");
+    const files = readdirSync(lessonsDir).filter((f) => f.endsWith(".json")).sort();
+    const ordered = files
+      .map((f) => ({ file: f, record: JSON.parse(readFileSync(join(lessonsDir, f), "utf8")) }))
+      .sort((x, y) => String(x.record.id).localeCompare(String(y.record.id)));
+
+    const figureOf = (record) => lessonFigureRecords(record).find((s) => s.kind === "section" && s.record.id);
+    const exampleOf = (record) => ((record.sections && record.sections.concept) || {}).examples?.find((e) => e && e.id);
+
+    // Two lessons that each declare a figure and a worked example, in lesson-id order so the choice
+    // is stable across filesystems and does not depend on which lesson grows a figure next.
+    const donors = ordered.filter(({ record }) => figureOf(record) && exampleOf(record));
+    if (donors.length < 2) return { caught: false, detail: "fewer than two lessons carry both a figure id and a worked-example id" };
+
+    // A's figure and worked example are renamed onto B's ids. Across a file boundary on purpose: the
+    // rule is corpus-wide, and a collision inside one lesson file is the case a per-lesson check
+    // would also catch, so it is the weaker of the two and not the one worth proving.
+    const [a, b] = donors;
+    const aFigure = figureOf(a.record);
+    const bFigure = figureOf(b.record);
+    const bExample = exampleOf(b.record);
+    aFigure.record.id = bFigure.record.id;
+    exampleOf(a.record).id = bExample.id;
+    // Written back over the originals, not out under a new name: this is the harness's own
+    // doubling (figureCountsTrackTheCorpus) that makes a MUTATIONS entry inconclusive here.
+    for (const entry of [a, b]) writeFileSync(join(lessonsDir, entry.file), JSON.stringify(entry.record, null, 2) + "\n");
+
+    const findings = run(dir).report.findings;
+    const figureHits = findings.filter((f) => f.rule === "figure-id-unique");
+    const exampleHits = findings.filter((f) => f.rule === "worked-example-id-unique");
+    const aFigureSite = `lessons/${a.record.id}.sections.${aFigure.sectionName}.figures[${aFigure.index}]`;
+    const bFigureSite = `lessons/${b.record.id}.sections.${bFigure.sectionName}.figures[${bFigure.index}]`;
+    const aExampleSite = `lessons/${a.record.id}.sections.concept.examples`;
+    const bExampleSite = `lessons/${b.record.id}.sections.concept.examples`;
+
+    const problems = [];
+    const nameBoth = (hit, id, ...sites) => sites.every((site) => String(hit.message).includes(site))
+      && String(hit.message).includes(JSON.stringify(id));
+    if (figureHits.length !== 1) problems.push(`1 injected figure-id collision produced ${figureHits.length} figure-id-unique finding(s), not 1`);
+    else if (!nameBoth(figureHits[0], bFigure.record.id, aFigureSite, bFigureSite)) problems.push(`figure-id-unique did not name ${bFigure.record.id} at both ${aFigureSite} and ${bFigureSite}`);
+    if (exampleHits.length !== 1) problems.push(`1 injected worked-example-id collision produced ${exampleHits.length} worked-example-id-unique finding(s), not 1`);
+    else if (!nameBoth(exampleHits[0], bExample.id, aExampleSite, bExampleSite)) problems.push(`worked-example-id-unique did not name ${bExample.id} in both lessons`);
+
+    return {
+      caught: problems.length === 0,
+      detail: problems.length
+        ? problems.join("; ")
+        : `colliding ${bFigure.record.id} across ${aFigureSite} and ${bFigureSite}, and ${bExample.id} across ${aExampleSite} and ` +
+          `${bExampleSite}, raised exactly one finding each and named both sites; the ${pristineHits}-finding corpus they came from is clean`,
+    };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+function countIdFindings(root) {
+  return run(root).report.findings.filter((f) => f.rule.endsWith("-id-unique")).length;
+}
+
 export function selftest(contentRoot) {
   const pristine = mkdtempSync(join(tmpdir(), "content-selftest-"));
   const rows = [];
@@ -622,6 +704,27 @@ export function selftest(contentRoot) {
         severity: "error",
         caught,
         detail,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
+        const collisions = idCollisionsAreReported(pristine);
+        caught = collisions.caught;
+        detail = collisions.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "id-collisions-are-reported-once-and-by-site",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail: caught
+          ? `${detail} (MAX-104's resolver reads by figure id, so this is the finding it needs)`
+          : `${detail} -- a resolver reading by figure id would have nothing to report`,
       });
     }
 
