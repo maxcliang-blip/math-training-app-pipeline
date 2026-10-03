@@ -16,6 +16,8 @@
     "ci:content": "npm run content:selftest && npm run content:figures",
     "git:guard": "node scripts/check-push-authors.mjs",
     "git:guard:selftest": "node scripts/check-push-authors.mjs --selftest",
+    "land:check": "node scripts/check-landed-content.mjs",
+    "land:selftest": "node scripts/check-landed-content.mjs --selftest",
     "git:hooks": "sh scripts/install-git-hooks.sh",
     "git:hooks:check": "sh scripts/install-git-hooks.sh --check",
     "git:worktree": "sh scripts/agent-worktree.sh",

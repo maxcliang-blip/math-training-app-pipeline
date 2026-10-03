@@ -14,6 +14,7 @@ Approved plan (MAX-1): React frontend + Node.js/Express backend, KaTeX for math 
 - `.githooks/` — the hooks git runs on every push. `scripts/install-git-hooks.sh` installs them
 - `.github/workflows/ci.yml` — CI: install, build, test, and the delivery-integrity gate
 - `.github/workflows/content.yml` — CI: content math gate and figure build
+- `.github/workflows/landed.yml` — CI: the landing gate (a gated branch with no pull request)
 
 ## Content build gates
 
@@ -296,6 +297,54 @@ A clone with no identity registry — a CI runner, a fresh `git clone` — has n
 It says so, names the command that creates a registry, and exits 0. It does not skip silently:
 silence is what a broken gate and a gate that passed look identical like. CI runs the same mode in
 `delivery-integrity`, on a clone whose guard is installed, so the path cannot rot.
+
+### The landing gate
+
+The push guard above asks *who* is delivering and *from where*. It cannot ask whether the delivery
+is ever going to arrive, and on 2026-10-03 that was the whole problem: MAX-111 repaired twelve
+figures, was marked `done`, and its commit sat on `fix/max-111-doubled-backslash-labels` with no
+pull request ever opened. `content:check` on `origin/main` reported 0 errors with the twelve wrong
+glyphs still in place — main was not red, it was blind.
+
+Every other gate in `scripts/` is downstream of that blind spot. A gate can only catch a defect that
+reaches the branch it watches, and the hole does not get smaller as the suite grows.
+
+```bash
+npm run land:check                # every branch: gated commits with no PR for them
+npm run land:check -- --branch fix/max-95-figure-size-floor   # one branch, the way CI asks on a push
+npm run land:selftest             # prove each rule can still fail
+```
+
+A branch is a finding when all three of these hold: it carries commits touching `content/**`,
+`lib/**` or `scripts/**`; those commits are not reachable from `origin/main`; and no **open or
+merged** pull request has that branch as its head. "Open or merged" is load-bearing — this
+repository squash-merges, so a merged branch's commits are usually not ancestors of main, and
+judging on reachability alone would fail every squash-merged branch in the repository. A PR that
+was closed without merging is a finding: the work is not on main and nothing is pending.
+
+Exit codes are three-valued on purpose:
+
+| code | meaning |
+| --- | --- |
+| 0 | nothing to report |
+| 1 | a finding: gated commits on a branch with no PR |
+| 2 | the question could not be asked — no base ref, no PR list, truncated listing, git failure |
+
+2 is neither 0 nor 1. A gate that cannot reach the PR list has not established that a PR exists,
+and reporting that as a pass is how a branch goes invisible again — the MAX-111 failure wearing a
+different hat. Everything else in `scripts/` treats an absent toolchain the same way (see
+`build-figures.mjs` exiting 3).
+
+CI runs it in `.github/workflows/landed.yml`, in three jobs: a hermetic `gate-can-fail` proof that
+the check still knows how to fail (no token, no network, both directions asserted); `branch-push`,
+the real check on every push to `fix/*` and `land/*`; and `full-audit`, the weekly inventory. The
+weekly job is the one MAX-111 needed and did not have — nobody ever pushed to that branch again, so
+a check that only runs on push never sees it.
+
+The PR list comes from `gh` when it is on PATH, otherwise the REST API with `GITHUB_TOKEN` (which
+is what Actions provides). `--pr-json <path>` replays a recorded list in either client shape, which
+is how the CI proof above stays hermetic and how the REST and `gh` paths are proven to reach the
+same verdict.
 
 ## Roadmap
 

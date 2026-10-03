@@ -1,0 +1,203 @@
+name: Landed content
+# MAX-126. A gate that can only see a defect once it reaches the branch it watches cannot see a
+# branch nobody merged. MAX-111 repaired twelve figures, was marked done, and shipped to nobody:
+# the commit sat on fix/max-111-doubled-backslash-labels with no pull request, and content:check on
+# origin/main reported 0 errors with the twelve wrong glyphs still in place.
+#
+# This workflow is the push-time half of the fix. scripts/check-landed-content.mjs decides; this
+# file only decides when to ask.
+#
+# Three jobs, and each one asks a different question:
+#
+#   gate-can-fail  hermetic, no network: does the check still know how to fail? A gate nobody can
+#                  make fail is indistinguishable from a gate that does not work, and the defect it
+#                  guards -- work that ships nowhere -- is precisely a gate that quietly stopped
+#                  working. Runs on every PR and on every push to a fix/* or land/* branch.
+#   branch-push    the real check, on pushes to fix/* and land/*: this branch carries gated commits
+#                  and no pull request has ever had it as its head. Open one or stop pushing.
+#   full-audit     the weekly inventory. This is the job MAX-111 needed and did not have: nobody
+#                  ever pushed to that branch again, so a check that only runs on push never sees
+#                  it. It is expected to be red until MAX-127 clears the backlog it names -- that
+#                  redness is the backlog, printed, and it goes away by deleting or landing
+#                  branches rather than by editing this file.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'fix/**'
+      - 'land/**'
+  schedule:
+    # Monday 06:17 UTC. Not midnight: every scheduled job in the world fires at :00.
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+# contents: read is what checkout needs. pull-requests: read is what the PR list needs -- and it is
+# requested explicitly rather than inherited, because the default token can read nothing at all and
+# the failure mode of a token that cannot read PRs is a gate that reports every branch as having no
+# PR, which is the MAX-111 finding multiplied by every branch in the repository.
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  gate-can-fail:
+    name: The landing gate can still fail
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # No npm install, and that is deliberate: the gate uses node builtins and fetch only, so this
+      # job cannot be broken by a dependency change in the same PR it is supposed to police.
+      - name: The decision layer passes its own cases
+        run: npm run land:selftest
+      - name: Prove the check fails a gated branch with no PR, and passes it with one
+        # End to end through git, the CLI and the exit codes, with the PR list supplied as a
+        # fixture: no token, no network, no dependence on this repository's real PRs. Both
+        # directions are asserted, because a check that always fails is as useless as one that
+        # never does, and only the failing half would show up in a normal review.
+        run: |
+          set -eu
+          # The probe branches start at origin/main, and on the pull request that introduces
+          # this gate origin/main does not contain the gate. The script is copied out first so the
+          # probe measures a synthetic branch instead of failing on a missing module -- which would
+          # exit 1 for the wrong reason and make the first assertion below pass by accident.
+          gate="$RUNNER_TEMP/check-landed-content.mjs"
+          cp scripts/check-landed-content.mjs "$gate"
+
+          probe=land/max-126-probe
+          git checkout -q -B "$probe" origin/main
+          # A gated path: one line of content, which is the smallest commit that must demand a PR.
+          printf '{}\n' > content/landed-probe.json
+          git add content/landed-probe.json
+          git -c user.name=probe -c user.email=probe@example.invalid \
+            commit -q -m 'probe: a gated commit with no pull request'
+
+          echo '[]' > "$RUNNER_TEMP/no-prs.json"
+          echo '--- a gated branch with no PR must fail'
+          set +e
+          node "$gate" --branch "$probe" --pr-source file --pr-json "$RUNNER_TEMP/no-prs.json"
+          code=$?
+          set -e
+          if [ "$code" -ne 1 ]; then
+            echo "::error::a gated branch with no PR exited $code, expected 1"
+            exit 1
+          fi
+
+          echo '[{"number":9999,"state":"OPEN","mergedAt":null,"headRefName":"land/max-126-probe","baseRefName":"main"}]' \
+            > "$RUNNER_TEMP/one-open-pr.json"
+          echo '--- the same branch with an open PR must pass'
+          set +e
+          node "$gate" --branch "$probe" --pr-source file --pr-json "$RUNNER_TEMP/one-open-pr.json"
+          code=$?
+          set -e
+          if [ "$code" -ne 0 ]; then
+            echo "::error::a gated branch with an open PR exited $code, expected 0"
+            exit 1
+          fi
+
+          git checkout -q -B docs/max-126-probe origin/main
+          printf 'wording\n' > landed-probe.md
+          git add landed-probe.md
+          git -c user.name=probe -c user.email=probe@example.invalid \
+            commit -q -m 'probe: a doc branch with no pull request'
+          echo '--- a doc branch with no PR must pass'
+          set +e
+          node "$gate" --branch docs/max-126-probe --pr-source file --pr-json "$RUNNER_TEMP/no-prs.json"
+          code=$?
+          set -e
+          if [ "$code" -ne 0 ]; then
+            echo "::error::a doc-only branch with no PR exited $code, expected 0 (false positive)"
+            exit 1
+          fi
+
+          # The exit code that must not be 0. A gate that cannot read the PR list has not
+          # established that a PR exists, and the whole value of this one is that it refuses to
+          # answer when it does not know.
+          echo '--- a gate that cannot read the PR list must exit 2, not 0'
+          set +e
+          node "$gate" --branch "$probe" --pr-source file --pr-json "$RUNNER_TEMP/does-not-exist.json"
+          code=$?
+          set -e
+          if [ "$code" -ne 2 ]; then
+            echo "::error::an unreadable PR list exited $code, expected 2"
+            exit 1
+          fi
+
+  # ---------------------------------------------------------------------------
+  branch-push:
+    name: This branch carries gated commits and no PR
+    # The push check. `branches:` above already limits it to fix/* and land/*; the job-level guard
+    # repeats it so that someone widening the workflow trigger cannot quietly turn this into a
+    # check that runs on main, where the pushed branch is the base and the answer is always "landed".
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history: the gate measures base..branch, and a depth-1 checkout answers that
+          # with "no such revision" -- which would be exit 2, a gate that could not ask, on every
+          # push in the repository.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Fetch every branch so origin/main exists as a commit
+        run: git fetch --prune origin
+      - name: The base this push is measured against
+        run: git rev-parse --verify 'origin/main^{commit}'
+      # --pr-source api rather than gh: both work on a runner, but the REST call takes the token
+      # from the environment and needs no gh auth setup, so this job has exactly one way to fail.
+      - name: Gated commits on this branch with no PR
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/check-landed-content.mjs \
+            --branch "${{ github.ref_name }}" \
+            --base origin/main \
+            --pr-source api
+
+  # ---------------------------------------------------------------------------
+  full-audit:
+    name: Every branch, every week
+    # Only the schedule. On a push this would run the same full audit on every agent's branch, and
+    # five known violations would make every push red for work that has nothing to do with the
+    # branch being pushed -- which is how a gate gets switched off.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: git fetch --prune origin
+      - name: Inventory of every branch
+        id: audit
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          node scripts/check-landed-content.mjs --base origin/main --pr-source api --json \
+            > landed-report.json
+          code=$?
+          set -e
+          {
+            echo '```'
+            cat landed-report.json
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "exit code: $code"
+          exit "$code"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: landed-report
+          path: landed-report.json
