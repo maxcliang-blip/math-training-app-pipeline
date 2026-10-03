@@ -55,12 +55,12 @@ const RENDER_OPTIONS = {
 
 // S3.2 "Approved - use freely"
 const APPROVED = new Set(
-  `frac dfrac tfrac sqrt binom dbinom tbinom left right middle mathbb mathcal mathfrak mathscr mathbf mathrm mathmathit mathsf operatorname text textbf textit emph overline underline widetilde widehat vec bar hat dot ddot
+  `frac dfrac tfrac sqrt binom dbinom tbinom left right middle mathbb mathcal mathfrak mathscr mathbf mathrm mathmathit mathit mathsf operatorname text textbf textit emph overline underline widetilde widehat vec bar hat dot ddot
    matrix pmatrix bmatrix vmatrix cases array aligned gathered smallmatrix substack boxed overbrace underbrace displaystyle textstyle limits nolimits
    sum prod int oint lim max min gcd deg mod pmod
    log ln exp sin cos tan sec csc cot arcsin arccos arctan
    , ! ; : quad qquad dots cdots vdots ddots infty ldots
-   equiv approx ne le ge propto angle triangle perp parallel sim to rightarrow mapsto implies iff
+   equiv approx neq ne le ge propto angle triangle perp parallel sim to rightarrow nearrow mapsto implies iff
    cdot`.split(/\s+/)
     .filter(Boolean),
 );

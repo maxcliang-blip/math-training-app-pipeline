@@ -67,7 +67,7 @@
           "slug": "first-piece-decomposition",
           "name": "Split on the first piece",
           "summaryLatex": "Condition on what the first (or leftmost, or initial) element is; each case becomes a smaller instance of the same problem.",
-          "bodyLatex": "Choose the end of the object that makes the remainder look like the original problem again. For a word problem about strings, the first symbol; for a tiling, the leftmost column; for a permutation, the position of one distinguished letter. Write the recurrence as $a_n = \\sum_j (\text{count for case } j)$, and check that the cases do not overlap: a string cannot both start with $01$ and start with $10$, so those are two cases, not one case counted twice. The left end is the better choice when the right end can be read in two ways (as in the $2 \\times n$ domino board, where the rightmost column can be one standing or two flat dominoes)."
+          "bodyLatex": "Choose the end of the object that makes the remainder look like the original problem again. For a word problem about strings, the first symbol; for a tiling, the leftmost column; for a permutation, the position of one distinguished letter. Write the recurrence as $a_n = \\sum_j (\\text{count for case } j)$, and check that the cases do not overlap: a string cannot both start with $01$ and start with $10$, so those are two cases, not one case counted twice. The left end is the better choice when the right end can be read in two ways (as in the $2 \\times n$ domino board, where the rightmost column can be one standing or two flat dominoes)."
         },
         {
           "slug": "last-piece-decomposition",
