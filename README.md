@@ -126,6 +126,30 @@ each other.
 so `add <agent>` needs no environment variables. That file is machine state, deliberately not
 committed: it is a statement about who runs here, not about the corpus.
 
+### Dependencies
+
+`node_modules` is not in this repository. It was once, as a symlink to
+`/home/opc/math-training-app/node_modules` — one host's absolute path, in the tree
+`deploy/README.md` tells every operator to build from, reproduced by `git archive` (MAX-81). Note
+the ignore rule: `node_modules/` does **not** match a symlink named `node_modules`, because a
+trailing-slash pattern matches real directories and git does not follow symlinks. The rule here is
+the bare `node_modules`, which matches both, and CI asserts the tree carries neither.
+
+A worktree installs its own: `npm ci`. Sharing one install across checkouts is supported, because
+110 packages per checkout is real work, but it is opt-in and it has a cost worth stating: npm's
+workspace links inside the install are relative, so `node_modules/api -> ../api` resolves to the
+checkout that ran the install, not to yours. Fine for running tooling, not fine for trusting
+`npm test` about your own source.
+
+```bash
+SHARED_NODE_MODULES=/home/opc/.shared-node-modules sh scripts/agent-worktree.sh add carol content/max-70-m5-l3
+sh scripts/agent-worktree.sh deps /home/opc/wt/carol-content-max-70-m5-l3 /home/opc/.shared-node-modules
+```
+
+`check` and `list` report what every worktree's `node_modules` actually resolves to, and a dangling
+link is a `check` failure — a link to a path that does not exist is the same broken state MAX-81
+shipped, one level of indirection closer.
+
 ### The push guard
 
 `scripts/check-push-authors.mjs` refuses a push that would introduce a commit authored by anyone

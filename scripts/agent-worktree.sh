@@ -323,10 +323,11 @@ EOF
     # living in main is what reached every operator's `git archive`, and a worktree on an older
     # branch is not where that gets decided.
     if git -C "$main_root" ls-files --error-unmatch node_modules >/dev/null 2>&1; then
-      printf 'FAIL  node_modules is tracked in the checkout at %s:\n' "$main_root"
+      printf 'WARN  node_modules is tracked in the checkout at %s:\n' "$main_root"
       git -C "$main_root" ls-tree -l HEAD -- node_modules | sed 's/^/        /'
       printf '      A tracked node_modules symlink carries one host'"'"'s absolute path into every\n'
-      printf '      export (MAX-81). Remove it with `git rm --cached node_modules`.\n'
+      printf '      export (MAX-81). Remove it with `git rm --cached node_modules`, and see\n'
+      printf '      whether this branch predates the fix on main.\n'
       rc=1
     fi
 
@@ -354,13 +355,16 @@ EOF
               rc=1
             fi
           fi
+          # A dangling dependency link is a check failure, and it is reported by name rather
+          # than folded into the identity status: it is not an isolation fault and the fix is
+          # one command. The state itself is on the second line, because "shared" and
+          # "shared but broken" have to be told apart from a listing.
           deps=$(deps_state "$path")
           case "$deps" in
             *DANGLING*)
-              status="$status; node_modules $deps"
+              status="$status; node_modules does not resolve"
               rc=1
               ;;
-            shared*) status="$status; deps shared" ;;
           esac
           printf '%-36s %-40s %-28s %s\n' "$path" "$agent" "$name <$email>" "$status"
           printf '%-36s %-40s %s\n' '' 'node_modules' "$deps"
