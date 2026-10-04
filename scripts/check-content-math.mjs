@@ -18,7 +18,7 @@
 //
 // Exit codes: 0 pass · 1 content or selftest failure · 2 environment/configuration error.
 
-import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, dirname, relative, resolve } from "node:path";
@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 import katex from "katex";
 import { run, KATEX_PINNED } from "./preflight-content.mjs";
 import { collectFigures } from "./build-figures.mjs";
+import { selftest as selftestRequirePathArg } from "./lib/require-path-arg.mjs";
 import { doubledBackslashInTexLabels, isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -806,6 +807,51 @@ export function selftest(contentRoot) {
   let baselineClean = false;
   let baselineErrors = 0;
   let baselineFindings = new Set();
+
+  // MAX-130. The shared bare-path parser (scripts/lib/require-path-arg.mjs) carries its own table,
+  // and it runs *here*, inside a suite ci.yml already gates, rather than beside it. That placement
+  // is the whole non-vacuity argument: a helper that only exists proves nothing, and a refactor
+  // that quietly dropped the refusal -- in the parser or in a tool that calls it -- would leave
+  // every other assertion in this file green. These rows are the failure that has to be visible.
+  //
+  // The end-to-end row is here rather than in the parser's table because it is a claim about a
+  // *call site*, not about the function: build-figures.mjs's `--out <dir>` is the only bare-path
+  // tool still unguarded on main, and a parser that is correct while nobody calls it has fixed
+  // nothing. It spawns the real binary with a corpus root that does not exist, so the run is
+  // cheap, has no side effects, and -- the part that makes it an assertion rather than a reading --
+  // exits 2 either way: the refusal and the content-root check share an exit code, so only the
+  // message distinguishes them.
+  for (const r of selftestRequirePathArg().rows) rows.push(r);
+  {
+    let caught = false;
+    let detail = "";
+    const cwd = pristine;
+    const stray = join(cwd, "--allow-missing-toolchain");
+    let out = "";
+    try {
+      execFileSync(
+        "node",
+        [join(HERE, "build-figures.mjs"), join(cwd, "no-such-corpus"), "--out", "--allow-missing-toolchain"],
+        { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], timeout: 60000 },
+      );
+    } catch (err) {
+      out = `${err.stdout || ""}${err.stderr || ""}`;
+      if (err.status !== 2) detail = `exited ${err.status}, not 2`;
+      else if (!/--out takes an output path; got the flag "--allow-missing-toolchain"/.test(out)) {
+        detail = `exited 2 without the refusal: ${out.trim().split("\n").slice(-2).join(" | ")}`;
+      } else if (existsSync(stray)) detail = "it refused and still created a directory of that name";
+      else caught = true;
+    }
+    rows.push({
+      id: "max-130-build-figures-out-refuses-a-flag-as-a-path",
+      rule: "harness-invariant",
+      severity: "error",
+      caught,
+      detail: caught
+        ? "`build-figures.mjs <root> --out --allow-missing-toolchain` exits 2, names the flag, and writes nothing"
+        : `build-figures.mjs --out did not refuse a flag where it wants a directory: ${detail || "it exited 0"}`,
+    });
+  }
 
   // preflight-content.mjs hands back a copy of its findings array, so every report is a
   // snapshot and two runs never share state. The copy is what makes this invariant checkable;

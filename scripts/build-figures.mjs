@@ -18,6 +18,9 @@
 //   node scripts/build-figures.mjs [contentRoot] [--out <dir>] [--allow-missing-toolchain]
 //                                   [--record-aspect-ratios]
 //
+// --out takes a directory, and refuses a value beginning with `-` (MAX-130): the shared parser in
+// scripts/lib/require-path-arg.mjs, so a mistyped flag cannot create a directory named after it.
+//
 // Exit codes: 0 validated and compiled · 1 contract violation · 2 configuration error
 //             3 validated but not compiled (no asymptote toolchain)
 
@@ -38,6 +41,7 @@ import {
   lessonFigureSites,
   exerciseFigureKey,
 } from "../lib/figure-contract.mjs";
+import { requirePathArg } from "./lib/require-path-arg.mjs";
 
 export { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS };
 
@@ -1312,10 +1316,30 @@ if (isMain) {
   const args = process.argv.slice(2);
   const allowMissing = args.includes("--allow-missing-toolchain");
   const record = args.includes("--record-aspect-ratios");
-  const outIdx = args.indexOf("--out");
   const positional = args[0] && !args[0].startsWith("--") ? resolve(args[0]) : null;
+
+  // `--out <dir>` takes the next argv token as its output directory, so `--out --any-flag` used to
+  // resolve that flag against the cwd and build into a directory named after it -- the same defect
+  // MAX-97 hit through check-content-math.mjs's `--json` and MAX-124 through check-push-authors.mjs's
+  // `--report`, the third instance of it in this repository and the first one still on main. The
+  // shared parser (scripts/lib/require-path-arg.mjs, MAX-130) is what every tool with a bare-path
+  // flag now calls, so the next one gets the refusal by default instead of re-deriving it.
+  //
+  // First thing the CLI does, before the content-root check, for the reason MAX-97 had to fix twice:
+  // the refusal and the configuration error below share exit code 2, so a run with both wrong can
+  // only be told apart by which message printed. check-content-math.mjs's --selftest pins that
+  // ordering by spawning this script with a corpus root that does not exist.
+  const outArg = requirePathArg(args, "--out");
+  if (!outArg.ok) {
+    console.error(`build-figures: ARGUMENT: ${outArg.message}`);
+    console.error("                     Nothing was written. Give --out a directory, or drop it to");
+    console.error(`                     build into ${DEFAULT_OUT}.`);
+    process.exit(2);
+  }
+  // The truthiness test is the original one: `--out` with no value, or `--out ""`, still means
+  // "the default directory", unchanged.
   const contentRoot = positional || (process.env.CONTENT_ROOT ? resolve(process.env.CONTENT_ROOT) : DEFAULT_CONTENT);
-  const outDir = outIdx >= 0 && args[outIdx + 1] ? resolve(args[outIdx + 1]) : DEFAULT_OUT;
+  const outDir = outArg.value ? resolve(outArg.value) : DEFAULT_OUT;
 
   if (!existsSync(contentRoot)) {
     console.error(`build-figures: CONFIG: content root ${contentRoot} does not exist`);
