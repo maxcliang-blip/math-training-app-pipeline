@@ -13,7 +13,8 @@ Approved plan (MAX-1): React frontend + Node.js/Express backend, KaTeX for math 
 - `lib/` — contracts shared between the api and the gates
 - `scripts/` — the content and figure build gates, the content close-out delivery check, and the
   agent git tooling below
-- `docs/` — the content issue close-out procedure and its template
+- `docs/` — the content issue close-out procedure and its template, and the authoring conventions
+  that no build gate enforces ([`docs/CONTENT_CONVENTIONS.md`](docs/CONTENT_CONVENTIONS.md))
 - `.githooks/` — the hooks git runs on every push. `scripts/install-git-hooks.sh` installs them
 - `.github/workflows/ci.yml` — CI: install, build, test, and the delivery-integrity gate
 - `.github/workflows/content.yml` — CI: content math gate and figure build
