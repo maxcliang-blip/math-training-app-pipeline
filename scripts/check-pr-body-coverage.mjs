@@ -44,9 +44,19 @@
 //
 // Exit codes: 0 pass · 1 unaccounted files or missing prose claims · 2 configuration error.
 
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+// MAX-130. Every bare-path flag here goes through the shared parser rather than a local
+// `indexOf(...) + 1`. This file's own first draft had its own `argValue`, three lines, and
+// `--json --selftest` wrote a 5.8KB file literally named `--selftest` into the working tree --
+// MAX-97's incident reproduced in the tool whose whole job is refusing PRs that do not account for
+// their files. The recurrence is the defect; that is what MAX-130 landed this module for, and
+// re-deriving the rule locally is how the fourth copy appears.
+import { requirePathArg, selftest as selftestRequirePathArg } from "./lib/require-path-arg.mjs";
 
 // A top-level area is one sentence of explanation. Chosen against the shortest honest sentence a
 // person actually writes ("content/lessons: 23 geometry lessons carried over from another agent's
@@ -973,6 +983,116 @@ export function selftest() {
   });
   if (!baseline.ok) missed.push("baseline-well-written-body-passes");
 
+  // --- E. This gate carries MAX-97's defect ----------------------------------
+  //
+  // MAX-130. The shared parser's own table runs *here*, inside a suite CI already gates, rather
+  // than beside it -- a helper that merely exists proves nothing.
+  //
+  // And then the call site, which is a claim this file cannot make about itself by importing
+  // something. This file's first draft carried its own three-line `argValue`, and `--json
+  // --selftest` wrote a 5.8KB file named `--selftest` into the working tree: MAX-97's incident,
+  // reproduced in the one tool here whose entire subject is a change nobody accounted for. The
+  // row below spawns this script for real and asserts on the filesystem, because asserting that
+  // the function returns the right object would pass with the call site still unwired.
+  for (const r of selftestRequirePathArg().rows) rows.push(r);
+
+  // The call-site row spawns this binary, which runs this function, which would spawn it again.
+  // MAX83_SELFTEST_DEPTH is the only thing standing between the row and unbounded recursion, so it
+  // is set by the spawn and read here: nested runs take the in-process argument check instead.
+  const nested = process.env.MAX83_SELFTEST_DEPTH !== undefined;
+  if (nested) {
+    const r = requirePathArg(["--json", "--selftest"], "--json");
+    const ok = !r.ok && r.message === '--json takes an output path; got the flag "--selftest".';
+    rows.push({
+      id: "json-flag-refused-as-a-path-and-writes-no-such-file",
+      rule: "argument-contract",
+      severity: "error",
+      caught: ok,
+      detail: ok ? "refused, naming the flag and the token" : `accepted a flag as a path: ${JSON.stringify(r)}`,
+    });
+    if (!ok) missed.push("json-flag-refused-as-a-path-and-writes-no-such-file");
+    return { rows, missed, baselineClean: baseline.ok };
+  }
+
+  {
+    const dir = mkdtempSync(join(tmpdir(), "max-83-flag-as-path-"));
+    const bodyFile = join(dir, "body.md");
+    const filesFile = join(dir, "files.txt");
+    writeFileSync(bodyFile, "a body that names the one file it changes, and explains it in a sentence of prose words.\n");
+    writeFileSync(filesFile, "scripts/check-pr-body-coverage.mjs\n");
+    const self = fileURLToPath(import.meta.url);
+    let caught = false;
+    let detail = "";
+    try {
+      const proc = spawnSync(
+        process.execPath,
+        [self, "--selftest", "--json", "--selftest", "--body", bodyFile, "--files", filesFile],
+        { cwd: dir, encoding: "utf8", env: { ...process.env, MAX83_SELFTEST_DEPTH: "1" } },
+      );
+      const stderr = proc.stderr || "";
+      const leaked = existsSync(join(dir, "--selftest"));
+      if (leaked) {
+        caught = false;
+        detail = `it wrote a file named --selftest into ${dir}`;
+      } else if (proc.status !== 2) {
+        caught = false;
+        detail = `it exited ${proc.status} rather than 2 as a configuration error (stdout tail: ${JSON.stringify((proc.stdout || "").slice(-120))})`;
+      } else if (!stderr.includes("--json takes an output path")) {
+        caught = false;
+        detail = `it refused, but not with the shared parser's message: ${JSON.stringify(stderr.slice(0, 160))}`;
+      } else {
+        caught = true;
+        detail = "refused as a configuration error, wrote no file named after a flag";
+      }
+    } catch (err) {
+      detail = `threw: ${err.message}`;
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+    rows.push({
+      id: "json-flag-refused-as-a-path-and-writes-no-such-file",
+      rule: "argument-contract",
+      severity: "error",
+      caught,
+      detail: caught ? detail : `${detail}`,
+    });
+    if (!caught) missed.push("json-flag-refused-as-a-path-and-writes-no-such-file");
+  }
+
+  {
+    // The other direction: the refusal must not be a blanket one. Every CI invocation of this
+    // gate passes a real path, so a parser that refused paths would break the gate that is
+    // supposed to be enforcing something -- and it would do it by failing closed on every PR.
+    const dir = mkdtempSync(join(tmpdir(), "max-83-real-path-"));
+    const bodyFile = join(dir, "body.md");
+    const filesFile = join(dir, "files.txt");
+    const outFile = join(dir, "out.json");
+    writeFileSync(
+      bodyFile,
+      "`scripts/check-pr-body-coverage.mjs` — the gate itself, described here in enough words to be a real claim about the one area it touches, rather than a bare path with no explanation attached to it at all.\n",
+    );
+    writeFileSync(filesFile, "scripts/check-pr-body-coverage.mjs\n");
+    const proc = spawnSync(
+      process.execPath,
+      [fileURLToPath(import.meta.url), "--body", bodyFile, "--files", filesFile, "--json", outFile],
+      { cwd: dir, encoding: "utf8" },
+    );
+    const wrote = existsSync(outFile);
+    const parsed = wrote ? JSON.parse(readFileSync(outFile, "utf8")) : null;
+    const ok = proc.status === 0 && wrote && parsed && parsed.ok === true;
+    rmSync(dir, { recursive: true, force: true });
+    rows.push({
+      id: "json-flag-still-accepts-a-real-path",
+      rule: "argument-contract",
+      severity: "error",
+      caught: ok,
+      detail: ok
+        ? "a real --json path is written and the check runs to completion"
+        : `status=${proc.status} wrote=${wrote} -- the refusal must not reject legitimate paths`,
+    });
+    if (!ok) missed.push("json-flag-still-accepts-a-real-path");
+  }
+
   return { rows, missed, baselineClean: baseline.ok };
 }
 
@@ -1003,7 +1123,22 @@ function readInput(path, what) {
   }
 }
 
+// MAX-130. A bare-path flag, parsed by the one parser. `--flag` alone stays undefined and
+// `--flag --other` is refused by name, so a typo cannot leave a file named after a flag behind.
 function argValue(args, name) {
+  const r = requirePathArg(args, name);
+  if (!r.ok) {
+    console.error(`check-pr-body-coverage: ARGUMENT: ${r.message}`);
+    console.error(`                       ${name} takes a path to a real file or directory.`);
+    process.exit(2);
+  }
+  return r.value !== undefined && r.value !== "" ? r.value : null;
+}
+
+// --pr and --title are not paths, so they keep the plain indexOf read: they are a URL and a
+// string, and a value that happens to start with "-" is legitimate for neither flag's caller
+// here, but refusing them would be a rule this file does not need and could not justify.
+function plainValue(args, name) {
   const i = args.indexOf(name);
   return i >= 0 && args[i + 1] ? args[i + 1] : null;
 }
@@ -1040,12 +1175,12 @@ if (isMain) {
     .map((l) => l.trim())
     .filter(Boolean);
 
-  const result = evaluate({ body, files, title: argValue(args, "--title") || "" });
+  const result = evaluate({ body, files, title: plainValue(args, "--title") || "" });
 
-  console.log(render(result, { prUrl: argValue(args, "--pr") || "" }).join("\n"));
+  console.log(render(result, { prUrl: plainValue(args, "--pr") || "" }).join("\n"));
   for (const a of annotations(result)) console.log(a);
 
-  const prUrl = argValue(args, "--pr") || "";
+  const prUrl = plainValue(args, "--pr") || "";
   const mdPath = argValue(args, "--report-md");
   if (mdPath) {
     mkdirSync(dirname(resolve(mdPath)), { recursive: true });

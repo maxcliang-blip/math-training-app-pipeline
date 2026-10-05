@@ -620,6 +620,14 @@ reject the MAX-69 shape (a Dockerfile body with 26 changed files) and requires a
 26 paths with no explanation to still fail on rule 2. CI runs the selftest **before** the check, so
 a change that guts the gate fails on that.
 
+This gate's own first draft carried a local `argValue` for its `--body` / `--files` / `--json`
+flags, and `--json --selftest` wrote a file literally named `--selftest` into the working tree —
+the MAX-97 incident reproduced in the one tool here whose subject is a change nobody accounted for.
+All three now go through the shared `scripts/lib/require-path-arg.mjs` parser, and two of the
+selftest's 35 cases assert that: one spawns the binary and requires that no file named after a flag
+appears, the other requires a real `--json` path to still be accepted, so the refusal cannot be
+over-corrected into one that breaks every CI run.
+
 Set **Require status checks to pass before merging** with `CI / pr-body-coverage` enabled on
 `main`, or the check is advisory and the board is relying on someone remembering to read it.
 
