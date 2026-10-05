@@ -31,6 +31,15 @@
 //             reported as delivered without being evidence of anything. Same reasoning as
 //             MAX-89: the gate is the only thing that can see this.
 //
+// What this file is not, and why the landing gate is not in it: every rule above runs with no app
+// and no repository, on a corpus directory, and stays that way on purpose -- an author can run it
+// from a checkout of content and nowhere else. The sibling scripts/check-landed-content.mjs
+// (MAX-126, `npm run land:check`) asks a question that needs git, a remote and a pull-request
+// list: this branch carries gated commits, no PR has ever had it as its head, and the issue it
+// belongs to is finished, so nothing here will ever ship (MAX-132 added that last condition -- work
+// in progress is not a finding). Folding it in would take the repository dependency with it and
+// cost the author workflow the only gate it can run anywhere.
+//
 // Usage: node scripts/preflight-content.mjs [contentRoot] [--json [<outPath>]]
 //   --json           print the report to stdout
 //   --json <path>    write the report to <path> instead
@@ -39,7 +48,12 @@ import { readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import katex from "katex";
-import { countFigures, isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
+import {
+  countFigures,
+  doubledBackslashInTexLabels,
+  isRenderableFigure,
+  lessonFigureRecords,
+} from "../lib/figure-contract.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -679,6 +693,59 @@ function checkAsymptote(source, alt, ratio, path) {
   const primitives = (code.match(/\b(draw|dot|label|filldraw|fill|clip|path)\s*\(/g) || []).length;
   check("advisory", "S5.2-primitive-budget", path, primitives <= 20,
     `figure uses ${primitives} drawing primitives, budget is 20 (S5.2)`);
+
+  // S5.2-tex-label-doubled-backslash: a LaTeX macro written with a doubled backslash inside a
+  // label(...) payload. (MAX-119)
+  //
+  // This is the pass-path half of a rule the build already had on its failure path, and until now
+  // the authoring gate had no half at all: scanMath -- which carries json-escaped-macro, S3.2 and
+  // S3.3 -- was never pointed at asymptoteSource, so nothing in `content:check` had ever read the
+  // inside of a label. Meanwhile scripts/build-figures.mjs carried the detector
+  // (doubledBackslashMacros) and called it from diagnoseCompileFailure alone, so the only code that
+  // could name this defect ran after a figure had already failed to build.
+  //
+  // The consequence is measured and it is the reason this is a source-shape rule rather than a
+  // render rule. Asymptote copies a string literal into the .tex it generates *verbatim* -- it
+  // does not read `\\` as an escape -- so a doubled backslash reaches TeX as two backslashes:
+  //
+  //   after `^` or `_`   the figure FAILS to compile ("Missing { inserted").
+  //   anywhere else       the figure COMPILES CLEAN and renders wrong glyphs. TeX reads `\\` as a
+  //                      line break and then sets the bare macro name in italic.
+  //
+  // Pointing scanMath or S3.3-renders at these payloads would not have caught it, because KaTeX
+  // accepts the broken form. Every one of `\frac{a}{b}`, `\sqrt{x-2}`, `b\cos C`,
+  // `\lceil 7/3 \rceil`, `\theta`, `3^{2}\equiv 1\pmod{8}`, `4 \cdot 3 \cdot 2 = 24`,
+  // `\angle AOB` and `\frac{a}{\sin A} = 2R` renders without error against the pinned
+  // katex@0.16.11. Only `90^\circ` is rejected, and only because the doubling happens to sit after
+  // a `^` -- which is the one case that already fails loudly by itself. A gate that asks "does it
+  // render?" is blind to this class by construction: the broken form is valid TeX.
+  //
+  // So this reads the shape of the payload and needs neither KaTeX nor a compiler. It sits in
+  // checkAsymptote, which is the only place all three figure sites arrive: concept/objective/
+  // other section figures and worked-example figures (below, via lessonFigureRecords) and exercise
+  // figures. That reach is the whole point of putting it here rather than at one call site -- the
+  // asymmetry MAX-76 was about was a rule that ran on lesson figures and not on the other two.
+  const badLabels = doubledBackslashInTexLabels(source);
+  for (const bad of badLabels) {
+    // Two rule ids for two consequences, not two rules to remember. After `^`/`_` the figure does
+    // not build, and the build's own diagnosis (DOUBLED_BACKSLASH_AFTER_SCRIPT) says so. Anywhere
+    // else it builds fine and ships wrong glyphs, which is the case no compiler output will ever
+    // mention. A message claiming "Missing { inserted" for a figure that compiles clean would be
+    // wrong in the one situation this rule most needs to be believed about.
+    const afterScript = bad.afterScript.length > 0;
+    check("error", afterScript ? "S5.2-tex-label-doubled-backslash-after-script"
+                               : "S5.2-tex-label-doubled-backslash", path, false,
+      `LaTeX macro${bad.macros.length > 1 ? "s" : ""} written with a doubled backslash in a TeX label payload ` +
+      `(${bad.macros.join(", ")}). Asymptote copies string literals into the .tex it generates verbatim, so both ` +
+      `backslashes reach TeX` +
+      (afterScript
+        ? `, and immediately after ^ or _ TeX takes exactly one token as its argument, so this figure fails to ` +
+          `compile with "Missing { inserted".`
+        : `, where TeX reads \\\\ as a line break and then sets the bare macro name in italic: the figure ` +
+          `COMPILES CLEAN and renders the wrong glyphs, which is why KaTeX renders it without complaint and ` +
+          `why only the build's failure path used to notice.`) +
+      ` Write one backslash: ${bad.macros[0].replace(/\\\\/g, "\\")}, not ${bad.macros[0]}.`);
+  }
   return true;
 }
 

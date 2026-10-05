@@ -35,8 +35,36 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Push authorship guard proves it can fail
+      - name: The push authorship guard proves it can fail
         run: npm run git:guard:selftest
+      # MAX-126: the landing gate is the only check that can see a gated branch nobody ever merged,
+      # and a gate nobody runs is indistinguishable from a gate that does not work. landed.yml runs
+      # it on PRs and on pushes to fix/* and land/*; this step is about the gate's own wiring, so
+      # deleting landed.yml, or narrowing its triggers to nothing, is a red build instead of a
+      # silent return to the MAX-111 state. The audit itself is deliberately not run here: on a
+      # PR it would report every known backlog branch and turn every unrelated change red.
+      - name: The landing gate is wired in, and still asks on the branches it is for
+        run: |
+          set -eu
+          if [ ! -f .github/workflows/landed.yml ]; then
+            echo "::error::.github/workflows/landed.yml is gone; the landing gate (MAX-126) no longer runs"
+            exit 1
+          fi
+          for needle in "'fix/**'" "'land/**'"; do
+            if ! grep -qF -- "$needle" .github/workflows/landed.yml; then
+              echo "::error::landed.yml no longer triggers on $needle"
+              exit 1
+            fi
+          done
+          if ! grep -qE '^  pull_request:' .github/workflows/landed.yml; then
+            echo "::error::landed.yml no longer runs on pull_request"
+            exit 1
+          fi
+          if ! grep -qF 'scripts/check-landed-content.mjs' .github/workflows/landed.yml; then
+            echo "::error::landed.yml no longer runs scripts/check-landed-content.mjs"
+            exit 1
+          fi
+          echo "landing gate wired: pull_request, push to fix/** and land/**, weekly schedule"
       - name: Hooks are executable and parse
         # git records the exec bit, and a hook without it is a hook git never calls. Asserting
         # it here is the difference between "the guard is in the repository" and "the guard
