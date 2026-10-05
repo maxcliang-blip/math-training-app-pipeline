@@ -6,7 +6,7 @@ import { join } from "node:path";
 
 import { ContentStore, loadContentStore, loadModuleMeta, toExerciseResponse, toLessonResponse, DEFAULT_CONTENT_ROOT } from "../src/content.js";
 import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure-contract.mjs";
-import { CORPUS_PINS, checkCorpusPins } from "../../lib/corpus-pins.mjs";
+import { CORPUS_PINS, checkCorpusPins, checkCatalogueTargets } from "../../lib/corpus-pins.mjs";
 
 // The store is what every route answers from, so these tests are about the corpus as it will be
 // served: the shape a client sees, and the two things that are load-bearing about it - that the
@@ -32,6 +32,17 @@ const stale = checkCorpusPins(stats);
     `${stale.join("\n")}\nPinned at ${CORPUS_PINS.baseline}; the content here is what the store loaded.`,
   );
   assert.ok(stats.modules >= 8, `expected at least the eight authored modules, got ${stats.modules}`);
+});
+
+test("every module's declared exercise count is the count its corpus holds", () => {
+  // The catalogue is a hand-edited JSON file with a number per module, and the module route serves
+  // that number beside the count measured from the corpus. Nothing compared the two, so they
+  // drifted for months: nine targets summing to 1,050 against 759 exercises on disk (MAX-65).
+  // Comparing the two payloads the route actually returns means the next drift is a red build
+  // rather than a module page quietly reporting a permanent shortfall.
+  const { modules } = store.listModules();
+  const problems = checkCatalogueTargets(modules);
+  assert.deepEqual(problems, [], problems.join("\n"));
 });
 
 test("a lesson route reports ids for practice, mastery and solutions, and the prose sections survive", () => {
