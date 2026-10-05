@@ -10,6 +10,10 @@
 //   2. Fail-closed corpus. An absent or empty content root fails. "Nothing to check" is not a pass.
 //   3. A non-vacuous gate. --selftest injects one defect per rule family and requires the engine
 //      to catch every one of them; a rule with no enforcement makes the selftest fail.
+//   4. A live corpus pin. lib/corpus-pins.mjs records the lesson and exercise counts the rest of
+//      the repo asserts; this gate compares them against the corpus it just loaded, so growing the
+//      corpus without moving the pin is a local failure rather than a red main. MAX-64, merging
+//      MAX-58. See lib/corpus-pins.mjs - and note that it counts records, not files.
 //
 // The figure build is a separate gate: scripts/build-figures.mjs.
 //
@@ -18,7 +22,7 @@
 //
 // Exit codes: 0 pass · 1 content or selftest failure · 2 environment/configuration error.
 
-import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, dirname, relative, resolve } from "node:path";
@@ -26,7 +30,9 @@ import { fileURLToPath } from "node:url";
 import katex from "katex";
 import { run, KATEX_PINNED } from "./preflight-content.mjs";
 import { collectFigures } from "./build-figures.mjs";
+import { selftest as selftestRequirePathArg } from "./lib/require-path-arg.mjs";
 import { doubledBackslashInTexLabels, isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
+import { CORPUS_PINS, checkCorpusPins } from "../lib/corpus-pins.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -279,6 +285,33 @@ export const MUTATIONS = [
     severity: "error",
     apply(c) {
       c.exercises[1].promptLatex += " $\\zeta \neq 1$";
+    },
+  },
+  {
+    // MAX-110. The reach half of MAX-89's rule, and the half that was missing: the same defect
+    // in a display block, a block with no `$` at all, which is where all 13 shipped instances
+    // lived (m5-l1, m5-l2). This mutation is separate from the one above rather than an
+    // extension of it, because the two probe different code paths: the span mutation needs the
+    // INLINE_SEGMENT scan, and this one needs the display-block scan. A single mutation cannot
+    // prove both, so a rule whose reach silently narrows back to spans still passes the first
+    // one. Two mutations, two paths, both required.
+    //
+    // Appended as a new block to a block-separated field, so the appended block has no `$` and
+    // is therefore a display block. The tab deliberately follows `180^{\circ}`, so the tail
+    // after it is `ext{.}` -- the exact shape of all 13 shipped sites, 9 of which were written
+    // that way in m5-l1. KaTeX renders a tab as letters without complaint, so nothing else in
+    // the gate sees it and the finding below is this rule's alone.
+    //
+    // The tab is written as the escape `\t`, and that is the whole mechanism rather than a typo:
+    // in a JavaScript string literal `\t` *is* a tab, and JSON.stringify then writes that tab
+    // back out into the mutated file as a single-backslash `\t` -- the shipped corruption.
+    // Writing `\\text` here instead would put a real backslash in the value, the macro would
+    // survive intact, and the mutation would pass while proving nothing.
+    id: "macro-name-eaten-in-a-display-block",
+    rule: "json-escaped-macro",
+    severity: "error",
+    apply(c) {
+      c.exercises[1].solutionLatex += "\n\n180^{\\circ}\text{.}";
     },
   },
   {
@@ -648,6 +681,75 @@ function reservationsAreReportedExactly(contentRoot) {
   };
 }
 
+// A figure id is an address, and MAX-107 is the rule that says a figure record must declare one.
+// Four of m5-l1's figure reservations declared none: they existed, they rendered, and no close-out
+// could name them, so nothing could assert they shipped.
+//
+// Proved here, on its own copy of the corpus, for the reason figureCountsTrackTheCorpus is: the
+// mutation framework above writes every record a second time beside the originals, so on its corpus
+// an injected defect cannot be told from the doubling, and the corpus it was failing to protect is
+// the corpus the rule rejects. A rule that fired on every figure would also "catch" a missing id.
+// So what is asserted is the count, not the presence -- and the count is only meaningful against a
+// corpus that raised none to begin with, so the baseline is asserted too.
+//
+// One id is deleted from one real section figure, in the files themselves rather than in a record
+// written beside them, and the return must be exactly one finding naming that figure's site in the
+// spelling figure-id-unique uses. Section figures only, because that is the set MAX-104's resolver
+// walks and therefore the set an id has to exist for.
+function figureIdRequiredIsReportedOnce(contentRoot) {
+  const pristineHits = run(contentRoot).report.findings.filter((f) => f.rule === "figure-id-required").length;
+  const dir = mkdtempSync(join(tmpdir(), "content-figure-id-"));
+  try {
+    cpSync(contentRoot, dir, { recursive: true });
+    const lessonsDir = join(dir, "lessons");
+    const ordered = readdirSync(lessonsDir)
+      .filter((f) => f.endsWith(".json"))
+      .sort()
+      .map((f) => ({ file: f, record: JSON.parse(readFileSync(join(lessonsDir, f), "utf8")) }))
+      .sort((a, b) => String(a.record.id).localeCompare(String(b.record.id)));
+
+    // A section figure on any section, scanned in lesson-id order so the choice is stable across
+    // filesystems and does not depend on which lesson grows a figure next.
+    const donor = ordered
+      .map((entry) => ({
+        ...entry,
+        site: lessonFigureRecords(entry.record).find((s) => s.kind === "section" && s.record.id),
+      }))
+      .find((entry) => entry.site);
+    if (!donor) return { caught: false, detail: "no lesson section figure carrying an id to remove" };
+
+    delete donor.site.record.id;
+    // Written back over the original file, not out under a new name: the harness's own doubling is
+    // what makes a MUTATIONS entry inconclusive here.
+    writeFileSync(join(lessonsDir, donor.file), JSON.stringify(donor.record, null, 2) + "\n");
+    const sitePath = `lessons/${donor.record.id}.sections.${donor.site.sectionName}.figures[${donor.site.index}]`;
+
+    const hits = run(dir).report.findings.filter((f) => f.rule === "figure-id-required");
+    const problems = [];
+    if (pristineHits !== 0) {
+      problems.push(`the corpus raised ${pristineHits} figure-id-required finding(s) before the injection, so "exactly one" would mean nothing`);
+    }
+    if (hits.length !== 1) {
+      problems.push(`unnaming ${donor.record.id}'s figure at ${sitePath} produced ${hits.length} figure-id-required finding(s), not 1`);
+    } else if (hits[0].severity !== "error") {
+      problems.push(`figure-id-required raised ${hits[0].severity} at ${hits[0].path}, expected error`);
+    } else if (!String(hits[0].path).includes(sitePath)) {
+      problems.push(`figure-id-required did not name ${sitePath} (reported ${hits[0].path})`);
+    }
+
+    return {
+      caught: problems.length === 0,
+      detail: problems.length
+        ? problems.join("; ")
+        : `removing the id from ${sitePath} raised exactly one error naming that site, and the ` +
+          `${pristineHits}-finding corpus it came from was clean; a close-out can name every section ` +
+          "figure in it",
+    };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 // The S5.1 caption scope is a settled decision, and a settled decision that nothing asserts is a
 // pending one waiting to be re-litigated by the next person to read "every figure". MAX-93 ruled
 // that the caption *requirement* binds concept section figures only, and that the figure-number
@@ -707,6 +809,88 @@ function captionScopeIsDeliberate(contentRoot) {
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+}
+
+// A figure id and a worked-example id are addresses, and MAX-106 is the rule that says two records
+// may not hold the same one. It cannot be proved by a MUTATIONS entry, and the reason is worth
+// writing down because the obvious way to add it is wrong.
+//
+// The mutation harness validates a corpus that has every record written a second time: `apply()`
+// mutates in memory and the mutated records land in a fresh `<kind>.json` beside the originals, so
+// a fresh finding can be told from a recurring one. On that corpus every figure id and every
+// worked-example id in the corpus is already claimed twice. An id-collision mutation there would be
+// reported as caught by the doubling alone -- the rule could be deleted outright and the mutation
+// would still pass. So it is proved the way `figureCountsTrackTheCorpus` is: on its own copy of
+// the corpus, with one collision injected into the files themselves.
+//
+// What it asserts is the count, not the presence. A uniqueness rule that fires on everything also
+// "catches" a collision, and the corpus it was failing to protect would be exactly the corpus it
+// rejected. So one injected figure-id collision must produce one finding and no more, and that
+// finding must name both sites -- which is the property MAX-104's resolver needs, since a collision
+// report that does not say which records collided is not something anyone can act on.
+function idCollisionsAreReported(contentRoot) {
+  const pristineHits = countIdFindings(contentRoot);
+
+  const dir = mkdtempSync(join(tmpdir(), "content-id-collisions-"));
+  try {
+    cpSync(contentRoot, dir, { recursive: true });
+    const lessonsDir = join(dir, "lessons");
+    const files = readdirSync(lessonsDir).filter((f) => f.endsWith(".json")).sort();
+    const ordered = files
+      .map((f) => ({ file: f, record: JSON.parse(readFileSync(join(lessonsDir, f), "utf8")) }))
+      .sort((x, y) => String(x.record.id).localeCompare(String(y.record.id)));
+
+    const figureOf = (record) => lessonFigureRecords(record).find((s) => s.kind === "section" && s.record.id);
+    const exampleOf = (record) => ((record.sections && record.sections.concept) || {}).examples?.find((e) => e && e.id);
+
+    // Two lessons that each declare a figure and a worked example, in lesson-id order so the choice
+    // is stable across filesystems and does not depend on which lesson grows a figure next.
+    const donors = ordered.filter(({ record }) => figureOf(record) && exampleOf(record));
+    if (donors.length < 2) return { caught: false, detail: "fewer than two lessons carry both a figure id and a worked-example id" };
+
+    // A's figure and worked example are renamed onto B's ids. Across a file boundary on purpose: the
+    // rule is corpus-wide, and a collision inside one lesson file is the case a per-lesson check
+    // would also catch, so it is the weaker of the two and not the one worth proving.
+    const [a, b] = donors;
+    const aFigure = figureOf(a.record);
+    const bFigure = figureOf(b.record);
+    const bExample = exampleOf(b.record);
+    aFigure.record.id = bFigure.record.id;
+    exampleOf(a.record).id = bExample.id;
+    // Written back over the originals, not out under a new name: this is the harness's own
+    // doubling (figureCountsTrackTheCorpus) that makes a MUTATIONS entry inconclusive here.
+    for (const entry of [a, b]) writeFileSync(join(lessonsDir, entry.file), JSON.stringify(entry.record, null, 2) + "\n");
+
+    const findings = run(dir).report.findings;
+    const figureHits = findings.filter((f) => f.rule === "figure-id-unique");
+    const exampleHits = findings.filter((f) => f.rule === "worked-example-id-unique");
+    const aFigureSite = `lessons/${a.record.id}.sections.${aFigure.sectionName}.figures[${aFigure.index}]`;
+    const bFigureSite = `lessons/${b.record.id}.sections.${bFigure.sectionName}.figures[${bFigure.index}]`;
+    const aExampleSite = `lessons/${a.record.id}.sections.concept.examples`;
+    const bExampleSite = `lessons/${b.record.id}.sections.concept.examples`;
+
+    const problems = [];
+    const nameBoth = (hit, id, ...sites) => sites.every((site) => String(hit.message).includes(site))
+      && String(hit.message).includes(JSON.stringify(id));
+    if (figureHits.length !== 1) problems.push(`1 injected figure-id collision produced ${figureHits.length} figure-id-unique finding(s), not 1`);
+    else if (!nameBoth(figureHits[0], bFigure.record.id, aFigureSite, bFigureSite)) problems.push(`figure-id-unique did not name ${bFigure.record.id} at both ${aFigureSite} and ${bFigureSite}`);
+    if (exampleHits.length !== 1) problems.push(`1 injected worked-example-id collision produced ${exampleHits.length} worked-example-id-unique finding(s), not 1`);
+    else if (!nameBoth(exampleHits[0], bExample.id, aExampleSite, bExampleSite)) problems.push(`worked-example-id-unique did not name ${bExample.id} in both lessons`);
+
+    return {
+      caught: problems.length === 0,
+      detail: problems.length
+        ? problems.join("; ")
+        : `colliding ${bFigure.record.id} across ${aFigureSite} and ${bFigureSite}, and ${bExample.id} across ${aExampleSite} and ` +
+          `${bExampleSite}, raised exactly one finding each and named both sites; the ${pristineHits}-finding corpus they came from is clean`,
+    };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+function countIdFindings(root) {
+  return run(root).report.findings.filter((f) => f.rule.endsWith("-id-unique")).length;
 }
 
 // MAX-119's DoD asks for a proof that the rule runs in the authoring path and not only in the
@@ -828,6 +1012,51 @@ export function selftest(contentRoot) {
   let baselineErrors = 0;
   let baselineFindings = new Set();
 
+  // MAX-130. The shared bare-path parser (scripts/lib/require-path-arg.mjs) carries its own table,
+  // and it runs *here*, inside a suite ci.yml already gates, rather than beside it. That placement
+  // is the whole non-vacuity argument: a helper that only exists proves nothing, and a refactor
+  // that quietly dropped the refusal -- in the parser or in a tool that calls it -- would leave
+  // every other assertion in this file green. These rows are the failure that has to be visible.
+  //
+  // The end-to-end row is here rather than in the parser's table because it is a claim about a
+  // *call site*, not about the function: build-figures.mjs's `--out <dir>` is the only bare-path
+  // tool still unguarded on main, and a parser that is correct while nobody calls it has fixed
+  // nothing. It spawns the real binary with a corpus root that does not exist, so the run is
+  // cheap, has no side effects, and -- the part that makes it an assertion rather than a reading --
+  // exits 2 either way: the refusal and the content-root check share an exit code, so only the
+  // message distinguishes them.
+  for (const r of selftestRequirePathArg().rows) rows.push(r);
+  {
+    let caught = false;
+    let detail = "";
+    const cwd = pristine;
+    const stray = join(cwd, "--allow-missing-toolchain");
+    let out = "";
+    try {
+      execFileSync(
+        "node",
+        [join(HERE, "build-figures.mjs"), join(cwd, "no-such-corpus"), "--out", "--allow-missing-toolchain"],
+        { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], timeout: 60000 },
+      );
+    } catch (err) {
+      out = `${err.stdout || ""}${err.stderr || ""}`;
+      if (err.status !== 2) detail = `exited ${err.status}, not 2`;
+      else if (!/--out takes an output path; got the flag "--allow-missing-toolchain"/.test(out)) {
+        detail = `exited 2 without the refusal: ${out.trim().split("\n").slice(-2).join(" | ")}`;
+      } else if (existsSync(stray)) detail = "it refused and still created a directory of that name";
+      else caught = true;
+    }
+    rows.push({
+      id: "max-130-build-figures-out-refuses-a-flag-as-a-path",
+      rule: "harness-invariant",
+      severity: "error",
+      caught,
+      detail: caught
+        ? "`build-figures.mjs <root> --out --allow-missing-toolchain` exits 2, names the flag, and writes nothing"
+        : `build-figures.mjs --out did not refuse a flag where it wants a directory: ${detail || "it exited 0"}`,
+    });
+  }
+
   // preflight-content.mjs hands back a copy of its findings array, so every report is a
   // snapshot and two runs never share state. The copy is what makes this invariant checkable;
   // when run() returned its live module-level array instead, a report captured from one corpus
@@ -887,6 +1116,27 @@ export function selftest(contentRoot) {
       let caught = false;
       let detail = "";
       try {
+        const collisions = idCollisionsAreReported(pristine);
+        caught = collisions.caught;
+        detail = collisions.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "id-collisions-are-reported-once-and-by-site",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail: caught
+          ? `${detail} (MAX-104's resolver reads by figure id, so this is the finding it needs)`
+          : `${detail} -- a resolver reading by figure id would have nothing to report`,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
         const tracks = figureCountsTrackTheCorpus(pristine);
         caught = tracks.caught;
         detail = tracks.detail;
@@ -898,6 +1148,50 @@ export function selftest(contentRoot) {
         rule: "harness-invariant",
         severity: "error",
         caught,
+        detail,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
+        const named = figureIdRequiredIsReportedOnce(pristine);
+        caught = named.caught;
+        detail = named.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "unnamed-figure-is-reported-once-and-by-site",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail: caught
+          ? `${detail} (MAX-104's resolver reads by figure id, so a record without one cannot be asserted delivered)`
+          : `${detail} -- a close-out could not have named that figure, let alone asserted it ships`,
+      });
+    }
+
+    // The corpus pin is a gate like any other here, so it is proved able to fail like any other
+    // here. Both halves are needed: a mutation the checker ignores proves nothing, and a checker
+    // that also fires on the pristine corpus would make every future mutation inconclusive.
+    {
+      const pinnedClean = checkCorpusPins(report.corpus);
+      const shifted = checkCorpusPins({
+        lessons: CORPUS_PINS.lessons + 1,
+        exercises: CORPUS_PINS.exercises + 18,
+      });
+      const detail = !pinnedClean.length
+        ? `the pinned corpus was itself reported stale: ${pinnedClean[0]}`
+        : shifted.length
+          ? shifted[0]
+          : "a corpus one lesson and eighteen exercises larger was not reported stale";
+      rows.push({
+        id: "corpus-grew-without-the-pin-moving",
+        rule: "corpus-pins",
+        severity: "error",
+        caught: pinnedClean.length === 0 && shifted.length > 0,
         detail,
       });
     }
@@ -1057,6 +1351,11 @@ if (isMain) {
   }
 
   let { report, errors } = checkCorpus(contentRoot);
+
+  // The pin check runs against the repository's own corpus root only, never a selftest's throwaway
+  // copy: a mutation copy is stale against the pin by construction, so asserting it there would
+  // make every mutation inconclusive.
+  const stalePins = checkCorpusPins(report.corpus);
   mkdirSync(dirname(outPath), { recursive: true });
   report.gate = {
     script: "scripts/check-content-math.mjs",
@@ -1065,6 +1364,8 @@ if (isMain) {
     // Name the rule the figure ratio is actually policed by, so a reader who came here looking
     // for it is sent to the check that exists instead of concluding the gate is missing.
     figureRatioRule: "S5.5 (declared vs compiled box), scripts/build-figures.mjs",
+    corpusPins: CORPUS_PINS,
+    corpusPinsOk: stalePins.length === 0,
   };
   writeFileSync(outPath, JSON.stringify(report, null, 2) + "\n");
 
@@ -1072,10 +1373,14 @@ if (isMain) {
   for (const line of printFindings(report) || []) console.log(line);
   console.log(`  report: ${outPath}`);
 
-  let failed = errors.length > 0;
+  let failed = errors.length > 0 || stalePins.length > 0;
   if (errors.length) {
     console.log("");
     console.log(`  ${errors.length} error(s); content does not pass the gate.`);
+  }
+  if (stalePins.length) {
+    console.log("");
+    for (const p of stalePins) console.error(`check-content-math: PINS: ${p}`);
   }
 
   if (wantSelftest) {

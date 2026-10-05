@@ -31,9 +31,16 @@ RUN apt-get update \
 
 WORKDIR /repo
 
-# build-figures.mjs needs the content tree and the shared contract module, and nothing else: it
-# imports node builtins only, so this stage installs no npm dependencies at all.
+# build-figures.mjs needs the content tree and its two repository modules, and nothing else: it
+# imports node builtins only otherwise, so this stage installs no npm dependencies at all.
+#
+# The module list is an allowlist, so it has to name every repository module the figure build
+# reaches. It did not name scripts/lib/require-path-arg.mjs, and the omission was not silent: the
+# image build died at `RUN node scripts/build-figures.mjs` with ERR_MODULE_NOT_FOUND, in the stage
+# that has no other way to fail (MAX-130). Copying `scripts/lib/` instead of naming files would
+# drag asy-container.sh into a stage that runs none of it, and would go stale the same way.
 COPY lib/figure-contract.mjs lib/figure-contract.mjs
+COPY scripts/lib/require-path-arg.mjs scripts/lib/require-path-arg.mjs
 COPY scripts/build-figures.mjs scripts/build-figures.mjs
 COPY content/ content/
 
