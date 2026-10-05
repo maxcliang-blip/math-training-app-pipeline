@@ -20,8 +20,10 @@
 //
 // Two families have no source document, and are deliberately not numbered like one:
 //
-//   MAX-89  - json-escaped-macro: a JSON control escape inside a math span ate the macro
-//             it introduced. The gate is the only thing that can see this, so it is stated
+//   MAX-89  - json-escaped-macro: a JSON control escape inside a math context ate the macro
+//             it introduced, widened by MAX-110 to reach display blocks as well as `$…$`
+//             spans; see the REACH note at the rule for why the span-only scope was wrong.
+//             The gate is the only thing that can see this, so it is stated
 //             here rather than waited for. A document half would belong to whoever owns
 //             rendering_conventions; it does not exist yet and this rule does not wait for it.
 //
@@ -488,19 +490,46 @@ const COMMAND = /\\([a-zA-Z]+|.)/g;
 // so. An advisory would be indistinguishable from no rule at all, because the only thing that
 // acts on this class of finding is the gate itself.
 //
-// The discriminator is "control character inside a math span", not "newline in a LaTeX field".
-// The corpus uses \n\n for paragraph breaks in solutionLatex and bodyLatex and is full of them:
-// 5,808 control characters sit in the scanned fields, and 12 of them are inside a math span. A
-// rule about newlines would fire on the other 5,796 and mean nothing. Inside a `$...$` or
-// `$$...$$` span there is no legitimate reading -- the block model separates blocks with a blank
-// line, and a math span is one span.
+// The discriminator is "control character inside a math context", not "newline in a LaTeX
+// field". The corpus uses \n\n for paragraph breaks in solutionLatex and bodyLatex and is full
+// of them. Measured on main (1179978) over the 8,107 fields this rule scans, there are 5,796
+// control characters in total and every one of them is inside a block: 5,783 line feeds and 13
+// tabs. A rule about newlines anywhere in a field would fire on all 5,783 and mean nothing.
+// Inside a `$...$` or `$$...$$` span there is no legitimate reading -- the block model separates
+// blocks with a blank line, and a math span is one span -- which is why a span search can afford
+// to include `\n` and still add nothing to the corpus. On main it adds nothing because MAX-87
+// cleared the spans: there are now 0 control characters strictly inside a `$...$` span.
 //
-// The one place this rule knowingly leaves a same-shaped defect alone is a display block, a
-// block with no `$` at all: 13 of the corpus's control characters are `\text` eaten inside
-// display blocks in m5-l1 and m5-l2, and a display block cannot be searched for a control
-// character without also catching the 29 line feeds that legitimately lay a display block out
-// over several lines. Tab-in-a-display-block is therefore its own rule, filed separately,
-// rather than a widening of this one.
+// REACH (MAX-110). This rule originally scanned `$...$` spans only, and recorded display blocks
+// as a knowingly-uncovered hole: 13 `\text` escapes were eaten in display blocks in m5-l1 and
+// m5-l2, with no span for the rule to search. The stated reason it could not widen was that a
+// display block "cannot be searched for a control character without also catching the 29 line
+// feeds that legitimately lay a display block out over several lines." That premise is wrong,
+// and the measurement that settles it is on both sides of the rule rather than inside it:
+//
+//   - A display block IS a math context, by the corpus's own block model. splitBlocks sets
+//     `display: true` for every block with no `$`, and renderBlocks hands the entire block to
+//     KaTeX with `displayMode: true`. S3.2-macro-allowlist already scans display blocks, because
+//     it matches COMMAND over the whole field. This one rule was the only place that refused to
+//     treat a display block as math, which is what made the hole a hole rather than a gap.
+//   - The 29 line feeds are not layout breaks. Every one is a single newline inside a
+//     soft-wrapped sentence, which TeX collapses to whitespace, so the render is byte-identical
+//     with or without it. They are legitimate, but they are legitimate for a reason that has
+//     nothing to do with display blocks: `\n` is the only one of JSON's five control escapes this
+//     convention gives an author a way to write. `\t`, `\r`, `\f` and `\b` have no authoring
+//     role in any LaTeX field, so one of those inside a display block can only be an escape that
+//     ate a macro.
+//
+// So the discriminator is not "control character" but "control character with no authoring
+// role", which excludes `\n` for a reason that holds as the corpus grows rather than a reason
+// that counts today's 29. That is why this is a widening of this rule and not the separate
+// rule MAX-89's comment promised: same defect, same cause, same fix message, same severity, and
+// an author who trips one needs to know about both. It also means the search can no longer be
+// defeated by an author who soft-wraps a display block to get under a line-length limit.
+//
+// Prose blocks are still not searched, deliberately: outside a `$...$` span in a prose block a
+// tab is at least conceivably an author's own indentation, and S3.1-no-math-outside-delimiters
+// already rejects a macro command sitting there.
 //
 // Deliberate false positive, recorded so it is a decision and not an accident: an author who
 // wants a math span laid out over several source lines will draw this finding. The convention
@@ -517,36 +546,59 @@ const CONTROL_NAMES = {
   "\b": "backspace (JSON \\b)",
 };
 
-// The path label is `<field>#math<n>`, n counting the math spans of the field from 1 in the
-// order they appear. The field is what the author has to open; the span index is what tells
-// them which of a dozen formulas in a long bodyLatex is the broken one. `#math<n>` sits beside
-// renderBlocks' existing `#block<n>` rather than replacing it: they count different things and
-// a report that reused one label for both would make the two unresolvable.
+// The same scan, minus the line feed. See the reach note above: a display block may legitimately
+// hold a soft-wrapped sentence, so `\n` is the one control character this convention gives an
+// author a way to use. `\t`, `\r`, `\f` and `\b` have no authoring role in any LaTeX field, so a
+// single one is a JSON escape that ate a macro -- `\text`, `\tfrac`, `\rightarrow`, `\frac`,
+// `\lfloor`, `\boxed`, `\right`, `\binom`. Excluding `\n` is not a concession to today's corpus:
+// it is the statement of which control escapes mean something here.
+const CONTROL_CHAR_NO_LF = /[\r\t\f\b]/;
+
+// The path label is `<field>#math<n>` for a `$...$` span, n counting the math spans of the field
+// from 1 in the order they appear, and `<field>#display<n>` for a block with no `$` at all, n
+// counting those blocks from 1. The field is what the author has to open; the index is what tells
+// them which of a dozen formulas in a long bodyLatex is the broken one. Both labels sit beside
+// renderBlocks' existing `#block<n>` rather than replacing it: `#block<n>` counts every block,
+// the two here count only the blocks or spans that could hold a math context, and a report that
+// reused one label for all three would make them unresolvable against each other.
 function checkEscapedMacro(value, path) {
-  const { blocks, style } = splitBlocks(value);
+  const { blocks, style, display } = splitBlocks(value);
   let spans = 0;
-  const report = (span, at) => {
-    const tail = span.slice(at + 1, at + 13).replace(/[\n\r\t\f\b]/g, " ").trim();
-    fail("error", "json-escaped-macro", `${path}#math${spans}`,
-      `${CONTROL_NAMES[span[at]]} inside a math span, followed by ${JSON.stringify(tail)}: ` +
+  let displays = 0;
+  const report = (scope, body, at) => {
+    const tail = body.slice(at + 1, at + 13).replace(CONTROL_CHAR, " ").trim();
+    fail("error", "json-escaped-macro", scope,
+      `${CONTROL_NAMES[body[at]]} ${scope.includes("#display") ? "in a display block" : "inside a math span"}, ` +
+      `followed by ${JSON.stringify(tail)}: ` +
       "the source almost certainly wrote the macro before it with a single backslash, so JSON " +
       "read the escape and the macro name became literal text. Double the backslash in the JSON " +
       "source (\\\\neq), or write it as \\u005cneq, which JSON cannot mistake for an escape");
   };
-  for (const block of blocks) {
+  for (let b = 0; b < blocks.length; b += 1) {
+    const block = blocks[b];
     if (style === "dollars") {
       // splitBlocks already stripped the $$ delimiters: the block IS the span.
       spans += 1;
       const at = block.search(CONTROL_CHAR);
-      if (at >= 0) report(block, at);
+      if (at >= 0) report(`${path}#math${spans}`, block, at);
       continue;
+    }
+    // A block with no `$` is a display block: the corpus block model hands the whole thing to
+    // KaTeX as math, so every control character in it is inside a math context. MAX-110.
+    if (display[b]) {
+      displays += 1;
+      const at = block.search(CONTROL_CHAR_NO_LF);
+      if (at >= 0) {
+        report(`${path}#display${displays}`, block, at);
+        continue;
+      }
     }
     let m;
     INLINE_SEGMENT.lastIndex = 0;
     while ((m = INLINE_SEGMENT.exec(block)) !== null) {
       spans += 1;
       const at = m[1].search(CONTROL_CHAR);
-      if (at >= 0) report(m[1], at);
+      if (at >= 0) report(`${path}#math${spans}`, m[1], at);
     }
   }
 }
