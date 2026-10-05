@@ -13,6 +13,8 @@
     "test:e2e": "playwright test",
     "test:e2e:install": "playwright install --with-deps chromium",
     "content:check": "node scripts/check-content-math.mjs",
+    "client:check": "node scripts/check-client-sections.mjs",
+    "client:selftest": "node scripts/check-client-sections.mjs --selftest",
     "content:selftest": "node scripts/check-content-math.mjs --selftest",
     "content:delivered": "node scripts/verify-delivery.mjs",
     "content:delivered:selftest": "node scripts/verify-delivery.mjs --selftest",

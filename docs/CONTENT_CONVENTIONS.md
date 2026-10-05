@@ -114,6 +114,42 @@ leave it empty when nothing is — is the convention.
 
 ---
 
+## 4. A lesson's mastery exercises are served and unreachable until there is a runner
+
+**The convention.** `mastery.exerciseIds` is authored, tagged and served, and the web client does not
+fetch it. That is the intended state of a reader, not a defect to fix by adding a fetch. When the
+attempt runner lands, the client gains the mastery surface in the same commit that gains the runner.
+
+**What the gate enforces.** `scripts/check-client-sections.mjs` reads three inputs — the API's
+`SECTION_ID_FIELDS` (`api/src/content.js`), every `.js`/`.jsx` file under `web/src`, and the corpus —
+and fails when they disagree. Specifically:
+
+- a section the API serves with no reach decision in `lib/client-sections.mjs` is an error, so a
+  fourth list cannot be added without answering what a client can reach;
+- a section declared `served` that the client no longer names is an error;
+- a section the client names that is not declared `served` is an error, which is what makes adding
+  the mastery fetch a deliberate act rather than a quiet one;
+- a `via-sibling` section must have every id carried by its `served` sibling, per lesson.
+
+`npm run client:selftest` proves each of those can fail. `api/test/client-sections.test.js` runs the
+same gate under `npm test`, so the disagreement is a local failure and not only a CI one.
+
+**Measured** on `origin/main` `fe13feb`, re-measured for this entry: **645 practice** ids across 38
+lessons, served and fetched; **114 mastery** ids across 38 lessons, served and not fetched; **645
+solutions** ids, never named by the client and identical to the practice set, so their records arrive
+inside the practice fetch. The sets are disjoint: 645 + 114 = 759, the whole corpus. Read those
+numbers here or run `npm run client:check`; do not subtract 759 − 645 to recover them.
+
+**Where this came from.** `7555756` was measured by [MAX-141](/MAX/issues/MAX-141), which recorded the
+`masteryIds` gap and closed without taking it; [MAX-70](/MAX/issues/MAX-70) had recorded the same gap
+earlier. [MAX-146](/MAX/issues/MAX-146) settled the intent and shipped the gate. The decision rests on
+a fact about the client rather than on taste: `web/src` makes no write call at all, so there is no
+attempt runner to record an answer against `passThreshold: 2`, and `api/src/state.js` only sets
+`attempt.mastery` when the request body carries `mode: "mastery"`. Rendering three exercises per
+lesson that no learner can answer would be worse than not rendering them.
+
+---
+
 ## Changing a convention here
 
 A convention is not edited because it is inconvenient. It is changed by:

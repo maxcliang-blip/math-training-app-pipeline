@@ -33,6 +33,16 @@ jobs:
       # It reads a throwaway corpus and no toolchain, so it costs a second. MAX-104.
       - name: Delivery resolver selftest
         run: npm run content:delivered:selftest
+      # MAX-146. The corpus gate above cannot see the client: it counts sections and records, and
+      # nothing in it reads web/src, so 114 exercises could be authored, tagged, listed, served and
+      # unreachable from a browser with every other gate green. This is the check that reads both
+      # ends -- the API's SECTION_ID_FIELDS, the client's source, and the corpus -- and fails when
+      # the three disagree about which exercise lists a learner can reach.
+      #
+      # --selftest, not the bare run, for the reason the rest of this file does it: a gate nobody
+      # has watched fail is indistinguishable from one that cannot fail.
+      - name: Client exercise-reach gate
+        run: npm run client:selftest
       - uses: actions/upload-artifact@v4
         if: always()
         with:
