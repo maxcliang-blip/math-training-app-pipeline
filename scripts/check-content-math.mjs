@@ -357,6 +357,42 @@ export const MUTATIONS = [
     },
   },
   {
+    // MAX-141. The rule that closes the 29-against-26 false orphan report on m7-l4: an exercise
+    // record that no lesson lists is content no learner can be served, and until this rule existed
+    // nothing would fail if one were authored.
+    //
+    // The donor is located rather than assumed for the same reason the figure donors are (MAX-76):
+    // readdirSync is unsorted and a corpus whose first exercise is already unlisted would make a
+    // fixed index silently vacuous. Scanning in id order and demanding a donor that its own lesson
+    // currently lists keeps the mutation conclusive, and throws rather than passing quietly on a
+    // corpus that has lost the shape.
+    //
+    // It drops the id from solutions as well as practice. Leaving solutions mirroring practice is
+    // what S8-id-lists requires, so removing it from one list only would trip that rule too, and a
+    // mutation that raises two rules proves less than one that raises exactly the rule under test.
+    id: "exercise-no-lesson-lists-it",
+    rule: "S8-exercise-reachable",
+    severity: "error",
+    apply(c) {
+      const ordered = [...c.exercises].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+      for (const ex of ordered) {
+        const lesson = c.lessons.find((l) => l.id === ex.lessonId);
+        const practice = lesson && lesson.sections && lesson.sections.practice
+          && lesson.sections.practice.exerciseIds;
+        if (!Array.isArray(practice) || !practice.includes(ex.id)) continue;
+        const drop = (ids) => {
+          const i = ids.indexOf(ex.id);
+          if (i >= 0) ids.splice(i, 1);
+        };
+        drop(practice);
+        const solutions = lesson.sections.solutions && lesson.sections.solutions.exerciseIds;
+        if (Array.isArray(solutions)) drop(solutions);
+        return;
+      }
+      throw new Error("no exercise record is listed by its own lesson's practice list, so the mutation cannot be injected");
+    },
+  },
+  {
     id: "choices-not-five",
     rule: "S3.3-choices-arity",
     severity: "error",

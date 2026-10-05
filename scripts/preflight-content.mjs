@@ -928,6 +928,44 @@ function checkFigureIdRequired(site, sitePath) {
     `record it cannot refer to. Author it as <lesson-id>-fig-<n>, counting within the section (MAX-107)`);
 }
 
+// S8, the converse of S8-id-lists. That rule walks a lesson's id lists and fails an id no exercise
+// file defines; this one walks an exercise and fails one no lesson lists, which is the direction
+// that hides.
+//
+// MAX-141. m7-l4 holds 29 m7-l4-* exercise records and 26 ids in sections.practice.exerciseIds,
+// and 29-against-26 was reported as 26 orphans by three people on three separate passes before
+// anyone counted. The three were sections.mastery.exerciseIds -- exactly where S8-mastery-count puts
+// three by rule -- and nothing in the corpus said that a lesson's exercises are split across two
+// lists rather than all living in practice. Every one of those comparisons was arithmetically
+// right; the invariant was simply unstated, which is the only reason the subtraction read as a
+// defect instead of as a question.
+//
+// A record no lesson names is content no learner can be served: the api builds every exercise list
+// a client can ask for out of the three id lists (SECTION_ID_FIELDS in api/src/content.js), so a
+// record outside all of them is unreachable however the client asks for it. Fixtures are exempt by
+// construction -- they are the --selftest donors in content/fixtures/, not served content -- so this
+// runs over content/exercises/ only.
+//
+// The lesson's own lists, not the union of every lesson's: an id listed by a different lesson is a
+// mis-wiring rather than a placement, and reporting it as a placement would be the silent half of
+// the defect.
+function checkExerciseReachable(ex, lessonIndex) {
+  const path = `exercises/${ex.id}`;
+  const lesson = lessonIndex.get(ex.lessonId);
+  if (!lesson) {
+    check("error", "S8-exercise-reachable", `${path}.lessonId`, false,
+      `lessonId ${JSON.stringify(ex.lessonId)} names no lesson, so no list can name this exercise`);
+    return;
+  }
+  const practice = (lesson.sections && lesson.sections.practice && lesson.sections.practice.exerciseIds) || [];
+  const mastery = (lesson.sections && lesson.sections.mastery && lesson.sections.mastery.exerciseIds) || [];
+  const named = new Set([...practice, ...mastery]);
+  check("error", "S8-exercise-reachable", path, named.has(ex.id),
+    `no lesson lists this exercise. ${ex.lessonId} practice holds ${practice.length} and mastery holds ` +
+    `${mastery.length} (S8-mastery-count fixes that at exactly 3), and an exercise outside every list is ` +
+    `content no learner can be served`);
+}
+
 function checkExercise(ex, lessonIndex) {
   const path = `exercises/${ex.id}`;
   const where = (f) => `${path}.${f}`;
@@ -1165,6 +1203,15 @@ function checkLesson(lesson, exerciseIds, exerciseById) {
   }
 
   // id lists, not embedded copies
+  //
+  // A lesson's exercises are split across two of these lists, and that is deliberate: practice
+  // carries the working set, mastery carries exactly three tier-mixed exercises that the pass
+  // threshold scores against. The solutions list mirrors practice only. So the count of records in
+  // content/exercises/<lessonId>-*.json is `practice.length + 3`, not `practice.length` -- m7-l4 is
+  // 26 + 3 = 29, and the 29-against-26 comparison that three passes reported as orphans was two
+  // correct counts about different lists (MAX-141). S8-exercise-reachable is the check that closes
+  // it: every exercise record must be named by one of these two lists, so a real orphan cannot look
+  // like the designed split again.
   const practice = lesson.sections.practice.exerciseIds;
   const solutions = lesson.sections.solutions.exerciseIds;
   const mastery = lesson.sections.mastery.exerciseIds;
@@ -1258,6 +1305,10 @@ export function run(contentRoot) {
     checkExercise(e, lessonIndex);
     blocksRendered += splitBlocks(e.solutionLatex).blocks.length;
   }
+  // Present in content/exercises/ is not the same as reachable: an exercise has to be named by its
+  // own lesson's practice or mastery list to be served at all. Fixtures are excluded on purpose --
+  // they are the --selftest donors, not content. MAX-141.
+  for (const e of exercises) checkExerciseReachable(e, lessonIndex);
   // After the per-lesson passes, not inside one of them: an id is unique across the corpus, so a
   // check that ran per lesson could only ever catch a collision inside a single file (MAX-106).
   checkIdUniqueness(lessons);
