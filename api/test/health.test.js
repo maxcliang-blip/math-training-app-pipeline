@@ -14,12 +14,18 @@ import { loadContentStore } from "../src/content.js";
 // running session survive a process restart.
 
 let dataDir;
+let content;
 let server;
 let base;
 
 before(async () => {
   dataDir = mkdtempSync(join(tmpdir(), "math-api-health-"));
-  server = createApp({ dataDir }).listen(0);
+  // One store, handed to the app. health must report the corpus *this app* loaded, so the test
+  // reads its counts off that same object rather than off a second load of the directory - which
+  // would be a different answer the moment the corpus moved under a running process, and would be
+  // a literal in every version of this file that had one.
+  content = loadContentStore();
+  server = createApp({ dataDir, content }).listen(0);
   await new Promise((resolve) => server.once("listening", resolve));
   base = `http://127.0.0.1:${server.address().port}`;
 });
@@ -34,8 +40,13 @@ test("health is 200 with the corpus counts and the figure pipeline state", async
   assert.equal(res.status, 200);
   const body = await res.json();
   assert.equal(body.ok, true);
-  assert.equal(body.content.lessons, 38);
-  assert.equal(body.content.exercises, 759);
+// The counts are compared against the store the routes answer from, not against a literal. What
+  // is under test here is the endpoint's promise - it reports the corpus it actually loaded - and a
+  // hard-coded number tests something else: that someone remembered to edit three files. The one
+  // pinned comparison lives in content.test.js, against lib/corpus-pins.mjs.
+  const loaded = content.stats();
+  assert.equal(body.content.lessons, loaded.lessons);
+  assert.equal(body.content.exercises, loaded.exercises);
   // The figure pipeline is reported rather than assumed, so a deploy can tell "the service is up"
   // from "the service is up and the figures are broken".
   assert.equal(typeof body.figures.usable, "boolean");

@@ -27,24 +27,28 @@
       "conceptLatex": "When two lines intersect, four angles are formed, and they come in two pairs of vertical angles: each angle shares only its vertex with its vertical partner, with no ray lying between them. Vertical angles are congruent, and the two pairs together make a full turn, so the four measures add to $360^{\\circ}$. Know one angle at an intersection and every other angle at that intersection follows.\n\nTwo adjacent angles that together form a straight line are a linear pair, and a linear pair is supplementary: the two measures add to $180^{\\circ}$. Complementary pairs, which add to $90^{\\circ}$, appear wherever a right angle is split into two parts.\n\nWhen two parallel lines are cut by a transversal, eight angles appear and their relationships are fixed. Corresponding angles, in the same relative position at the two intersections, are congruent. Alternate interior angles, inside the parallel lines but on opposite sides of the transversal, are congruent, and so are alternate exterior angles. Consecutive interior angles, inside on the same side of the transversal, are supplementary. Each of these has a converse: a pair of congruent or supplementary angles cut by a transversal forces the lines to be parallel, which is how most converse proofs of parallel lines are built.\n\nThe triangle angle sum generalises the linear pair. For any triangle $\\triangle ABC$, $\\angle A + \\angle B + \\angle C = 180^{\\circ}$, because the exterior angle at one vertex equals the sum of the two remote interior angles. Cutting a convex $n$-gon into $n - 2$ triangles from a single vertex gives an interior angle sum of $(n - 2) \\times 180^{\\circ}$, and the $n$ exterior angles, one at each vertex, always add up to $360^{\\circ}$.\n\nChoosing which rule applies is mostly a matter of what the figure hands you. A single intersection means vertical angles and linear pairs. Two parallel lines and a transversal mean corresponding, alternate, and consecutive pairs. A triangle means the angle sum. An $n$-gon means the polygon formula, and in a regular polygon every interior angle is equal, so one angle and the vertex count determine all the rest.",
       "figures": [
         {
+          "id": "m5-l1-fig-1",
           "asymptoteSource": null,
           "asymptoteAlt": null,
           "asymptoteAspectRatio": null,
           "captionLatex": "Angle relationships formed by parallel lines and a transversal."
         },
         {
+          "id": "m5-l1-fig-2",
           "asymptoteSource": null,
           "asymptoteAlt": null,
           "asymptoteAspectRatio": null,
           "captionLatex": "Triangle angle sum theorem."
         },
         {
+          "id": "m5-l1-fig-3",
           "asymptoteSource": null,
           "asymptoteAlt": null,
           "asymptoteAspectRatio": null,
           "captionLatex": "Polygon angle sum for a pentagon."
         },
         {
+          "id": "m5-l1-fig-4",
           "asymptoteSource": null,
           "asymptoteAlt": null,
           "asymptoteAspectRatio": null,
@@ -83,8 +87,8 @@
         {
           "slug": "linear-pair-supplementary",
           "name": "Linear pair angles are supplementary",
-          "summaryLatex": "\\text{Angles in a linear pair sum to } 180^{\\circ}\text{.}",
-          "bodyLatex": "\\text{If two adjacent angles form a straight line, their measures add to } 180^{\\circ}\text{.}"
+          "summaryLatex": "\\text{Angles in a linear pair sum to } 180^{\\circ}\\text{.}",
+          "bodyLatex": "\\text{If two adjacent angles form a straight line, their measures add to } 180^{\\circ}\\text{.}"
         },
         {
           "slug": "corresponding-angles",
@@ -108,19 +112,19 @@
           "slug": "consecutive-interior-supplementary",
           "name": "Consecutive interior angles are supplementary",
           "summaryLatex": "\\text{Consecutive interior angles formed by a transversal and parallel lines are supplementary.}",
-          "bodyLatex": "\\text{When two parallel lines are cut by a transversal, interior angles on the same side of the transversal sum to } 180^{\\circ}\text{.}"
+          "bodyLatex": "\\text{When two parallel lines are cut by a transversal, interior angles on the same side of the transversal sum to } 180^{\\circ}\\text{.}"
         },
         {
           "slug": "triangle-angle-sum",
           "name": "Triangle angle sum is 180",
-          "summaryLatex": "\\text{The interior angles of a triangle sum to } 180^{\\circ}\text{.}",
-          "bodyLatex": "\\text{For any triangle } \\triangle ABC, \\angle A + \\angle B + \\angle C = 180^{\\circ}\text{.}"
+          "summaryLatex": "\\text{The interior angles of a triangle sum to } 180^{\\circ}\\text{.}",
+          "bodyLatex": "\\text{For any triangle } \\triangle ABC, \\angle A + \\angle B + \\angle C = 180^{\\circ}\\text{.}"
         },
         {
           "slug": "polygon-angle-sum",
           "name": "Polygon interior angle sum",
-          "summaryLatex": "\\text{The interior angle sum of a convex } n\text{-gon is } (n-2)\\times 180^{\\circ}\text{.}",
-          "bodyLatex": "\\text{A convex } n\text{-gon can be decomposed into } (n-2) \\text{ triangles, each contributing } 180^{\\circ}\text{.}"
+          "summaryLatex": "\\text{The interior angle sum of a convex } n\\text{-gon is } (n-2)\\times 180^{\\circ}\\text{.}",
+          "bodyLatex": "\\text{A convex } n\\text{-gon can be decomposed into } (n-2) \\text{ triangles, each contributing } 180^{\\circ}\\text{.}"
         }
       ]
     },

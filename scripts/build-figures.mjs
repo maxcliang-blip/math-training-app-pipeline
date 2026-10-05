@@ -18,6 +18,9 @@
 //   node scripts/build-figures.mjs [contentRoot] [--out <dir>] [--allow-missing-toolchain]
 //                                   [--record-aspect-ratios]
 //
+// --out takes a directory, and refuses a value beginning with `-` (MAX-130): the shared parser in
+// scripts/lib/require-path-arg.mjs, so a mistyped flag cannot create a directory named after it.
+//
 // Exit codes: 0 validated and compiled · 1 contract violation · 2 configuration error
 //             3 validated but not compiled (no asymptote toolchain)
 
@@ -29,7 +32,16 @@ import { tmpdir } from "node:os";
 import { isAbsolute, join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS, isRenderableFigure, lessonFigureSites, exerciseFigureKey } from "../lib/figure-contract.mjs";
+import {
+  DERIVED_FIELDS,
+  FIGURE_PAYLOAD_FIELDS,
+  doubledBackslashAfterScript,
+  doubledBackslashMacros,
+  isRenderableFigure,
+  lessonFigureSites,
+  exerciseFigureKey,
+} from "../lib/figure-contract.mjs";
+import { requirePathArg } from "./lib/require-path-arg.mjs";
 
 export { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS };
 
@@ -833,18 +845,23 @@ function compileFigure(toolchain, figure, outDir) {
 // Diagnosing a compile failure
 // ---------------------------------------------------------------------------
 
-// Two literal backslashes, two literal backslashes followed by a macro name, and two literal
-// backslashes immediately after a `^` or `_`. `\\\\` in a regex literal is two escaped backslashes,
-// i.e. two characters.
-const DOUBLED_BACKSLASH = /\\\\/;
-const DOUBLED_BACKSLASH_MACRO = /\\\\[A-Za-z]+/g;
-const DOUBLED_BACKSLASH_AFTER_SCRIPT = /[\^_]\s*\\\\[A-Za-z]+/g;
-
-// Every LaTeX macro in this figure's source that was written with a doubled backslash, in source
-// order and de-duplicated.
-function doubledBackslashMacros(source) {
-  return [...new Set(String(source || "").match(DOUBLED_BACKSLASH_MACRO) || [])];
-}
+// The doubled-backslash detector lives in lib/figure-contract.mjs, next to the TeX label
+// extractor, and is imported rather than re-declared here. (MAX-119)
+//
+// It used to be a regex and a helper defined right here, called from exactly one place:
+// diagnoseCompileFailure, below. That is the half of the defect that was already understood --
+// Asymptote copies a string literal into the .tex it generates for a TeX label verbatim, so a macro
+// written with `\\` reaches TeX as two backslashes -- and the half the authoring gate could not
+// reach, because the detector sat behind a compile failure. One definition, in a module both
+// consumers already import, is what lets checkAsymptote ask the same question on the pass path, and
+// it means the two can no longer disagree about what a doubled backslash is.
+//
+// This file still matches over the *whole* source rather than over extracted label payloads, on
+// purpose: the two answer different questions. The build must not add a new failure mode to a
+// figure that compiles, and a payload this extractor does not recognise (a macro that builds its
+// label some other way) still has to be diagnosable when TeX rejects it. The authoring gate asks
+// the narrower question, on purpose, because it has to be right about every figure and cannot afford
+// to guess. Both use the same definition of the defect, which is the part that had to be shared.
 
 // The one line of a TeX log that says what went wrong.
 //
@@ -885,7 +902,7 @@ function diagnoseCompileFailure(err, figure, logs) {
   // worse in a way no build output will ever report. The corpus currently carries 34 of those
   // (MAX-62); they are named here so the fix is not mistaken for "the five that happened to
   // fail".
-  const scripting = [...new Set(source.match(DOUBLED_BACKSLASH_AFTER_SCRIPT) || [])];
+  const scripting = doubledBackslashAfterScript(source);
   const elsewhere = doubledBackslashMacros(source);
   if (scripting.length) {
     const others = elsewhere.filter((m) => !scripting.some((s) => s.endsWith(m.slice(2))));
@@ -1299,10 +1316,30 @@ if (isMain) {
   const args = process.argv.slice(2);
   const allowMissing = args.includes("--allow-missing-toolchain");
   const record = args.includes("--record-aspect-ratios");
-  const outIdx = args.indexOf("--out");
   const positional = args[0] && !args[0].startsWith("--") ? resolve(args[0]) : null;
+
+  // `--out <dir>` takes the next argv token as its output directory, so `--out --any-flag` used to
+  // resolve that flag against the cwd and build into a directory named after it -- the same defect
+  // MAX-97 hit through check-content-math.mjs's `--json` and MAX-124 through check-push-authors.mjs's
+  // `--report`, the third instance of it in this repository and the first one still on main. The
+  // shared parser (scripts/lib/require-path-arg.mjs, MAX-130) is what every tool with a bare-path
+  // flag now calls, so the next one gets the refusal by default instead of re-deriving it.
+  //
+  // First thing the CLI does, before the content-root check, for the reason MAX-97 had to fix twice:
+  // the refusal and the configuration error below share exit code 2, so a run with both wrong can
+  // only be told apart by which message printed. check-content-math.mjs's --selftest pins that
+  // ordering by spawning this script with a corpus root that does not exist.
+  const outArg = requirePathArg(args, "--out");
+  if (!outArg.ok) {
+    console.error(`build-figures: ARGUMENT: ${outArg.message}`);
+    console.error("                     Nothing was written. Give --out a directory, or drop it to");
+    console.error(`                     build into ${DEFAULT_OUT}.`);
+    process.exit(2);
+  }
+  // The truthiness test is the original one: `--out` with no value, or `--out ""`, still means
+  // "the default directory", unchanged.
   const contentRoot = positional || (process.env.CONTENT_ROOT ? resolve(process.env.CONTENT_ROOT) : DEFAULT_CONTENT);
-  const outDir = outIdx >= 0 && args[outIdx + 1] ? resolve(args[outIdx + 1]) : DEFAULT_OUT;
+  const outDir = outArg.value ? resolve(outArg.value) : DEFAULT_OUT;
 
   if (!existsSync(contentRoot)) {
     console.error(`build-figures: CONFIG: content root ${contentRoot} does not exist`);

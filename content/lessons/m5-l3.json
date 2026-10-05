@@ -32,7 +32,7 @@
         {
           "id": "m5-l3-fig-1",
           "captionLatex": "The same arc is measured two ways: the central angle $\\angle AOB$ at the centre and the inscribed angle $\\angle ACB$ at the circumference, which is exactly half of it.",
-          "asymptoteSource": "import graph;\nsize(280,220);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair A = dir(90);\npair B = dir(210);\npair C = dir(330);\ndot(A); dot(B); dot(C); dot((0,0));\ndraw(A--B); draw(A--C);\ndraw((0,0)--A, dashed); draw((0,0)--B, dashed);\nlabel(\"$A$\", A, N); label(\"$B$\", B, SW); label(\"$C$\", C, SE);\nlabel(\"$O$\", (0,0), SE);\nlabel(\"$\\\\angle AOB$\", (0.55,0.35), NE);\nlabel(\"$\\\\angle ACB$\", C, S);",
+          "asymptoteSource": "import graph;\nsize(280,220);\npen p = currentpen;\ndraw(scale(2)*unitcircle);\npair A = dir(90);\npair B = dir(210);\npair C = dir(330);\ndot(A); dot(B); dot(C); dot((0,0));\ndraw(A--B); draw(A--C);\ndraw((0,0)--A, dashed); draw((0,0)--B, dashed);\nlabel(\"$A$\", A, N); label(\"$B$\", B, SW); label(\"$C$\", C, SE);\nlabel(\"$O$\", (0,0), SE);\nlabel(\"$\\angle AOB$\", (0.55,0.35), NE);\nlabel(\"$\\angle ACB$\", C, S);",
           "asymptoteAlt": "A circle carries a central angle drawn from the centre out to two points on the circumference with dashed radii, and an inscribed angle at a third point on the circumference whose two arms reach the same two points. The angle at the circumference is drawn at the bottom of the circle and the angle at the centre is drawn between the two dashed radii.",
           "asymptoteAspectRatio": 1
         },

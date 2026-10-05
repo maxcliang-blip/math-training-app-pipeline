@@ -10,6 +10,10 @@
 //   2. Fail-closed corpus. An absent or empty content root fails. "Nothing to check" is not a pass.
 //   3. A non-vacuous gate. --selftest injects one defect per rule family and requires the engine
 //      to catch every one of them; a rule with no enforcement makes the selftest fail.
+//   4. A live corpus pin. lib/corpus-pins.mjs records the lesson and exercise counts the rest of
+//      the repo asserts; this gate compares them against the corpus it just loaded, so growing the
+//      corpus without moving the pin is a local failure rather than a red main. MAX-64, merging
+//      MAX-58. See lib/corpus-pins.mjs - and note that it counts records, not files.
 //
 // The figure build is a separate gate: scripts/build-figures.mjs.
 //
@@ -18,15 +22,17 @@
 //
 // Exit codes: 0 pass · 1 content or selftest failure · 2 environment/configuration error.
 
-import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { join, dirname, resolve } from "node:path";
+import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import katex from "katex";
 import { run, KATEX_PINNED } from "./preflight-content.mjs";
 import { collectFigures } from "./build-figures.mjs";
-import { isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
+import { selftest as selftestRequirePathArg } from "./lib/require-path-arg.mjs";
+import { doubledBackslashInTexLabels, isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
+import { CORPUS_PINS, checkCorpusPins } from "../lib/corpus-pins.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -171,6 +177,77 @@ function findExerciseFigure(exercises) {
   return ordered.find(isRenderableFigure);
 }
 
+// Clean donors, for the S5.2-tex-label-doubled-backslash family (MAX-119).
+//
+// "Clean" is not a nicety here, it is what makes the mutation conclusive. The mutation harness
+// treats a finding as caught only when it is *fresh* -- a rule|path pair absent from the baseline
+// run -- because a mutated corpus holds the original records alongside the mutated ones and a
+// pre-existing finding simply recurs. MAX-119's rule reports at the figure's own path, and twelve
+// figures on main already carry this defect, so injecting the defect into the figure
+// findLessonFigure() returns (m1-l3-fig-1, which is one of the twelve) would re-raise a baseline
+// finding: filtered as not-fresh, and the mutation would report MISSED for a rule that works.
+//
+// So these three pick the first figure that has a source and no doubled-backslash TeX label at its
+// own site. All three sites have one today; a corpus that lost them would report MISSED rather than
+// silently proving nothing, which is the right way for that to fail.
+function firstCleanFigure(records, where_) {
+  const ordered = [...records].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  for (const lesson of ordered) {
+    for (const site of lessonFigureRecords(lesson)) {
+      if (where_(site) && isRenderableFigure(site.record) &&
+          doubledBackslashInTexLabels(site.record.asymptoteSource).length === 0) {
+        return site.record;
+      }
+    }
+  }
+  return undefined;
+}
+
+function findCleanLessonFigure(lessons) {
+  return firstCleanFigure(lessons, () => true);
+}
+
+function findCleanLessonExampleFigure(lessons) {
+  return firstCleanFigure(lessons, (site) => site.kind === "example");
+}
+
+function findCleanExerciseFigure(exercises) {
+  const ordered = [...exercises].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  return ordered.find((ex) => isRenderableFigure(ex) &&
+    doubledBackslashInTexLabels(ex.asymptoteSource).length === 0);
+}
+
+// The nine label bodies measured against the pinned katex@0.16.11 for MAX-119.
+//
+// These are the fixture the issue names as the definition of done, and the reason they are a table
+// rather than one representative case: KaTeX renders all nine without error, so nothing that asks
+// "does it render?" distinguishes a broken payload from a correct one. Nine near-identical rows
+// that a single rule catches is the measurement that "a render-based rule is blind to this class
+// by construction" rests on -- with one row it would be an anecdote.
+//
+// Each body is spliced into a figure source with its backslashes DOUBLED, which is the defect:
+// Asymptote copies the literal verbatim, so two backslashes is what reaches TeX.
+const MEASURED_LABEL_BODIES = [
+  "\\frac{a}{b}",
+  "\\sqrt{x-2}",
+  "b\\cos C",
+  "\\lceil 7/3 \\rceil",
+  "\\theta",
+  "3^{2}\\equiv 1\\pmod{8}",
+  "4 \\cdot 3 \\cdot 2 = 24",
+  "\\angle AOB",
+  "\\frac{a}{\\sin A} = 2R",
+];
+
+// Append one label whose payload carries `body`, doubled. Appended rather than substituted so the
+// donor figure keeps every other property the S5.2 rules look at, and so the only new finding this
+// can raise is this rule's.
+function poisonLabelWith(donor, body) {
+  const doubled = body.replace(/\\/g, "\\\\");
+  donor.asymptoteSource += `\nlabel("$${doubled}$",B,SE);`;
+  return donor;
+}
+
 // One defect per rule family, each with the severity that family must raise and a rule
 // token to look for. Rule ids are matched by substring so a renumber after a spec
 // revision does not silently disarm the test.
@@ -208,6 +285,33 @@ export const MUTATIONS = [
     severity: "error",
     apply(c) {
       c.exercises[1].promptLatex += " $\\zeta \neq 1$";
+    },
+  },
+  {
+    // MAX-110. The reach half of MAX-89's rule, and the half that was missing: the same defect
+    // in a display block, a block with no `$` at all, which is where all 13 shipped instances
+    // lived (m5-l1, m5-l2). This mutation is separate from the one above rather than an
+    // extension of it, because the two probe different code paths: the span mutation needs the
+    // INLINE_SEGMENT scan, and this one needs the display-block scan. A single mutation cannot
+    // prove both, so a rule whose reach silently narrows back to spans still passes the first
+    // one. Two mutations, two paths, both required.
+    //
+    // Appended as a new block to a block-separated field, so the appended block has no `$` and
+    // is therefore a display block. The tab deliberately follows `180^{\circ}`, so the tail
+    // after it is `ext{.}` -- the exact shape of all 13 shipped sites, 9 of which were written
+    // that way in m5-l1. KaTeX renders a tab as letters without complaint, so nothing else in
+    // the gate sees it and the finding below is this rule's alone.
+    //
+    // The tab is written as the escape `\t`, and that is the whole mechanism rather than a typo:
+    // in a JavaScript string literal `\t` *is* a tab, and JSON.stringify then writes that tab
+    // back out into the mutated file as a single-backslash `\t` -- the shipped corruption.
+    // Writing `\\text` here instead would put a real backslash in the value, the macro would
+    // survive intact, and the mutation would pass while proving nothing.
+    id: "macro-name-eaten-in-a-display-block",
+    rule: "json-escaped-macro",
+    severity: "error",
+    apply(c) {
+      c.exercises[1].solutionLatex += "\n\n180^{\\circ}\text{.}";
     },
   },
   {
@@ -417,6 +521,60 @@ export const MUTATIONS = [
   },
 ];
 
+// Nine mutations, one per measured label body, and then the three that are about *reach* rather
+// than about detection. (MAX-119)
+//
+// The nine come from the table in the issue: bodies that KaTeX renders without complaint, so the
+// rule that catches them cannot be a render rule. They are appended to MUTATIONS rather than
+// written inline there because they are generated from one measurement, and a hand-copied table of
+// nine near-identical rows is a table that drifts from its source on the second edit.
+for (const body of MEASURED_LABEL_BODIES) {
+  MUTATIONS.push({
+    id: `tex-label-doubled-backslash-${body.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
+    rule: "S5.2-tex-label-doubled-backslash",
+    severity: "error",
+    apply(c) {
+      poisonLabelWith(findCleanLessonFigure(c.lessons), body);
+    },
+  });
+}
+
+// The subset of the same family that sits immediately after `^` or `_`. That one does not render
+// wrong, it fails to build, so it gets its own rule id and its own mutation: without this the
+// second id would be an untested branch of the first, and "keep it only if it buys a better
+// message" is only true if the message is reachable.
+MUTATIONS.push({
+  id: "tex-label-doubled-backslash-after-a-script",
+  rule: "S5.2-tex-label-doubled-backslash-after-script",
+  severity: "error",
+  apply(c) {
+    poisonLabelWith(findCleanLessonFigure(c.lessons), "90^\\circ");
+  },
+});
+
+// The two other figure sites. The rule lives in checkAsymptote, which all three sites already call,
+// so on paper it cannot miss one -- and "on paper" is exactly what MAX-76 was: a rule that ran over
+// concept.figures and not over the two other sites, with the gate reporting a clean run for 8
+// worked-example figures that had never met a rule at all. These two mutations are the assertion,
+// and they fail if the reach is ever narrowed back to lessons.
+MUTATIONS.push({
+  id: "example-figure-label-doubled-backslash",
+  rule: "S5.2-tex-label-doubled-backslash",
+  severity: "error",
+  apply(c) {
+    poisonLabelWith(findCleanLessonExampleFigure(c.lessons), "\\theta");
+  },
+});
+
+MUTATIONS.push({
+  id: "exercise-figure-label-doubled-backslash",
+  rule: "S5.2-tex-label-doubled-backslash",
+  severity: "error",
+  apply(c) {
+    poisonLabelWith(findCleanExerciseFigure(c.exercises), "\\theta");
+  },
+});
+
 
 // Harness invariant, not a content rule: the authoring gate's corpus figure total and the build's
 // own corpus scan must be the same number, and they must both move when the corpus moves.
@@ -502,6 +660,75 @@ function reservationsAreReportedExactly(contentRoot) {
   };
 }
 
+// A figure id is an address, and MAX-107 is the rule that says a figure record must declare one.
+// Four of m5-l1's figure reservations declared none: they existed, they rendered, and no close-out
+// could name them, so nothing could assert they shipped.
+//
+// Proved here, on its own copy of the corpus, for the reason figureCountsTrackTheCorpus is: the
+// mutation framework above writes every record a second time beside the originals, so on its corpus
+// an injected defect cannot be told from the doubling, and the corpus it was failing to protect is
+// the corpus the rule rejects. A rule that fired on every figure would also "catch" a missing id.
+// So what is asserted is the count, not the presence -- and the count is only meaningful against a
+// corpus that raised none to begin with, so the baseline is asserted too.
+//
+// One id is deleted from one real section figure, in the files themselves rather than in a record
+// written beside them, and the return must be exactly one finding naming that figure's site in the
+// spelling figure-id-unique uses. Section figures only, because that is the set MAX-104's resolver
+// walks and therefore the set an id has to exist for.
+function figureIdRequiredIsReportedOnce(contentRoot) {
+  const pristineHits = run(contentRoot).report.findings.filter((f) => f.rule === "figure-id-required").length;
+  const dir = mkdtempSync(join(tmpdir(), "content-figure-id-"));
+  try {
+    cpSync(contentRoot, dir, { recursive: true });
+    const lessonsDir = join(dir, "lessons");
+    const ordered = readdirSync(lessonsDir)
+      .filter((f) => f.endsWith(".json"))
+      .sort()
+      .map((f) => ({ file: f, record: JSON.parse(readFileSync(join(lessonsDir, f), "utf8")) }))
+      .sort((a, b) => String(a.record.id).localeCompare(String(b.record.id)));
+
+    // A section figure on any section, scanned in lesson-id order so the choice is stable across
+    // filesystems and does not depend on which lesson grows a figure next.
+    const donor = ordered
+      .map((entry) => ({
+        ...entry,
+        site: lessonFigureRecords(entry.record).find((s) => s.kind === "section" && s.record.id),
+      }))
+      .find((entry) => entry.site);
+    if (!donor) return { caught: false, detail: "no lesson section figure carrying an id to remove" };
+
+    delete donor.site.record.id;
+    // Written back over the original file, not out under a new name: the harness's own doubling is
+    // what makes a MUTATIONS entry inconclusive here.
+    writeFileSync(join(lessonsDir, donor.file), JSON.stringify(donor.record, null, 2) + "\n");
+    const sitePath = `lessons/${donor.record.id}.sections.${donor.site.sectionName}.figures[${donor.site.index}]`;
+
+    const hits = run(dir).report.findings.filter((f) => f.rule === "figure-id-required");
+    const problems = [];
+    if (pristineHits !== 0) {
+      problems.push(`the corpus raised ${pristineHits} figure-id-required finding(s) before the injection, so "exactly one" would mean nothing`);
+    }
+    if (hits.length !== 1) {
+      problems.push(`unnaming ${donor.record.id}'s figure at ${sitePath} produced ${hits.length} figure-id-required finding(s), not 1`);
+    } else if (hits[0].severity !== "error") {
+      problems.push(`figure-id-required raised ${hits[0].severity} at ${hits[0].path}, expected error`);
+    } else if (!String(hits[0].path).includes(sitePath)) {
+      problems.push(`figure-id-required did not name ${sitePath} (reported ${hits[0].path})`);
+    }
+
+    return {
+      caught: problems.length === 0,
+      detail: problems.length
+        ? problems.join("; ")
+        : `removing the id from ${sitePath} raised exactly one error naming that site, and the ` +
+          `${pristineHits}-finding corpus it came from was clean; a close-out can name every section ` +
+          "figure in it",
+    };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 // The S5.1 caption scope is a settled decision, and a settled decision that nothing asserts is a
 // pending one waiting to be re-litigated by the next person to read "every figure". MAX-93 ruled
 // that the caption *requirement* binds concept section figures only, and that the figure-number
@@ -563,12 +790,251 @@ function captionScopeIsDeliberate(contentRoot) {
   }
 }
 
+// A figure id and a worked-example id are addresses, and MAX-106 is the rule that says two records
+// may not hold the same one. It cannot be proved by a MUTATIONS entry, and the reason is worth
+// writing down because the obvious way to add it is wrong.
+//
+// The mutation harness validates a corpus that has every record written a second time: `apply()`
+// mutates in memory and the mutated records land in a fresh `<kind>.json` beside the originals, so
+// a fresh finding can be told from a recurring one. On that corpus every figure id and every
+// worked-example id in the corpus is already claimed twice. An id-collision mutation there would be
+// reported as caught by the doubling alone -- the rule could be deleted outright and the mutation
+// would still pass. So it is proved the way `figureCountsTrackTheCorpus` is: on its own copy of
+// the corpus, with one collision injected into the files themselves.
+//
+// What it asserts is the count, not the presence. A uniqueness rule that fires on everything also
+// "catches" a collision, and the corpus it was failing to protect would be exactly the corpus it
+// rejected. So one injected figure-id collision must produce one finding and no more, and that
+// finding must name both sites -- which is the property MAX-104's resolver needs, since a collision
+// report that does not say which records collided is not something anyone can act on.
+function idCollisionsAreReported(contentRoot) {
+  const pristineHits = countIdFindings(contentRoot);
+
+  const dir = mkdtempSync(join(tmpdir(), "content-id-collisions-"));
+  try {
+    cpSync(contentRoot, dir, { recursive: true });
+    const lessonsDir = join(dir, "lessons");
+    const files = readdirSync(lessonsDir).filter((f) => f.endsWith(".json")).sort();
+    const ordered = files
+      .map((f) => ({ file: f, record: JSON.parse(readFileSync(join(lessonsDir, f), "utf8")) }))
+      .sort((x, y) => String(x.record.id).localeCompare(String(y.record.id)));
+
+    const figureOf = (record) => lessonFigureRecords(record).find((s) => s.kind === "section" && s.record.id);
+    const exampleOf = (record) => ((record.sections && record.sections.concept) || {}).examples?.find((e) => e && e.id);
+
+    // Two lessons that each declare a figure and a worked example, in lesson-id order so the choice
+    // is stable across filesystems and does not depend on which lesson grows a figure next.
+    const donors = ordered.filter(({ record }) => figureOf(record) && exampleOf(record));
+    if (donors.length < 2) return { caught: false, detail: "fewer than two lessons carry both a figure id and a worked-example id" };
+
+    // A's figure and worked example are renamed onto B's ids. Across a file boundary on purpose: the
+    // rule is corpus-wide, and a collision inside one lesson file is the case a per-lesson check
+    // would also catch, so it is the weaker of the two and not the one worth proving.
+    const [a, b] = donors;
+    const aFigure = figureOf(a.record);
+    const bFigure = figureOf(b.record);
+    const bExample = exampleOf(b.record);
+    aFigure.record.id = bFigure.record.id;
+    exampleOf(a.record).id = bExample.id;
+    // Written back over the originals, not out under a new name: this is the harness's own
+    // doubling (figureCountsTrackTheCorpus) that makes a MUTATIONS entry inconclusive here.
+    for (const entry of [a, b]) writeFileSync(join(lessonsDir, entry.file), JSON.stringify(entry.record, null, 2) + "\n");
+
+    const findings = run(dir).report.findings;
+    const figureHits = findings.filter((f) => f.rule === "figure-id-unique");
+    const exampleHits = findings.filter((f) => f.rule === "worked-example-id-unique");
+    const aFigureSite = `lessons/${a.record.id}.sections.${aFigure.sectionName}.figures[${aFigure.index}]`;
+    const bFigureSite = `lessons/${b.record.id}.sections.${bFigure.sectionName}.figures[${bFigure.index}]`;
+    const aExampleSite = `lessons/${a.record.id}.sections.concept.examples`;
+    const bExampleSite = `lessons/${b.record.id}.sections.concept.examples`;
+
+    const problems = [];
+    const nameBoth = (hit, id, ...sites) => sites.every((site) => String(hit.message).includes(site))
+      && String(hit.message).includes(JSON.stringify(id));
+    if (figureHits.length !== 1) problems.push(`1 injected figure-id collision produced ${figureHits.length} figure-id-unique finding(s), not 1`);
+    else if (!nameBoth(figureHits[0], bFigure.record.id, aFigureSite, bFigureSite)) problems.push(`figure-id-unique did not name ${bFigure.record.id} at both ${aFigureSite} and ${bFigureSite}`);
+    if (exampleHits.length !== 1) problems.push(`1 injected worked-example-id collision produced ${exampleHits.length} worked-example-id-unique finding(s), not 1`);
+    else if (!nameBoth(exampleHits[0], bExample.id, aExampleSite, bExampleSite)) problems.push(`worked-example-id-unique did not name ${bExample.id} in both lessons`);
+
+    return {
+      caught: problems.length === 0,
+      detail: problems.length
+        ? problems.join("; ")
+        : `colliding ${bFigure.record.id} across ${aFigureSite} and ${bFigureSite}, and ${bExample.id} across ${aExampleSite} and ` +
+          `${bExampleSite}, raised exactly one finding each and named both sites; the ${pristineHits}-finding corpus they came from is clean`,
+    };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+function countIdFindings(root) {
+  return run(root).report.findings.filter((f) => f.rule.endsWith("-id-unique")).length;
+}
+
+// MAX-119's DoD asks for a proof that the rule runs in the authoring path and not only in the
+// figure build. Two claims, both checkable, and neither of them is "the mutation above passed":
+//
+//   1. The rule fires from `run()` alone. `run` is preflight-content.mjs's engine. That matters
+//      because preflight-content.mjs is the author-side reference implementation, the one an
+//      author can run against a corpus with no app, no repo and no toolchain -- which is where a
+//      rule about figure *source* belongs. The nine mutations above go through checkCorpus(), and
+//      checkCorpus() is `run`, so this is partly redundant on purpose: it states the claim where a
+//      reader of the rule will find it.
+//
+//   2. preflight-content.mjs's module graph contains no compiler. This is the half that cannot be
+//      asserted by inspection later, because the obvious future edit -- "just call
+//      diagnoseCompileFailure, it already knows about this" -- is an import away and would silently
+//      turn an authoring-path rule into one that needs a toolchain. If someone makes that edit, the
+//      rule keeps working on any machine that has Asymptote and stops working on every machine that
+//      does not, and nothing else in the file would notice. So the import is checked.
+//
+// Claim 2 reads the source of preflight-content.mjs rather than its resolved module graph: it is
+// the *edges in this repository* that are the hazard, and a transitive dependency of katex is not
+// where a compiler would come from.
+// Claim 2 is a static fact about preflight-content.mjs's module graph: it must not reach a
+// compiler. This has to be a *graph* walk and not a grep of the file, for two reasons.
+//
+// First, a grep is defeated by the file's own prose. This one was: the rule's comment explains
+// that scripts/build-figures.mjs carries the detector, so a substring check for "build-figures.mjs"
+// reads that sentence and calls the gate compiler-dependent. The claim is about import edges, so
+// only import edges are read.
+//
+// Second, and more to the point, the detector now lives in lib/figure-contract.mjs, which
+// preflight-content.mjs imports. An execFileSync added *there* reaches the authoring gate just as
+// surely as one added to preflight itself, and a one-file check would not see it. So the walk
+// follows relative specifiers out of the repository's own scripts/ and lib/ directories and reports
+// the closure.
+function authoringGateImportClosure() {
+  const seen = new Set();
+  const compilerEdges = [];
+  const queue = [join(HERE, "preflight-content.mjs")];
+  const IMPORT_SPECIFIER = /(?:^|\n)\s*(?:import|export)[\s\S]*?from\s+["']([^"']+)["']|(?:^|\n)\s*import\s+["']([^"']+)["']/g;
+  while (queue.length) {
+    const file = queue.pop();
+    if (seen.has(file)) continue;
+    seen.add(file);
+    let source;
+    try {
+      source = readFileSync(file, "utf8");
+    } catch {
+      continue; // unresolvable specifier: nothing to read, and nothing to claim about it
+    }
+    for (const m of source.matchAll(IMPORT_SPECIFIER)) {
+      const spec = m[1] || m[2];
+      if (spec === "node:child_process") {
+        compilerEdges.push(`${relative(HERE, file)} -> ${spec}`);
+        continue;
+      }
+      if (!spec.startsWith(".")) continue; // third-party: katex, node builtins, nothing else
+      if (/build-figures\.mjs$/.test(spec)) {
+        // The figure build is not a compiler by itself -- but diagnoseCompileFailure lives in it,
+        // so importing it is the edit this check exists to notice.
+        compilerEdges.push(`${relative(HERE, file)} -> ${spec}`);
+        continue;
+      }
+      queue.push(resolve(dirname(file), spec));
+    }
+  }
+  return { files: [...seen], compilerEdges };
+}
+
+function labelRuleNeedsNoToolchain(contentRoot) {
+  const problems = [];
+
+  const closure = authoringGateImportClosure();
+  for (const edge of closure.compilerEdges) {
+    problems.push(`the authoring gate's import closure reaches a compiler: ${edge}`);
+  }
+
+  // The rule has to actually fire, from run() alone, on a corpus that carries the defect.
+  const dir = mkdtempSync(join(tmpdir(), "content-label-notoolchain-"));
+  try {
+    cpSync(contentRoot, dir, { recursive: true });
+    const corpus = loadCorpus(dir);
+    const donor = findCleanLessonFigure(corpus.lessons);
+    if (!donor) {
+      problems.push("no lesson figure with a clean source to poison");
+    } else {
+      poisonLabelWith(donor, "\\theta");
+      for (const [kind, items] of Object.entries(corpus)) {
+        writeFileSync(join(dir, kind, "notoolchain.json"), JSON.stringify(items, null, 2) + "\n");
+      }
+      const findings = run(dir).report.findings.filter(
+        (f) => f.rule === "S5.2-tex-label-doubled-backslash" && f.severity === "error",
+      );
+      if (!findings.length) {
+        problems.push("run() over a poisoned corpus raised no S5.2-tex-label-doubled-backslash error");
+      }
+      if (!problems.length) {
+        return {
+          caught: true,
+          detail: `run() -- the engine behind content:check and the author-side preflight -- raised ` +
+            `${findings.length} S5.2-tex-label-doubled-backslash error(s) on a poisoned label ` +
+            `(${findings[0].path}), and all ${closure.files.length} module(s) in the gate's own import closure ` +
+            `(scripts/preflight-content.mjs, lib/figure-contract.mjs) reach neither node:child_process nor the figure build`,
+        };
+      }
+    }
+  } catch (err) {
+    problems.push(`threw: ${err.message}`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+  return { caught: false, detail: problems.join("; ") };
+}
+
 export function selftest(contentRoot) {
   const pristine = mkdtempSync(join(tmpdir(), "content-selftest-"));
   const rows = [];
   let baselineClean = false;
   let baselineErrors = 0;
   let baselineFindings = new Set();
+
+  // MAX-130. The shared bare-path parser (scripts/lib/require-path-arg.mjs) carries its own table,
+  // and it runs *here*, inside a suite ci.yml already gates, rather than beside it. That placement
+  // is the whole non-vacuity argument: a helper that only exists proves nothing, and a refactor
+  // that quietly dropped the refusal -- in the parser or in a tool that calls it -- would leave
+  // every other assertion in this file green. These rows are the failure that has to be visible.
+  //
+  // The end-to-end row is here rather than in the parser's table because it is a claim about a
+  // *call site*, not about the function: build-figures.mjs's `--out <dir>` is the only bare-path
+  // tool still unguarded on main, and a parser that is correct while nobody calls it has fixed
+  // nothing. It spawns the real binary with a corpus root that does not exist, so the run is
+  // cheap, has no side effects, and -- the part that makes it an assertion rather than a reading --
+  // exits 2 either way: the refusal and the content-root check share an exit code, so only the
+  // message distinguishes them.
+  for (const r of selftestRequirePathArg().rows) rows.push(r);
+  {
+    let caught = false;
+    let detail = "";
+    const cwd = pristine;
+    const stray = join(cwd, "--allow-missing-toolchain");
+    let out = "";
+    try {
+      execFileSync(
+        "node",
+        [join(HERE, "build-figures.mjs"), join(cwd, "no-such-corpus"), "--out", "--allow-missing-toolchain"],
+        { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], timeout: 60000 },
+      );
+    } catch (err) {
+      out = `${err.stdout || ""}${err.stderr || ""}`;
+      if (err.status !== 2) detail = `exited ${err.status}, not 2`;
+      else if (!/--out takes an output path; got the flag "--allow-missing-toolchain"/.test(out)) {
+        detail = `exited 2 without the refusal: ${out.trim().split("\n").slice(-2).join(" | ")}`;
+      } else if (existsSync(stray)) detail = "it refused and still created a directory of that name";
+      else caught = true;
+    }
+    rows.push({
+      id: "max-130-build-figures-out-refuses-a-flag-as-a-path",
+      rule: "harness-invariant",
+      severity: "error",
+      caught,
+      detail: caught
+        ? "`build-figures.mjs <root> --out --allow-missing-toolchain` exits 2, names the flag, and writes nothing"
+        : `build-figures.mjs --out did not refuse a flag where it wants a directory: ${detail || "it exited 0"}`,
+    });
+  }
 
   // preflight-content.mjs hands back a copy of its findings array, so every report is a
   // snapshot and two runs never share state. The copy is what makes this invariant checkable;
@@ -629,6 +1095,27 @@ export function selftest(contentRoot) {
       let caught = false;
       let detail = "";
       try {
+        const collisions = idCollisionsAreReported(pristine);
+        caught = collisions.caught;
+        detail = collisions.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "id-collisions-are-reported-once-and-by-site",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail: caught
+          ? `${detail} (MAX-104's resolver reads by figure id, so this is the finding it needs)`
+          : `${detail} -- a resolver reading by figure id would have nothing to report`,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
         const tracks = figureCountsTrackTheCorpus(pristine);
         caught = tracks.caught;
         detail = tracks.detail;
@@ -640,6 +1127,50 @@ export function selftest(contentRoot) {
         rule: "harness-invariant",
         severity: "error",
         caught,
+        detail,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
+        const named = figureIdRequiredIsReportedOnce(pristine);
+        caught = named.caught;
+        detail = named.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "unnamed-figure-is-reported-once-and-by-site",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail: caught
+          ? `${detail} (MAX-104's resolver reads by figure id, so a record without one cannot be asserted delivered)`
+          : `${detail} -- a close-out could not have named that figure, let alone asserted it ships`,
+      });
+    }
+
+    // The corpus pin is a gate like any other here, so it is proved able to fail like any other
+    // here. Both halves are needed: a mutation the checker ignores proves nothing, and a checker
+    // that also fires on the pristine corpus would make every future mutation inconclusive.
+    {
+      const pinnedClean = checkCorpusPins(report.corpus);
+      const shifted = checkCorpusPins({
+        lessons: CORPUS_PINS.lessons + 1,
+        exercises: CORPUS_PINS.exercises + 18,
+      });
+      const detail = !pinnedClean.length
+        ? `the pinned corpus was itself reported stale: ${pinnedClean[0]}`
+        : shifted.length
+          ? shifted[0]
+          : "a corpus one lesson and eighteen exercises larger was not reported stale";
+      rows.push({
+        id: "corpus-grew-without-the-pin-moving",
+        rule: "corpus-pins",
+        severity: "error",
+        caught: pinnedClean.length === 0 && shifted.length > 0,
         detail,
       });
     }
@@ -697,6 +1228,25 @@ export function selftest(contentRoot) {
       }
       rows.push({
         id: "caption-scope-is-deliberate",
+        rule: "harness-invariant",
+        severity: "error",
+        caught,
+        detail,
+      });
+    }
+
+    {
+      let caught = false;
+      let detail = "";
+      try {
+        const noToolchain = labelRuleNeedsNoToolchain(pristine);
+        caught = noToolchain.caught;
+        detail = noToolchain.detail;
+      } catch (err) {
+        detail = `threw: ${err.message}`;
+      }
+      rows.push({
+        id: "tex-label-rule-needs-no-toolchain",
         rule: "harness-invariant",
         severity: "error",
         caught,
@@ -763,9 +1313,20 @@ if (isMain) {
   const args = process.argv.slice(2);
   const wantSelftest = args.includes("--selftest");
   const jsonIdx = args.indexOf("--json");
+  const jsonValue = jsonIdx >= 0 ? args[jsonIdx + 1] : undefined;
+  // `--json <outPath>` takes the next argv token as a path, so `--json --selftest` used to resolve
+  // `--selftest` against the cwd and write the report to a file of that name. It reached main as a
+  // 4KB tracked blob (MAX-97): a flag is not a path, and a mistyped flag must not leave a build
+  // product behind silently. Refuse it, and refuse it as a configuration error (exit 2) rather
+  // than by quietly falling back to DEFAULT_REPORT, which would hide the typo behind a pass.
+  if (jsonValue !== undefined && jsonValue.startsWith("-")) {
+    console.error(`check-content-math: ARGUMENT: --json takes an output path; got the flag "${jsonValue}".`);
+    console.error(`                       Write the report to a path, or drop --json to use ${DEFAULT_REPORT}.`);
+    process.exit(2);
+  }
   const positional = args[0] && !args[0].startsWith("--") ? resolve(args[0]) : null;
   const contentRoot = positional || (process.env.CONTENT_ROOT ? resolve(process.env.CONTENT_ROOT) : DEFAULT_CONTENT);
-  const outPath = jsonIdx >= 0 && args[jsonIdx + 1] ? resolve(args[jsonIdx + 1]) : DEFAULT_REPORT;
+  const outPath = jsonValue !== undefined ? resolve(jsonValue) : DEFAULT_REPORT;
 
   const env = checkEnvironment();
   if (env.problems.length) {
@@ -780,6 +1341,11 @@ if (isMain) {
   }
 
   let { report, errors } = checkCorpus(contentRoot);
+
+  // The pin check runs against the repository's own corpus root only, never a selftest's throwaway
+  // copy: a mutation copy is stale against the pin by construction, so asserting it there would
+  // make every mutation inconclusive.
+  const stalePins = checkCorpusPins(report.corpus);
   mkdirSync(dirname(outPath), { recursive: true });
   report.gate = {
     script: "scripts/check-content-math.mjs",
@@ -788,6 +1354,8 @@ if (isMain) {
     // Name the rule the figure ratio is actually policed by, so a reader who came here looking
     // for it is sent to the check that exists instead of concluding the gate is missing.
     figureRatioRule: "S5.5 (declared vs compiled box), scripts/build-figures.mjs",
+    corpusPins: CORPUS_PINS,
+    corpusPinsOk: stalePins.length === 0,
   };
   writeFileSync(outPath, JSON.stringify(report, null, 2) + "\n");
 
@@ -795,10 +1363,14 @@ if (isMain) {
   for (const line of printFindings(report) || []) console.log(line);
   console.log(`  report: ${outPath}`);
 
-  let failed = errors.length > 0;
+  let failed = errors.length > 0 || stalePins.length > 0;
   if (errors.length) {
     console.log("");
     console.log(`  ${errors.length} error(s); content does not pass the gate.`);
+  }
+  if (stalePins.length) {
+    console.log("");
+    for (const p of stalePins) console.error(`check-content-math: PINS: ${p}`);
   }
 
   if (wantSelftest) {

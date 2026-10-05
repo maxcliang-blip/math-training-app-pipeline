@@ -10,10 +10,14 @@ Approved plan (MAX-1): React frontend + Node.js/Express backend, KaTeX for math 
 - `api/` — Node.js/Express backend (lesson CRUD, exercise handling, rendering support)
 - `content/` — the authored corpus: `lessons/`, `exercises/`, `fixtures/`. This is the import
   source of truth, so it lives in the repository and not beside it.
-- `scripts/` — the content and figure build gates, plus the agent git tooling below
+- `lib/` — contracts shared between the api and the gates
+- `scripts/` — the content and figure build gates, the content close-out delivery check, and the
+  agent git tooling below
+- `docs/` — the content issue close-out procedure and its template
 - `.githooks/` — the hooks git runs on every push. `scripts/install-git-hooks.sh` installs them
 - `.github/workflows/ci.yml` — CI: install, build, test, and the delivery-integrity gate
 - `.github/workflows/content.yml` — CI: content math gate and figure build
+- `.github/workflows/landed.yml` — CI: the landing gate (a gated branch with no pull request)
 
 ## Content build gates
 
@@ -23,11 +27,38 @@ Content is not allowed to reach import unverified. Two gates, both in `scripts/`
 npm run content:check      # lint every field against Rendering Conventions S2-S9
 npm run content:selftest   # the same, plus proof that each rule family can fail
 npm run content:figures    # pre-render Asymptote to sanitized SVG, write the figure manifest
+npm run content:delivered -- m5-l2   # is the lesson id on origin/main? for a close-out
 ```
 
 `content:selftest` is the one CI runs. It injects one defect per rule family into a throwaway
 copy of the corpus and requires the engine to catch every one, so a pass means something. A
 rule that stops being enforced fails the build instead of passing quietly.
+
+`content:delivered` closes the loop from the other end. A content issue can be closed `done` with
+its lesson on a branch, or never written at all, and neither is visible to a gate that only looks
+at the corpus in front of it — MAX-20 and MAX-23 were both. So a content issue names the lesson
+ids it delivered and this command is run against `origin/main` before the issue closes. See
+[`docs/CONTENT_ISSUE_CLOSEOUT.md`](docs/CONTENT_ISSUE_CLOSEOUT.md).
+
+### The corpus pins
+
+`lib/corpus-pins.mjs` holds the lesson and exercise counts the repo asserts, in one place. Both
+`npm test` and `npm run content:check` compare them against the corpus they loaded, so growing the
+corpus without moving the pin is a local failure rather than a red `main`:
+
+```
+corpus pins are stale: tests assert 38 lessons / 759 exercises,
+content/ holds 39 lessons / 777 exercises
+```
+
+These were three literals in three test files and had been left stale three times, each caught by
+a person reading a diff. Only `api/test/content.test.js` asserts against the pin;
+`api/test/health.test.js` and `api/test/routes.test.js` compare the route's numbers against the
+store it loaded, because what they are testing is the route's honesty, not the corpus size.
+
+Count records, not files, anywhere you count the corpus: a file in `content/exercises/` is either
+one record or an array of them, so 264 files hold 759 records. `api/src/content.js` says so at the
+loader.
 
 `content:figures` needs an Asymptote toolchain (`ASYMPTOTE_BIN`, or `asymptote` on PATH). With
 no toolchain it exits 3 rather than reporting success: figures validated but not compiled is
@@ -328,6 +359,83 @@ A clone with no identity registry — a CI runner, a fresh `git clone` — has n
 It says so, names the command that creates a registry, and exits 0. It does not skip silently:
 silence is what a broken gate and a gate that passed look identical like. CI runs the same mode in
 `delivery-integrity`, on a clone whose guard is installed, so the path cannot rot.
+
+### The landing gate
+
+The push guard above asks *who* is delivering and *from where*. It cannot ask whether the delivery
+is ever going to arrive, and on 2026-10-03 that was the whole problem: MAX-111 repaired twelve
+figures, was marked `done`, and its commit sat on `fix/max-111-doubled-backslash-labels` with no
+pull request ever opened. `content:check` on `origin/main` reported 0 errors with the twelve wrong
+glyphs still in place — main was not red, it was blind.
+
+Every other gate in `scripts/` is downstream of that blind spot. A gate can only catch a defect that
+reaches the branch it watches, and the hole does not get smaller as the suite grows.
+
+```bash
+npm run land:check                # every branch: gated commits with no PR for them
+npm run land:check -- --branch fix/max-95-figure-size-floor   # one branch, the way CI asks on a push
+npm run land:selftest             # prove each rule can still fail
+```
+
+A branch is a finding when all of these hold: it carries commits touching `content/**`, `lib/**`
+or `scripts/**`; those commits are not reachable from `origin/main`; no **open or merged** pull
+request has that branch as its head; and the issue it belongs to is finished.
+
+"Open or merged" is load-bearing — this repository squash-merges, so a merged branch's commits are
+usually not ancestors of main, and judging on reachability alone would fail every squash-merged
+branch in the repository. A PR that was closed without merging is a finding: the work is not on
+main and nothing is pending.
+
+### Work in progress is not a finding
+
+The last condition is the one that keeps the gate usable. A branch named after an issue that is
+still open (`fix/max-64-…`, `gate/max-64-…`) is work somebody is doing *now*; a branch named
+after an issue that is `done` or `cancelled` is work that stopped without shipping. Without the
+distinction the gate reported three findings on the dev checkout, all of them MAX-64's live
+branches — and a gate that cries wolf on your own in-flight work gets muted rather than fixed.
+
+The exemption is keyed to the issue, not to the branch name. A branch naming an issue the gate was
+never told about is still a finding, because a naming convention is not evidence; that is MAX-111's
+shape, and a renamed branch must not buy it an exemption.
+
+```bash
+npm run land:check                                   # asks the tracker when the session has it
+npm run land:check -- --issues-json statuses.json    # or replay a recorded status list
+```
+
+A recorded list is an array of `{"identifier": "MAX-64", "status": "in_review"}` (or an object
+keyed by identifier). With neither source the gate applies no exemption and says so on stdout,
+rather than guessing. `--issue-source` forces one: `file`, `paperclip`, or `none`.
+
+### Exit codes, and where the output goes
+
+| code | meaning |
+| --- | --- |
+| 0 | nothing to report |
+| 1 | a finding: gated commits on a branch with no PR |
+| 2 | the question could not be asked — no base ref, no PR list, unreadable issue statuses, truncated listing, git failure |
+
+2 is neither 0 nor 1. A gate that cannot reach the PR list has not established that a PR exists,
+and reporting that as a pass is how a branch goes invisible again — the MAX-111 failure wearing a
+different hat. Everything else in `scripts/` treats an absent toolchain the same way (see
+`build-figures.mjs` exiting 3).
+
+**Everything the gate has to say goes to stdout, `--quiet` included.** It used to go to stderr and
+`--quiet` suppressed exactly that, so `npm run land:check --silent` against a failing gate printed
+nothing at all and exited 1 — a silent failure that reads as a silent pass. `--quiet` now drops the
+per-branch inventory and keeps the notes, the findings and the one-line verdict. stderr carries only
+an unexpected crash. `--json` prints the payload and nothing else, so it stays parseable.
+
+CI runs it in `.github/workflows/landed.yml`, in three jobs: a hermetic `gate-can-fail` proof that
+the check still knows how to fail (no token, no network, both directions asserted); `branch-push`,
+the real check on every push to `fix/*` and `land/*`; and `full-audit`, the weekly inventory. The
+weekly job is the one MAX-111 needed and did not have — nobody ever pushed to that branch again, so
+a check that only runs on push never sees it.
+
+The PR list comes from `gh` when it is on PATH, otherwise the REST API with `GITHUB_TOKEN` (which
+is what Actions provides). `--pr-json <path>` replays a recorded list in either client shape, which
+is how the CI proof above stays hermetic and how the REST and `gh` paths are proven to reach the
+same verdict.
 
 ## Roadmap
 

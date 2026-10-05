@@ -8,9 +8,12 @@
 //
 // Three things are load-bearing here and each is easy to get quietly wrong:
 //
-//  1. Exercise files are sometimes a single record and sometimes an array of records. 42 of the
-//     66 files in content/exercises are objects. A loader that assumes one shape silently drops
-//     roughly two thirds of the corpus, and a 404-per-exercise is the only symptom.
+//  1. Exercise files are sometimes a single record and sometimes an array of records. At the
+//     corpus pin (lib/corpus-pins.mjs) 264 files hold 759 records, and 236 of those files are a
+//     single object. A loader that assumes one shape silently drops roughly two thirds of the
+//     corpus, and a 404-per-exercise is the only symptom. Anything that counts the corpus - this
+//     loader, the content gate, the pins - has to count records. Counting files is how a gate
+//     passes on a corpus it is not looking at.
 //
 //  2. Figure bytes do not travel here. A lesson or exercise carries figureReference() -- a
 //     figureKey, the authored description, and the build's §5.5 cache key -- and the nine payload
