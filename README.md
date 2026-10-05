@@ -10,7 +10,8 @@ Approved plan (MAX-1): React frontend + Node.js/Express backend, KaTeX for math 
 - `api/` — Node.js/Express backend (lesson CRUD, exercise handling, rendering support)
 - `content/` — the authored corpus: `lessons/`, `exercises/`, `fixtures/`. This is the import
   source of truth, so it lives in the repository and not beside it.
-- `lib/` — contracts shared between the api and the gates
+- `lib/` — contracts shared between the api and the gates, including which lesson exercise lists the
+  client reaches ([`lib/client-sections.mjs`](lib/client-sections.mjs))
 - `scripts/` — the content and figure build gates, the content close-out delivery check, and the
   agent git tooling below
 - `docs/` — the content issue close-out procedure and its template, and the authoring conventions
@@ -29,6 +30,8 @@ npm run content:check      # lint every field against Rendering Conventions S2-S
 npm run content:selftest   # the same, plus proof that each rule family can fail
 npm run content:figures    # pre-render Asymptote to sanitized SVG, write the figure manifest
 npm run content:delivered -- m5-l2   # is the lesson id on origin/main? for a close-out
+npm run client:check       # which lesson exercise lists a learner can actually reach
+npm run client:selftest    # the same, plus proof each disagreement can be caught
 ```
 
 `content:selftest` is the one CI runs. It injects one defect per rule family into a throwaway
@@ -40,6 +43,35 @@ its lesson on a branch, or never written at all, and neither is visible to a gat
 at the corpus in front of it — MAX-20 and MAX-23 were both. So a content issue names the lesson
 ids it delivered and this command is run against `origin/main` before the issue closes. See
 [`docs/CONTENT_ISSUE_CLOSEOUT.md`](docs/CONTENT_ISSUE_CLOSEOUT.md).
+
+### What the client can reach
+
+A lesson serves three exercise lists. The client fetches one of them, and nothing else in the
+repository could tell you that — the content gate counts sections and records, the corpus pins count
+the corpus, and neither reads `web/src`. 114 mastery exercises were in exactly that state, authored
+and served and unreachable, until MAX-146 made the split declared and checked.
+
+`npm run client:check` prints it:
+
+```
+section  client reach
+practice    645 ids in  38 lessons  served
+mastery     114 ids in  38 lessons  api-only
+solutions   645 ids in  38 lessons  via-sibling
+```
+
+`mastery` is **api-only on purpose**, not a bug. The reader makes no write call, so there is no
+attempt runner to record an answer against `passThreshold: 2`; the surface ships with the runner.
+`solutions` is never named by the client and does not need to be — its ids are exactly the practice
+ids, so those records arrive inside the practice fetch. That one is asserted per lesson rather than
+assumed, so a lesson whose solutions drifted outside its practice list fails instead of quietly
+becoming a fourth unreachable set.
+
+The reach decisions live in [`lib/client-sections.mjs`](lib/client-sections.mjs), and the gate reads
+them against the API's own `SECTION_ID_FIELDS`, `web/src`, and the corpus. Adding a section the API
+serves without declaring its reach is a failure, and adding the mastery fetch without recording the
+decision is a failure too. The rationale is in
+[`docs/CONTENT_CONVENTIONS.md` §4](docs/CONTENT_CONVENTIONS.md#4-a-lessons-mastery-exercises-are-served-and-unreachable-until-there-is-a-runner).
 
 ### The corpus pins
 

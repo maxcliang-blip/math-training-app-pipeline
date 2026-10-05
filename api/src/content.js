@@ -89,7 +89,7 @@ function readRecords(dir) {
 // suffix. Deriving it is a one-line guess that is wrong exactly where the naming is irregular:
 // "solutionIds" strips to "solution", the corpus section is "solutions", and the lookup misses
 // so every lesson reports zero solutions while the two lists beside it look healthy.
-const SECTION_ID_FIELDS = [
+export const SECTION_ID_FIELDS = [
   { section: "practice", field: "practiceIds" },
   { section: "mastery", field: "masteryIds" },
   { section: "solutions", field: "solutionIds" },
