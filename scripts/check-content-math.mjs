@@ -1313,9 +1313,20 @@ if (isMain) {
   const args = process.argv.slice(2);
   const wantSelftest = args.includes("--selftest");
   const jsonIdx = args.indexOf("--json");
+  const jsonValue = jsonIdx >= 0 ? args[jsonIdx + 1] : undefined;
+  // `--json <outPath>` takes the next argv token as a path, so `--json --selftest` used to resolve
+  // `--selftest` against the cwd and write the report to a file of that name. It reached main as a
+  // 4KB tracked blob (MAX-97): a flag is not a path, and a mistyped flag must not leave a build
+  // product behind silently. Refuse it, and refuse it as a configuration error (exit 2) rather
+  // than by quietly falling back to DEFAULT_REPORT, which would hide the typo behind a pass.
+  if (jsonValue !== undefined && jsonValue.startsWith("-")) {
+    console.error(`check-content-math: ARGUMENT: --json takes an output path; got the flag "${jsonValue}".`);
+    console.error(`                       Write the report to a path, or drop --json to use ${DEFAULT_REPORT}.`);
+    process.exit(2);
+  }
   const positional = args[0] && !args[0].startsWith("--") ? resolve(args[0]) : null;
   const contentRoot = positional || (process.env.CONTENT_ROOT ? resolve(process.env.CONTENT_ROOT) : DEFAULT_CONTENT);
-  const outPath = jsonIdx >= 0 && args[jsonIdx + 1] ? resolve(args[jsonIdx + 1]) : DEFAULT_REPORT;
+  const outPath = jsonValue !== undefined ? resolve(jsonValue) : DEFAULT_REPORT;
 
   const env = checkEnvironment();
   if (env.problems.length) {
