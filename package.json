@@ -1,12 +1,17 @@
 {
   "name": "math-training-app",
   "private": true,
-  "workspaces": ["web", "api"],
+  "workspaces": [
+    "web",
+    "api"
+  ],
   "scripts": {
     "dev:web": "npm run dev --workspace web",
     "dev:api": "npm run dev --workspace api",
     "build": "npm run build --workspace web",
     "test": "npm test --workspaces --if-present",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps chromium",
     "content:check": "node scripts/check-content-math.mjs",
     "content:selftest": "node scripts/check-content-math.mjs --selftest",
     "content:delivered": "node scripts/verify-delivery.mjs",
@@ -15,7 +20,7 @@
     "content:figures:container": "ASYMPTOTE_BIN=scripts/asy-docker DVISVGM_BIN=scripts/dvisvgm-docker node scripts/build-figures.mjs",
     "content:figures:authoring": "node scripts/build-figures.mjs --allow-missing-toolchain",
     "content:figures:record": "node scripts/build-figures.mjs --record-aspect-ratios",
-"ci:content": "npm run content:selftest && npm run content:delivered:selftest && npm run content:figures",
+    "ci:content": "npm run content:selftest && npm run content:delivered:selftest && npm run content:figures",
     "git:guard": "node scripts/check-push-authors.mjs",
     "git:guard:selftest": "node scripts/check-push-authors.mjs --selftest",
     "land:check": "node scripts/check-landed-content.mjs",
@@ -27,6 +32,7 @@
     "git:worktrees:check:push": "sh scripts/agent-worktree.sh check --for-push"
   },
   "devDependencies": {
+    "@playwright/test": "1.59.1",
     "katex": "0.16.11"
   }
 }

@@ -23,3 +23,9 @@ web/test/.degraded-*/
 # path will do the same thing to the next flag -- and a name git already knows about is one fewer
 # stray report to find on main later. The file itself is untracked as of MAX-97.
 --selftest
+# Playwright's per-run output: traces for a failing test, and an error-context file per failure. It
+# is written into the repository root rather than a build directory because `testDir` is ./e2e, and
+# a failure report that lands in the next commit is a screenshot of a defect somebody else then has
+# to triage from a diff.
+test-results/
+playwright-report/

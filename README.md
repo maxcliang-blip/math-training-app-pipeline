@@ -164,6 +164,55 @@ npm run dev:api   # Express API on :4000
 npm run dev:web   # Vite dev server on :5173
 ```
 
+## Browser suite
+
+```bash
+npm run test:e2e:install   # once per clone: the chromium the suite drives
+npm run test:e2e          # layout assertions in a real browser
+```
+
+RC §7 budgets layout shift at 0 and §8.5 makes it an acceptance criterion, naming the instrument:
+"Asserted in a Playwright check". `npm test` cannot see layout — it renders no page — so this is a
+separate suite against the **production build**, not the dev server: `vite build` is what turns
+KaTeX's `@font-face` urls into the requests a reader makes, and a suite run against the dev server
+would be asserting about filesystem paths that only exist on a developer machine.
+
+It boots the API on `:4000` and serves `web/dist` on `:5184`, and navigates the real reader
+(module list → module → lesson) against the shipped corpus.
+
+### Why the KaTeX faces settle, and why `optional`
+
+KaTeX declares twenty `@font-face` families with no `font-display`, so they inherit `auto`: a block
+period, then a swap whenever the face lands. A face is only *requested* once a formula has rendered,
+which is after the bundle has loaded and React has run — so the swap is always after first paint.
+Until it lands every formula is laid out in the fallback serif; when it lands, the browser re-lays the
+prose. Measured on `m1-l1`, that is `CLS 1.1e-6` from one `SPAN.base` inside `SPAN.katex-html`, which
+is inside the Lesson spec §9 #6 budget (`< 0.05`) and outside RC §7's (`= 0`) at the same time.
+
+`web/vite-katex-font-display.js` rewrites those declarations to `font-display: optional` and preloads
+the one face that carries prose (`KaTeX_Main-Regular`). `optional` has **no swap period**: the browser
+gives the face a short block period and then, if it has not arrived, uses the fallback for the life of
+the page and never changes its mind. Preloading or reordering only makes the face arrive sooner —
+it cannot make it arrive before first paint on a connection where it does not, so the defect survives
+as a timing race and the number changes with the machine. The cost of `optional` is stated rather than
+hidden: on a first visit on a slow connection the math renders once in the fallback serif, and the
+face is cached from then on.
+
+Two traps this went through, both of which look like a working fix in a diff:
+
+- **A duplicate `@font-face` only overrides the original because the last one declared wins.** That is
+  a cascade detail, not a guarantee. The transform rewrites the declaration in place instead, so there
+  is one rule with one `font-display` that every browser has to honour.
+- **KaTeX's declarations do not end in a semicolon**, because a CSS block's last declaration does not
+  need one. Appending `font-display:optional` straight onto the end produces
+  `src:url(...) format("truetype")font-display:optional`, where the policy is swallowed into the
+  value of `src` and the face silently keeps the default. The symptom is the layout shift still being
+  there, with nothing in the emitted CSS to explain it.
+
+`e2e/math-font-settle.spec.js` covers both: it parks every KaTeX font response until the page has
+painted and then releases them, so a fix that only makes the faces arrive sooner fails the suite on
+any machine, fast or slow.
+
 ## One worktree per agent
 
 Several agents work this repository at the same time, so the git working directory is shared
