@@ -17,7 +17,7 @@
 
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { SECTION_ID_FIELDS, loadContentStore } from "../api/src/content.js";
@@ -32,6 +32,30 @@ const DEFAULT_REPORT = join(REPO, "artifacts", "client-sections-report.json");
 // Every .js/.jsx file under web/src. Recursive because a future route or a component folder is
 // exactly where a second exercise fetch would land, and a scan that only reads App.jsx would
 // report "the client names practice only" while a second fetch sat two directories away.
+// A label for a file the scan found. It has to name the file, because every finding this scan emits
+// leads with it -- a finding that says "names the practice list" and not which file is not a finding
+// anyone can act on.
+//
+// The selftest scans scratch copies under os.tmpdir(), which are not under the repository, so this
+// cannot be arithmetic on the repo root. The previous `path.slice(REPO.length + 1)` was: on a runner
+// where REPO is longer than the temp path the slice produced the empty string, so the message read
+// " names the practice exercise list" and the selftest case failed on the name alone. It passed
+// locally only because a long TMPDIR left a fragment that still ended in App.jsx -- a label correct
+// by luck of directory depth, which is the kind of pass that stops meaning anything the moment the
+// runner's paths change. Relative when the file is in the repository, absolute when it is not; both
+// keep the basename, and the check below refuses to emit a label that does not.
+function labelFor(path) {
+  const rel = relative(REPO, path);
+  const insideRepo = rel !== "" && !rel.startsWith(`..${sep}`) && rel !== "..";
+  const label = (insideRepo ? rel : path).split(sep).join("/");
+  if (!label.endsWith(basename(path))) {
+    throw new Error(
+      `client scan produced a label that does not name its file: ${JSON.stringify(label)} for ${path}`,
+    );
+  }
+  return label;
+}
+
 function readClientSources(dir = WEB_SRC) {
   const sources = [];
   const walk = (d) => {
@@ -40,7 +64,7 @@ function readClientSources(dir = WEB_SRC) {
       if (entry.isDirectory()) {
         walk(path);
       } else if (/\.(js|jsx)$/.test(entry.name)) {
-        sources.push({ path: path.slice(REPO.length + 1), source: readFileSync(path, "utf8") });
+        sources.push({ path: labelFor(path), source: readFileSync(path, "utf8") });
       }
     }
   };
