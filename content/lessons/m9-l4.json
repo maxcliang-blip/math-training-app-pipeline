@@ -18,30 +18,7 @@
   ],
   "sections": {
     "objective": {
-      "objectiveLatex": "Identify false claims and construct minimal counterexamples, evaluate proposed proofs for logical validity, and choose an appropriate proof strategy (direct, contradiction, induction, or case analysis) for a given claim.",
-      "figures": [
-        {
-          "id": "m9-l4-fig-1",
-          "captionLatex": "A counterexample to the claim that all odd numbers greater than 1 are prime: the number 9 is odd, greater than 1, but not prime.",
-          "asymptoteSource": "// Counterexample visualization\n//\n// A two-argument size call bounds the output under Asymptote's default keepAspect\n// and does not scale labels, so the compiler decides the box. This declaration is\n// restated from a real compile by `npm run content:figures -- --record-aspect-ratios`.\nsize(237,121);\nlabel(\"9\", (0,0), N);\nlabel(\"not prime\", (0,-1.5), S);\ncircle((0,0), 1.5);\nlabel(\"odd > 1\", (0,2), N);\nlabel(\"prime\", (-2,0), W);\nlabel(\"counterexample: 9\", (2,0), E);",
-          "asymptoteAlt": "A circle labeled 9 with an arrow pointing down labeled 'not prime' and text above the circle saying 'odd > 1' and to the right labeled 'counterexample: 9'.",
-          "asymptoteAspectRatio": 1.959
-        }
-      ],
-      "examples": [
-        {
-          "id": "m9-l4-ex-1",
-          "titleLatex": "Worked example: counterexample to a universal claim",
-          "bodyLatex": "Claim: 'Every odd number greater than 1 is prime.' \nCounterexample: n = 9. Nine is odd (not divisible by 2), and nine is greater than 1, but 9 = 3 \\times 3 is not prime. Therefore the claim is false.\n\nTo verify: check that 9 > 1, that 9 is not divisible by 2, and that 9 factors as 3 \\times 3 with both factors greater than 1, so 9 is composite.",
-          "answerLatex": "9"
-        },
-        {
-          "id": "m9-l4-ex-2",
-          "titleLatex": "Worked example: evaluating a proposed proof",
-          "bodyLatex": "Claim: 'For every positive integer n, n^2 + n + 41 is prime.' \nProposed proof: 'The expression gives prime values for n = 1, 2, 3, ..., 40, so it must always be prime.' \nEvaluation: This is not a valid proof. Checking examples establishes consistency but does not prove the claim for all n. In fact, the claim is false at n = 40, since 40^2 + 40 + 41 = 1681 = 41^2 is composite. A valid proof would require either a general argument or a counterexample.",
-          "answerLatex": "The proposed proof is invalid; n = 40 is a counterexample."
-        }
-      ]
+      "objectiveLatex": "Identify false claims and construct minimal counterexamples, evaluate proposed proofs for logical validity, and choose an appropriate proof strategy (direct, contradiction, induction, or case analysis) for a given claim."
     },
     "prerequisites": {
       "items": [
