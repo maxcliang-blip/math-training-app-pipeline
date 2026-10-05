@@ -25,6 +25,12 @@
 //             here rather than waited for. A document half would belong to whoever owns
 //             rendering_conventions; it does not exist yet and this rule does not wait for it.
 //
+//   MAX-106 - figure-id-unique / worked-example-id-unique: a figure or worked-example id is an
+//             address, and two records sharing one make it resolve to whichever came first. The
+//             delivery gate on MAX-104 resolves by figure id, so a duplicate there would be
+//             reported as delivered without being evidence of anything. Same reasoning as
+//             MAX-89: the gate is the only thing that can see this.
+//
 //   MAX-107 - figure-id-required: a figure id is an address, and a record that declares none
 //             cannot be named by anything that would have to assert it shipped -- least of all
 //             the delivery gate on MAX-104, whose whole premise is that a close-out names ids
@@ -32,6 +38,15 @@
 //             reservations declared no id at all. Same reasoning as MAX-89: the gate is the
 //             only thing that can see this, and the document half would belong to whoever owns
 //             the figure authoring contract.
+//
+// What this file is not, and why the landing gate is not in it: every rule above runs with no app
+// and no repository, on a corpus directory, and stays that way on purpose -- an author can run it
+// from a checkout of content and nowhere else. The sibling scripts/check-landed-content.mjs
+// (MAX-126, `npm run land:check`) asks a question that needs git, a remote and a pull-request
+// list: this branch carries gated commits, no PR has ever had it as its head, and the issue it
+// belongs to is finished, so nothing here will ever ship (MAX-132 added that last condition -- work
+// in progress is not a finding). Folding it in would take the repository dependency with it and
+// cost the author workflow the only gate it can run anywhere.
 //
 // Usage: node scripts/preflight-content.mjs [contentRoot] [--json [<outPath>]]
 //   --json           print the report to stdout
@@ -41,7 +56,12 @@ import { readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import katex from "katex";
-import { countFigures, isRenderableFigure, lessonFigureRecords } from "../lib/figure-contract.mjs";
+import {
+  countFigures,
+  doubledBackslashInTexLabels,
+  isRenderableFigure,
+  lessonFigureRecords,
+} from "../lib/figure-contract.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -681,6 +701,59 @@ function checkAsymptote(source, alt, ratio, path) {
   const primitives = (code.match(/\b(draw|dot|label|filldraw|fill|clip|path)\s*\(/g) || []).length;
   check("advisory", "S5.2-primitive-budget", path, primitives <= 20,
     `figure uses ${primitives} drawing primitives, budget is 20 (S5.2)`);
+
+  // S5.2-tex-label-doubled-backslash: a LaTeX macro written with a doubled backslash inside a
+  // label(...) payload. (MAX-119)
+  //
+  // This is the pass-path half of a rule the build already had on its failure path, and until now
+  // the authoring gate had no half at all: scanMath -- which carries json-escaped-macro, S3.2 and
+  // S3.3 -- was never pointed at asymptoteSource, so nothing in `content:check` had ever read the
+  // inside of a label. Meanwhile scripts/build-figures.mjs carried the detector
+  // (doubledBackslashMacros) and called it from diagnoseCompileFailure alone, so the only code that
+  // could name this defect ran after a figure had already failed to build.
+  //
+  // The consequence is measured and it is the reason this is a source-shape rule rather than a
+  // render rule. Asymptote copies a string literal into the .tex it generates *verbatim* -- it
+  // does not read `\\` as an escape -- so a doubled backslash reaches TeX as two backslashes:
+  //
+  //   after `^` or `_`   the figure FAILS to compile ("Missing { inserted").
+  //   anywhere else       the figure COMPILES CLEAN and renders wrong glyphs. TeX reads `\\` as a
+  //                      line break and then sets the bare macro name in italic.
+  //
+  // Pointing scanMath or S3.3-renders at these payloads would not have caught it, because KaTeX
+  // accepts the broken form. Every one of `\frac{a}{b}`, `\sqrt{x-2}`, `b\cos C`,
+  // `\lceil 7/3 \rceil`, `\theta`, `3^{2}\equiv 1\pmod{8}`, `4 \cdot 3 \cdot 2 = 24`,
+  // `\angle AOB` and `\frac{a}{\sin A} = 2R` renders without error against the pinned
+  // katex@0.16.11. Only `90^\circ` is rejected, and only because the doubling happens to sit after
+  // a `^` -- which is the one case that already fails loudly by itself. A gate that asks "does it
+  // render?" is blind to this class by construction: the broken form is valid TeX.
+  //
+  // So this reads the shape of the payload and needs neither KaTeX nor a compiler. It sits in
+  // checkAsymptote, which is the only place all three figure sites arrive: concept/objective/
+  // other section figures and worked-example figures (below, via lessonFigureRecords) and exercise
+  // figures. That reach is the whole point of putting it here rather than at one call site -- the
+  // asymmetry MAX-76 was about was a rule that ran on lesson figures and not on the other two.
+  const badLabels = doubledBackslashInTexLabels(source);
+  for (const bad of badLabels) {
+    // Two rule ids for two consequences, not two rules to remember. After `^`/`_` the figure does
+    // not build, and the build's own diagnosis (DOUBLED_BACKSLASH_AFTER_SCRIPT) says so. Anywhere
+    // else it builds fine and ships wrong glyphs, which is the case no compiler output will ever
+    // mention. A message claiming "Missing { inserted" for a figure that compiles clean would be
+    // wrong in the one situation this rule most needs to be believed about.
+    const afterScript = bad.afterScript.length > 0;
+    check("error", afterScript ? "S5.2-tex-label-doubled-backslash-after-script"
+                               : "S5.2-tex-label-doubled-backslash", path, false,
+      `LaTeX macro${bad.macros.length > 1 ? "s" : ""} written with a doubled backslash in a TeX label payload ` +
+      `(${bad.macros.join(", ")}). Asymptote copies string literals into the .tex it generates verbatim, so both ` +
+      `backslashes reach TeX` +
+      (afterScript
+        ? `, and immediately after ^ or _ TeX takes exactly one token as its argument, so this figure fails to ` +
+          `compile with "Missing { inserted".`
+        : `, where TeX reads \\\\ as a line break and then sets the bare macro name in italic: the figure ` +
+          `COMPILES CLEAN and renders the wrong glyphs, which is why KaTeX renders it without complaint and ` +
+          `why only the build's failure path used to notice.`) +
+      ` Write one backslash: ${bad.macros[0].replace(/\\\\/g, "\\")}, not ${bad.macros[0]}.`);
+  }
   return true;
 }
 
@@ -874,6 +947,71 @@ function checkExercise(ex, lessonIndex) {
   if (hasFigure) checkCaption(ex, `${where("captionLatex")}`, { binding: false });
 }
 
+// ---------------------------------------------------------------------------
+// Ids are addresses (MAX-106)
+// ---------------------------------------------------------------------------
+//
+// A figure id is the name an author gives a figure and the name everyone reaches for when they
+// mean it -- a content drop, a review comment, and the delivery gate on MAX-104, which walks
+// sections.<name>.figures[] looking for the id it was asked about. Nothing enforced that, and
+// that is how two records ended up holding one: m9-l3 and m9-l4 each hung a figure on the
+// `objective` section whose id was the id of the lesson's own `concept` figure, the same record
+// copied byte for byte. It broke nothing, precisely because nothing resolved by id yet.
+//
+// It becomes a key the moment anything does, and then a duplicate does not fail loudly. A
+// resolver that finds two records for one id returns whichever it saw first, and the gate reports
+// that figure as delivered -- a check that cannot say which of two things it meant is not
+// evidence of anything. So the collision is an error here, before the consumer that would have to
+// guess at it, and not left to that consumer to detect.
+//
+// Corpus-wide rather than per-lesson. The id is meant to be an address, and an address scoped to
+// one file is not an address. Every finding names every site holding the id, because "m9-l3-fig-1
+// is used twice" is not actionable and "m9-l3-fig-1 is held by sections.objective.figures[0] and
+// sections.concept.figures[0]" is.
+//
+// Worked examples get the same check for the same reason and because the same two lessons had
+// them: m9-l3-ex-1, m9-l3-ex-2, m9-l4-ex-1 and m9-l4-ex-2 were each authored into `objective`
+// and `concept`, the objective copies being the pre-markup drafts of the concept ones -- same
+// ids, and text that renders `n \ge 2` literally because it never learned the $...$ spans. A
+// record that carries no id is not a collision and is skipped rather than reported: four of
+// m5-l1's figure reservations declare no id at all, which is a separate gap and not this rule.
+function checkIdUniqueness(lessons) {
+  const figures = new Map();
+  const examples = new Map();
+
+  const claim = (into, id, site) => {
+    if (typeof id !== "string" || id.trim() === "") return;
+    if (!into.has(id)) into.set(id, []);
+    into.get(id).push(site);
+  };
+
+  for (const lesson of lessons) {
+    // `lessonFigureRecords` is the one walk over figures -- section figures on any section and
+    // worked-example figures, reservations included -- so the sites named here are the same
+    // addresses the build compiles under, not a second spelling of them.
+    for (const site of lessonFigureRecords(lesson)) {
+      const field = site.kind === "example" ? "examples" : "figures";
+      claim(figures, site.record.id, `lessons/${lesson.id}.sections.${site.sectionName}.${field}[${site.index}]`);
+    }
+    for (const [sectionName, section] of Object.entries((lesson && lesson.sections) || {})) {
+      for (const [index, record] of (section.examples || []).entries()) {
+        claim(examples, record && record.id, `lessons/${lesson.id}.sections.${sectionName}.examples[${index}]`);
+      }
+    }
+  }
+
+  const report = (rule, claimed, kind) => {
+    for (const [id, sites] of claimed) {
+      if (sites.length < 2) continue;
+      check("error", rule, "corpus", false,
+        `${kind} id ${JSON.stringify(id)} is claimed by ${sites.length} records (${sites.join(", ")}); ` +
+        "an id is an address, and two records sharing one resolve to whichever came first");
+    }
+  };
+  report("figure-id-unique", figures, "figure");
+  report("worked-example-id-unique", examples, "worked-example");
+}
+
 function checkLesson(lesson, exerciseIds, exerciseById) {
   const path = `lessons/${lesson.id}`;
   const where = (f) => `${path}.${f}`;
@@ -969,8 +1107,11 @@ function checkLesson(lesson, exerciseIds, exerciseById) {
   // `conceptFigures.length` and then added one more inside the loop for every figure whose source
   // parsed, so each concept figure was charged twice (63 of them), and it seeded the total with the
   // *declared* records, including the eight reservations whose `asymptoteSource` is null. It also
-  // never looked at a figure outside `concept.figures`, of which this corpus has two, on the
-  // `objective` sections of m9-l3 and m9-l4.
+  // never looked at a figure outside `concept.figures`, of which this corpus had exactly two: the
+  // `objective`-section figures on m9-l3 and m9-l4, each a byte-for-byte copy of that lesson's own
+  // concept figure under the same id. MAX-106 removed both, so the corpus now hangs every figure
+  // off `concept` -- and this walk is what stops that being load-bearing, since the next lesson to
+  // hang one elsewhere is validated here either way.
   //
   // `lessonFigureRecords` is every declared figure-bearing record and is what gets validated: a
   // reservation is not a figure, but it is still a record an author can contradict, and dropping
@@ -1035,6 +1176,9 @@ export function run(contentRoot) {
     checkExercise(e, lessonIndex);
     blocksRendered += splitBlocks(e.solutionLatex).blocks.length;
   }
+  // After the per-lesson passes, not inside one of them: an id is unique across the corpus, so a
+  // check that ran per lesson could only ever catch a collision inside a single file (MAX-106).
+  checkIdUniqueness(lessons);
   // The corpus figure total comes from the shared counter, not from summing the per-lesson
   // returns. Summing a return value is how this number drifted from the build's in the first
   // place: the build's scan and the gate's tally were two independent expressions of "figure",

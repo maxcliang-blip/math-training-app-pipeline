@@ -44,7 +44,7 @@
         {
           "id": "m5-l4-fig-3",
           "captionLatex": "A sector is the piece of the disc cut off by two radii: its area and its arc length are the central angle's fraction of the whole, taken out of the full area and the full circumference.",
-          "asymptoteSource": "import graph;\nsize(240,230);\npen p = currentpen;\npair O = (0,0);\ndraw(scale(2)*unitcircle, lightgray);\npair A = dir(150);\npair B = dir(30);\nfill(O--arc(O,2,30,150)--cycle, white);\ndraw(scale(2)*unitcircle);\ndraw(O--A); draw(O--B);\ndot(O);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, W);\nlabel(\"$B$\", B, E);\nlabel(\"$r$\", A/2, NW);\nlabel(\"$\\\\theta$\", O + (0,0.45), N);",
+          "asymptoteSource": "import graph;\nsize(240,230);\npen p = currentpen;\npair O = (0,0);\ndraw(scale(2)*unitcircle, lightgray);\npair A = dir(150);\npair B = dir(30);\nfill(O--arc(O,2,30,150)--cycle, white);\ndraw(scale(2)*unitcircle);\ndraw(O--A); draw(O--B);\ndot(O);\nlabel(\"$O$\", O, SW);\nlabel(\"$A$\", A, W);\nlabel(\"$B$\", B, E);\nlabel(\"$r$\", A/2, NW);\nlabel(\"$\\theta$\", O + (0,0.45), N);",
           "asymptoteAlt": "A circle with a wedge-shaped piece of its interior left blank and the rest of the disc shaded lightly. Two radii bound the blank wedge, the centre is marked with a dot, and the radius and the central angle are labelled.",
           "asymptoteAspectRatio": 1
         },
