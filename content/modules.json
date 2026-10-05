@@ -1,5 +1,5 @@
 {
-  "note": "The module catalogue the API serves at GET /api/modules. Titles, tiers, order and target exercise counts are the agreed curriculum baseline; the corpus in content/lessons and content/exercises is filed under these codes. A module with no lessons yet is declared here on purpose - the catalogue is wider than the corpus. M3 = Counting & Combinatorics holds m3-l1/m3-l2 (the counting lessons previously misfiled as m7-l1/m7-l2). M7 = Probability holds m7-l1 (counting outcomes and basic probability) and m7-l2 (independence, conditional probability and expectation), 29 exercises each; m7-l3 and m7-l4 are still unauthored, so the module is at 58 of its 110 target exercises.",
+  "note": "The module catalogue the API serves at GET /api/modules. `code` is the value that appears in Exercise.moduleId and Lesson.moduleId. Titles, summaries, tiers and order are curriculum declarations; the corpus in content/lessons and content/exercises is filed under these codes, and a module may be declared before anything is authored under it - it is then served with lessonCount 0 and the tiers it declares, which is the normal way a new module enters the catalogue. targetExerciseCount is the measured size of that module's corpus, not a quota to be reached: GET /api/modules reports exerciseCount for the same module from the loaded corpus, and the two agree because the build fails when they do not. Author the exercises and the count follows; never raise the count ahead of the corpus, or the module page reports a permanent shortfall against a number nothing is working toward.",
   "modules": [
     {
       "id": "M1",
@@ -12,7 +12,7 @@
         "10",
         "12"
       ],
-      "targetExerciseCount": 120
+      "targetExerciseCount": 90
     },
     {
       "id": "M2",
@@ -26,7 +26,7 @@
         "12",
         "A"
       ],
-      "targetExerciseCount": 140
+      "targetExerciseCount": 72
     },
     {
       "id": "M3",
@@ -40,7 +40,7 @@
         "12",
         "A"
       ],
-      "targetExerciseCount": 150
+      "targetExerciseCount": 94
     },
     {
       "id": "M4",
@@ -54,7 +54,7 @@
         "12",
         "A"
       ],
-      "targetExerciseCount": 100
+      "targetExerciseCount": 72
     },
     {
       "id": "M5",
@@ -67,7 +67,7 @@
         "10",
         "12"
       ],
-      "targetExerciseCount": 130
+      "targetExerciseCount": 72
     },
     {
       "id": "M6",
@@ -81,7 +81,7 @@
         "12",
         "A"
       ],
-      "targetExerciseCount": 110
+      "targetExerciseCount": 72
     },
     {
       "id": "M7",
@@ -95,7 +95,7 @@
         "12",
         "A"
       ],
-      "targetExerciseCount": 110
+      "targetExerciseCount": 116
     },
     {
       "id": "M8",
@@ -122,7 +122,7 @@
         "A",
         "A+"
       ],
-      "targetExerciseCount": 100
+      "targetExerciseCount": 81
     }
   ]
 }
