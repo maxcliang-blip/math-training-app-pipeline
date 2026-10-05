@@ -156,6 +156,18 @@ const MAX_FIGURES_PER_LESSON = 8;
 const MAX_CORPUS_FIGURES = 185;
 const MAX_ASPECT = 3;
 const MIN_ASPECT = 0.5;
+// Lower bound on each dimension of the declared size(W,H) ceiling. Authoring-time twin of the
+// authoritative gate in scripts/build-figures.mjs (validateFigure, MIN_SIZE_FLOOR); the two
+// constants must agree and api/test/figures.test.js asserts that they do.
+//
+// The number is measured, not chosen (MAX-95). asy 2.87 does not scale type with size() -- across a
+// ladder from size(40,30) to size(640,480) the label glyph path is byte-identical at 11.38 CSS px
+// cap-height, and stroke-width stays 0.5pt -- so no ceiling makes the *text* too small. What a small
+// ceiling does is shrink the drawing out from under labels that never shrank: glyph area as a
+// fraction of the emitted box runs 0.204 at size(40,30), 0.048 at size(80,60), 0.025 at
+// size(111,83), 0.003 at size(320,240). This is the absolute-size counterpart to MIN_ASPECT, which
+// only constrains the shape of the box.
+export const MIN_SIZE_FLOOR = 80;
 
 const TIERS = new Set(["10", "12", "A", "A+"]);
 
@@ -740,6 +752,24 @@ function checkAsymptote(source, alt, ratio, path) {
     fail("advisory", "S5.4-ratio-unverifiable", path,
       "single-argument size() bounds the output but declares no box, so asymptoteAspectRatio cannot be derived " +
       "from the source at authoring time and only S5.5 (declared vs the compiled box) checks it");
+  }
+  // Inside the sizeCall branch, so the two adjacent shapes keep exactly one verdict each: no size()
+  // call at all is S5.2-size-required, and a one-argument call is the S5.4-ratio-unverifiable
+  // advisory above. This rule only has a ceiling to read when there is a two-dimensional one.
+  //
+  // MIN_ASPECT/MAX_ASPECT above bound the *shape* of the declared box and nothing bounds its
+  // absolute size, which is why a size(60,45) figure with a perfectly legal 1.333 ratio reaches the
+  // renderer. See MIN_SIZE_FLOOR for the measurement: the failure is not small text (asy does not
+  // scale type), it is a drawing crushed under labels that stayed the same size.
+  if (sizeCall) {
+    const declaredW = Number(sizeCall[1]);
+    const declaredH = Number(sizeCall[2]);
+    const below = [["W", declaredW], ["H", declaredH]].filter(([, v]) => v < MIN_SIZE_FLOOR);
+    check("error", "S5.2-size-floor", path, below.length === 0,
+      `figure declares size(${declaredW},${declaredH}), below the ${MIN_SIZE_FLOOR}pt legibility floor ` +
+      `(${below.map(([n, v]) => `${n}=${v}`).join(", ")}). A ceiling this small does not shrink the labels -- ` +
+      `Asymptote does not scale type with size() -- it shrinks the drawing underneath labels that stay the ` +
+      `same size (S5.2). The ceiling bounds the output, it is not the box (S5.4 item 4)`);
   }
   check("error", "S5.2-no-file-io", path, !/\b(input|include|write|open)\s*\(/.test(code),
     "figure source must not do file IO (S5.2)");
