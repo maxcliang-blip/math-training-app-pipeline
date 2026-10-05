@@ -17,7 +17,7 @@ Approved plan (MAX-1): React frontend + Node.js/Express backend, KaTeX for math 
 - `docs/` — the content issue close-out procedure and its template, and the authoring conventions
   that no build gate enforces ([`docs/CONTENT_CONVENTIONS.md`](docs/CONTENT_CONVENTIONS.md))
 - `.githooks/` — the hooks git runs on every push. `scripts/install-git-hooks.sh` installs them
-- `.github/workflows/ci.yml` — CI: install, build, test, and the delivery-integrity gate
+- `.github/workflows/ci.yml` — CI: install, build, test, the browser layout suite, and the delivery-integrity gate
 - `.github/workflows/content.yml` — CI: content math gate and figure build
 - `.github/workflows/landed.yml` — CI: the landing gate (a gated branch with no pull request)
 
@@ -179,14 +179,69 @@ reach a learner, shared by the build, the API (`api/src/figures.js`) and the fro
   serves a learner the wrong figure
 - the figure payload is exactly `figureKey`, `figureSvgUrl`, `figureHash`,
   `figurePipelineVersion`, `declaredAspectRatio`, `compiledAspectRatio`, `alt`, `captionLatex`
-- a lesson or exercise response carries `figureReference()` and nothing more: `figureKey` and
-  `asymptoteAlt`, never an inline SVG, hash or pipeline version. The description is on the
-  reference because the figure route is the thing that can fail — a manifest that did not pass is
-  a 503 for every key — and the degraded figure box renders that description visibly rather than
-  leaving a blank region
+- a lesson or exercise response carries `figureReference()` and nothing more: `figureKey`,
+  `asymptoteAlt`, `figureCacheKey` and the authored `asymptoteAspectRatio`, never an inline SVG,
+  hash or pipeline version. The description is on the reference because the figure route is the
+  thing that can fail — a manifest that did not pass is a 503 for every key — and the degraded
+  figure box renders that description visibly rather than leaving a blank region. The ratio is on
+  the reference because of the reservation below — see "The figure box is reserved, not measured"
+
 - the payload is served only from a manifest with `status: "pass"` and a `figureHash` on the
   figure. Absent, unbuilt or unhashed means the route does not answer; it is not an empty
   catalogue
+
+### The figure box is reserved, not measured
+
+Rendering Conventions S5.4 makes the figure box a promise about layout, and S5.4 item 5 states the
+promise as a number: **CLS contribution from a figure is 0 in both states**, unloaded and loaded.
+Three rules in the implementation carry it.
+
+- **The reservation is on the element at first paint.** `.figure__box` is sized by
+  `aspect-ratio: var(--fig-ratio, 1.333)` and painted `var(--surface-sunken)` in the pending,
+  unavailable and loaded states alike. The 1.333 is the default S5.4 item 1 names, and it exists
+  because a box with no ratio is not neutral — it collapses to its content's height, so it is
+  near-zero while pending and full height once the SVG lands.
+- **The reservation comes from the reference, not from the figure route.** First paint of a figure
+  happens before its payload has been fetched, so a client that has to ask for the ratio in order
+  to know how much room it needs reserves nothing. `Figure.jsx` latches the ratio on the figure's
+  first render and never re-reads it.
+- **Nothing that arrives later resizes the box.** The `<img>` is `position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: contain`, so its arrival contributes no dimension. The
+  browser's measurement of the decoded SVG is recorded as drift
+  (`data-figure-ratio-drift`) and warned about in development; it is never applied to the box. A
+  declaration that turns out to be wrong letterboxes the picture rather than distorting the
+  geometry, and `npm run content:figures:record` is the fix for a wrong declaration.
+
+The browser suite in `e2e/` asserts all of it:
+
+```bash
+npm run test:e2e:figure     # drives the lesson route in Chromium and measures layout shift
+npm run test:e2e:install    # once per machine: download the browser
+```
+
+Its own script and its own config, `playwright.figure.config.js`, because it needs the dev server
+rather than the production build `npm run test:e2e` serves. The two browser suites assert different
+things against different servers, and running either under the other's server reports the wrong
+number rather than failing: this one needs a dev server proxying to a fixture API it controls, and
+the math suite needs `vite build` because that is what turns KaTeX's `@font-face` urls into the
+requests a reader makes. `npm run test:e2e:all` runs both.
+
+It boots its own API against a fixture corpus (`e2e/fixture-api.mjs`) rather than against
+`content/`, because a layout test that runs against whatever the corpus happens to declare proves
+nothing: the fixture's figure declares a 4:1 box and its SVG is 1:1, so an implementation that
+resizes the box on load fails loudly instead of accidentally agreeing. No Asymptote and no
+`artifacts/` are needed. Measured on that fixture, the box went 50px → 400px and the route shifted
+CLS 0.069 before this change, and holds at the reserved 4:1 with the figure's own contribution 0
+after.
+
+**Two numbers, because two documents budget two things.** The figure's contribution is asserted at
+exactly `0`, over the window in which the figure arrives. The route's total is asserted against the
+Lesson spec S9 #6 budget of `< 0.05`, separately, and on today's build it is not zero: the reader
+typesets prose with KaTeX, whose webfonts arrive after first paint and re-lay the prose out for
+CLS ~0.0001. That is a real shift and it is **MAX-142**'s subject; it is not charged to the figure,
+and the suite refuses to let it hide one — `expectNoFigureShift` reads every shift the run ever
+recorded, including before the settle, and fails if any of them has a source inside a figure box.
+See the header of `e2e/figure-reservation.spec.js` for why the obvious narrower metrics are worse.
 
 ## Run locally
 
@@ -200,8 +255,13 @@ npm run dev:web   # Vite dev server on :5173
 
 ```bash
 npm run test:e2e:install   # once per clone: the chromium the suite drives
-npm run test:e2e          # layout assertions in a real browser
+npm run test:e2e          # math layout assertions in a real browser
+npm run test:e2e:figure   # figure layout assertions, dev server + fixture corpus
+npm run test:e2e:all      # both suites, in that order
 ```
+
+This section is the math half. The figure half is a second Playwright suite with its own config and
+script — see *Reserve the figure box before the SVG arrives* above for why the two cannot share one.
 
 RC §7 budgets layout shift at 0 and §8.5 makes it an acceptance criterion, naming the instrument:
 "Asserted in a Playwright check". `npm test` cannot see layout — it renders no page — so this is a

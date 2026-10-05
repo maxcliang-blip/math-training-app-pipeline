@@ -16,18 +16,26 @@
 //     passes on a corpus it is not looking at.
 //
 //  2. Figure bytes do not travel here. A lesson or exercise carries figureReference() -- a
-//     figureKey, the authored description, and the build's §5.5 cache key -- and the nine payload
-//     fields stay behind the figure route. So a client learns "this exercise has a figure, and
-//     here is what it shows" from the lesson/exercise payload, and learns the SVG, the hash and
-//     the declared aspect ratio from the figure route, which is the split the figure contract
-//     mandates.
+//     figureKey, the authored description, the build's §5.5 cache key, and the authored aspect
+//     ratio -- and the nine payload fields stay behind the figure route. So a client learns "this
+//     exercise has a figure, here is what it shows, and this is how much room it needs" from the
+//     lesson/exercise payload, and learns the SVG, the hash and the compiler's own measurement
+//     from the figure route, which is the split the figure contract mandates.
 //
 //     The description is on the reference rather than on the route because of the degraded
 //     state (Rendering Conventions §5.6): when the build has produced no usable manifest the
 //     figure route is a hard 503 for every key, so the only moment the description is needed is
-//     the moment the route cannot supply it. asymptoteSource -- kilobytes of build input per
-//     figure -- still never leaves the build; the cache key is the hash of it, computed by the
-//     build and attached from the figure store.
+//     the moment the route cannot supply it.
+//
+//     The ratio is on the reference for the mirror-image reason (§5.4 item 1): the reserved box
+//     has to be sized at first paint, and first paint happens before the figure route answers.
+//     A client that has to fetch the ratio in order to reserve the box reserves nothing, and the
+//     box then changes size when the SVG lands -- which is §5.4 item 5's zero, spent on a number
+//     the client could have had for free. It is one number, not kilobytes.
+//
+//     asymptoteSource -- kilobytes of build input per figure -- still never leaves the build; the
+//     cache key is the hash of it, computed by the build and attached from the figure store.
+
 //
 //  3. Dangling references are reported, not patched. A practice list naming an exercise id that
 //     does not exist is a content bug. Serving the list anyway with the id quietly missing would
@@ -335,7 +343,8 @@ export function toLessonResponse(store, lesson) {
     // Worked examples carry their own figure fields, and a worked example is a section member
     // like any other, so the same projection applies to it. Without this the asymptoteSource of
     // every figure-bearing example rides along on every lesson response, which is exactly the
-    // build input the figure contract keeps behind the build.
+    // build input the figure contract keeps behind the build. The authored ratio is what stays,
+    // because it is what the box is reserved from.
     if (Array.isArray(section.examples)) {
       copy.examples = section.examples.map((example, i) => toExampleResponse(store, lesson, name, example, i));
     }
@@ -364,21 +373,30 @@ function lessonFigureRefs(store, lesson, sectionName, figures) {
     .map((fig, i) => {
       if (!fig || !fig.asymptoteSource) return null;
       const figureKey = lessonFigureKey(lesson.id, sectionName, i);
-      return figureReference(figureKey, fig.asymptoteAlt, store.figureCacheKeyFor(figureKey));
+      return figureReference(
+        figureKey,
+        fig.asymptoteAlt,
+        store.figureCacheKeyFor(figureKey),
+        fig.asymptoteAspectRatio
+      );
     })
     .filter(Boolean);
 }
 
 // A worked example, with its figure reduced to a reference. The build input is dropped rather than
 // blanked: an empty asymptoteSource would read as "this figure has no source", which is a
-// different and wrong claim. When there is a figure, figureKey and the description are there
-// instead, and the payload comes from the figure route.
+// different and wrong claim. When there is a figure, figureKey, the description, the cache key and
+// the authored ratio are there instead, and the payload comes from the figure route.
 function toExampleResponse(store, lesson, sectionName, example, index) {
   if (!example || typeof example !== "object") return example;
   const { asymptoteSource, asymptoteAlt, asymptoteAspectRatio, ...rest } = example;
   if (!asymptoteSource) return rest;
   const figureKey = exampleFigureKey(lesson.id, sectionName, index);
-  return { ...rest, ...figureReference(figureKey, asymptoteAlt, store.figureCacheKeyFor(figureKey)) };
+  return {
+    ...rest,
+    ...figureReference(figureKey, asymptoteAlt, store.figureCacheKeyFor(figureKey), asymptoteAspectRatio)
+  };
+
 }
 
 // The exercise route's shape. Raw LaTeX in, raw LaTeX out - never pre-rendered HTML (IA S7): the
@@ -426,11 +444,21 @@ export function toExerciseResponse(store, ex) {
     response.solutionWithheld = true;
   }
 
-  // The reference carries the description as well as the key, because the degraded state renders
-  // it and the degraded state is the one where this route's figure cannot be fetched.
+  // The reference carries the description and the authored ratio as well as the key: the degraded
+  // state renders the description, and §5.4 item 1 sizes the reserved box from the ratio -- both at
+  // moments when this route's figure payload cannot be fetched.
   if (ex.asymptoteSource) {
     const figureKey = exerciseFigureKey(ex.id);
-    return { ...response, ...figureReference(figureKey, ex.asymptoteAlt, store.figureCacheKeyFor(figureKey)) };
+    return {
+      ...response,
+      ...figureReference(
+        figureKey,
+        ex.asymptoteAlt,
+        store.figureCacheKeyFor(figureKey),
+        ex.asymptoteAspectRatio
+      )
+    };
+
   }
   return response;
 }

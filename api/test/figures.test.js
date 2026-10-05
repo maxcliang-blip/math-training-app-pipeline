@@ -51,15 +51,19 @@ test("a figure payload carries the contract fields and nothing else", () => {
 });
 
 test("a non-figure route gets the reference and never the payload", () => {
-  const ref = figureReference("m1-l1.sections.concept.figures[0]", "a number line with five dots", "sha256:feedface");
+  const ref = figureReference("m1-l1.sections.concept.figures[0]", "a number line with five dots", "sha256:feedface", 2.667);
   assert.deepEqual(Object.keys(ref), FIGURE_REFERENCE_FIELDS);
   assert.equal(ref.asymptoteAlt, "a number line with five dots");
+  assert.equal(ref.asymptoteAspectRatio, 2.667);
   // The payload fields that are not reference fields are the figure route's alone. The ones that
-  // are on both are on the reference because the client reads them before the fetch (§5.5).
+  // are on both are on the reference because the client reads them before the fetch (§5.5 for the
+  // cache key, §5.4 item 1 for the ratio).
   for (const field of FIGURE_PAYLOAD_FIELDS.filter((f) => !FIGURE_REFERENCE_FIELDS.includes(f))) {
+
     assert.equal(field in ref, false, `${field} must not appear on a lesson or exercise response`);
   }
 });
+
 
 test("a reference carries the build's cache key, and omits it rather than inventing one", () => {
   // §5.5: the client cache is read before the fetch, so the build identity has to be on the
@@ -80,7 +84,8 @@ test("a reference carries the build's cache key, and omits it rather than invent
 test("a reference with no authored description omits it rather than blanking it", () => {
   // An empty description reads as "this figure has no description", which is a different and wrong
   // claim, and the degraded box would render an empty paragraph where the description belongs.
-  assert.deepEqual(Object.keys(figureReference("k", "   ", "sha256:feedface")), ["figureKey", "figureCacheKey"]);
+  assert.deepEqual(Object.keys(figureReference("k", "   ", "sha256:feedface", 4)), ["figureKey", "figureCacheKey", "asymptoteAspectRatio"]);
+  assert.deepEqual(Object.keys(figureReference("k", undefined, null, 4)), ["figureKey", "asymptoteAspectRatio"]);
   assert.deepEqual(Object.keys(figureReference("k")), ["figureKey"]);
   assert.deepEqual(Object.keys(figureReference("k", null, null)), ["figureKey"]);
   assert.equal(figureReference(""), null);
@@ -139,6 +144,15 @@ test("the figure store hands the build's cache keys to the content store, or non
   // A manifest written before this field existed has none, and is not given one by guessing.
   const legacy = new FigureStore(manifest({ figures: [{ ...manifest().figures[0], figureCacheKey: undefined }] }));
   assert.equal(legacy.cacheKey("m1-l1.sections.concept.figures[0]"), null);
+});
+
+test("a figure that declares no usable ratio gets no ratio on its reference", () => {
+  // Omitted rather than blanked, and certainly not defaulted here: the default belongs to the
+  // renderer (web/src/lib/figures.js), so the value in the document is always one that was authored.
+  for (const value of [undefined, null, 0, -1, NaN, "wide", {}]) {
+    const ref = figureReference("k", null, null, value);
+    assert.deepEqual(Object.keys(ref), ["figureKey"], `${JSON.stringify(value)} must not invent a shape`);
+  }
 });
 
 test("a manifest that did not pass the build serves no figure", () => {
