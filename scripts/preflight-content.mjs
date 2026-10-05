@@ -18,12 +18,18 @@
 //   Rendering Conventions S9  - asymptoteAlt / asymptoteAspectRatio mandatory
 //   Interaction Spec S8       - the nine content requirements
 //
-// One family has no source document, and is deliberately not numbered like one:
+// Two families have no source document, and are deliberately not numbered like one:
 //
 //   MAX-89  - json-escaped-macro: a JSON control escape inside a math span ate the macro
 //             it introduced. The gate is the only thing that can see this, so it is stated
 //             here rather than waited for. A document half would belong to whoever owns
 //             rendering_conventions; it does not exist yet and this rule does not wait for it.
+//
+//   MAX-106 - figure-id-unique / worked-example-id-unique: a figure or worked-example id is an
+//             address, and two records sharing one make it resolve to whichever came first. The
+//             delivery gate on MAX-104 resolves by figure id, so a duplicate there would be
+//             reported as delivered without being evidence of anything. Same reasoning as
+//             MAX-89: the gate is the only thing that can see this.
 //
 // What this file is not, and why the landing gate is not in it: every rule above runs with no app
 // and no repository, on a corpus directory, and stays that way on purpose -- an author can run it
@@ -898,6 +904,71 @@ function checkExercise(ex, lessonIndex) {
   if (hasFigure) checkCaption(ex, `${where("captionLatex")}`, { binding: false });
 }
 
+// ---------------------------------------------------------------------------
+// Ids are addresses (MAX-106)
+// ---------------------------------------------------------------------------
+//
+// A figure id is the name an author gives a figure and the name everyone reaches for when they
+// mean it -- a content drop, a review comment, and the delivery gate on MAX-104, which walks
+// sections.<name>.figures[] looking for the id it was asked about. Nothing enforced that, and
+// that is how two records ended up holding one: m9-l3 and m9-l4 each hung a figure on the
+// `objective` section whose id was the id of the lesson's own `concept` figure, the same record
+// copied byte for byte. It broke nothing, precisely because nothing resolved by id yet.
+//
+// It becomes a key the moment anything does, and then a duplicate does not fail loudly. A
+// resolver that finds two records for one id returns whichever it saw first, and the gate reports
+// that figure as delivered -- a check that cannot say which of two things it meant is not
+// evidence of anything. So the collision is an error here, before the consumer that would have to
+// guess at it, and not left to that consumer to detect.
+//
+// Corpus-wide rather than per-lesson. The id is meant to be an address, and an address scoped to
+// one file is not an address. Every finding names every site holding the id, because "m9-l3-fig-1
+// is used twice" is not actionable and "m9-l3-fig-1 is held by sections.objective.figures[0] and
+// sections.concept.figures[0]" is.
+//
+// Worked examples get the same check for the same reason and because the same two lessons had
+// them: m9-l3-ex-1, m9-l3-ex-2, m9-l4-ex-1 and m9-l4-ex-2 were each authored into `objective`
+// and `concept`, the objective copies being the pre-markup drafts of the concept ones -- same
+// ids, and text that renders `n \ge 2` literally because it never learned the $...$ spans. A
+// record that carries no id is not a collision and is skipped rather than reported: four of
+// m5-l1's figure reservations declare no id at all, which is a separate gap and not this rule.
+function checkIdUniqueness(lessons) {
+  const figures = new Map();
+  const examples = new Map();
+
+  const claim = (into, id, site) => {
+    if (typeof id !== "string" || id.trim() === "") return;
+    if (!into.has(id)) into.set(id, []);
+    into.get(id).push(site);
+  };
+
+  for (const lesson of lessons) {
+    // `lessonFigureRecords` is the one walk over figures -- section figures on any section and
+    // worked-example figures, reservations included -- so the sites named here are the same
+    // addresses the build compiles under, not a second spelling of them.
+    for (const site of lessonFigureRecords(lesson)) {
+      const field = site.kind === "example" ? "examples" : "figures";
+      claim(figures, site.record.id, `lessons/${lesson.id}.sections.${site.sectionName}.${field}[${site.index}]`);
+    }
+    for (const [sectionName, section] of Object.entries((lesson && lesson.sections) || {})) {
+      for (const [index, record] of (section.examples || []).entries()) {
+        claim(examples, record && record.id, `lessons/${lesson.id}.sections.${sectionName}.examples[${index}]`);
+      }
+    }
+  }
+
+  const report = (rule, claimed, kind) => {
+    for (const [id, sites] of claimed) {
+      if (sites.length < 2) continue;
+      check("error", rule, "corpus", false,
+        `${kind} id ${JSON.stringify(id)} is claimed by ${sites.length} records (${sites.join(", ")}); ` +
+        "an id is an address, and two records sharing one resolve to whichever came first");
+    }
+  };
+  report("figure-id-unique", figures, "figure");
+  report("worked-example-id-unique", examples, "worked-example");
+}
+
 function checkLesson(lesson, exerciseIds, exerciseById) {
   const path = `lessons/${lesson.id}`;
   const where = (f) => `${path}.${f}`;
@@ -993,8 +1064,11 @@ function checkLesson(lesson, exerciseIds, exerciseById) {
   // `conceptFigures.length` and then added one more inside the loop for every figure whose source
   // parsed, so each concept figure was charged twice (63 of them), and it seeded the total with the
   // *declared* records, including the eight reservations whose `asymptoteSource` is null. It also
-  // never looked at a figure outside `concept.figures`, of which this corpus has two, on the
-  // `objective` sections of m9-l3 and m9-l4.
+  // never looked at a figure outside `concept.figures`, of which this corpus had exactly two: the
+  // `objective`-section figures on m9-l3 and m9-l4, each a byte-for-byte copy of that lesson's own
+  // concept figure under the same id. MAX-106 removed both, so the corpus now hangs every figure
+  // off `concept` -- and this walk is what stops that being load-bearing, since the next lesson to
+  // hang one elsewhere is validated here either way.
   //
   // `lessonFigureRecords` is every declared figure-bearing record and is what gets validated: a
   // reservation is not a figure, but it is still a record an author can contradict, and dropping
@@ -1058,6 +1132,9 @@ export function run(contentRoot) {
     checkExercise(e, lessonIndex);
     blocksRendered += splitBlocks(e.solutionLatex).blocks.length;
   }
+  // After the per-lesson passes, not inside one of them: an id is unique across the corpus, so a
+  // check that ran per lesson could only ever catch a collision inside a single file (MAX-106).
+  checkIdUniqueness(lessons);
   // The corpus figure total comes from the shared counter, not from summing the per-lesson
   // returns. Summing a return value is how this number drifted from the build's in the first
   // place: the build's scan and the gate's tally were two independent expressions of "figure",
