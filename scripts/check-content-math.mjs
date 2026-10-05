@@ -357,6 +357,56 @@ export const MUTATIONS = [
     },
   },
   {
+    // MAX-141. The rule that closes the 29-against-26 false orphan report on m7-l4: an exercise
+    // record that no lesson lists is content no learner can be served, and until this rule existed
+    // nothing would fail if one were authored.
+    //
+    // The defect is *appended* rather than carved out of an existing record, and that is the whole
+    // reason this donor is conclusive. The harness copies the pristine corpus and then writes every
+    // kind back out as a single mutated.json holding the mutated records, so the tree under test
+    // holds each record twice: the original on disk and the mutated one. An earlier version of this
+    // donor unlisted a real exercise by splicing its id out of the lesson's practice list, which
+    // left two records with the same lesson id on disk and let the check's lessonIndex bind
+    // whichever one readdirSync happened to return last. On the corpus as it stands that is the
+    // untouched original, so the mutation was silently vacuous and reported MISSED for a rule that
+    // works. Appending a record touches no lesson, so there is no id for the two copies to collide
+    // on and the finding does not depend on directory iteration order at all.
+    //
+    // The donor is a real record, deep-copied, so every field-level rule still passes on it and the
+    // only thing wrong with it is that no lesson lists it -- otherwise the mutation would prove
+    // that some *other* rule fires, which is not what this entry is asserting. Figure-free is the
+    // same concern applied to figure ids: a copy carrying asymptoteSource would raise
+    // figure-id-unique as well, and a mutation that raises two rules proves less than one that
+    // raises exactly the rule under test.
+    id: "exercise-no-lesson-lists-it",
+    rule: "S8-exercise-reachable",
+    severity: "error",
+    apply(c) {
+      const listed = new Set();
+      for (const l of c.lessons) {
+        for (const key of ["practice", "mastery"]) {
+          const ids = l.sections && l.sections[key] && l.sections[key].exerciseIds;
+          for (const id of Array.isArray(ids) ? ids : []) listed.add(id);
+        }
+      }
+      // Located in id order rather than by index: readdirSync is unsorted, so a fixed index would
+      // make the donor depend on the filesystem, and a donor that happened to be the first record
+      // would break the moment the corpus grew (MAX-76).
+      const donor = [...c.exercises]
+        .sort((a, b) => String(a.id).localeCompare(String(b.id)))
+        .find((ex) => ex && ex.lessonId && !ex.asymptoteSource
+          && c.lessons.some((l) => l.id === ex.lessonId));
+      if (!donor) {
+        throw new Error("no figure-free exercise belongs to a lesson, so the mutation cannot be injected");
+      }
+      let id = `${donor.lessonId}-unlisted`;
+      for (let n = 2; listed.has(id) || c.exercises.some((ex) => ex.id === id); n += 1) {
+        id = `${donor.lessonId}-unlisted-${n}`;
+      }
+      c.exercises.push(JSON.parse(JSON.stringify({ ...donor, id })));
+    },
+  },
+  {
     id: "choices-not-five",
     rule: "S3.3-choices-arity",
     severity: "error",
