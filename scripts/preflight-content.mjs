@@ -31,6 +31,14 @@
 //             reported as delivered without being evidence of anything. Same reasoning as
 //             MAX-89: the gate is the only thing that can see this.
 //
+//   MAX-107 - figure-id-required: a figure id is an address, and a record that declares none
+//             cannot be named by anything that would have to assert it shipped -- least of all
+//             the delivery gate on MAX-104, whose whole premise is that a close-out names ids
+//             and the ref's tree is asked whether it holds them. Four of m5-l1's figure
+//             reservations declared no id at all. Same reasoning as MAX-89: the gate is the
+//             only thing that can see this, and the document half would belong to whoever owns
+//             the figure authoring contract.
+//
 // What this file is not, and why the landing gate is not in it: every rule above runs with no app
 // and no repository, on a corpus directory, and stays that way on purpose -- an author can run it
 // from a checkout of content and nowhere else. The sibling scripts/check-landed-content.mjs
@@ -803,6 +811,41 @@ function checkFigureReserved(record, path) {
     "it is not counted against an S5.1 budget until its source lands");
 }
 
+// A figure id is the name an author gives a figure, and it is the name everything else reaches for
+// when it means that figure: a content drop, a review comment, and the delivery gate on MAX-104,
+// which walks sections.<name>.figures[] for the id it was asked about. A record that declares no id
+// cannot be named, so nothing can assert it shipped. It exists, it renders, and it is invisible to
+// every check that could say whether it was delivered -- which is the defect, not a cosmetic one.
+//
+// MAX-106's figure-id-unique cannot catch this, and correctly so: a record with no id cannot collide.
+// It is a separate rule because it is a separate question. Four of m5-l1's figure reservations
+// declared none, which is what MAX-107 is about: they had captions, alt text slots and aspect-ratio
+// slots, and no name.
+//
+// Reservations are included, and they are the case that matters most. A reservation is not a figure
+// yet -- it is the promise of one, authored ahead of the Asymptote -- and it is the state an author
+// adds a record in and leaves alone. The id is the one field an author has to invent rather than
+// transcribe, so it is the one that gets left out. Filling in the source later does not add it.
+//
+// Scoped to section figures, `sections.<name>.figures[]`, because that is the set MAX-104's resolver
+// walks. Worked-example figures live in `sections.<name>.examples[]` and exercise figures hang off an
+// exercise id, which is already the record's own address; neither is resolved by figure id by
+// anything today. Widening this to them is a separate decision, and a deliberate one -- not an
+// oversight to be read as permission.
+//
+// The site is named in the same spelling figure-id-unique uses -- `lessons/<id>.sections.<name>.
+// figures[<i>]` -- because the two rules answer about the same records and a reader holding one
+// finding should be able to find the other without translating.
+function checkFigureIdRequired(site, sitePath) {
+  if (site.kind !== "section") return;
+  const id = site.record.id;
+  check("error", "figure-id-required", `${sitePath}.id`,
+    typeof id === "string" && id.trim() !== "",
+    "figure record declares no id, so nothing can name it: a content drop, a review comment and the " +
+    "delivery gate all address a figure by its id, and a close-out cannot assert delivery of a " +
+    `record it cannot refer to. Author it as <lesson-id>-fig-<n>, counting within the section (MAX-107)`);
+}
+
 function checkExercise(ex, lessonIndex) {
   const path = `exercises/${ex.id}`;
   const where = (f) => `${path}.${f}`;
@@ -1082,6 +1125,7 @@ function checkLesson(lesson, exerciseIds, exerciseById) {
 
   for (const site of declared) {
     const sitePath = where(`sections.${site.sectionName}.${site.kind === "example" ? "examples" : "figures"}[${site.index}]`);
+    checkFigureIdRequired(site, sitePath);
     checkFigureReserved(site.record, `${sitePath}.asymptoteSource`);
     checkAsymptote(site.record.asymptoteSource, site.record.asymptoteAlt,
       site.record.asymptoteAspectRatio, sitePath);
