@@ -58,6 +58,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { requirePathArg } from "./lib/require-path-arg.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -1373,10 +1374,15 @@ if (isMain) {
   // Inert for both real callers, which is why it is a change and not a new failure mode:
   // `npm run git:guard:selftest` passes `--selftest` alone, and .githooks/pre-push ends in
   // `exec node "$gate" "$@"`, where git's own arguments are `<remote-name> <remote-url>`.
-  const reportIdx = args.indexOf("--report");
-  const reportValue = reportIdx >= 0 ? args[reportIdx + 1] : undefined;
-  if (reportValue !== undefined && reportValue.startsWith("-")) {
-    console.error(`check-push-authors: ARGUMENT: --report takes an output path; got the flag "${reportValue}".`);
+  //
+  // The parse is `requirePathArg`, the shared bare-path parser MAX-130 landed while this branch was
+  // open, not the third hand-written copy of these three lines. The module fixes its message shape
+  // as `<flag> takes an output path; got the flag "<token>".` precisely so adopting it here is a
+  // byte-identical message, and the selftest case below asserts that exact substring rather than
+  // merely "it refused something" -- so the swap is checked, not assumed.
+  const reportArg = requirePathArg(args, "--report");
+  if (!reportArg.ok) {
+    console.error(`check-push-authors: ARGUMENT: ${reportArg.message}`);
     console.error("                       Nothing was written. Give --report a path, or drop it to");
     console.error("                       judge the push and report to stdout only.");
     process.exit(2);
@@ -1426,12 +1432,13 @@ if (isMain) {
 
   console.log(printResult(result).join("\n"));
 
-  // One parse, one place a flag can be refused: reportValue, not args[reportIdx + 1] again. The
-  // truthiness test is the original one -- `--report` with no value, or `--report ""`, still means
+  // One parse, one place a flag can be refused: reportArg is reused here rather than re-derived
+  // from `args` a second time, so the token that was refused is the token that gets written.
+  // The truthiness test is the original one -- `--report` with no value, or `--report ""`, still means
   // "no report", and neither is an error, because a hook that forwards git's own arguments must not
   // fail over a flag it was never given a value for.
-  if (reportValue) {
-    const out = resolve(reportValue);
+  if (reportArg.value) {
+    const out = resolve(reportArg.value);
     mkdirSync(dirname(out), { recursive: true });
     writeFileSync(out, JSON.stringify({ gate: "check-push-authors", baseRef, ...result }, null, 2) + "\n");
     console.log(`  report: ${out}`);
