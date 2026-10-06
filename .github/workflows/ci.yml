@@ -91,6 +91,20 @@ jobs:
           node-version: 20
       - name: The push authorship guard proves it can fail
         run: npm run git:guard:selftest
+      # MAX-149: docs/CONTENT_CONVENTIONS.md carries measured claims about the corpus -- 38 lessons,
+      # 759 exercise records, 645 practice and 114 mastery ids, 338 technique slugs of which 13 are
+      # shared, 10 untagged exercises split 3/7 -- and the doc's own rule is that "a stale
+      # measurement is worse than a missing one, because the next author cannot tell which is
+      # which". Nothing checked them, so each one went false in silence the first time an exercise
+      # was authored. --selftest runs the real doc against the real corpus first (a clean tree must
+      # pass, or every case below would be vacuous) and then falsifies each claim in turn, so a
+      # green run means the gate measures the doc rather than restating it.
+      #
+      # Deliberately not the landing gate. GATED_PREFIXES stays ["content/", "lib/", "scripts/"]:
+      # MAX-145 settled that question by measurement, and widening it here would re-decide it in a
+      # commit whose subject is a docs check.
+      - name: The measured claims in the docs are still true of the corpus
+        run: npm run docs:selftest
       # MAX-126: the landing gate is the only check that can see a gated branch nobody ever merged,
       # and a gate nobody runs is indistinguishable from a gate that does not work. landed.yml runs
       # it on PRs and on pushes to fix/* and land/*; this step is about the gate's own wiring, so
