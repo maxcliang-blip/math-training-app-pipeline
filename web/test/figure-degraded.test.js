@@ -122,12 +122,14 @@ for (const [name, failure] of Object.entries(FAILURES)) {
 test("§8.6: the box keeps its size — the reserved ratio survives the failure", async () => {
   // The SVG is not coming, so nothing will ever correct this box. It is sized once, from the
   // authored ratio, and that is what keeps the lesson from reflowing under the reader.
+  // On `.figure__box`, not on the wrapper: the three states share one element sized by one rule, and
+  // a ratio on the wrapper would be a fourth place for the number to live and drift.
   const { html } = await degradedHtml(FAILURES.network, { declaredAspectRatio: 0.661 });
-  assert.match(html, /aspect-ratio:\s*0\.661/);
+  assert.match(html, /class="figure__box" style="--fig-ratio:0\.661"/);
 
   // With no ratio authored anywhere, the documented default rather than an unreserved box.
   const { html: defaulted } = await degradedHtml(FAILURES.network);
-  assert.match(defaulted, /aspect-ratio:\s*1\.333/);
+  assert.match(defaulted, /--fig-ratio:1\.333/);
 });
 
 test("§8.6: the lesson stays usable — the reason is inspectable and the prose is untouched", async () => {

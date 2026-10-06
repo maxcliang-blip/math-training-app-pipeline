@@ -29,3 +29,7 @@ web/test/.degraded-*/
 # to triage from a diff.
 test-results/
 playwright-report/
+# The figure suite's own scratch: the fixture corpus the fixture API serves out of .e2e-tmp/, and
+# the failure artefacts a red run leaves behind. Separate from the two entries above because it is
+# the only one of the three that is an input to a later run rather than an output of one.
+.e2e-tmp/

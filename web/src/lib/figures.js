@@ -17,7 +17,8 @@
 
 import {
   FIGURE_PAYLOAD_FIELDS,
-  toFigurePayload
+  toFigurePayload,
+  usableRatio
 } from "../../../lib/figure-contract.mjs";
 
 // A 503 from the figure route carries the pipeline status. This is the shape of that body,
@@ -80,29 +81,39 @@ const RATIO_TOLERANCE = 0.02;
 // of text inside a box that is supposed to hold a diagram.
 export const DEFAULT_FIGURE_ASPECT_RATIO = 1.333;
 
-// Which aspect ratio the <img> box should use, and whether the manifest's numbers disagree.
-//
-// Two ratios come from the build (declared is the author's, compiled is the compiler's) and a third
-// from the browser once the SVG decodes. They are not equally trustworthy, and treating them as
-// interchangeable is how a diagram ends up drawn at the wrong shape: applying the declared ratio to
-// an SVG whose intrinsic ratio differs stretches the picture, and a stretched geometry figure
-// teaches the wrong thing. The measured ratio wins for layout because it is the only one that
-// describes the bytes actually being painted.
-//
-// The declared/compiled numbers still have a job — reserving the box before the SVG arrives — and a
-// disagreement between them is a build defect worth reporting rather than silently picking a
-// winner. This returns both so the component can reserve, then correct, then say so.
-export function resolveFigureRatio({ declaredAspectRatio, compiledAspectRatio, measuredAspectRatio } = {}) {
-  const usable = (value) =>
-    typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
 
+// Which aspect ratio the figure box is sized at, and whether the manifest's numbers disagree.
+//
+// Three ratios are in play and they are not equally trustworthy: the author's declaration, the
+// compiler's measurement of the built SVG, and the browser's measurement once the SVG decodes.
+//
+// The box is sized from the author's declaration and from nothing else, once, on the figure's
+// first paint. That is the whole no-reflow contract (§5.4 items 1 and 5): the reserved box and the
+// loaded box must be the same box, so nothing that arrives later may resize it. Applying the
+// browser's measurement to the box is what made the layout depend on load timing — the measured
+// ratio replaced the reservation after first paint, and on the deployed corpus the reservation and
+// the measurement disagree on 65 of 69 figures, so the box changed height under the reader.
+//
+// The compiler's and the browser's numbers are still worth having: they say whether the authored
+// declaration is true. They are returned as drift, and the component records it, because a figure
+// drawn at the wrong shape is a build defect to fix in the authoring record or the compiler and
+// not in the stylesheet. The <img> is laid into the box with object-fit: contain, so a declaration
+// that turns out to be wrong letterboxes the picture instead of distorting the geometry.
+// "Is this a shape", asked with the contract's own predicate rather than a second copy of it. The
+// number reaches the client as JSON and the authoring record holds it as whatever the author typed,
+// so the same value arrives here as a number on one path and a string on the other -- and two copies
+// of the predicate are two chances to disagree about which strings are ratios.
+const usable = usableRatio;
+
+export function resolveFigureRatio({ declaredAspectRatio, compiledAspectRatio, measuredAspectRatio } = {}) {
   const declared = usable(declaredAspectRatio);
   const compiled = usable(compiledAspectRatio);
   const measured = usable(measuredAspectRatio);
 
-  // Before the SVG arrives the compiler's measurement beats the author's declaration.
-  const reserved = compiled ?? declared;
-  const resolved = measured ?? reserved;
+  // The authored declaration wins because it is the only one available at first paint; the
+  // compiler's measurement is the fallback for a figure that somehow reached the client without
+  // one. The measurement is deliberately not in this expression.
+  const reserved = declared ?? compiled ?? DEFAULT_FIGURE_ASPECT_RATIO;
 
   const drift = [];
   if (declared && compiled && Math.abs(declared - compiled) / compiled > RATIO_TOLERANCE) {
@@ -112,7 +123,7 @@ export function resolveFigureRatio({ declaredAspectRatio, compiledAspectRatio, m
     drift.push({ kind: "reserved-vs-measured", expected: reserved, actual: measured });
   }
 
-  return { reserved, resolved, drift };
+  return { reserved, declared, compiled, measured, drift };
 }
 
 // The build identity a call carries, or null. Whitespace is not an identity: a blank key would be
