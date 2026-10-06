@@ -23,7 +23,7 @@
 //
 // Usage: node verify-staging.mjs [baseUrl]
 
-import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../lib/figure-contract.mjs";
+import { AUTHORED_FIELDS, FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../lib/figure-contract.mjs";
 
 const BASE = process.argv[2] || "http://127.0.0.1:18083";
 
@@ -33,7 +33,19 @@ function check(ok, label, detail = "") {
   console.log(`${ok ? "PASS" : "FAIL"}  ${label}${detail ? `  ${detail}` : ""}`);
 }
 
-const FIGURE_BUILD_INPUT_FIELDS = ["asymptoteSource", "asymptoteAspectRatio"];
+// The authored fields that are NOT reference fields are exactly the build inputs that must never
+// reach a content route -- and they are derived rather than written out, because a hand-kept list
+// of "fields banned here" is a second copy of the contract with none of its tests. MAX-72 found that
+// out the expensive way: asymptoteAspectRatio became a reference field so a figure box could be
+// reserved at first paint, this list was not narrowed to match, and the deployed-image acceptance
+// check went red on a field the contract had deliberately moved. Today the derivation is
+// ["asymptoteSource"] and nothing else.
+//
+// The derivation cuts both ways, which is the point. Widening FIGURE_REFERENCE_FIELDS can no longer
+// leave a stale ban behind here, and it cannot silently widen what a content route may carry
+// either: a new reference field still has to be in AUTHORED_FIELDS to reach a content route at all,
+// and the two payload checks below independently fail anything that is neither.
+const FIGURE_BUILD_INPUT_FIELDS = AUTHORED_FIELDS.filter((f) => !FIGURE_REFERENCE_FIELDS.includes(f));
 
 async function json(path, options) {
   const res = await fetch(`${BASE}${path}`, options);

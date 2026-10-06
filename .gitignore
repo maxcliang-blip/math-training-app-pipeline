@@ -16,3 +16,20 @@ artifacts/
 # The compiled Figure.jsx the degraded-state test imports. It is deleted when the suite finishes,
 # and ignored so that a suite killed halfway does not leave a build product in a commit.
 web/test/.degraded-*/
+# The report `check-content-math.mjs --json --selftest` wrote to a file literally named
+# `--selftest`, because `--json` took the next argv token as its output path (MAX-97). The parser
+# rejects a value beginning with `-` now, so this name cannot be produced by that call again. It is
+# ignored rather than deleted on sight because the defect is a shape -- any tool that takes a bare
+# path will do the same thing to the next flag -- and a name git already knows about is one fewer
+# stray report to find on main later. The file itself is untracked as of MAX-97.
+--selftest
+# Playwright's per-run output: traces for a failing test, and an error-context file per failure. It
+# is written into the repository root rather than a build directory because `testDir` is ./e2e, and
+# a failure report that lands in the next commit is a screenshot of a defect somebody else then has
+# to triage from a diff.
+test-results/
+playwright-report/
+# The figure suite's own scratch: the fixture corpus the fixture API serves out of .e2e-tmp/, and
+# the failure artefacts a red run leaves behind. Separate from the two entries above because it is
+# the only one of the three that is an input to a later run rather than an output of one.
+.e2e-tmp/

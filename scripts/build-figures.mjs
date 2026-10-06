@@ -18,6 +18,9 @@
 //   node scripts/build-figures.mjs [contentRoot] [--out <dir>] [--allow-missing-toolchain]
 //                                   [--record-aspect-ratios]
 //
+// --out takes a directory, and refuses a value beginning with `-` (MAX-130): the shared parser in
+// scripts/lib/require-path-arg.mjs, so a mistyped flag cannot create a directory named after it.
+//
 // Exit codes: 0 validated and compiled · 1 contract violation · 2 configuration error
 //             3 validated but not compiled (no asymptote toolchain)
 
@@ -38,6 +41,7 @@ import {
   lessonFigureSites,
   exerciseFigureKey,
 } from "../lib/figure-contract.mjs";
+import { requirePathArg } from "./lib/require-path-arg.mjs";
 
 export { DERIVED_FIELDS, FIGURE_PAYLOAD_FIELDS };
 
@@ -139,6 +143,44 @@ const RATIO_REJECT = 0.05;
 // record pass is allowed to bless one.
 const MIN_ASPECT = 0.5;
 const MAX_ASPECT = 3;
+
+// Lower bound on each dimension of the declared size(W,H) ceiling, in the same units as the call.
+// This is the *absolute size* counterpart to MIN_ASPECT/MAX_ASPECT, and it exists because the band
+// above only constrains the shape of the box: a size(60,45) figure has a legal 1.333 ratio and
+// passes every other extent check in the pipeline.
+//
+// WHY 80, MEASURED (MAX-95). Measured on asy 2.87 + dvisvgm 3.2.1 through this same compile path
+// (scripts/asy-docker, --eps --no-fonts), over a 12-rung ladder from size(40,30) to size(640,480),
+// each rung drawing a stroked line plus default-font labels:
+//
+//   1. size() does NOT scale type. The label glyph path is byte-identical at size(40,30) and
+//      size(640,480) -- same absolute coordinates, only translated -- at a cap-height of 8.51pt =
+//      11.38 CSS px. stroke-width stays 0.5pt at every rung too. So there is no "the text shrank"
+//      regime to guard, and a floor pitched at type size would be guarding a number that does not
+//      move. This is why the number below is a floor on the *box*, not on the font.
+//   2. size(W,H) sets a uniform unitsize from the declared HEIGHT and lets width follow the
+//      content's aspect ratio: declared size(80,60) emits 71x61pt, size(100,75) emits 89x75.
+//      Consistent with MAX-59's "size() bounds the box, it does not fix it".
+//   3. What degrades as the ceiling shrinks is therefore proportion, not type: glyph-box area as a
+//      fraction of the emitted viewBox runs 0.204 at size(40,30), 0.048 at size(80,60), 0.025 at
+//      size(111,83), 0.003 at size(320,240). Past roughly 5% the labels stop being annotations and
+//      become the figure. asy never overlaps them -- glyphPairs was 0 at every rung, because it
+//      shrinks the drawing instead -- so there is no hard collision edge to sit on, only a
+//      gradient, and 80pt is where that gradient is still comfortably on the good side.
+//
+// 80pt declared is >= 106.7 CSS px of rendered figure, against a container that very nearly binds:
+// web/src/styles.css gives .figure__svg `max-width: 100%` and never `width: 100%`, so the browser
+// lays the <img> out at the SVG's intrinsic pt width * 4/3 inside a 736px `main` (704px inside
+// article.exercise). Measured over the 91 artifacts a current container build emits, intrinsic
+// widths run 169-641 CSS px -- the widest clears 91% of the container an exercise figure gets, so
+// the ceiling is very nearly what sets the on-screen size of a figure today.
+//
+// The corpus is clear of this floor by 39%: on origin/main all 91 ceilings use the two-argument
+// form, the smallest declared dimension is 111, and nothing is below 80. So this rejects nothing
+// that passes today. That is also why the number is NOT derived from the corpus -- MAX-60 found 55
+// of 78 ceilings equal to their own measured box, so the corpus distribution is a record of a
+// writeback pass, not of author intent. 80 came from the ladder; the corpus merely clears it.
+export const MIN_SIZE_FLOOR = 80;
 
 // Defence in depth. The primary control is that only Asymptote output for approved figure
 // sources is ever shipped; this removes the active-content vectors that could survive a
@@ -292,6 +334,29 @@ export function validateFigure(figure) {
 
   const width = Number(sizeCall[1]);
   const height = Number(sizeCall[2]);
+
+  // The floor on the ceiling. MIN_ASPECT/MAX_ASPECT above constrain the *shape* of the declared
+  // box; this constrains its absolute size, which nothing else in the pipeline does. The reason it
+  // is a floor on the box and not on the font is measured, and it is the opposite of the intuitive
+  // story: asy 2.87's size() does not scale type, so a figure's labels stay at 11.38 CSS px cap-
+  // height whatever the ceiling says. Shrinking the ceiling does not make the text small -- it
+  // shrinks the drawing out from under text that never shrank, so the labels stop being annotations
+  // and become the figure. See MIN_SIZE_FLOOR above for the ladder.
+  //
+  // Reported per dimension rather than on the area or the minimum, because the two dimensions fail
+  // for different reasons and an author needs to know which one to raise: a too-narrow W means the
+  // figure cannot hold a label beside what it labels, a too-short H means it cannot hold a label
+  // above and below. One message covers both and names the pair, because the fix is the same.
+  const tooSmall = [["W", width], ["H", height]].filter(([, v]) => v < MIN_SIZE_FLOOR);
+  if (tooSmall.length) {
+    problems.push(
+      `size(${width},${height}) declares a ceiling below the ${MIN_SIZE_FLOOR}pt legibility floor ` +
+        `(${tooSmall.map(([n, v]) => `${n}=${v}`).join(", ")}). Asymptote's size() does not scale type, so a ` +
+        `ceiling this small does not shrink the labels -- it shrinks the drawing underneath labels that ` +
+        "stay the same size, and the figure stops being readable (S5.2). The ceiling still bounds the " +
+        "output, it is not the box: asymptoteAspectRatio comes from the compiled viewBox (S5.4 item 4)",
+    );
+  }
 
   // The declared ratio is content's own assertion about the box this figure renders at, and it is
   // what S5.4 item 4 compares against the compiled viewBox. It is NOT width/height: Asymptote's
@@ -1312,10 +1377,30 @@ if (isMain) {
   const args = process.argv.slice(2);
   const allowMissing = args.includes("--allow-missing-toolchain");
   const record = args.includes("--record-aspect-ratios");
-  const outIdx = args.indexOf("--out");
   const positional = args[0] && !args[0].startsWith("--") ? resolve(args[0]) : null;
+
+  // `--out <dir>` takes the next argv token as its output directory, so `--out --any-flag` used to
+  // resolve that flag against the cwd and build into a directory named after it -- the same defect
+  // MAX-97 hit through check-content-math.mjs's `--json` and MAX-124 through check-push-authors.mjs's
+  // `--report`, the third instance of it in this repository and the first one still on main. The
+  // shared parser (scripts/lib/require-path-arg.mjs, MAX-130) is what every tool with a bare-path
+  // flag now calls, so the next one gets the refusal by default instead of re-deriving it.
+  //
+  // First thing the CLI does, before the content-root check, for the reason MAX-97 had to fix twice:
+  // the refusal and the configuration error below share exit code 2, so a run with both wrong can
+  // only be told apart by which message printed. check-content-math.mjs's --selftest pins that
+  // ordering by spawning this script with a corpus root that does not exist.
+  const outArg = requirePathArg(args, "--out");
+  if (!outArg.ok) {
+    console.error(`build-figures: ARGUMENT: ${outArg.message}`);
+    console.error("                     Nothing was written. Give --out a directory, or drop it to");
+    console.error(`                     build into ${DEFAULT_OUT}.`);
+    process.exit(2);
+  }
+  // The truthiness test is the original one: `--out` with no value, or `--out ""`, still means
+  // "the default directory", unchanged.
   const contentRoot = positional || (process.env.CONTENT_ROOT ? resolve(process.env.CONTENT_ROOT) : DEFAULT_CONTENT);
-  const outDir = outIdx >= 0 && args[outIdx + 1] ? resolve(args[outIdx + 1]) : DEFAULT_OUT;
+  const outDir = outArg.value ? resolve(outArg.value) : DEFAULT_OUT;
 
   if (!existsSync(contentRoot)) {
     console.error(`build-figures: CONFIG: content root ${contentRoot} does not exist`);

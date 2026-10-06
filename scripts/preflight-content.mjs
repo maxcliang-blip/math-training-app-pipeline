@@ -18,12 +18,37 @@
 //   Rendering Conventions S9  - asymptoteAlt / asymptoteAspectRatio mandatory
 //   Interaction Spec S8       - the nine content requirements
 //
-// One family has no source document, and is deliberately not numbered like one:
+// Two families have no source document, and are deliberately not numbered like one:
 //
-//   MAX-89  - json-escaped-macro: a JSON control escape inside a math span ate the macro
-//             it introduced. The gate is the only thing that can see this, so it is stated
+//   MAX-89  - json-escaped-macro: a JSON control escape inside a math context ate the macro
+//             it introduced, widened by MAX-110 to reach display blocks as well as `$…$`
+//             spans; see the REACH note at the rule for why the span-only scope was wrong.
+//             The gate is the only thing that can see this, so it is stated
 //             here rather than waited for. A document half would belong to whoever owns
 //             rendering_conventions; it does not exist yet and this rule does not wait for it.
+//
+//   MAX-106 - figure-id-unique / worked-example-id-unique: a figure or worked-example id is an
+//             address, and two records sharing one make it resolve to whichever came first. The
+//             delivery gate on MAX-104 resolves by figure id, so a duplicate there would be
+//             reported as delivered without being evidence of anything. Same reasoning as
+//             MAX-89: the gate is the only thing that can see this.
+//
+//   MAX-107 - figure-id-required: a figure id is an address, and a record that declares none
+//             cannot be named by anything that would have to assert it shipped -- least of all
+//             the delivery gate on MAX-104, whose whole premise is that a close-out names ids
+//             and the ref's tree is asked whether it holds them. Four of m5-l1's figure
+//             reservations declared no id at all. Same reasoning as MAX-89: the gate is the
+//             only thing that can see this, and the document half would belong to whoever owns
+//             the figure authoring contract.
+//
+// What this file is not, and why the landing gate is not in it: every rule above runs with no app
+// and no repository, on a corpus directory, and stays that way on purpose -- an author can run it
+// from a checkout of content and nowhere else. The sibling scripts/check-landed-content.mjs
+// (MAX-126, `npm run land:check`) asks a question that needs git, a remote and a pull-request
+// list: this branch carries gated commits, no PR has ever had it as its head, and the issue it
+// belongs to is finished, so nothing here will ever ship (MAX-132 added that last condition -- work
+// in progress is not a finding). Folding it in would take the repository dependency with it and
+// cost the author workflow the only gate it can run anywhere.
 //
 // Usage: node scripts/preflight-content.mjs [contentRoot] [--json [<outPath>]]
 //   --json           print the report to stdout
@@ -131,6 +156,18 @@ const MAX_FIGURES_PER_LESSON = 8;
 const MAX_CORPUS_FIGURES = 185;
 const MAX_ASPECT = 3;
 const MIN_ASPECT = 0.5;
+// Lower bound on each dimension of the declared size(W,H) ceiling. Authoring-time twin of the
+// authoritative gate in scripts/build-figures.mjs (validateFigure, MIN_SIZE_FLOOR); the two
+// constants must agree and api/test/figures.test.js asserts that they do.
+//
+// The number is measured, not chosen (MAX-95). asy 2.87 does not scale type with size() -- across a
+// ladder from size(40,30) to size(640,480) the label glyph path is byte-identical at 11.38 CSS px
+// cap-height, and stroke-width stays 0.5pt -- so no ceiling makes the *text* too small. What a small
+// ceiling does is shrink the drawing out from under labels that never shrank: glyph area as a
+// fraction of the emitted box runs 0.204 at size(40,30), 0.048 at size(80,60), 0.025 at
+// size(111,83), 0.003 at size(320,240). This is the absolute-size counterpart to MIN_ASPECT, which
+// only constrains the shape of the box.
+export const MIN_SIZE_FLOOR = 80;
 
 const TIERS = new Set(["10", "12", "A", "A+"]);
 
@@ -465,19 +502,46 @@ const COMMAND = /\\([a-zA-Z]+|.)/g;
 // so. An advisory would be indistinguishable from no rule at all, because the only thing that
 // acts on this class of finding is the gate itself.
 //
-// The discriminator is "control character inside a math span", not "newline in a LaTeX field".
-// The corpus uses \n\n for paragraph breaks in solutionLatex and bodyLatex and is full of them:
-// 5,808 control characters sit in the scanned fields, and 12 of them are inside a math span. A
-// rule about newlines would fire on the other 5,796 and mean nothing. Inside a `$...$` or
-// `$$...$$` span there is no legitimate reading -- the block model separates blocks with a blank
-// line, and a math span is one span.
+// The discriminator is "control character inside a math context", not "newline in a LaTeX
+// field". The corpus uses \n\n for paragraph breaks in solutionLatex and bodyLatex and is full
+// of them. Measured on main (1179978) over the 8,107 fields this rule scans, there are 5,796
+// control characters in total and every one of them is inside a block: 5,783 line feeds and 13
+// tabs. A rule about newlines anywhere in a field would fire on all 5,783 and mean nothing.
+// Inside a `$...$` or `$$...$$` span there is no legitimate reading -- the block model separates
+// blocks with a blank line, and a math span is one span -- which is why a span search can afford
+// to include `\n` and still add nothing to the corpus. On main it adds nothing because MAX-87
+// cleared the spans: there are now 0 control characters strictly inside a `$...$` span.
 //
-// The one place this rule knowingly leaves a same-shaped defect alone is a display block, a
-// block with no `$` at all: 13 of the corpus's control characters are `\text` eaten inside
-// display blocks in m5-l1 and m5-l2, and a display block cannot be searched for a control
-// character without also catching the 29 line feeds that legitimately lay a display block out
-// over several lines. Tab-in-a-display-block is therefore its own rule, filed separately,
-// rather than a widening of this one.
+// REACH (MAX-110). This rule originally scanned `$...$` spans only, and recorded display blocks
+// as a knowingly-uncovered hole: 13 `\text` escapes were eaten in display blocks in m5-l1 and
+// m5-l2, with no span for the rule to search. The stated reason it could not widen was that a
+// display block "cannot be searched for a control character without also catching the 29 line
+// feeds that legitimately lay a display block out over several lines." That premise is wrong,
+// and the measurement that settles it is on both sides of the rule rather than inside it:
+//
+//   - A display block IS a math context, by the corpus's own block model. splitBlocks sets
+//     `display: true` for every block with no `$`, and renderBlocks hands the entire block to
+//     KaTeX with `displayMode: true`. S3.2-macro-allowlist already scans display blocks, because
+//     it matches COMMAND over the whole field. This one rule was the only place that refused to
+//     treat a display block as math, which is what made the hole a hole rather than a gap.
+//   - The 29 line feeds are not layout breaks. Every one is a single newline inside a
+//     soft-wrapped sentence, which TeX collapses to whitespace, so the render is byte-identical
+//     with or without it. They are legitimate, but they are legitimate for a reason that has
+//     nothing to do with display blocks: `\n` is the only one of JSON's five control escapes this
+//     convention gives an author a way to write. `\t`, `\r`, `\f` and `\b` have no authoring
+//     role in any LaTeX field, so one of those inside a display block can only be an escape that
+//     ate a macro.
+//
+// So the discriminator is not "control character" but "control character with no authoring
+// role", which excludes `\n` for a reason that holds as the corpus grows rather than a reason
+// that counts today's 29. That is why this is a widening of this rule and not the separate
+// rule MAX-89's comment promised: same defect, same cause, same fix message, same severity, and
+// an author who trips one needs to know about both. It also means the search can no longer be
+// defeated by an author who soft-wraps a display block to get under a line-length limit.
+//
+// Prose blocks are still not searched, deliberately: outside a `$...$` span in a prose block a
+// tab is at least conceivably an author's own indentation, and S3.1-no-math-outside-delimiters
+// already rejects a macro command sitting there.
 //
 // Deliberate false positive, recorded so it is a decision and not an accident: an author who
 // wants a math span laid out over several source lines will draw this finding. The convention
@@ -494,36 +558,59 @@ const CONTROL_NAMES = {
   "\b": "backspace (JSON \\b)",
 };
 
-// The path label is `<field>#math<n>`, n counting the math spans of the field from 1 in the
-// order they appear. The field is what the author has to open; the span index is what tells
-// them which of a dozen formulas in a long bodyLatex is the broken one. `#math<n>` sits beside
-// renderBlocks' existing `#block<n>` rather than replacing it: they count different things and
-// a report that reused one label for both would make the two unresolvable.
+// The same scan, minus the line feed. See the reach note above: a display block may legitimately
+// hold a soft-wrapped sentence, so `\n` is the one control character this convention gives an
+// author a way to use. `\t`, `\r`, `\f` and `\b` have no authoring role in any LaTeX field, so a
+// single one is a JSON escape that ate a macro -- `\text`, `\tfrac`, `\rightarrow`, `\frac`,
+// `\lfloor`, `\boxed`, `\right`, `\binom`. Excluding `\n` is not a concession to today's corpus:
+// it is the statement of which control escapes mean something here.
+const CONTROL_CHAR_NO_LF = /[\r\t\f\b]/;
+
+// The path label is `<field>#math<n>` for a `$...$` span, n counting the math spans of the field
+// from 1 in the order they appear, and `<field>#display<n>` for a block with no `$` at all, n
+// counting those blocks from 1. The field is what the author has to open; the index is what tells
+// them which of a dozen formulas in a long bodyLatex is the broken one. Both labels sit beside
+// renderBlocks' existing `#block<n>` rather than replacing it: `#block<n>` counts every block,
+// the two here count only the blocks or spans that could hold a math context, and a report that
+// reused one label for all three would make them unresolvable against each other.
 function checkEscapedMacro(value, path) {
-  const { blocks, style } = splitBlocks(value);
+  const { blocks, style, display } = splitBlocks(value);
   let spans = 0;
-  const report = (span, at) => {
-    const tail = span.slice(at + 1, at + 13).replace(/[\n\r\t\f\b]/g, " ").trim();
-    fail("error", "json-escaped-macro", `${path}#math${spans}`,
-      `${CONTROL_NAMES[span[at]]} inside a math span, followed by ${JSON.stringify(tail)}: ` +
+  let displays = 0;
+  const report = (scope, body, at) => {
+    const tail = body.slice(at + 1, at + 13).replace(CONTROL_CHAR, " ").trim();
+    fail("error", "json-escaped-macro", scope,
+      `${CONTROL_NAMES[body[at]]} ${scope.includes("#display") ? "in a display block" : "inside a math span"}, ` +
+      `followed by ${JSON.stringify(tail)}: ` +
       "the source almost certainly wrote the macro before it with a single backslash, so JSON " +
       "read the escape and the macro name became literal text. Double the backslash in the JSON " +
       "source (\\\\neq), or write it as \\u005cneq, which JSON cannot mistake for an escape");
   };
-  for (const block of blocks) {
+  for (let b = 0; b < blocks.length; b += 1) {
+    const block = blocks[b];
     if (style === "dollars") {
       // splitBlocks already stripped the $$ delimiters: the block IS the span.
       spans += 1;
       const at = block.search(CONTROL_CHAR);
-      if (at >= 0) report(block, at);
+      if (at >= 0) report(`${path}#math${spans}`, block, at);
       continue;
+    }
+    // A block with no `$` is a display block: the corpus block model hands the whole thing to
+    // KaTeX as math, so every control character in it is inside a math context. MAX-110.
+    if (display[b]) {
+      displays += 1;
+      const at = block.search(CONTROL_CHAR_NO_LF);
+      if (at >= 0) {
+        report(`${path}#display${displays}`, block, at);
+        continue;
+      }
     }
     let m;
     INLINE_SEGMENT.lastIndex = 0;
     while ((m = INLINE_SEGMENT.exec(block)) !== null) {
       spans += 1;
       const at = m[1].search(CONTROL_CHAR);
-      if (at >= 0) report(m[1], at);
+      if (at >= 0) report(`${path}#math${spans}`, m[1], at);
     }
   }
 }
@@ -666,6 +753,24 @@ function checkAsymptote(source, alt, ratio, path) {
       "single-argument size() bounds the output but declares no box, so asymptoteAspectRatio cannot be derived " +
       "from the source at authoring time and only S5.5 (declared vs the compiled box) checks it");
   }
+  // Inside the sizeCall branch, so the two adjacent shapes keep exactly one verdict each: no size()
+  // call at all is S5.2-size-required, and a one-argument call is the S5.4-ratio-unverifiable
+  // advisory above. This rule only has a ceiling to read when there is a two-dimensional one.
+  //
+  // MIN_ASPECT/MAX_ASPECT above bound the *shape* of the declared box and nothing bounds its
+  // absolute size, which is why a size(60,45) figure with a perfectly legal 1.333 ratio reaches the
+  // renderer. See MIN_SIZE_FLOOR for the measurement: the failure is not small text (asy does not
+  // scale type), it is a drawing crushed under labels that stayed the same size.
+  if (sizeCall) {
+    const declaredW = Number(sizeCall[1]);
+    const declaredH = Number(sizeCall[2]);
+    const below = [["W", declaredW], ["H", declaredH]].filter(([, v]) => v < MIN_SIZE_FLOOR);
+    check("error", "S5.2-size-floor", path, below.length === 0,
+      `figure declares size(${declaredW},${declaredH}), below the ${MIN_SIZE_FLOOR}pt legibility floor ` +
+      `(${below.map(([n, v]) => `${n}=${v}`).join(", ")}). A ceiling this small does not shrink the labels -- ` +
+      `Asymptote does not scale type with size() -- it shrinks the drawing underneath labels that stay the ` +
+      `same size (S5.2). The ceiling bounds the output, it is not the box (S5.4 item 4)`);
+  }
   check("error", "S5.2-no-file-io", path, !/\b(input|include|write|open)\s*\(/.test(code),
     "figure source must not do file IO (S5.2)");
   check("error", "S5.2-no-interactivity", path, !/\banimate|add\s*\(\s*\)/.test(code),
@@ -788,6 +893,79 @@ function checkFigureReserved(record, path) {
     "it is not counted against an S5.1 budget until its source lands");
 }
 
+// A figure id is the name an author gives a figure, and it is the name everything else reaches for
+// when it means that figure: a content drop, a review comment, and the delivery gate on MAX-104,
+// which walks sections.<name>.figures[] for the id it was asked about. A record that declares no id
+// cannot be named, so nothing can assert it shipped. It exists, it renders, and it is invisible to
+// every check that could say whether it was delivered -- which is the defect, not a cosmetic one.
+//
+// MAX-106's figure-id-unique cannot catch this, and correctly so: a record with no id cannot collide.
+// It is a separate rule because it is a separate question. Four of m5-l1's figure reservations
+// declared none, which is what MAX-107 is about: they had captions, alt text slots and aspect-ratio
+// slots, and no name.
+//
+// Reservations are included, and they are the case that matters most. A reservation is not a figure
+// yet -- it is the promise of one, authored ahead of the Asymptote -- and it is the state an author
+// adds a record in and leaves alone. The id is the one field an author has to invent rather than
+// transcribe, so it is the one that gets left out. Filling in the source later does not add it.
+//
+// Scoped to section figures, `sections.<name>.figures[]`, because that is the set MAX-104's resolver
+// walks. Worked-example figures live in `sections.<name>.examples[]` and exercise figures hang off an
+// exercise id, which is already the record's own address; neither is resolved by figure id by
+// anything today. Widening this to them is a separate decision, and a deliberate one -- not an
+// oversight to be read as permission.
+//
+// The site is named in the same spelling figure-id-unique uses -- `lessons/<id>.sections.<name>.
+// figures[<i>]` -- because the two rules answer about the same records and a reader holding one
+// finding should be able to find the other without translating.
+function checkFigureIdRequired(site, sitePath) {
+  if (site.kind !== "section") return;
+  const id = site.record.id;
+  check("error", "figure-id-required", `${sitePath}.id`,
+    typeof id === "string" && id.trim() !== "",
+    "figure record declares no id, so nothing can name it: a content drop, a review comment and the " +
+    "delivery gate all address a figure by its id, and a close-out cannot assert delivery of a " +
+    `record it cannot refer to. Author it as <lesson-id>-fig-<n>, counting within the section (MAX-107)`);
+}
+
+// S8, the converse of S8-id-lists. That rule walks a lesson's id lists and fails an id no exercise
+// file defines; this one walks an exercise and fails one no lesson lists, which is the direction
+// that hides.
+//
+// MAX-141. m7-l4 holds 29 m7-l4-* exercise records and 26 ids in sections.practice.exerciseIds,
+// and 29-against-26 was reported as 26 orphans by three people on three separate passes before
+// anyone counted. The three were sections.mastery.exerciseIds -- exactly where S8-mastery-count puts
+// three by rule -- and nothing in the corpus said that a lesson's exercises are split across two
+// lists rather than all living in practice. Every one of those comparisons was arithmetically
+// right; the invariant was simply unstated, which is the only reason the subtraction read as a
+// defect instead of as a question.
+//
+// A record no lesson names is content no learner can be served: the api builds every exercise list
+// a client can ask for out of the three id lists (SECTION_ID_FIELDS in api/src/content.js), so a
+// record outside all of them is unreachable however the client asks for it. Fixtures are exempt by
+// construction -- they are the --selftest donors in content/fixtures/, not served content -- so this
+// runs over content/exercises/ only.
+//
+// The lesson's own lists, not the union of every lesson's: an id listed by a different lesson is a
+// mis-wiring rather than a placement, and reporting it as a placement would be the silent half of
+// the defect.
+function checkExerciseReachable(ex, lessonIndex) {
+  const path = `exercises/${ex.id}`;
+  const lesson = lessonIndex.get(ex.lessonId);
+  if (!lesson) {
+    check("error", "S8-exercise-reachable", `${path}.lessonId`, false,
+      `lessonId ${JSON.stringify(ex.lessonId)} names no lesson, so no list can name this exercise`);
+    return;
+  }
+  const practice = (lesson.sections && lesson.sections.practice && lesson.sections.practice.exerciseIds) || [];
+  const mastery = (lesson.sections && lesson.sections.mastery && lesson.sections.mastery.exerciseIds) || [];
+  const named = new Set([...practice, ...mastery]);
+  check("error", "S8-exercise-reachable", path, named.has(ex.id),
+    `no lesson lists this exercise. ${ex.lessonId} practice holds ${practice.length} and mastery holds ` +
+    `${mastery.length} (S8-mastery-count fixes that at exactly 3), and an exercise outside every list is ` +
+    `content no learner can be served`);
+}
+
 function checkExercise(ex, lessonIndex) {
   const path = `exercises/${ex.id}`;
   const where = (f) => `${path}.${f}`;
@@ -889,6 +1067,71 @@ function checkExercise(ex, lessonIndex) {
   if (hasFigure) checkCaption(ex, `${where("captionLatex")}`, { binding: false });
 }
 
+// ---------------------------------------------------------------------------
+// Ids are addresses (MAX-106)
+// ---------------------------------------------------------------------------
+//
+// A figure id is the name an author gives a figure and the name everyone reaches for when they
+// mean it -- a content drop, a review comment, and the delivery gate on MAX-104, which walks
+// sections.<name>.figures[] looking for the id it was asked about. Nothing enforced that, and
+// that is how two records ended up holding one: m9-l3 and m9-l4 each hung a figure on the
+// `objective` section whose id was the id of the lesson's own `concept` figure, the same record
+// copied byte for byte. It broke nothing, precisely because nothing resolved by id yet.
+//
+// It becomes a key the moment anything does, and then a duplicate does not fail loudly. A
+// resolver that finds two records for one id returns whichever it saw first, and the gate reports
+// that figure as delivered -- a check that cannot say which of two things it meant is not
+// evidence of anything. So the collision is an error here, before the consumer that would have to
+// guess at it, and not left to that consumer to detect.
+//
+// Corpus-wide rather than per-lesson. The id is meant to be an address, and an address scoped to
+// one file is not an address. Every finding names every site holding the id, because "m9-l3-fig-1
+// is used twice" is not actionable and "m9-l3-fig-1 is held by sections.objective.figures[0] and
+// sections.concept.figures[0]" is.
+//
+// Worked examples get the same check for the same reason and because the same two lessons had
+// them: m9-l3-ex-1, m9-l3-ex-2, m9-l4-ex-1 and m9-l4-ex-2 were each authored into `objective`
+// and `concept`, the objective copies being the pre-markup drafts of the concept ones -- same
+// ids, and text that renders `n \ge 2` literally because it never learned the $...$ spans. A
+// record that carries no id is not a collision and is skipped rather than reported: four of
+// m5-l1's figure reservations declare no id at all, which is a separate gap and not this rule.
+function checkIdUniqueness(lessons) {
+  const figures = new Map();
+  const examples = new Map();
+
+  const claim = (into, id, site) => {
+    if (typeof id !== "string" || id.trim() === "") return;
+    if (!into.has(id)) into.set(id, []);
+    into.get(id).push(site);
+  };
+
+  for (const lesson of lessons) {
+    // `lessonFigureRecords` is the one walk over figures -- section figures on any section and
+    // worked-example figures, reservations included -- so the sites named here are the same
+    // addresses the build compiles under, not a second spelling of them.
+    for (const site of lessonFigureRecords(lesson)) {
+      const field = site.kind === "example" ? "examples" : "figures";
+      claim(figures, site.record.id, `lessons/${lesson.id}.sections.${site.sectionName}.${field}[${site.index}]`);
+    }
+    for (const [sectionName, section] of Object.entries((lesson && lesson.sections) || {})) {
+      for (const [index, record] of (section.examples || []).entries()) {
+        claim(examples, record && record.id, `lessons/${lesson.id}.sections.${sectionName}.examples[${index}]`);
+      }
+    }
+  }
+
+  const report = (rule, claimed, kind) => {
+    for (const [id, sites] of claimed) {
+      if (sites.length < 2) continue;
+      check("error", rule, "corpus", false,
+        `${kind} id ${JSON.stringify(id)} is claimed by ${sites.length} records (${sites.join(", ")}); ` +
+        "an id is an address, and two records sharing one resolve to whichever came first");
+    }
+  };
+  report("figure-id-unique", figures, "figure");
+  report("worked-example-id-unique", examples, "worked-example");
+}
+
 function checkLesson(lesson, exerciseIds, exerciseById) {
   const path = `lessons/${lesson.id}`;
   const where = (f) => `${path}.${f}`;
@@ -960,6 +1203,15 @@ function checkLesson(lesson, exerciseIds, exerciseById) {
   }
 
   // id lists, not embedded copies
+  //
+  // A lesson's exercises are split across two of these lists, and that is deliberate: practice
+  // carries the working set, mastery carries exactly three tier-mixed exercises that the pass
+  // threshold scores against. The solutions list mirrors practice only. So the count of records in
+  // content/exercises/<lessonId>-*.json is `practice.length + 3`, not `practice.length` -- m7-l4 is
+  // 26 + 3 = 29, and the 29-against-26 comparison that three passes reported as orphans was two
+  // correct counts about different lists (MAX-141). S8-exercise-reachable is the check that closes
+  // it: every exercise record must be named by one of these two lists, so a real orphan cannot look
+  // like the designed split again.
   const practice = lesson.sections.practice.exerciseIds;
   const solutions = lesson.sections.solutions.exerciseIds;
   const mastery = lesson.sections.mastery.exerciseIds;
@@ -984,8 +1236,11 @@ function checkLesson(lesson, exerciseIds, exerciseById) {
   // `conceptFigures.length` and then added one more inside the loop for every figure whose source
   // parsed, so each concept figure was charged twice (63 of them), and it seeded the total with the
   // *declared* records, including the eight reservations whose `asymptoteSource` is null. It also
-  // never looked at a figure outside `concept.figures`, of which this corpus has two, on the
-  // `objective` sections of m9-l3 and m9-l4.
+  // never looked at a figure outside `concept.figures`, of which this corpus had exactly two: the
+  // `objective`-section figures on m9-l3 and m9-l4, each a byte-for-byte copy of that lesson's own
+  // concept figure under the same id. MAX-106 removed both, so the corpus now hangs every figure
+  // off `concept` -- and this walk is what stops that being load-bearing, since the next lesson to
+  // hang one elsewhere is validated here either way.
   //
   // `lessonFigureRecords` is every declared figure-bearing record and is what gets validated: a
   // reservation is not a figure, but it is still a record an author can contradict, and dropping
@@ -999,6 +1254,7 @@ function checkLesson(lesson, exerciseIds, exerciseById) {
 
   for (const site of declared) {
     const sitePath = where(`sections.${site.sectionName}.${site.kind === "example" ? "examples" : "figures"}[${site.index}]`);
+    checkFigureIdRequired(site, sitePath);
     checkFigureReserved(site.record, `${sitePath}.asymptoteSource`);
     checkAsymptote(site.record.asymptoteSource, site.record.asymptoteAlt,
       site.record.asymptoteAspectRatio, sitePath);
@@ -1049,6 +1305,13 @@ export function run(contentRoot) {
     checkExercise(e, lessonIndex);
     blocksRendered += splitBlocks(e.solutionLatex).blocks.length;
   }
+  // Present in content/exercises/ is not the same as reachable: an exercise has to be named by its
+  // own lesson's practice or mastery list to be served at all. Fixtures are excluded on purpose --
+  // they are the --selftest donors, not content. MAX-141.
+  for (const e of exercises) checkExerciseReachable(e, lessonIndex);
+  // After the per-lesson passes, not inside one of them: an id is unique across the corpus, so a
+  // check that ran per lesson could only ever catch a collision inside a single file (MAX-106).
+  checkIdUniqueness(lessons);
   // The corpus figure total comes from the shared counter, not from summing the per-lesson
   // returns. Summing a return value is how this number drifted from the build's in the first
   // place: the build's scan and the gate's tally were two independent expressions of "figure",

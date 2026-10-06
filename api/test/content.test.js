@@ -6,6 +6,7 @@ import { join } from "node:path";
 
 import { ContentStore, loadContentStore, loadModuleMeta, toExerciseResponse, toLessonResponse, DEFAULT_CONTENT_ROOT } from "../src/content.js";
 import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure-contract.mjs";
+import { CORPUS_PINS, checkCorpusPins, checkCatalogueTargets } from "../../lib/corpus-pins.mjs";
 
 // The store is what every route answers from, so these tests are about the corpus as it will be
 // served: the shape a client sees, and the two things that are load-bearing about it - that the
@@ -14,19 +15,34 @@ import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure
 const store = loadContentStore();
 
 test("every lesson and every exercise in the repository is loaded", () => {
-  // Both file shapes exist in the corpus - 42 single-record files and 24 arrays. A loader that
-  // assumes one of them silently serves about a third of the exercises, and the only symptom is
-  // a 404 on an exercise the board can see listed. Pin the count so the drop cannot come back.
+  // Both file shapes exist in the corpus, and a loader that assumes one of them silently serves
+  // about a third of the exercises, with a 404 on an exercise the board can see listed as the only
+  // symptom. That is why the count is pinned - and this is the only place it is pinned.
   //
-  // Raising a pinned count is part of adding exercises. 669 is the count cc48b1a left behind:
-  // it topped m1-l1, m5-l1 and m9-l3 up to 15 practice exercises each and the pin still said 648,
-  // so main went red on three tests that have nothing to do with content authoring. The pin is
-  // worth keeping -- a loader that drops exercises is invisible otherwise -- but it is only worth
-  // something if the person who grows the corpus moves it in the same commit.
+  // The pin lives in lib/corpus-pins.mjs, not in this file, because it used to be a literal here
+  // and in two more test files, and it had been left stale three times (648, 669, and the
+  // cdf6986 baseline in MAX-47). Every one of those was found by a person reading a diff. Raising
+  // the pin is part of adding exercises, so it is a one-line edit in one file next to this test,
+  // and the message below names the corpus so a stale pin is legible from CI output.
   const stats = store.stats();
-  assert.equal(stats.lessons, 38);
-  assert.equal(stats.exercises, 759);
+const stale = checkCorpusPins(stats);
+  assert.deepEqual(
+    stale,
+    [],
+    `${stale.join("\n")}\nPinned at ${CORPUS_PINS.baseline}; the content here is what the store loaded.`,
+  );
   assert.ok(stats.modules >= 8, `expected at least the eight authored modules, got ${stats.modules}`);
+});
+
+test("every module's declared exercise count is the count its corpus holds", () => {
+  // The catalogue is a hand-edited JSON file with a number per module, and the module route serves
+  // that number beside the count measured from the corpus. Nothing compared the two, so they
+  // drifted for months: nine targets summing to 1,050 against 759 exercises on disk (MAX-65).
+  // Comparing the two payloads the route actually returns means the next drift is a red build
+  // rather than a module page quietly reporting a permanent shortfall.
+  const { modules } = store.listModules();
+  const problems = checkCatalogueTargets(modules);
+  assert.deepEqual(problems, [], problems.join("\n"));
 });
 
 test("a lesson route reports ids for practice, mastery and solutions, and the prose sections survive", () => {
@@ -116,14 +132,20 @@ test("a lesson's figure lists become references, and the Asymptote source does n
   const figures = lesson.sections.concept.figures;
   assert.ok(figures.length > 0, "m1-l3 has a figure in its concept section");
   for (const ref of figures) {
-    // No figure store is attached in this unit test, which is the degraded state: the build has
-    // produced nothing, so there is no build identity to carry. The reference is otherwise whole.
-    assert.deepEqual(Object.keys(ref), ["figureKey", "asymptoteAlt"]);
-    for (const field of Object.keys(ref)) {
-      assert.ok(FIGURE_REFERENCE_FIELDS.includes(field), `${field} is not a reference field`);
-    }
+    // Not exact equality, and the difference is meaningful in both directions. No figure store is
+    // attached in this unit test, which is the degraded state: the build has produced nothing, so
+    // there is no build identity (figureCacheKey) to carry. A record that authored no ratio carries
+    // no asymptoteAspectRatio either, and the client falls back to the documented default. What
+    // must hold is that nothing *outside* the reference fields rides along.
+    assert.deepEqual(Object.keys(ref).filter((k) => !FIGURE_REFERENCE_FIELDS.includes(k)), []);
+    assert.ok(ref.figureKey, "the address is always on the reference");
+    assert.equal("figureCacheKey" in ref, false, "no build ran, so there is no build identity");
+
     assert.match(ref.figureKey, /^m1-l3\.sections\.concept\.figures\[\d+\]$/);
   }
+  // The reservation travels with the reference so the box is sized before the figure route answers
+  // (RC §5.4 item 1). Every figure-bearing record in the corpus authors one.
+  assert.ok(figures.every((ref) => typeof ref.asymptoteAspectRatio === "number"));
   // The raw source is kilobytes of Asymptote per figure and belongs to the build.
   assert.equal(JSON.stringify(lesson).includes("size(299,241)"), false);
 });
@@ -148,13 +170,17 @@ test("no Asymptote build input reaches any lesson, including inside worked examp
   // record is the point: four lessons had a figure-bearing example and the projection used to miss
   // all four, because only `sections.*.figures` was reduced to references.
   //
-  // asymptoteAlt is not in this list and is not a mistake. It is the authored description, one
-  // sentence per figure, and it is on the reference because the degraded state has to render it
-  // while the figure route is 503 for every key (§5.6). The build input beside it stays here.
+  // asymptoteAlt and asymptoteAspectRatio are not in this list and neither is a mistake. The
+  // description is the authored sentence the degraded state renders while the figure route is 503
+  // for every key (§5.6); the ratio is what §5.4 item 1 sizes the reserved box from at first
+  // paint, which happens before that route has answered. Both are reference fields, not build
+  // input. asymptoteSource — the actual build input, kilobytes per figure — is what stays forbidden,
+  // and the reference-field boundary itself is asserted by the test below.
   const offenders = [];
   for (const lessonId of store.lessons.keys()) {
     const json = JSON.stringify(store.getLesson(lessonId));
-    for (const field of ["asymptoteSource", "asymptoteAspectRatio"]) {
+    for (const field of ["asymptoteSource"]) {
+
       if (json.includes(`"${field}"`)) offenders.push(`${lessonId}:${field}`);
     }
   }
@@ -192,8 +218,15 @@ test("a figure-bearing worked example becomes a reference, and an example withou
   const examples = lesson.sections.concept.examples;
   const withFigure = examples.find((e) => "figureKey" in e);
   assert.ok(withFigure, "m4-l2 has a worked example with a figure");
-  assert.deepEqual(Object.keys(withFigure).filter((k) => k === "figureKey"), ["figureKey"]);
+  // A worked example is a section member, so its own fields survive the projection; what must not
+  // survive is the figure's build input. The description and the ratio do survive, and for the same
+  // reasons they survive on a section figure: the degraded state renders the description (§5.6) and
+  // the reserved box is sized from the ratio before the figure route answers (§5.4 item 1).
+  for (const field of ["asymptoteSource"]) {
+    assert.equal(field in withFigure, false, `${field} must not ride along on a worked example`);
+  }
   assert.match(withFigure.figureKey, /^m4-l2\.sections\.concept\.examples\[\d+\]$/);
+  assert.equal(typeof withFigure.asymptoteAspectRatio, "number", "the authored ratio is reserved from");
   // The prose of the example survives the projection; only the figure fields are dropped.
   assert.ok(withFigure.titleLatex);
   assert.ok(withFigure.bodyLatex);

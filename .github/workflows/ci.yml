@@ -24,6 +24,60 @@ jobs:
       - run: npm run build --workspace web
       - run: npm test --workspaces --if-present
 
+  # RC §7 budgets layout shift from math and figures at 0. The math half needs a browser and cannot
+  # be asserted by `npm test`, which renders no page: KaTeX requests its twenty faces lazily, as each
+  # formula renders, so until they land the prose is laid out in the fallback serif and is re-laid
+  # when a face swaps in. Measured at CLS 1.1e-6 -- inside the Lesson spec §9 #6 budget (< 0.05),
+  # outside RC §7's (= 0), and therefore invisible to every gate this repository had.
+  #
+  # Its own job, like the figure half, because it needs a browser binary and because a layout
+  # assertion failing is a different kind of news from a unit test failing. The suite builds the web
+  # app and serves the build: `vite build` is what turns the @font-face urls into the requests a
+  # reader makes, so a run against the dev server would assert about paths that only exist on a
+  # developer machine.
+  math-layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - name: Install the browser the layout suite drives
+        run: npx playwright install --with-deps chromium
+      - name: Math settles before first paint and causes no layout shift
+        run: npm run test:e2e
+
+  # RC §7 budgets layout shift at 0 and §8.5 makes it a testable acceptance criterion, naming the
+  # instrument: "Asserted in a Playwright check on one lesson per module". Until this job existed
+  # there was no browser test in the repository and no CLS assertion anywhere, which is how a figure
+  # box could be resized by its own onLoad handler for months without anything going red.
+  #
+  # It is its own job rather than a step in build-test because it needs a browser binary and a
+  # dev server, and because a layout assertion that fails is a different kind of news from a unit
+  # test that fails. The suite boots its own API against a fixture corpus (e2e/fixture-api.mjs), so
+  # this job needs no Asymptote and no artifacts/ — the same reason the staging-image job's figure
+  # assertions must not be the ones that catch a layout regression.
+  #
+  # Its own npm script, not `npm run test:e2e`, because the two browser suites need opposite servers
+  # — this one a dev server against a fixture API, math-layout a preview server against the shipped
+  # corpus — and either run under the other's server reports the wrong number rather than failing.
+  # See playwright.figure.config.js.
+  figure-layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - name: Install the browser the layout suite drives
+        run: npx playwright install --with-deps chromium
+      - name: Figures reserve their box and cause no layout shift
+        run: npm run test:e2e:figure
+
   # MAX-69: several agents share this repository, so the delivery path needs its own gate.
   # It is here, and not only as a local hook, because a hook nobody runs is indistinguishable
   # from a hook that does not work -- and because a change that guts the guard must fail the
@@ -35,8 +89,36 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Push authorship guard proves it can fail
+      - name: The push authorship guard proves it can fail
         run: npm run git:guard:selftest
+      # MAX-126: the landing gate is the only check that can see a gated branch nobody ever merged,
+      # and a gate nobody runs is indistinguishable from a gate that does not work. landed.yml runs
+      # it on PRs and on pushes to fix/* and land/*; this step is about the gate's own wiring, so
+      # deleting landed.yml, or narrowing its triggers to nothing, is a red build instead of a
+      # silent return to the MAX-111 state. The audit itself is deliberately not run here: on a
+      # PR it would report every known backlog branch and turn every unrelated change red.
+      - name: The landing gate is wired in, and still asks on the branches it is for
+        run: |
+          set -eu
+          if [ ! -f .github/workflows/landed.yml ]; then
+            echo "::error::.github/workflows/landed.yml is gone; the landing gate (MAX-126) no longer runs"
+            exit 1
+          fi
+          for needle in "'fix/**'" "'land/**'"; do
+            if ! grep -qF -- "$needle" .github/workflows/landed.yml; then
+              echo "::error::landed.yml no longer triggers on $needle"
+              exit 1
+            fi
+          done
+          if ! grep -qE '^  pull_request:' .github/workflows/landed.yml; then
+            echo "::error::landed.yml no longer runs on pull_request"
+            exit 1
+          fi
+          if ! grep -qF 'scripts/check-landed-content.mjs' .github/workflows/landed.yml; then
+            echo "::error::landed.yml no longer runs scripts/check-landed-content.mjs"
+            exit 1
+          fi
+          echo "landing gate wired: pull_request, push to fix/** and land/**, weekly schedule"
       - name: Hooks are executable and parse
         # git records the exec bit, and a hook without it is a hook git never calls. Asserting
         # it here is the difference between "the guard is in the repository" and "the guard

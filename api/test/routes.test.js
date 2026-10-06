@@ -16,10 +16,15 @@ import { FIGURE_PAYLOAD_FIELDS, FIGURE_REFERENCE_FIELDS } from "../../lib/figure
 let server;
 let base;
 let dataDir;
+let content;
 
 before(async () => {
   dataDir = mkdtempSync(join(tmpdir(), "math-api-test-"));
-  server = createApp({ dataDir }).listen(0);
+  // The store is injected so the health assertions below can read the counts off the very object
+  // the routes answer from. Reloading the directory inside the test would assert against a second
+  // corpus, not this app's.
+  content = loadContentStore();
+  server = createApp({ dataDir, content }).listen(0);
   await new Promise((resolve) => server.once("listening", resolve));
   base = `http://127.0.0.1:${server.address().port}`;
 });
@@ -73,11 +78,38 @@ function collectKeys(value, into = new Set()) {
   return into;
 }
 
+// Every object that names itself a figure reference: an object with a figureKey string. Walking for
+// the shape rather than for known paths is deliberate — a figure in a section list, a figure on a
+// worked example and a figure on an exercise are three different places, and a check that knows the
+// first two and not the third is how four lessons ended up shipping their Asymptote source.
+//
+// Such an object is not *only* a reference: a worked example keeps its prose and an exercise keeps
+// its prompt. What is asserted about it is narrower — nothing figure-shaped rides along except the
+// reference fields themselves.
+const FIGURE_SHAPED_KEYS = [
+  ...new Set([...FIGURE_PAYLOAD_FIELDS, ...FIGURE_REFERENCE_FIELDS, "asymptoteSource", "asymptoteAlt"])
+];
+
+function walkReferences(value, into) {
+  if (Array.isArray(value)) {
+    for (const item of value) walkReferences(item, into);
+    return;
+  }
+  if (!value || typeof value !== "object") return;
+  if (typeof value.figureKey === "string") into.push(value);
+  for (const child of Object.values(value)) walkReferences(child, into);
+}
+
 test("health reports the corpus it actually loaded", async () => {
   const { status, body } = await get("/api/health");
   assert.equal(status, 200);
   assert.equal(body.ok, true);
-  assert.equal(body.content.exercises, 759);
+// Against the store the routes answer from, not a literal: this test is about the route's
+  // honesty about its own corpus. The pinned corpus counts are asserted once, in content.test.js,
+  // from lib/corpus-pins.mjs.
+  const loaded = content.stats();
+  assert.equal(body.content.exercises, loaded.exercises);
+  assert.equal(body.content.lessons, loaded.lessons);
   assert.equal(typeof body.figures.usable, "boolean");
 });
 
@@ -251,7 +283,6 @@ test("a lesson and an exercise reference carry the build's cache key, and no bui
           figureHash: "sha256:deadbeef",
           figurePipelineVersion: "asymptote-svg-sanitized@2",
           figureCacheKey: "sha256:c0ffee",
-          figureCacheKey: "sha256:c0ffee",
           declaredAspectRatio: 0.661,
           compiledAspectRatio: 0.66,
           asymptoteVersion: "Asymptote version 2.87",
@@ -274,7 +305,17 @@ test("a lesson and an exercise reference carry the build's cache key, and no bui
       // This manifest knows one figure and it is not one of these, so the lesson's references
       // carry no key at all rather than a borrowed one. Same rule, other direction.
       assert.equal("figureCacheKey" in ref, false, `${ref.figureKey} is not in the manifest`);
-      assert.deepEqual(Object.keys(ref), ["figureKey", "asymptoteAlt"]);
+      // Everything on the reference is a reference field, and the two the content record owns --
+      // the description and the authored ratio -- are there. Written as a filter rather than as
+      // deepEqual on a literal key list, because a record that authored no ratio legitimately
+      // produces a reference without one and the invariant under test is the boundary, not the
+      // spelling of the list.
+      assert.deepEqual(
+        Object.keys(ref).filter((k) => !FIGURE_REFERENCE_FIELDS.includes(k)),
+        [],
+        `${ref.figureKey} carried something that is not a reference field`
+      );
+      assert.equal(typeof ref.asymptoteAspectRatio, "number", "the box has to be reservable");
     }
     assert.equal(JSON.stringify(lesson).includes("size(299,241)"), false, "no Asymptote source in a lesson");
   } finally {
@@ -282,16 +323,47 @@ test("a lesson and an exercise reference carry the build's cache key, and no bui
   }
 });
 
-// The seven figure payload fields are not the whole leak. asymptoteSource is build input, it is
-// kilobytes per figure, and a payload-field check cannot see it because it is not named in
-// FIGURE_PAYLOAD_FIELDS. This walks every lesson and every exercise.
+// The numbers a figure reference carries are asserted where they are a deliberate exception rather
+// than as an absence: every figure reference in the corpus must carry the authored ratio, because a
+// client that has to fetch the ratio in order to reserve the box reserves nothing, and the box then
+// moves when the SVG lands (Rendering Conventions §5.4 items 1 and 5). The second half of the
+// assertion is the one that keeps the exception from becoming a leak: nothing figure-shaped beyond
+// the reference fields may ride along with it.
+test("every figure reference in the corpus carries the authored ratio, and nothing else", async () => {
+  const lessons = await get("/api/lessons");
+  let references = 0;
+  for (const summary of lessons.body) {
+    const { body } = await get(`/api/lessons/${summary.id}`);
+    const found = [];
+    walkReferences(body, found);
+    for (const ref of found) {
+      references += 1;
+      assert.deepEqual(
+        Object.keys(ref).filter((k) => FIGURE_SHAPED_KEYS.includes(k) && !FIGURE_REFERENCE_FIELDS.includes(k)),
+        [],
+        `figure reference on ${summary.id} carried something else: ${JSON.stringify(ref)}`
+      );
+      assert.equal(
+        typeof ref.asymptoteAspectRatio,
+        "number",
+        `figure reference ${ref.figureKey} on ${summary.id} has no ratio to reserve from`
+      );
+    }
+  }
+  assert.ok(references > 0, "the corpus has figure references to check");
+});
+
+// asymptoteSource is not a payload field, so a payload-field check cannot see it. It is the one
+// figure input that must never reach a content route at any width.
 //
-// asymptoteAlt is deliberately absent from that list. It is the authored description rather than
-// build input, and it is on the reference because the degraded state renders it while the figure
-// route is failing for every key (Rendering Conventions §5.6, §8.6). A client that only learns the
-// description from the route that failed never shows it.
+// asymptoteAlt and asymptoteAspectRatio are deliberately absent from that list. Both are reference
+// fields rather than build input: the description because the degraded state renders it while the
+// figure route is failing for every key (§5.6, §8.6), and the ratio because §5.4 item 1 sizes the
+// reserved box from it at first paint, which is before that route has answered. The test above is
+// where they are pinned instead, so widening the reference cannot quietly become a wider leak.
 test("no Asymptote build input appears anywhere on a content route", async () => {
-  const buildInput = ["asymptoteSource", "asymptoteAspectRatio"];
+  const buildInput = ["asymptoteSource"];
+
   const lessons = await get("/api/lessons");
   for (const summary of lessons.body) {
     for (const path of [`/api/lessons/${summary.id}`, `/api/exercises?lessonId=${summary.id}`]) {

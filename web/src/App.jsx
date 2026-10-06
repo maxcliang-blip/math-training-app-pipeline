@@ -95,11 +95,17 @@ function Section({ name, section }) {
         {section.examples.map((example, index) => (
           <article key={example.id || index} className="example">
             {example.titleLatex ? <h4><MathBlock source={example.titleLatex} /></h4> : null}
+            {/* asymptoteAspectRatio rides on the reference (FIGURE_REFERENCE_FIELDS) so the box can
+                be reserved before the figure route has answered; see RC §5.4 item 1. figureCacheKey
+                is the build's own identity for the bytes (§5.5), which the client cache needs
+                before it has a payload to derive one from. */}
             {example.figureKey ? (
               <Figure
                 figureKey={example.figureKey}
                 figureCacheKey={example.figureCacheKey}
                 alt={example.asymptoteAlt}
+                declaredAspectRatio={example.asymptoteAspectRatio}
+
               />
             ) : null}
             {example.bodyLatex ? <MathBlock source={example.bodyLatex} /> : null}
@@ -146,6 +152,7 @@ function ExerciseCard({ exercise }) {
           figureKey={exercise.figureKey}
           figureCacheKey={exercise.figureCacheKey}
           alt={exercise.asymptoteAlt}
+          declaredAspectRatio={exercise.asymptoteAspectRatio}
         />
       ) : null}
       {Array.isArray(exercise.choices) && exercise.choices.length ? (

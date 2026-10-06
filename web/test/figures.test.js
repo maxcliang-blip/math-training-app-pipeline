@@ -19,6 +19,7 @@ import {
   DEFAULT_FIGURE_ASPECT_RATIO,
   FIGURE_UNAVAILABLE_MESSAGE,
   resolveFigureRatio
+
 } from "../src/lib/figures.js";
 
 const KEY = "m1-linear-equations.figures[0]";
@@ -375,25 +376,51 @@ test("resolves a relative asset url against an origin", () => {
 
 // --- aspect ratio resolution ----------------------------------------------
 //
-// These exist because the ratio is applied to the <img> box, so a wrong one does not look broken —
-// it draws the figure at the wrong shape. The regression that motivated them: a manifest declaring
-// 2.667 next to an SVG whose intrinsic ratio is 4.505 rendered a number line 41% too tall.
+// These exist because the ratio sizes the box, so a wrong one does not look broken — it either
+// moves the page under the reader or draws the figure at the wrong shape. The regression that
+// motivated them: a manifest declaring 2.667 next to an SVG whose intrinsic ratio is 4.505
+// rendered a number line 41% too tall, and then resized the box again when the SVG decoded.
 
-test("reserves the compiled ratio before the SVG has loaded", () => {
-  const r = resolveFigureRatio({ declaredAspectRatio: 1.5, compiledAspectRatio: 1.49 });
-  assert.equal(r.reserved, 1.49, "the compiler's measurement beats the author's declaration");
-  assert.equal(r.resolved, 1.49);
+test("the box is sized from the authored ratio, before anything is fetched", () => {
+  // RC §5.4 item 1: sized from asymptoteAspectRatio at first paint. The authored ratio is the only
+  // one on the element at first paint, because the payload has not been asked yet.
+  const r = resolveFigureRatio({ declaredAspectRatio: 1.5 });
+  assert.equal(r.reserved, 1.5);
   assert.deepEqual(r.drift, []);
 });
 
-test("a measured ratio overrides the reserved one rather than stretching the figure", () => {
-  const r = resolveFigureRatio({ declaredAspectRatio: 2.667, measuredAspectRatio: 4.505 });
-  assert.equal(r.reserved, 2.667, "what the manifest claimed");
-  assert.equal(r.resolved, 4.505, "what the browser actually measured");
+test("the compiler's ratio stands in for a figure that declares none", () => {
+  const r = resolveFigureRatio({ compiledAspectRatio: 1.49 });
+  assert.equal(r.reserved, 1.49);
+});
+
+test("a figure that declares nothing is reserved at the documented default", () => {
+  // 1.333 is the default RC §5.4 item 1 names. The failure this replaces was worse than a wrong
+  // default: with no ratio at all the box was a min-height, so it was 3rem tall while pending and
+  // full height once the SVG landed, and that transition is the layout shift.
+  for (const input of [{}, { declaredAspectRatio: null }, { declaredAspectRatio: 0 }, { declaredAspectRatio: -2 }]) {
+    assert.equal(resolveFigureRatio(input).reserved, 1.333, JSON.stringify(input));
+  }
+  assert.equal(DEFAULT_FIGURE_ASPECT_RATIO, 1.333, "the default is one value, named once");
+});
+
+test("the browser's measurement never resizes the box", () => {
+  // The whole point. Applying the measurement after load is what made the box depend on when the
+  // SVG decoded, and on the deployed corpus the two numbers disagree on 65 of 69 figures.
+  const r = resolveFigureRatio({ declaredAspectRatio: 2.667, compiledAspectRatio: 2.5, measuredAspectRatio: 4.505 });
+  assert.equal(r.reserved, 2.667, "the box keeps the ratio it was reserved at");
+  assert.equal(r.reserved, r.reserved, "stable across the load");
+  // It is not discarded though: the disagreement is the report.
+  assert.deepEqual(r.drift, [
+    { kind: "declared-vs-compiled", expected: 2.667, actual: 2.5 },
+    { kind: "reserved-vs-measured", expected: 2.667, actual: 4.505 }
+  ]);
+  assert.equal(r.measured, 4.505, "the measurement is returned for the report");
 });
 
 test("declared and compiled disagreeing is reported, not resolved silently", () => {
   const r = resolveFigureRatio({ declaredAspectRatio: 3, compiledAspectRatio: 1.5 });
+  assert.equal(r.reserved, 3, "the authored ratio still sizes the box");
   assert.deepEqual(r.drift, [{ kind: "declared-vs-compiled", expected: 3, actual: 1.5 }]);
 });
 
@@ -416,12 +443,22 @@ test("both drift kinds are reported when both are wrong", () => {
   );
 });
 
-test("missing or nonsense ratios leave the box unconstrained", () => {
-  for (const value of [null, undefined, 0, -2, NaN, Infinity, "2", {}]) {
-    const r = resolveFigureRatio({ declaredAspectRatio: value, compiledAspectRatio: value });
-    assert.equal(r.reserved, null, `${JSON.stringify(value)} must not reserve a box`);
-    assert.equal(r.resolved, null);
-    assert.deepEqual(r.drift, []);
-  }
-  assert.equal(resolveFigureRatio().resolved, null, "no inputs at all is not a crash");
+test("a nonsense measurement is ignored rather than reserved", () => {
+  // A browser that reports 0x0 for a decode it could not size must not be able to size a box.
+  const r = resolveFigureRatio({ declaredAspectRatio: 1.5, measuredAspectRatio: 0 });
+  assert.equal(r.reserved, 1.5);
+  assert.equal(r.measured, null);
+  assert.deepEqual(r.drift, []);
+});
+
+test("a numeric string ratio is read, not discarded", () => {
+  // The manifest is JSON written by the build and the authoring record is JSON written by a person;
+  // neither should be able to reserve an unreserved box by quoting a number.
+  assert.equal(resolveFigureRatio({ declaredAspectRatio: "2.5" }).reserved, 2.5);
+  assert.equal(resolveFigureRatio({ declaredAspectRatio: "wide" }).reserved, 1.333);
+});
+
+test("no inputs at all is not a crash", () => {
+  assert.equal(resolveFigureRatio().reserved, 1.333);
+  assert.deepEqual(resolveFigureRatio().drift, []);
 });
