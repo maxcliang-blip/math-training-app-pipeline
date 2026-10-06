@@ -31,6 +31,8 @@
     "land:selftest": "node scripts/check-landed-content.mjs --selftest",
     "pr:body:check": "node scripts/check-pr-body-coverage.mjs",
     "pr:body:selftest": "node scripts/check-pr-body-coverage.mjs --selftest",
+    "docs:check": "node scripts/check-doc-measurements.mjs",
+    "docs:selftest": "node scripts/check-doc-measurements.mjs --selftest",
     "git:hooks": "sh scripts/install-git-hooks.sh",
     "git:hooks:check": "sh scripts/install-git-hooks.sh --check",
     "git:worktree": "sh scripts/agent-worktree.sh",
