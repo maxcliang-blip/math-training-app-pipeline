@@ -46,17 +46,19 @@
 //   node scripts/check-push-authors.mjs --report <out.json>
 //
 // Exit codes: 0 pass · 1 refused (foreign authorship, or a push out of the shared root)
-//             · 2 configuration/environment error.
+//             · 2 configuration/environment error, including a flag handed to --report
+//               where it wants an output path (MAX-124).
 //
 // Escape hatch, named rather than discovered: `git config agent.allowSharedRoot true`
 // or AGENT_PUSH_ALLOW_SHARED_ROOT=1. It has to be set deliberately, it only waives
 // layer 2, and layer 1 still applies.
 
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { requirePathArg } from "./lib/require-path-arg.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..");
@@ -1062,13 +1064,19 @@ export function selftest() {
       commitAs(dir, { ...carol, file: "sneaky.txt", body: "carol\n", message: "Carol: add sneaky" });
       const rebasedMixed = sha(dir);
 
-      const spawn = (input, spawnCwd = dir, spawnEnv = {}) => {
+      // The argv tail is the hook's own (`git` passes `<remote-name> <remote-url>`), except in the
+      // MAX-124 case below, which is the only one that passes a flag of this script's own. Every
+      // child is bounded: that case's value is `--selftest`, so a regression in the refusal's
+      // position would send the child into this suite and recurse. A kill is reported as a wrong
+      // exit code, which is a MISS in the table -- CI fails with a line to read, instead of hanging.
+      const spawn = (input, spawnCwd = dir, spawnEnv = {}, spawnArgs = []) => {
         try {
-          const stdout = execFileSync("node", [join(HERE, "check-push-authors.mjs")], {
+          const stdout = execFileSync("node", [join(HERE, "check-push-authors.mjs"), ...spawnArgs], {
             cwd: spawnCwd,
             input,
             encoding: "utf8",
             stdio: ["pipe", "pipe", "pipe"],
+            timeout: 60000,
             env: { ...process.env, ...spawnEnv },
           });
           return { code: 0, stdout };
@@ -1206,6 +1214,71 @@ export function selftest() {
           expect: { code: 1, contains: "did not resolve", config: ["agent.pushBase", "refs/heads/no-such-base"] },
           run: () => spawn(`refs/heads/landed ${rebasedClean} refs/heads/landed ${rebaseOld}\n`, dir, inSharedRoot),
         },
+
+        // ---- MAX-124 end to end: --report takes a path, so a flag handed to it is a mistake -----
+        //
+        // `--report <out.json>` takes the next argv token as its output path, so `--report --selftest`
+        // resolved `--selftest` against the cwd and wrote a file of that name -- which is how a 4KB
+        // JSON report called `--selftest` ended up tracked on main, via the sibling tool's `--json`
+        // (MAX-97). Same three lines, same mistake, second tool: MAX-124.
+        //
+        // These four cases are the whole argument contract. The first asserts the refusal by its
+        // effect and not only by its exit code: restoring the old one-token behaviour makes it write
+        // the file and fail, which an exit-code assertion alone would not notice. The last one is
+        // the reason the refusal can be inert at all: git hands the gate two arguments of its own.
+        {
+          id: "end-to-end-max-124-report-refuses-a-flag-as-a-path",
+          detail: "`--report --selftest` exits 2, names the flag it got, and leaves no file of that name behind",
+          expect: { code: 2, contains: '--report takes an output path; got the flag "--selftest"' },
+          run: () => {
+            const stray = join(dir, "--selftest");
+            rmSync(stray, { force: true });
+            const r = spawn(`refs/heads/clean ${bobSha} refs/heads/clean ${base}\n`, dir, inSharedRoot, [
+              "--report",
+              "--selftest",
+            ]);
+            if (existsSync(stray)) {
+              rmSync(stray, { force: true });
+              return { code: 99, stdout: `${r.stdout}\nwrote a file named --selftest into the cwd` };
+            }
+            return r;
+          },
+        },
+        {
+          id: "end-to-end-max-124-report-still-writes-a-real-path",
+          detail: "the refusal is not a blanket refusal: `--report <path>` writes a well-formed report and the push still decides the exit code",
+          expect: { code: 0, contains: "report: " },
+          run: () => {
+            const out = join(dir, "report.json");
+            rmSync(out, { force: true });
+            const r = spawn(`refs/heads/clean ${bobSha} refs/heads/clean ${base}\n`, dir, inSharedRoot, [
+              "--report",
+              out,
+            ]);
+            let why = "";
+            try {
+              const body = JSON.parse(readFileSync(out, "utf8"));
+              if (body.gate !== "check-push-authors") why = `the report's gate is ${JSON.stringify(body.gate)}`;
+            } catch (err) {
+              why = `no report was written: ${err.message}`;
+            }
+            rmSync(out, { force: true });
+            return why ? { code: 99, stdout: `${r.stdout}\n${why}` } : r;
+          },
+        },
+        {
+          id: "end-to-end-max-124-report-with-no-value-still-writes-nothing",
+          detail: "a bare `--report` is a flag with no path: no refusal, no file, and the verdict stands. The hook forwards git's own arguments, so a missing value has to stay quiet",
+          expect: { code: 0, notContains: "report:" },
+          run: () => spawn(`refs/heads/clean ${bobSha} refs/heads/clean ${base}\n`, dir, inSharedRoot, ["--report"]),
+        },
+        {
+          id: "end-to-end-max-124-the-hooks-own-arguments-are-not-a-path",
+          detail: "the hook forwards `<remote-name> <remote-url>` to the gate. Neither may be mistaken for a path, so a push still ends on the verdict: the refusal is inert for the caller that runs on every push",
+          expect: { code: 0 },
+          run: () =>
+            spawn(`refs/heads/clean ${bobSha} refs/heads/clean ${base}\n`, dir, inSharedRoot, ["origin", originDir]),
+        },
       ];
       for (const c of e2e) {
         // A case that needs repository config sets it and puts it back, so one case's config can
@@ -1283,6 +1356,38 @@ const isMain = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(imp
 if (isMain) {
   const args = process.argv.slice(2);
 
+  // `--report <out.json>` takes the next argv token as its output path, so `--report --anything`
+  // resolved `--anything` against the cwd and wrote a JSON file of that name into it. That is the
+  // identical defect that put a 4KB file named `--selftest` on main through the sibling tool's
+  // `--json` (MAX-97); a second tool growing the same three lines independently is what MAX-97's
+  // note about a shared `requirePathArg` predicted, and this is that recurrence (MAX-124).
+  //
+  // A flag is not a path, and the failure has to be loud: exit 2 -- this script's documented
+  // configuration/environment code -- rather than writing somewhere nobody asked for.
+  //
+  // This is the FIRST thing the CLI does, ahead of `--selftest`, for the reason MAX-97 had to fix
+  // twice: `--report --selftest` is the exact invocation that produced the stray file, and if the
+  // selftest branch got there first it would swallow the flag and run the suite instead of refusing
+  // it. The selftest case below runs the real binary with those two arguments, so the ordering is
+  // pinned rather than merely intended.
+  //
+  // Inert for both real callers, which is why it is a change and not a new failure mode:
+  // `npm run git:guard:selftest` passes `--selftest` alone, and .githooks/pre-push ends in
+  // `exec node "$gate" "$@"`, where git's own arguments are `<remote-name> <remote-url>`.
+  //
+  // The parse is `requirePathArg`, the shared bare-path parser MAX-130 landed while this branch was
+  // open, not the third hand-written copy of these three lines. The module fixes its message shape
+  // as `<flag> takes an output path; got the flag "<token>".` precisely so adopting it here is a
+  // byte-identical message, and the selftest case below asserts that exact substring rather than
+  // merely "it refused something" -- so the swap is checked, not assumed.
+  const reportArg = requirePathArg(args, "--report");
+  if (!reportArg.ok) {
+    console.error(`check-push-authors: ARGUMENT: ${reportArg.message}`);
+    console.error("                       Nothing was written. Give --report a path, or drop it to");
+    console.error("                       judge the push and report to stdout only.");
+    process.exit(2);
+  }
+
   if (args.includes("--selftest")) {
     const result = selftest();
     console.log("check-push-authors selftest");
@@ -1327,9 +1432,13 @@ if (isMain) {
 
   console.log(printResult(result).join("\n"));
 
-  const jsonIdx = args.indexOf("--report");
-  if (jsonIdx >= 0 && args[jsonIdx + 1]) {
-    const out = resolve(args[jsonIdx + 1]);
+  // One parse, one place a flag can be refused: reportArg is reused here rather than re-derived
+  // from `args` a second time, so the token that was refused is the token that gets written.
+  // The truthiness test is the original one -- `--report` with no value, or `--report ""`, still means
+  // "no report", and neither is an error, because a hook that forwards git's own arguments must not
+  // fail over a flag it was never given a value for.
+  if (reportArg.value) {
+    const out = resolve(reportArg.value);
     mkdirSync(dirname(out), { recursive: true });
     writeFileSync(out, JSON.stringify({ gate: "check-push-authors", baseRef, ...result }, null, 2) + "\n");
     console.log(`  report: ${out}`);
