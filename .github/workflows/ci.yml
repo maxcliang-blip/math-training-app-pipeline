@@ -186,6 +186,115 @@ jobs:
             esac
           done
           echo "no tracked node_modules; tracked symlinks: ${links:-<none>}"
+
+  # MAX-83, item 4 of MAX-69. PR #19 was opened with a body describing a Dockerfile change and
+  # merged with 26 changed files. A reviewer reading the description had no way to know that 23 of
+  # them were somebody else's lesson content, and nothing failed at any step along the way: CI was
+  # green, the push guard passed, the merge succeeded. The signal existed -- `changed_files 26` in
+  # the pull request metadata -- and nobody was reading it as an assertion.
+  #
+  # The delivery-integrity job above closes the *next* occurrence earlier, at push time. It cannot
+  # close this one, and its own header says why: a squash rewrites authorship to the first commit's
+  # author, and a worktree with the wrong identity produces commits that match the configured one.
+  # So this job asks the other question -- does the pull request's own description account for the
+  # files the pull request changes.
+  pr-body-coverage:
+    # Only pull requests have a body that could be wrong about the change. The push-to-main trigger
+    # has no body to check and would otherwise make this job a permanent red run.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Read for the collect step; write for the verdict comment below, and only for it. Creating a
+      # comment on a pull request needs write on pull requests, and without it the posting step
+      # 403s on every event -- which is exactly what the first run of this job did.
+      #
+      # Nothing else here needs write. The check reads a body and a file list and exits with a code.
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Before the check, not after it. A pull request that guts the coverage check -- by widening
+      # the glob, emptying the body handling, or making every row vacuously pass -- has to fail on
+      # that, and the only way it can is if the selftest runs. This step is the difference between
+      # "the check is in the repository" and "the check can still fail".
+      - name: The check proves it can fail, and is not a rubber stamp
+        run: npm run pr:body:selftest
+      # Body and file list both come from the API rather than from the checkout. A `git diff` in a
+      # checkout of a merge commit is a different question than "which files does this pull request
+      # change", and answering the neighbouring question here would be a check that can be green
+      # about the wrong set of files.
+      - name: Collect the body and the changed files
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('node:fs');
+            const pr = context.payload.pull_request;
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 100,
+            });
+            // The list endpoint stops at 3000 files. Past that the list is silently short, and a
+            // short list makes a coverage check pass -- so a disagreement with the count GitHub
+            // reports is a hard failure here, not a note to carry on past.
+            if (files.length !== pr.changed_files) {
+              throw new Error(
+                `collected ${files.length} file(s) but this pull request reports changed_files=${pr.changed_files}`,
+              );
+            }
+            fs.writeFileSync('pr-body.txt', pr.body || '');
+            fs.writeFileSync('pr-files.txt', `${files.map((f) => f.filename).join('\n')}\n`);
+      - name: Every changed file is accounted for by this pull request's own body
+        run: node scripts/check-pr-body-coverage.mjs --body pr-body.txt --files pr-files.txt --title "$PR_TITLE" --pr "$PR_URL" --report-md pr-report.md
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+      # A check nobody reads is a check that did not happen, and the whole point of this gate is
+      # that somebody is routed to the description. The summary is posted on the pull request
+      # itself, which is where a reviewer is already looking.
+      #
+      # continue-on-error, because the comment is the routing aid and the gate is the exit code of
+      # the step above it. A webhook timeout or a revoked token must not block a pull request whose
+      # body is fine; it should cost the comment, not the merge.
+      - name: Post the verdict on the pull request
+        if: always()
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('node:fs');
+            if (!fs.existsSync('pr-report.md')) {
+              core.info('no report; the collect step did not run');
+              return;
+            }
+            const body = fs.readFileSync('pr-report.md', 'utf8');
+            const marker = '<!-- pr-body-coverage -->';
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find((c) => (c.body || '').includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: `${marker}\n${body}`,
+              });
+              return;
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `${marker}\n${body}`,
+            });
   # Every other job in this repository reads a checkout. That is the whole reason an image could
   # be built from a working copy of a different repository, or with scripts/ missing from the
   # build context, and still leave CI green: the only thing that reads the image is the image
