@@ -72,6 +72,12 @@ COPY scripts/ scripts/
 # The suite asserts against the real corpus, so the corpus has to be in this stage. A build that
 # ran the tests against an empty content/ would pass 25 assertions by accident.
 COPY content/ content/
+# One doc, not the directory. api/test/doc-measurements.test.js reads the measured claims out of
+# docs/CONTENT_CONVENTIONS.md and compares them to the corpus, which is the whole point of it: it
+# turns a stale doc into a local test failure rather than a CI one. Copying only this file is
+# enough for the suite and keeps the image's size tied to one document rather than to whatever
+# else docs/ gains later. See the scripts/ note above for the same class of fix.
+COPY docs/CONTENT_CONVENTIONS.md docs/CONTENT_CONVENTIONS.md
 
 # The backend suite is the gate that keeps the three content-route rules true; it is fast enough
 # to run on every image build.

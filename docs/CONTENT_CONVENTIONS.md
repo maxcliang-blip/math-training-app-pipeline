@@ -9,13 +9,56 @@ author does not resolve them again from scratch, and does not resolve them diffe
 one. Each entry states what the convention is, what the gate *does* enforce (so the two are not
 confused), and what the corpus measured on `origin/main` at the time of writing.
 
-Settled on [MAX-70](/MAX/issues/MAX-70), 2026-10-05. Measurements below are from `origin/main`
-`5153ae5`: 38 lessons, 759 exercise records. Re-measured at `ae40c51` (the SHA this branch merges
-onto) and unchanged — `content/**` has not moved since, so every number below still holds.
+Settled on [MAX-70](/MAX/issues/MAX-70), 2026-10-05. Measurements below were taken from `origin/main`
+`5153ae5` and re-measured at `ae40c51`; `content/**` had not moved between them. They are stated in
+one machine-checked block below rather than in prose, because every one of them is a claim about
+`main` that goes false the moment the corpus moves: `npm run docs:check` re-measures them and fails
+when one drifts, and `npm run docs:check -- --update` rewrites them from the corpus.
 
 Rule references below name the rule code, not a line number. A line number was in the first draft and
 it went stale within one commit, because `preflight-content.mjs` gains lines faster than a doc on it
 gets edited. Search the code.
+
+## Measured on the corpus
+
+Every number this file cites, in one block, re-measured from `content/` by
+`scripts/check-doc-measurements.mjs`. `npm run docs:check` fails when one of them drifts from the
+corpus; `-- --update` rewrites them in place and prints the id tables behind them. The measurements
+come from the same loader `lib/corpus-pins.mjs` is compared against and the same client-sections
+report `npm run client:check` prints, so they cannot disagree with the rest of the repository's
+counts. MAX-149 moved them here because a number written in prose is a fourth thing to keep in
+sync, and the one that would go stale while every gate kept passing.
+
+<!-- doc-measurements:begin -->
+<!--
+  Machine-checked by `npm run docs:check`, which re-measures the corpus and fails when a number
+  here disagrees with it. Refresh with `npm run docs:check -- --update`, which rewrites the
+  numbers below from the corpus and prints the id tables behind them.
+
+  Do not hand-edit a number to make the check pass. The corpus is the claim; this block is a
+  transcript of it, and the two are supposed to be the same thing.
+-->
+```json
+{
+  "lessons": 38,
+  "exerciseRecords": 759,
+  "sectionIds": {
+    "practice": 645,
+    "mastery": 114,
+    "solutions": 645
+  },
+  "techniqueSlugs": {
+    "distinct": 338,
+    "sharedByMultipleLessons": 13
+  },
+  "untaggedExercises": {
+    "total": 10,
+    "explicitEmptyArray": 3,
+    "keyOmitted": 7
+  }
+}
+```
+<!-- doc-measurements:end -->
 
 ---
 
@@ -155,12 +198,22 @@ lesson that no learner can answer would be worse than not rendering them.
 A convention is not edited because it is inconvenient. It is changed by:
 
 1. **Measuring the corpus first.** Every number above was read off `origin/main`, not remembered.
-   Re-measure before arguing; the corpus moves under these claims.
+   Re-measure before arguing; the corpus moves under these claims. `npm run docs:check` does the
+   re-measuring and fails when the block above has drifted, so this is enforced rather than asked.
 2. **Recording the decision on the issue that raised it**, with the branch or commit that produced
    the evidence, so the ruling has a provenance and not just a date.
 3. **Replacing the measured block above**, not appending a second one. A stale measurement is worse
-   than a missing one, because the next author cannot tell which is which.
+   than a missing one, because the next author cannot tell which is which. Since MAX-149 the block
+   is checked, so a second one is also a build failure rather than something only a reader notices.
 
 If a convention here ever starts wanting to fail a build, that is a gate rule, and it belongs in
 `scripts/preflight-content.mjs` with a fixture donor in `content/fixtures/` and a line in
 `--selftest` — not in this file. `S8-*` codes are append-only.
+
+The measured block is the exception, and it is worth being precise about why, because the rule above
+would otherwise appear to forbid it. `preflight-content.mjs` judges content against rules about
+content; a doc has no corpus to judge, and its claims are not rules at all — they are a transcript
+of what the corpus happens to hold today. So `scripts/check-doc-measurements.mjs` fails when the doc
+and the corpus *disagree*, and never for a corpus that is merely different from what the doc says:
+that is an authoring decision recorded on an issue, not a defect. Raising the numbers is therefore
+always allowed, and `--update` does it. What is not allowed is leaving them behind.
